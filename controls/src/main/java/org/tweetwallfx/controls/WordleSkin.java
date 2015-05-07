@@ -608,7 +608,6 @@ public class WordleSkin extends SkinBase<Wordle> {
             center = center.multiply(1d / totalWeight);
             boolean done = false;
             double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
-            boolean fail = false;
             while (!done) {
                 if (radius > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth())) {
                     doFinish = true;
@@ -633,11 +632,6 @@ public class WordleSkin extends SkinBase<Wordle> {
                             || mayBe.getMaxX() + layoutBounds.getWidth() / 2d > layoutBounds.getMaxX()
                             || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
                         useable = false;
-                        if (rad > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth()) / 2) {
-                            System.out.println("Alles blöd!");
-                            fail = true;
-                            break;
-                        }
                     }
                     for (int prev = 0; prev < i; ++prev) {
                         if (mayBe.intersects(boundsList.get(prev)) || (null != logo && mayBe.intersects(logoBounds))) {
