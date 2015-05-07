@@ -4,3 +4,8 @@
 **/.nb-gradle
 **/.gradle
 **/MyOAuth.properties
+
+# Eclipse specific
+**/.classpath
+**/.project
+**/.settings/
