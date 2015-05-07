@@ -333,7 +333,10 @@ public class WordleSkin extends SkinBase<Wordle> {
         faiReTwCount.setGlyphSize(24);
         
         Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+        favCount.getStyleClass().setAll("handle");
+        
         Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+        reTwCount.getStyleClass().setAll("handle");
 
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Label handle = new Label("@" + tweetInfo.getHandle() + " · " + df.format(tweetInfo.getDate()));
