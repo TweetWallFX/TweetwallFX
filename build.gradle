@@ -59,6 +59,7 @@ project(":TweetWallFX-Devoxx"){
         classpath = sourceSets.main.runtimeClasspath
         args = ["-oAuthFile", "MyOAuth.properties"]
         debug = true
+        args = ["-oAuthFile", "MyOAuth.properties"]
     }    
     
     dependencies {
@@ -81,6 +82,7 @@ project(":TweetWallFX-NetBeans"){
         classpath = sourceSets.main.runtimeClasspath
         args = ["-oAuthFile", "MyOAuth.properties"]        
         debug = true
+        args = ["-oAuthFile", "MyOAuth.properties"]
     }    
     
     dependencies {

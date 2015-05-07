@@ -31,7 +31,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.tweetwallfx.controls.StopList;
-import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.twitter.TwitterOAuth;
 import org.tweetwallfx.twod.TagTweets;
 import twitter4j.conf.Configuration;
