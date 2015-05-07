@@ -19,6 +19,7 @@ subprojects {
 project(":TweetWallFX-Core"){
     dependencies {
         compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+        compile group: "de.jensd", name: "fontawesomefx", version: "8.3"
         compile group: "com.beust", name: "jcommander", version: "1.48"
         compile group: "log4j", name: "log4j", version: "1.2.17"
     }
@@ -78,6 +79,7 @@ project(":TweetWallFX-NetBeans"){
     }
     
     task('debug', dependsOn: 'classes', type: JavaExec) {
+        main = "org.tweetwallfx.netbeans.Main"        
         classpath = sourceSets.main.runtimeClasspath
         args = ["-oAuthFile", "MyOAuth.properties"]        
         debug = true
