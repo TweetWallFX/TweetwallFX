@@ -49,7 +49,7 @@ project(":TweetWallFX-Devoxx"){
     
     run {
         main = "org.tweetwallfx.devoxx.Main"        
-        args = ["-oAuthFile","MyOAuth.properties"]
+        args = ["-oAuthFile", "MyOAuth.properties"]
     }
     
     task('debug', dependsOn: 'classes', type: JavaExec) {
@@ -71,7 +71,7 @@ project(":TweetWallFX-NetBeans"){
     
     run {
         main = "org.tweetwallfx.netbeans.Main"        
-        args = ["-oAuthFile","MyOAuth.properties"]
+        args = ["-oAuthFile", "MyOAuth.properties"]
     }
     
     task('debug', dependsOn: 'classes', type: JavaExec) {
@@ -98,11 +98,11 @@ description = 'TweetWallFX'
 task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:build',  type:(JavaExec)) {
     classpath = project(":TweetWallFX-Devoxx").sourceSets.main.runtimeClasspath
     main = "org.tweetwallfx.devoxx.DevoxxTweetWall"
-    args = ["-oAuthFile","MyOAuth.properties"]
+    args = ["-oAuthFile", "MyOAuth.properties"]
 }
 
 task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:build',  type:(JavaExec)) {
     classpath = project(":TweetWallFX-NetBeans").sourceSets.main.runtimeClasspath
     main = "org.tweetwallfx.netbeans.Main"
-    args = ["-oAuthFile","MyOAuth.properties"]
+    args = ["-oAuthFile", "MyOAuth.properties"]
 }
