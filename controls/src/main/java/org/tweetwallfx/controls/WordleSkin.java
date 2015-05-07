@@ -575,6 +575,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     private static final int MAX_FONT_SIZE = 72;
 
     private Map<Word, Bounds> recalcTagLayout(List<Word> words) {
+        boolean doFinish=false;
         Bounds layoutBounds = pane.getLayoutBounds();
         Bounds logoLayout = logo.getBoundsInParent();
         Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d, 
@@ -608,6 +609,9 @@ public class WordleSkin extends SkinBase<Wordle> {
             boolean done = false;
             double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
             while (!done) {
+                if (radius > Math.max(layoutBounds.getHeight(),layoutBounds.getWidth())) {
+                    doFinish = true;
+                }
                 int startDeg = rand.nextInt(360);
                 double prev_x = -1;
                 double prev_y = -1;
@@ -636,7 +640,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                             break;
                         }
                     }
-                    if (useable) {
+                    if (useable ||doFinish) {
                         done = true;
                         boundsList.add(new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));
