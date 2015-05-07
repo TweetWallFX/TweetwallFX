@@ -17,28 +17,26 @@ import javafx.stage.Stage;
  * @author sven
  */
 public class WordleControlTest extends Application {
-    
+
     @Override
     public void start(Stage primaryStage) {
-        
+
         Wordle wordle = new Wordle();
-        
-        List<Word> words = Arrays.asList(new Word[] {
-                new Word("#Devoxx", 20), 
-                new Word("trip", 10),
-                new Word("fun", 15),
-                new Word("Java", 15),
-                new Word("JavaFX", 25),
-                new Word("Java EE", 5),
-        });
-        
-        
+
+        List<Word> words = Arrays.asList(new Word[]{
+            new Word("#Devoxx", 20),
+            new Word("trip", 10),
+            new Word("fun", 15),
+            new Word("Java", 15),
+            new Word("JavaFX", 25),
+            new Word("Java EE", 5),});
+
         wordle.setWords(words);
-        
+
         BorderPane pane = new BorderPane(wordle);
-        
+
         Scene scene = new Scene(pane, 300, 250);
-        
+
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -50,5 +48,5 @@ public class WordleControlTest extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

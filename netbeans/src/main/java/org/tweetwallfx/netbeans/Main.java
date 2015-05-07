@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.tweetwallfx.controls.StopList;
-import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.twitter.TwitterOAuth;
 import org.tweetwallfx.twod.TagTweets;
 import twitter4j.conf.Configuration;
@@ -56,7 +55,7 @@ public class Main extends Application {
                 tweetsTask.start();
             }
         });
-               
+
         primaryStage.setTitle("The JavaFX Tweetwall for NetBeans Day!");
         primaryStage.setScene(scene);
         scene.getStylesheets().add(this.getClass().getResource("/netbeans.css").toExternalForm());

@@ -12,6 +12,7 @@ import java.util.Objects;
  * @author sven
  */
 public class Word implements Comparable<Word> {
+
     private String text;
     private double weight;
 
@@ -19,7 +20,7 @@ public class Word implements Comparable<Word> {
         this.text = text;
         this.weight = weight;
     }
-    
+
     public String getText() {
         return text;
     }
@@ -61,7 +62,5 @@ public class Word implements Comparable<Word> {
         }
         return true;
     }
-    
 
-    
 }

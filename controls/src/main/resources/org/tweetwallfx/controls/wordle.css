@@ -18,9 +18,9 @@ and open the template in the editor.
 }
 
 .wordle .name {
-        -fx-font: 36px "Calibri"; 
-        -fx-text-fill: darkgray; 
-        -fx-font-weight: bold;    
+    -fx-font: 36px "Calibri"; 
+    -fx-text-fill: darkgray; 
+    -fx-font-weight: bold;    
 }
 
 .wordle .handle {

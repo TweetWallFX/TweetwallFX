@@ -10,10 +10,11 @@ import javafx.scene.shape.DrawMode;
 import org.fxyz.shapes.containers.ShapeContainer;
 
 /**
- * TweetWallFX - Devoxx 2014
- * {@literal @}johanvos {@literal @}SvenNB {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- * 
- * SegmentedTorus is based in Torus from F(x)yz, but allows a segmented Torus Mesh
+ * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
+ * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
+ *
+ * SegmentedTorus is based in Torus from F(x)yz, but allows a segmented Torus
+ * Mesh
  */
 public class SegmentedTorus extends ShapeContainer<SegmentedTorusMesh> {
 
@@ -21,15 +22,15 @@ public class SegmentedTorus extends ShapeContainer<SegmentedTorusMesh> {
 
     public SegmentedTorus() {
         super(new SegmentedTorusMesh());
-        this.mesh = getShape();        
+        this.mesh = getShape();
     }
-    
-    public SegmentedTorus(double radius, double tRadius){
+
+    public SegmentedTorus(double radius, double tRadius) {
         this();
         mesh.setRadius(radius);
         mesh.setTubeRadius(tRadius);
     }
-    
+
     public SegmentedTorus(int rDivs, int tDivs, int crop, double radius, double tRadius) {
         this();
         mesh.setRadiusDivisions(rDivs);
@@ -44,12 +45,12 @@ public class SegmentedTorus extends ShapeContainer<SegmentedTorusMesh> {
         this();
         this.setDiffuseColor(c);
     }
-    
-    public SegmentedTorus(double radius, double tRadius, Color c){
+
+    public SegmentedTorus(double radius, double tRadius, Color c) {
         this(radius, tRadius);
         this.setDiffuseColor(c);
     }
-    
+
     public SegmentedTorus(int rDivs, int tDivs, int crop, double radius, double tRadius, Color c) {
         this(rDivs, tDivs, crop, radius, tRadius);
         this.setDiffuseColor(c);
@@ -174,5 +175,5 @@ public class SegmentedTorus extends ShapeContainer<SegmentedTorusMesh> {
     public final void setCullFace(CullFace value) {
         mesh.setCullFace(value);
     }
-    
+
 }

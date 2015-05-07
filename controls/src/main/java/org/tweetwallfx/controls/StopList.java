@@ -19,7 +19,7 @@ public class StopList {
     //TODO: Add I18N support
     private StopList() {
     }
-    
+
     private static final List<String> stopList = new ArrayList<>(
             Arrays.asList("http", "https", "has", "have", "do", "for", "are", "the", "and",
                     "with", "here", "active", "see", "next", "will", "any", "off", "there", "while", "just", "all", "from", "got", "think", "nice",
@@ -29,7 +29,7 @@ public class StopList {
     public static boolean add(String stopword) {
         return stopList.add(stopword);
     }
-    
+
     public static boolean contains(String string) {
         return stopList.contains(string);
     }
