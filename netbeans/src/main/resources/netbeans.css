@@ -1,0 +1,29 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 25, 2014, 10:52:52 PM
+    Author     : MICHELB
+*/
+
+.wordle {
+    -fx-background-color: linear-gradient(to bottom, lightblue, white 75%);
+    -fx-graphic: url(netbeans-logo.png)
+}
+
+.wordle .tag {
+    -fx-fill: DarkBlue;     
+}
+
+.wordle .name {
+        -fx-font: 36px "Calibri"; 
+        -fx-text-fill: darkblue; 
+        -fx-font-weight: bold;    
+}
+
+.wordle .handle {
+    -fx-font: 28px "Calibri";
+    -fx-text-fill: #8899A6;   
+}

@@ -1,0 +1,108 @@
+subprojects {
+    apply plugin: 'java'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        //        compile fileTree(dir: 'libs', include: '*.jar')
+        testCompile 'junit:junit:4.11'
+    }
+    version = '1.0'
+    jar {
+        manifest.attributes provider: 'gradle'
+    } 
+}
+
+project(":TweetWallFX-Core"){
+    dependencies {
+        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+        compile group: "com.beust", name: "jcommander", version: "1.48"
+        compile group: "log4j", name: "log4j", version: "1.2.17"
+    }
+}
+
+project(":TweetWallFX-2D"){
+    dependencies {
+        compile group: "org.twitter4j", name: "twitter4j-stream", version: "4.0.3"
+        compile project(':TweetWallFX-Core')
+        compile project(':TweetWallFX-Controls')
+    }
+}
+
+project(":TweetWallFX-3D"){
+    dependencies {
+        compile group: "org.twitter4j", name: "twitter4j-stream", version: "4.0.3"
+        compile fileTree(dir: 'libs', include: '*.jar')
+        compile project(':TweetWallFX-Core')        
+    }
+}
+
+project(":TweetWallFX-Controls"){
+    dependencies {
+        compile project(':TweetWallFX-Core')        
+    }
+}
+
+project(":TweetWallFX-Devoxx"){
+    
+    apply plugin: "application"
+    
+    run {
+        main = "org.tweetwallfx.devoxx.Main"        
+        args = ["-oAuthFile MyOAuth.properties"]
+    }
+    
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        main = "org.tweetwallfx.devoxx.Main"
+        classpath = sourceSets.main.runtimeClasspath
+        debug = true
+    }    
+    
+    dependencies {
+        compile project(':TweetWallFX-2D')        
+        compile project(':TweetWallFX-Controls')        
+        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+    }
+}
+
+project(":TweetWallFX-NetBeans"){
+    
+    apply plugin: "application"
+    
+    run {
+        main = "org.tweetwallfx.netbeans.Main"        
+        args = ["-oAuthFile MyOAuth.properties"]
+    }
+    
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        main = "org.tweetwallfx.netbeans.Main"
+        classpath = sourceSets.main.runtimeClasspath
+        debug = true
+    }    
+    
+    dependencies {
+        compile project(':TweetWallFX-2D')        
+        compile project(':TweetWallFX-Controls')        
+        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+    }
+}
+
+project(":TweetWallFX-JavaOne"){
+    dependencies {
+        compile project(':TweetWallFX-2D')        
+    }
+}
+
+description = 'TweetWallFX'
+
+task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:build',  type:(JavaExec)) {
+    classpath = project(":TweetWallFX-Devoxx").sourceSets.main.runtimeClasspath
+    main = "org.tweetwallfx.devoxx.DevoxxTweetWall"
+    args = ["-oAuthFile MyOAuth.properties"]
+}
+
+task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:build',  type:(JavaExec)) {
+    classpath = project(":TweetWallFX-NetBeans").sourceSets.main.runtimeClasspath
+    main = "org.tweetwallfx.netbeans.Main"
+    args = ["-oAuthFile MyOAuth.properties"]
+}

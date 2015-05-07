@@ -1,0 +1,10 @@
+include ':core', 'controls', ':2d', ':3d', ':devoxx', ':netbeans', ':javaone'
+rootProject.name='TweetWallFX'
+project(":controls").name = "TweetWallFX-Controls"
+project(":core").name = "TweetWallFX-Core"
+project(":2d").name = "TweetWallFX-2D"
+project(":3d").name = "TweetWallFX-3D"
+
+project(":devoxx").name = "TweetWallFX-Devoxx"
+project(":netbeans").name = "TweetWallFX-NetBeans"
+project(":javaone").name = "TweetWallFX-JavaOne"
