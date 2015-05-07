@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2014-2015 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.tweetwallfx.threed.billboard;
 
@@ -26,16 +44,16 @@ import org.fxyz.extras.BillboardBehavior;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<DevoxxBillboardLogo>{
+public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<DevoxxBillboardLogo> {
 
     private final PhongMaterial mat = new PhongMaterial();
-    private final Image image = new Image(getClass().getResourceAsStream("devoxx.png"));    
+    private final Image image = new Image(getClass().getResourceAsStream("devoxx.png"));
     private final FXTimer updateThread = new FXTimer();
     private Camera otherNode;
 
     public DevoxxBillboardLogo(double width, double height) {
-        this();        
-    }    
+        this();
+    }
 
     public DevoxxBillboardLogo() {
         this.mat.setDiffuseMap(image);
@@ -44,19 +62,19 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         this.setMesh(mesh);
         this.setMaterial(mat);
         this.setCullFace(CullFace.NONE);
-        this.updateThread.setRunnable(()->{
+        this.updateThread.setRunnable(() -> {
             if (isAnimated() && updateThread.getCurrentTime() >= (updateThread.getUpdateDelay())) {
                 updateMesh();
                 updateThread.setUpdateDelay((updateThread.getCurrentTime() + 80000000));
             }
         });
-        
+
         updateThread.start();
-        
+
         this.sceneProperty().addListener(new ChangeListener<Scene>() {
             @Override
             public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
-                if(newValue != null){
+                if (newValue != null) {
 //                    otherNode = getScene().getCamera();
 //                    startBillboardBehavior();
 //                    sceneProperty().removeListener(this);
@@ -87,8 +105,8 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         return animated;
     }
     //==========================================================================
-    private final FloatProperty prefWidth = new SimpleFloatProperty(1920){
-        
+    private final FloatProperty prefWidth = new SimpleFloatProperty(1920) {
+
         @Override
         protected void invalidated() {
             updateProperties();
@@ -108,8 +126,8 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         return prefWidth;
     }
     //==========================================================================
-    private final FloatProperty prefHeight = new SimpleFloatProperty(1080){
-        
+    private final FloatProperty prefHeight = new SimpleFloatProperty(1080) {
+
         @Override
         protected void invalidated() {
             updateProperties();
@@ -128,15 +146,14 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     public FloatProperty prefHeightProperty() {
         return prefHeight;
     }
-    
+
 
     /*==========================================================================
      *          Create Mesh
      *///=======================================================================
-    
     private final float defaultAmplitude = 75.0f;
     private final float defaultFrequency = 20.0f, defaultPeriod = 60.5f, defaultWaveLength = 80.25f;
-    
+
     private int divX = 64, divY = 64;
     private int subX, subY;
 
@@ -145,24 +162,23 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     private float holdPos, X;
 
     private TriangleMesh mesh;
-    
+
     private boolean needsUpdate;
-    
+
     private Random r = new Random();
-    
+
     //==========================================================================
     private TriangleMesh createMesh() {
 
         TriangleMesh m = newEmptyMesh();
 
-        float 
-                minX = -(float) getPrefWidth() / 2f,
-                maxX = (float)  getPrefWidth() / 2f,
+        float minX = -(float) getPrefWidth() / 2f,
+                maxX = (float) getPrefWidth() / 2f,
                 minY = -(float) getPrefHeight() / 2f,
-                maxY =  (float) getPrefHeight() / 2f;
+                maxY = (float) getPrefHeight() / 2f;
 
         subX = (int) getPrefWidth() / divX;
-        subY = (int) getPrefHeight()/ divY;
+        subY = (int) getPrefHeight() / divY;
         if (pointCache == null) {
             pointCache = new float[subX + 2][subY + 2][3];
         }
@@ -179,9 +195,9 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         int faces[] = new int[faceCount * faceSize];
 
         /*======================================================================
-            if animated and pointCache needs update
-        */
-        if(isAnimated() && needsUpdate){
+         if animated and pointCache needs update
+         */
+        if (isAnimated() && needsUpdate) {
             for (int y = 0; y <= subY; y++) {
 
                 float currY = (float) y / subY;
@@ -193,12 +209,12 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     double fx = (1 - currX) * minX + currX * maxX;
                     int index = y * numDivX * pointSize + (x * pointSize);
                     // Apply The Wave To Our Mesh
-                                       
-                    if(r.nextBoolean()){
+
+                    if (r.nextBoolean()) {
                         pointCache[x][y][0] = (float) (fx);
                         pointCache[x][y][1] = (float) (fy);
                         pointCache[x][y][2] = (float) (getAmplitude() * (Math.sin(((waveNumber.get()) * x) - (getFrequency() * currX))) + getAmplitude() * r.nextFloat());
-                    }else{
+                    } else {
                         pointCache[x][y][0] = (float) (fx);
                         pointCache[x][y][1] = (float) (fy);
                         pointCache[x][y][2] = (float) (getAmplitude() * (Math.sin(((waveNumber.get()) * x) - (getFrequency() * currX))));
@@ -215,11 +231,9 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                 }
             }
             needsUpdate = false;
-        } 
-        /*======================================================================
-            step values if animated        
-        */
-        else if (isAnimated() && !needsUpdate) {
+        } /*======================================================================
+         step values if animated        
+         */ else if (isAnimated() && !needsUpdate) {
             // update pointPos and texCoords
             int index = 0;
             int texIndex;
@@ -248,11 +262,9 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                 // Last Value Becomes The Far Left Stored Value
                 pointCache[subX][y][2] = holdPos;
             }
-        } 
-        /*======================================================================
-            else create default points  
-        */
-        else {
+        } /*======================================================================
+         else create default points  
+         */ else {
             // Create pointPos and texCoords
             for (int y = 0; y <= subY; y++) {
 
@@ -264,9 +276,8 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     float currX = (float) x / subX;
                     double fx = (1 - currX) * minX + currX * maxX;
                     int index = y * numDivX * pointSize + (x * pointSize);
-                    
+
                     // Apply The Wave To Our Mesh on XZ plane                     
-                    
                     pointCache[x][y][0] = (float) (fx);
                     pointCache[x][y][1] = (float) (fy);
                     pointCache[x][y][2] = (float) (getAmplitude() * (Math.sin(((waveNumber.get()) * x) - (getFrequency() * currX))));
@@ -317,20 +328,21 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         m.getFaces().addAll(faces);
         return m;
     }
+
     //==========================================================================
     private TriangleMesh newEmptyMesh() {
         return new TriangleMesh();
     }
 
-    private void updateMesh() {        
+    private void updateMesh() {
         mesh = createMesh();
         setMesh(mesh);
     }
     //==========================================================================
-    private final FloatProperty pi2 = new SimpleFloatProperty((float)Math.PI * 2);
+    private final FloatProperty pi2 = new SimpleFloatProperty((float) Math.PI * 2);
     //==========================================================================
     private final FloatProperty frequency = new SimpleFloatProperty(defaultFrequency) {
-        
+
         @Override
         protected void invalidated() {
             updateProperties();
@@ -389,7 +401,7 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     public FloatProperty waveLengthProperty() {
         return waveLength;
     }
-    
+
     //==========================================================================
     private final FloatProperty amplitude = new SimpleFloatProperty(defaultAmplitude) {
         @Override
@@ -410,18 +422,18 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     public FloatProperty amplitudeProperty() {
         return amplitude;
     }
-    
+
     //==========================================================================
     private final FloatProperty waveSpeed = new SimpleFloatProperty();
     //==========================================================================
     private final FloatProperty waveNumber = new SimpleFloatProperty();
-    
+
     //==========================================================================
-    private void updateProperties(){
+    private void updateProperties() {
         waveSpeed.set(waveLength.divide(period).floatValue());
-        waveNumber.set((pi2.divide(period)).floatValue());        
+        waveNumber.set((pi2.divide(period)).floatValue());
     }
-    
+
     public final void start() {
         updateThread.start();
     }
@@ -441,5 +453,4 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         return otherNode;
     }
 
-    
 }
