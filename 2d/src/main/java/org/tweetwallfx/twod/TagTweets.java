@@ -1,9 +1,31 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2014-2015 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.tweetwallfx.twod;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +66,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import org.tweetwallfx.controls.StopList;
 
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
@@ -74,12 +97,6 @@ public class TagTweets {
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
-
-    private final List<String> stopList = new ArrayList<>(
-            Arrays.asList("http", "https", "has", "have", "do", "for", "are", "the", "and",
-                    "with", "here", "#devoxx", "active", "see", "next", "will", "any", "off", "there", "while", "just", "all", "from", "got", "think", "nice",
-                    "ask", "can", "you", "week", "some", "not", "didn", "isn", "per", "how", "show", "out", "but", "last", "your", "one", "should",
-                    "now", "also", "done", "will", "become", "did", "what", "when", "let", "that", "this", "always", "where", "our"));
 
     private final Pattern pattern = Pattern.compile("\\s+");
 
@@ -212,7 +229,7 @@ public class TagTweets {
             // add words to tree and update weights
             collect.stream()
                     .filter(w -> w.length() > 2)
-                    .filter(w -> !stopList.contains(w))
+                    .filter(w -> !StopList.contains(w))
                     .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1l));
 
 //            // check if there is any word in the tags in the wall 
@@ -299,7 +316,7 @@ public class TagTweets {
                     .filter(l -> !l.startsWith("@"))
                     .filter(l -> !l.startsWith("http:"))
                     .filter(l -> !l.startsWith("https:"))
-                    .filter(l -> !stopList.contains(l)).map(l -> new Word(l, -2)).collect(Collectors.toSet());
+                    .filter(l -> !StopList.contains(l)).map(l -> new Word(l, -2)).collect(Collectors.toSet());
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
             words.addAll(tweetWords);
@@ -500,7 +517,7 @@ public class TagTweets {
                 .filter(l -> l.length() > 2)
                 .filter(l -> !l.startsWith("@"))
                 .map(l -> l.toLowerCase())
-                .filter(l -> !stopList.contains(l))
+                .filter(l -> !StopList.contains(l))
                 .collect(Collectors.groupingBy(String::toLowerCase, TreeMap::new, Collectors.counting()));
     }
 

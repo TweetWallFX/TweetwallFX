@@ -26,7 +26,6 @@ package org.tweetwallfx.threed.billboard;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -49,13 +48,17 @@ import javafx.util.Duration;
  * 
 */
 /**
- *  Added more properties for keeping track of time
- *  Time is is nanoTime
+ * Added more properties for keeping track of time Time is is nanoTime
+ *
  * @author Jason Pollastrini aka jdub1581
  */
 public class FXTimer {
+
     private static final Logger LOG = Logger.getLogger(FXTimer.class.getName());
-    static {LOG.setLevel(Level.ALL);}
+
+    static {
+        LOG.setLevel(Level.ALL);
+    }
     /*==========================================================================
      *    Variables
      *///========================================================================    
@@ -64,33 +67,28 @@ public class FXTimer {
     public static final long maxFPS = 120;
     public static final long OPTIMAL_TIME = (long) (1000000000 / targetFPS);
     public static long frame = 0;
-    
+
     public long now = 0,
             updateLength = 0,
             lastLoopTime = 0,
-            lastFpsTime = 0;    
+            lastFpsTime = 0;
     public float delta;
 
-    
     private Runnable runnable;
     final private boolean isDaemon = true;
     volatile private java.util.Timer timer;
-    
+
     final private AtomicReference<TimerTask> timerTaskAtomicReference = new AtomicReference<>(null);
-    
-    
+
 // ==================================================================================================================
 // CONSTRUCTOR
-
-    public FXTimer(){
-        this(null);        
+    public FXTimer() {
+        this(null);
     }
-    
+
     public FXTimer(final Runnable rbl) {
         this.runnable = rbl;
     }
-    
-    
 
 // ==================================================================================================================
 // PROPERTIES
@@ -150,7 +148,6 @@ public class FXTimer {
      *
      * @return
      */
-    
     final private ObjectProperty<Boolean> repeats = new SimpleObjectProperty<>(this, "repeats", Boolean.TRUE);
 
     /*==========================================================================
@@ -247,20 +244,20 @@ public class FXTimer {
                     frame = 0;
                 }
                 //calculate time on one frame, update on the next
-                if(frame % 2 == 0){
+                if (frame % 2 == 0) {
                     //update properties
                     currentTime.set(now);
                     lastFrameTime.set(lastLoopTime);
                     deltaTime.set(delta);
                     elapsedTime.set(now - getStartTime());
                     delay.set(Duration.millis((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
-                    cycleDuration.set(DurationUtils.fpsToMillis(getFPS()));                        
-                }else{                    
-                    if(runnable != null){
+                    cycleDuration.set(DurationUtils.fpsToMillis(getFPS()));
+                } else {
+                    if (runnable != null) {
                         Platform.runLater(runnable);
                     }
                 }
-                
+
             }
         };
         if (timer == null) {
@@ -300,8 +297,4 @@ public class FXTimer {
         this.runnable = runnable;
     }
 
-    
-
-    
-    
 }
