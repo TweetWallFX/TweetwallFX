@@ -19,8 +19,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import org.tweetwallfx.twitter.TweetInfo;
 
-
-
 /**
  *
  * @author sven
@@ -28,6 +26,7 @@ import org.tweetwallfx.twitter.TweetInfo;
 public class Wordle extends Control {
 
     public enum LayoutMode {
+
         WORDLE, TWEET
     }
 
@@ -42,12 +41,12 @@ public class Wordle extends Control {
 
     public void setTweet(TweetInfo status) {
         tweetInfoProperty.set(status);
-    }    
-    
+    }
+
     public ObjectProperty<TweetInfo> tweetInfoProperty() {
         return tweetInfoProperty;
     }
-    
+
     public void setWords(List<Word> words) {
         wordsProperty.set(words);
     }
@@ -63,7 +62,7 @@ public class Wordle extends Control {
     public ObjectProperty<LayoutMode> layoutModeProperty() {
         return layoutModeProperty;
     }
-    
+
     @Override
     protected Skin<?> createDefaultSkin() {
         return new WordleSkin(this);
@@ -88,8 +87,8 @@ public class Wordle extends Control {
     @Override
     public String getUserAgentStylesheet() {
         return this.getClass().getResource("wordle.css").toExternalForm();
-    }    
-    
+    }
+
     private static class StyleableProperties {
 
         private static final CssMetaData< Wordle, String> LOGO_GRAPHIC

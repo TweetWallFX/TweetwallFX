@@ -55,7 +55,7 @@ public class Main extends Application {
                 tweetsTask.start();
             }
         });
-               
+
         primaryStage.setTitle("The JavaFX Tweetwall for Devoxx!");
         primaryStage.setScene(scene);
 //        scene.getStylesheets().add(this.getClass().getResource("/devoxx.css").toExternalForm());

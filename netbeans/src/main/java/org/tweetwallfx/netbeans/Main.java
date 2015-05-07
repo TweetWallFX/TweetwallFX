@@ -56,7 +56,7 @@ public class Main extends Application {
                 tweetsTask.start();
             }
         });
-               
+
         primaryStage.setTitle("The JavaFX Tweetwall for NetBeans Day!");
         primaryStage.setScene(scene);
         scene.getStylesheets().add(this.getClass().getResource("/netbeans.css").toExternalForm());

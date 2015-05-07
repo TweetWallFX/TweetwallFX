@@ -30,23 +30,24 @@ public class TagCloud extends Application {
     private CLogOut log;
     private final String hashtag = "#devoxx";
     private TagTweets tweetsTask;
-    
+
     @Override
     public void start(Stage primaryStage) {
-        
+
         try {
             AnchorPane root = FXMLLoader.<AnchorPane>load(this.getClass().getResource("TweetWallFX.fxml"));
             BorderPane borderPane = (BorderPane) root.lookup("#displayArea");
             Scene scene = new Scene(root, 800, 600);
-            
+
             /* TWITTER */
 //        log=CLogOut.getInstance();
 //        log.getMessages().addListener((ov,s,s1)->System.out.println(s1));
-            
-            final Service service=new Service<Void>(){
-                @Override protected Task<Void> createTask() {   
-                    Task<Void> task = new Task<Void>(){
-                        @Override protected Void call() throws Exception {
+            final Service service = new Service<Void>() {
+                @Override
+                protected Task<Void> createTask() {
+                    Task<Void> task = new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
                             conf = TwitterOAuth.getInstance().readOAuth();
                             return null;
                         }
@@ -54,14 +55,14 @@ public class TagCloud extends Application {
                     return task;
                 }
             };
-            
-            service.setOnSucceeded(e->{
-                if(!hashtag.isEmpty() && conf!=null){
-                    tweetsTask= new TagTweets(conf, hashtag, borderPane);
+
+            service.setOnSucceeded(e -> {
+                if (!hashtag.isEmpty() && conf != null) {
+                    tweetsTask = new TagTweets(conf, hashtag, borderPane);
                     tweetsTask.start();
                 }
             });
-            
+
             primaryStage.setTitle("The JavvaFX Tweetwall for Devoox!");
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -71,15 +72,15 @@ public class TagCloud extends Application {
             Logger.getLogger(TagCloud.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void stop() {
         System.out.println("closing...");
-        if(tweetsTask!=null){
+        if (tweetsTask != null) {
             tweetsTask.stop();
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
