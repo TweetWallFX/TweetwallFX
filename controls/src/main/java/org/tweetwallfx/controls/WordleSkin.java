@@ -575,6 +575,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     private static final int MAX_FONT_SIZE = 72;
 
     private Map<Word, Bounds> recalcTagLayout(List<Word> words) {
+        boolean doFinish = false;
         Bounds layoutBounds = pane.getLayoutBounds();
         Bounds logoLayout = logo.getBoundsInParent();
         Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d,
@@ -609,6 +610,9 @@ public class WordleSkin extends SkinBase<Wordle> {
             double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
             boolean fail = false;
             while (!done) {
+                if (radius > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth())) {
+                    doFinish = true;
+                }
                 int startDeg = rand.nextInt(360);
                 double prev_x = -1;
                 double prev_y = -1;
@@ -628,7 +632,6 @@ public class WordleSkin extends SkinBase<Wordle> {
                             || mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0
                             || mayBe.getMaxX() + layoutBounds.getWidth() / 2d > layoutBounds.getMaxX()
                             || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
-
                         useable = false;
                         if (rad > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth()) / 2) {
                             System.out.println("Alles blöd!");
@@ -642,7 +645,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                             break;
                         }
                     }
-                    if (useable || fail) {
+                    if (useable || doFinish) {
                         done = true;
                         boundsList.add(new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));
