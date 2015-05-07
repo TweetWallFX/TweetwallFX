@@ -523,7 +523,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         // maxFont = 48
         // minFont = 18
 
-        double size = defaultFont.getSize();
+        double size;
         if (weight == -1) {
             size = TWEET_FONT_SIZE;
         } else if (weight == -2) {
