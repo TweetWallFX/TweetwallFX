@@ -72,9 +72,9 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         pane = new Pane();
 
-        getSkinnable().logoProperty().addListener((obs, oldValue, newValue)  -> {
+        getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
             if (null != logo) {
-                pane.getChildren().remove(logo);                
+                pane.getChildren().remove(logo);
             }
             System.out.println("Logo: " + newValue);
             logo = new ImageView(newValue);
@@ -85,7 +85,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
 
         System.out.println("LOGO: " + getSkinnable().logoProperty().getValue());
-        
+
         logo = new ImageView(getSkinnable().logoProperty().getValue());
         logo.getStyleClass().setAll("logo");
 
@@ -577,18 +577,18 @@ public class WordleSkin extends SkinBase<Wordle> {
     private Map<Word, Bounds> recalcTagLayout(List<Word> words) {
         Bounds layoutBounds = pane.getLayoutBounds();
         Bounds logoLayout = logo.getBoundsInParent();
-        Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d, 
-                logoLayout.getMinY() - layoutBounds.getHeight() / 2d, 
-                logoLayout.getWidth(), 
+        Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d,
+                logoLayout.getMinY() - layoutBounds.getHeight() / 2d,
+                logoLayout.getWidth(),
                 logoLayout.getHeight());
-        
+
         List<Bounds> boundsList = new ArrayList<>();
         Text firstNode = createTextNode(words.get(0));
         double firstWidth = firstNode.getLayoutBounds().getWidth();
         double firstHeight = firstNode.getLayoutBounds().getHeight();
 
         boundsList.add(new BoundingBox(-firstWidth / 2d,
-                -firstHeight/2d, firstWidth, firstHeight));
+                -firstHeight / 2d, firstWidth, firstHeight));
 
         for (int i = 1; i < words.size(); ++i) {
             Word word = words.get(i);
@@ -607,6 +607,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             center = center.multiply(1d / totalWeight);
             boolean done = false;
             double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
+            boolean fail = false;
             while (!done) {
                 int startDeg = rand.nextInt(360);
                 double prev_x = -1;
@@ -623,12 +624,17 @@ public class WordleSkin extends SkinBase<Wordle> {
                             center.getY() - height / 2d, width, height);
                     boolean useable = true;
                     //check if bounds are full on screen:
-                    if (layoutBounds.getWidth() > 0 && layoutBounds.getHeight() > 0 && (mayBe.getMinX() + layoutBounds.getWidth()/2d < 0 || 
-                            mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0 ||
-                            mayBe.getMaxX() + layoutBounds.getWidth()/2d > layoutBounds.getMaxX() || 
-                            mayBe.getMaxY() + layoutBounds.getHeight()/2d > layoutBounds.getMaxY() 
-                            )) {
+                    if (layoutBounds.getWidth() > 0 && layoutBounds.getHeight() > 0 && (mayBe.getMinX() + layoutBounds.getWidth() / 2d < 0
+                            || mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0
+                            || mayBe.getMaxX() + layoutBounds.getWidth() / 2d > layoutBounds.getMaxX()
+                            || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
+
                         useable = false;
+                        if (rad > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth()) / 2) {
+                            System.out.println("Alles blöd!");
+                            fail = true;
+                            break;
+                        }
                     }
                     for (int prev = 0; prev < i; ++prev) {
                         if (mayBe.intersects(boundsList.get(prev)) || (null != logo && mayBe.intersects(logoBounds))) {
@@ -636,7 +642,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                             break;
                         }
                     }
-                    if (useable) {
+                    if (useable || fail) {
                         done = true;
                         boundsList.add(new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));
