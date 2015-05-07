@@ -65,6 +65,14 @@ public class TweetInfo {
         return status.getMediaEntities();
     }
 
+    public int getFavoriteCount() {
+        return status.getFavoriteCount();
+    }
+
+    public int getRetweetCount() {
+        return status.getRetweetCount();
+    }
+
     @Override
     public String toString() {
         return "TweetInfo{" + "status=" + status + '}';

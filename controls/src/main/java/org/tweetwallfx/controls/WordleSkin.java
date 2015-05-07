@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -321,7 +322,19 @@ public class WordleSkin extends SkinBase<Wordle> {
 //        HBox hName = new HBox(20);
         Label name = new Label(tweetInfo.getName());
         name.getStyleClass().setAll("name");
-//        name.setStyle("-fx-font: 36px \"Calibri\"; -fx-text-fill: #e1ecee; -fx-font-weight: bold;");
+
+//        faiFavCount.setGlyphName("TWITTER");
+//        faiFavCount.setGlyphName("TWITTER_SIGN");
+        FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
+        faiFavCount.setGlyphName("THUMBS_UP");
+        faiFavCount.setGlyphSize(24);
+        FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
+        faiReTwCount.setGlyphName("RETWEET");
+        faiReTwCount.setGlyphSize(24);
+        
+        Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+        Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Label handle = new Label("@" + tweetInfo.getHandle() + " · " + df.format(tweetInfo.getDate()));
         handle.getStyleClass().setAll("handle");
@@ -331,7 +344,7 @@ public class WordleSkin extends SkinBase<Wordle> {
 
 //        VBox vbox = new VBox(10);
 //        vbox.getChildren().addAll(hName);
-        hbox.getChildren().addAll(hImage, name, handle);
+        hbox.getChildren().addAll(hImage, name, handle, faiReTwCount, reTwCount, faiFavCount, favCount);
 
         hbox.setOpacity(0);
         hbox.setAlignment(Pos.CENTER);
