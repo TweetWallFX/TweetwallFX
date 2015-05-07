@@ -30,6 +30,7 @@ import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import org.tweetwallfx.controls.StopList;
 import org.tweetwallfx.twitter.TwitterOAuth;
 import org.tweetwallfx.twod.TagTweets;
@@ -47,6 +48,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        CommandLineArgumentParser.parseArguments(getParameters().getRaw());
 
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
@@ -58,8 +60,7 @@ public class Main extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        final List<String> rawParameters = getParameters().getRaw();
-                        conf = TwitterOAuth.getInstance(rawParameters.toArray(new String[rawParameters.size()])).readOAuth();
+                        conf = TwitterOAuth.getInstance().readOAuth();
                         return null;
                     }
                 };

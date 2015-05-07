@@ -1,4 +1,4 @@
-include ':core', 'controls', ':2d', ':3d', ':devoxx', ':netbeans', ':javaone'
+include ':core', 'controls', ':2d', ':3d', ':devoxx', ':netbeans', ':javaone', ":generic2d"
 rootProject.name='TweetWallFX'
 project(":controls").name = "TweetWallFX-Controls"
 project(":core").name = "TweetWallFX-Core"
@@ -8,3 +8,4 @@ project(":3d").name = "TweetWallFX-3D"
 project(":devoxx").name = "TweetWallFX-Devoxx"
 project(":netbeans").name = "TweetWallFX-NetBeans"
 project(":javaone").name = "TweetWallFX-JavaOne"
+project(":generic2d").name = "TweetWallFX-Generic2D"
