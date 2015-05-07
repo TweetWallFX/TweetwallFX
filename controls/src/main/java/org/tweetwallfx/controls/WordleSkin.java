@@ -1,7 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2014-2015 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.tweetwallfx.controls;
 
@@ -72,9 +90,9 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         pane = new Pane();
 
-        getSkinnable().logoProperty().addListener((obs, oldValue, newValue)  -> {
+        getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
             if (null != logo) {
-                pane.getChildren().remove(logo);                
+                pane.getChildren().remove(logo);
             }
             System.out.println("Logo: " + newValue);
             logo = new ImageView(newValue);
@@ -85,7 +103,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
 
         System.out.println("LOGO: " + getSkinnable().logoProperty().getValue());
-        
+
         logo = new ImageView(getSkinnable().logoProperty().getValue());
         logo.getStyleClass().setAll("logo");
 
@@ -575,21 +593,21 @@ public class WordleSkin extends SkinBase<Wordle> {
     private static final int MAX_FONT_SIZE = 72;
 
     private Map<Word, Bounds> recalcTagLayout(List<Word> words) {
-        boolean doFinish=false;
+        boolean doFinish = false;
         Bounds layoutBounds = pane.getLayoutBounds();
         Bounds logoLayout = logo.getBoundsInParent();
-        Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d, 
-                logoLayout.getMinY() - layoutBounds.getHeight() / 2d, 
-                logoLayout.getWidth(), 
+        Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d,
+                logoLayout.getMinY() - layoutBounds.getHeight() / 2d,
+                logoLayout.getWidth(),
                 logoLayout.getHeight());
-        
+
         List<Bounds> boundsList = new ArrayList<>();
         Text firstNode = createTextNode(words.get(0));
         double firstWidth = firstNode.getLayoutBounds().getWidth();
         double firstHeight = firstNode.getLayoutBounds().getHeight();
 
         boundsList.add(new BoundingBox(-firstWidth / 2d,
-                -firstHeight/2d, firstWidth, firstHeight));
+                -firstHeight / 2d, firstWidth, firstHeight));
 
         for (int i = 1; i < words.size(); ++i) {
             Word word = words.get(i);
@@ -609,7 +627,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             boolean done = false;
             double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
             while (!done) {
-                if (radius > Math.max(layoutBounds.getHeight(),layoutBounds.getWidth())) {
+                if (radius > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth())) {
                     doFinish = true;
                 }
                 int startDeg = rand.nextInt(360);
@@ -627,11 +645,10 @@ public class WordleSkin extends SkinBase<Wordle> {
                             center.getY() - height / 2d, width, height);
                     boolean useable = true;
                     //check if bounds are full on screen:
-                    if (layoutBounds.getWidth() > 0 && layoutBounds.getHeight() > 0 && (mayBe.getMinX() + layoutBounds.getWidth()/2d < 0 || 
-                            mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0 ||
-                            mayBe.getMaxX() + layoutBounds.getWidth()/2d > layoutBounds.getMaxX() || 
-                            mayBe.getMaxY() + layoutBounds.getHeight()/2d > layoutBounds.getMaxY() 
-                            )) {
+                    if (layoutBounds.getWidth() > 0 && layoutBounds.getHeight() > 0 && (mayBe.getMinX() + layoutBounds.getWidth() / 2d < 0
+                            || mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0
+                            || mayBe.getMaxX() + layoutBounds.getWidth() / 2d > layoutBounds.getMaxX()
+                            || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
                         useable = false;
                     }
                     for (int prev = 0; prev < i; ++prev) {
@@ -640,7 +657,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                             break;
                         }
                     }
-                    if (useable ||doFinish) {
+                    if (useable || doFinish) {
                         done = true;
                         boundsList.add(new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));

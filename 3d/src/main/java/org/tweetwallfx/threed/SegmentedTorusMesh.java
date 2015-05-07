@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2014-2015 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.tweetwallfx.threed;
 
 import java.util.Arrays;
@@ -10,15 +33,15 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- * TweetWallFX - Devoxx 2014
- * {@literal @}johanvos {@literal @}SvenNB {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- * 
- * SegmentedTorusMesh is based in TorusMesh from F(x)yz, but allows cutting the torus in two 
- * directions, in order to have a banner parallel to an uncut torus.
- * Based on a regular 2D TriangleMesh, mapped to a 3D mesh with the torus parametric equations
- * Crop allows cutting/cropping the 2D mesh on the borders
- * If crop ==0  then  a regular torus is formed (thought with slight differences from 
- * TorusMesh)
+ * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
+ * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
+ *
+ * SegmentedTorusMesh is based in TorusMesh from F(x)yz, but allows cutting the
+ * torus in two directions, in order to have a banner parallel to an uncut
+ * torus. Based on a regular 2D TriangleMesh, mapped to a 3D mesh with the torus
+ * parametric equations Crop allows cutting/cropping the 2D mesh on the borders
+ * If crop ==0 then a regular torus is formed (thought with slight differences
+ * from TorusMesh)
  */
 public class SegmentedTorusMesh extends MeshView {
 
@@ -31,7 +54,7 @@ public class SegmentedTorusMesh extends MeshView {
     private static final double DEFAULT_X_OFFSET = 0.0D;
     private static final double DEFAULT_Y_OFFSET = 0.0D;
     private static final double DEFAULT_Z_OFFSET = 1.0D;
-    
+
     public SegmentedTorusMesh() {
         this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, DEFAULT_CROP, DEFAULT_RADIUS, DEFAULT_T_RADIUS);
     }
@@ -46,38 +69,38 @@ public class SegmentedTorusMesh extends MeshView {
         setTorusCrop(crop);
         setRadius(radius);
         setTubeRadius(tRadius);
-        
+
         setDepthTest(DepthTest.ENABLE);
         updateMesh();
     }
 
-    private void updateMesh(){       
+    private void updateMesh() {
         setMesh(createTorus(
-            getRadiusDivisions(), 
-            getTubeDivisions(), 
-            getTorusCrop(),
-            (float) getRadius(), 
-            (float) getTubeRadius(), 
-            (float) getTubeStartAngleOffset(), 
-            (float)getxOffset(),
-            (float)getyOffset(), 
-            (float)getzOffset()));     
+                getRadiusDivisions(),
+                getTubeDivisions(),
+                getTorusCrop(),
+                (float) getRadius(),
+                (float) getTubeRadius(),
+                (float) getTubeStartAngleOffset(),
+                (float) getxOffset(),
+                (float) getyOffset(),
+                (float) getzOffset()));
     }
-    
+
     private final IntegerProperty radiusDivisions = new SimpleIntegerProperty(DEFAULT_DIVISIONS) {
 
         @Override
         protected void invalidated() {
             setMesh(createTorus(
-                getRadiusDivisions(), 
-                getTubeDivisions(), 
-                getTorusCrop(),
-                (float) getRadius(), 
-                (float) getTubeRadius(), 
-                (float) getTubeStartAngleOffset(), 
-                (float)getxOffset(),
-                (float)getyOffset(), 
-                (float)getzOffset()));
+                    getRadiusDivisions(),
+                    getTubeDivisions(),
+                    getTorusCrop(),
+                    (float) getRadius(),
+                    (float) getTubeRadius(),
+                    (float) getTubeStartAngleOffset(),
+                    (float) getxOffset(),
+                    (float) getyOffset(),
+                    (float) getzOffset()));
         }
 
     };
@@ -123,6 +146,7 @@ public class SegmentedTorusMesh extends MeshView {
         }
 
     };
+
     public final int getTorusCrop() {
         return torusCrop.get();
     }
@@ -257,77 +281,77 @@ public class SegmentedTorusMesh extends MeshView {
     public DoubleProperty zOffsetProperty() {
         return zOffset;
     }
-    
+
     private TriangleMesh createTorus(int subDivX, int subDivY, int crop, float radius,
             float tRadius, float tubeStartAngle, float xOffset, float yOffset, float zOffset) {
- 
+
         final int pointSize = 3;
         final int texCoordSize = 2;
         final int faceSize = 6;
-        int numDivX = subDivX + 1-2*crop;
-        int numDivY = subDivY + 1-2*crop;
+        int numDivX = subDivX + 1 - 2 * crop;
+        int numDivY = subDivY + 1 - 2 * crop;
         int numVerts = numDivY * numDivX;
         float points[] = new float[numVerts * pointSize];
         float texCoords[] = new float[numVerts * texCoordSize];
-        int faceCount = (numDivX-1) * (numDivY-1) * 2;
+        int faceCount = (numDivX - 1) * (numDivY - 1) * 2;
         int faces[] = new int[faceCount * faceSize];
- 
+
         // Create points and texCoords
-        for (int y = crop; y <= subDivY-crop; y++) {
+        for (int y = crop; y <= subDivY - crop; y++) {
             float dy = (float) y / subDivY;
-            if(crop>0 || (crop==0 && y<subDivY)){
-                for (int x = crop; x <= subDivX-crop; x++) {
+            if (crop > 0 || (crop == 0 && y < subDivY)) {
+                for (int x = crop; x <= subDivX - crop; x++) {
                     float dx = (float) x / subDivX;
-                    if(crop>0 || (crop==0 && x<subDivX)){
-                        int index = (y-crop) * numDivX * pointSize + ((x-crop) * pointSize);
-                        points[index] = (float) ((radius+tRadius*Math.cos((-1d+2d*dy)*Math.PI))*(Math.cos((-1d+2d*dx)*Math.PI)+ xOffset));
-                        points[index + 2] = (float) ((radius+tRadius*Math.cos((-1d+2d*dy)*Math.PI))*(Math.sin((-1d+2d*dx)*Math.PI)+ yOffset));
-                        points[index + 1] = (float) (1.5*tRadius*Math.sin((-1d+2d*dy)*Math.PI)*zOffset);
-                        index = (y-crop) * numDivX * texCoordSize + ((x-crop) * texCoordSize);
-                        texCoords[index] = (((float)(x-crop))/((float)(subDivX-2f*crop)));
-                        texCoords[index + 1] = (((float)(y-crop))/((float)(subDivY-2f*crop)));
+                    if (crop > 0 || (crop == 0 && x < subDivX)) {
+                        int index = (y - crop) * numDivX * pointSize + ((x - crop) * pointSize);
+                        points[index] = (float) ((radius + tRadius * Math.cos((-1d + 2d * dy) * Math.PI)) * (Math.cos((-1d + 2d * dx) * Math.PI) + xOffset));
+                        points[index + 2] = (float) ((radius + tRadius * Math.cos((-1d + 2d * dy) * Math.PI)) * (Math.sin((-1d + 2d * dx) * Math.PI) + yOffset));
+                        points[index + 1] = (float) (1.5 * tRadius * Math.sin((-1d + 2d * dy) * Math.PI) * zOffset);
+                        index = (y - crop) * numDivX * texCoordSize + ((x - crop) * texCoordSize);
+                        texCoords[index] = (((float) (x - crop)) / ((float) (subDivX - 2f * crop)));
+                        texCoords[index + 1] = (((float) (y - crop)) / ((float) (subDivY - 2f * crop)));
                     }
                 }
             }
         }
         // Create faces
-        for (int y = crop; y < subDivY-crop; y++) {
-            for (int x = crop; x < subDivX-crop; x++) {
-                int p00 = (y-crop) * numDivX + (x-crop);
+        for (int y = crop; y < subDivY - crop; y++) {
+            for (int x = crop; x < subDivX - crop; x++) {
+                int p00 = (y - crop) * numDivX + (x - crop);
                 int p01 = p00 + 1;
-                if(crop==0 && x==subDivX-1){
-                    p01-=subDivX;
+                if (crop == 0 && x == subDivX - 1) {
+                    p01 -= subDivX;
                 }
                 int p10 = p00 + numDivX;
-                if(crop==0 && y==subDivY-1){
-                    p10-=subDivY*numDivX;
+                if (crop == 0 && y == subDivY - 1) {
+                    p10 -= subDivY * numDivX;
                 }
                 int p11 = p10 + 1;
-                if(crop==0 && x==subDivX-1){
-                    p11-=subDivX;
+                if (crop == 0 && x == subDivX - 1) {
+                    p11 -= subDivX;
                 }
-                
-                int tc00 = (y-crop) * numDivX + (x-crop);
+
+                int tc00 = (y - crop) * numDivX + (x - crop);
                 int tc01 = tc00 + 1;
-                if(crop==0 && x==subDivX-1){
-                    tc01-=subDivX;
+                if (crop == 0 && x == subDivX - 1) {
+                    tc01 -= subDivX;
                 }
                 int tc10 = tc00 + numDivX;
-                if(crop==0 && y==subDivY-1){
-                    tc10-=subDivY*subDivX;
+                if (crop == 0 && y == subDivY - 1) {
+                    tc10 -= subDivY * subDivX;
                 }
                 int tc11 = tc10 + 1;
-                if(crop==0 && x==subDivX-1){
-                    tc11-=subDivX;
+                if (crop == 0 && x == subDivX - 1) {
+                    tc11 -= subDivX;
                 }
-                int index = ((y-crop) * (numDivX-1) * faceSize + ((x-crop) * faceSize)) * 2;
+                int index = ((y - crop) * (numDivX - 1) * faceSize + ((x - crop) * faceSize)) * 2;
                 faces[index + 0] = p00;
                 faces[index + 1] = tc00;
                 faces[index + 2] = p10;
                 faces[index + 3] = tc10;
                 faces[index + 4] = p11;
                 faces[index + 5] = tc11;
- 
+
                 index += faceSize;
                 faces[index + 0] = p11;
                 faces[index + 1] = tc11;
@@ -339,7 +363,7 @@ public class SegmentedTorusMesh extends MeshView {
         }
         int[] faceSmoothingGroups = new int[faceCount];
         Arrays.fill(faceSmoothingGroups, 1);
- 
+
         TriangleMesh triangleMesh = new TriangleMesh();
         triangleMesh.getPoints().addAll(points);
         triangleMesh.getTexCoords().addAll(texCoords);
@@ -347,5 +371,5 @@ public class SegmentedTorusMesh extends MeshView {
         triangleMesh.getFaceSmoothingGroups().addAll(faceSmoothingGroups);
         return triangleMesh;
     }
-    
+
 }
