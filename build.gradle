@@ -107,7 +107,7 @@ project(":TweetWallFX-JavaOne"){
 
 project(":TweetWallFX-Generic2D"){
     
-    apply plugin: "application"
+    apply plugin: "java"
     
 //    run {
 //        mainClassName = "org.tweetwallfx.generic.Main"        
