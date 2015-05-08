@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Properties;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
+import org.tweetwallfx.cmdargs.RegularFileValueValidator;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -84,10 +85,6 @@ public class TwitterOAuth {
             } else {
                 System.out.println("Using authentication information from provided file: " + Params.oAuthFile.getAbsolutePath());
 
-                if (!Params.oAuthFile.exists()) {
-                    throw new IllegalArgumentException("Provided authentication file does not exist!");
-                }
-
                 try (final FileReader fr = new FileReader(Params.oAuthFile)) {
                     props.load(fr);
                 }
@@ -139,7 +136,7 @@ public class TwitterOAuth {
     @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
     public static final class Params implements CommandLineArgumentParser.ParametersObject {
 
-        @Parameter(names = "-oAuthFile", description = "File with OAuth Properties")
+        @Parameter(names = "-oAuthFile", description = "File with OAuth Properties", validateValueWith = RegularFileValueValidator.class)
         private static File oAuthFile;
     }
 }
