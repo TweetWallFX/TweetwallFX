@@ -55,7 +55,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane, 800, 600);
         StopList.add(Params.query);
 
-        final Service service = new Service<Void>() {
+        final Service<Void> service = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
                 Task<Void> task = new Task<Void>() {

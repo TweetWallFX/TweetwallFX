@@ -303,7 +303,7 @@ public class TweetsToTori {
         }
     }
 
-    private class SaveTweetsTask<Void> extends Task {
+    private class SaveTweetsTask extends Task<Void> {
 
         private final BlockingQueue<Parent> tweets = new ArrayBlockingQueue<>(5);
         private final BlockingQueue<BufferedImage> bufferedImages = new ArrayBlockingQueue<>(5);
