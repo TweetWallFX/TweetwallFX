@@ -1,5 +1,6 @@
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'eclipse'
     
     group = "org.tweetwallfx"
     
@@ -13,14 +14,19 @@ subprojects {
     version = '1.0'
     jar {
         manifest.attributes provider: 'gradle'
-    } 
+    }
+    compileJava {
+        options.compilerArgs << "-Xlint:all"// << "-Xlint:deprecation"
+    }
 }
 
 project(":TweetWallFX-Core"){
     dependencies {
         compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+        compile group: "de.jensd", name: "fontawesomefx", version: "8.3"
         compile group: "com.beust", name: "jcommander", version: "1.48"
         compile group: "log4j", name: "log4j", version: "1.2.17"
+        compile(group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80')
     }
 }
 
@@ -73,26 +79,58 @@ project(":TweetWallFX-NetBeans"){
     apply plugin: "application"
     
     run {
-        mainClassName = "org.tweetwallfx.netbeans.Main"        
-        args = ["-oAuthFile", "MyOAuth.properties"]
+        mainClassName = "org.tweetwallfx.generic.Main"        
+        args = [
+            "-oAuthFile", "MyOAuth.properties",
+            "-title", "The JavaFX Tweetwall for NetBeans Day!",
+            "-query", "#netbeans OR #netbeansday",
+            "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
+        ]
     }
     
     task('debug', dependsOn: 'classes', type: JavaExec) {
+        main = "org.tweetwallfx.netbeans.Main"        
         classpath = sourceSets.main.runtimeClasspath
-        args = ["-oAuthFile", "MyOAuth.properties"]        
+        args = [
+            "-oAuthFile", "MyOAuth.properties",
+            "-title", "The JavaFX Tweetwall for NetBeans Day!",
+            "-query", "#netbeans OR #netbeansday",
+            "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
+        ]
         debug = true
     }    
     
     dependencies {
-        compile project(':TweetWallFX-2D')        
-        compile project(':TweetWallFX-Controls')        
-        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
+        compile project(':TweetWallFX-Generic2D')        
     }
 }
 
 project(":TweetWallFX-JavaOne"){
     dependencies {
         compile project(':TweetWallFX-2D')        
+    }
+}
+
+project(":TweetWallFX-Generic2D"){
+    
+//    run {
+//        mainClassName = "org.tweetwallfx.generic.Main"        
+//        args = [
+//            "-oAuthFile", "MyOAuth.properties",
+//            "-stylesheet", file('netbeans.css').toURI().toURL().toString()
+//        ]
+//    }
+//    
+//    task('debug', dependsOn: 'classes', type: JavaExec) {
+//        classpath = sourceSets.main.runtimeClasspath
+//        args = ["-oAuthFile", "MyOAuth.properties"]        
+//        debug = true
+//    }    
+    
+    dependencies {
+        compile project(':TweetWallFX-2D')        
+        compile project(':TweetWallFX-Controls')        
+        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
     }
 }
 

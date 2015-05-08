@@ -131,8 +131,8 @@ public class TweetWallFX extends Application {
 
         IntStream.range(0, MAX_TORI).boxed().forEach(i -> {
             Random r = new Random();
-            float randomRadius = (float) ((r.nextFloat() * 100) + 550);
-            float randomTubeRadius = (float) ((r.nextFloat() * 100) + 300);
+            float randomRadius = (r.nextFloat() * 100f) + 550f;
+            float randomTubeRadius = (r.nextFloat() * 100f) + 300f;
             Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
 
             SegmentedTorus torus = new SegmentedTorus(50, 42, 0, randomRadius, randomTubeRadius, randomColor);
@@ -191,7 +191,7 @@ public class TweetWallFX extends Application {
         log = CLogOut.getInstance();
         log.getMessages().addListener((ob, s, s1) -> System.out.println(s1));
 
-        final Service service = new Service<Void>() {
+        final Service<Void> service = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
                 Task<Void> task = new Task<Void>() {

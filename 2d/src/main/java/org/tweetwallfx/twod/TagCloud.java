@@ -60,7 +60,7 @@ public class TagCloud extends Application {
             /* TWITTER */
 //        log=CLogOut.getInstance();
 //        log.getMessages().addListener((ov,s,s1)->System.out.println(s1));
-            final Service service = new Service<Void>() {
+            final Service<Void> service = new Service<Void>() {
                 @Override
                 protected Task<Void> createTask() {
                     Task<Void> task = new Task<Void>() {
