@@ -23,13 +23,14 @@
  */
 package org.tweetwallfx.twitter;
 
-import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import org.openide.util.lookup.ServiceProvider;
+import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -62,37 +63,32 @@ public class TwitterOAuth {
 
     private String error = "";
     private Configuration conf = null;
-    @Parameter(names = "-oAuthFile", description = "File with OAuth Properties")
-    private File oAuthFile = null;
-    @Parameter(names = "-help", help = true)
-    private boolean help;
     private static TwitterOAuth instance = null;
 
-    public static TwitterOAuth getInstance(final String... args) {
+    public static TwitterOAuth getInstance() {
         if (instance == null) {
-            instance = new TwitterOAuth(args);
+            instance = new TwitterOAuth();
         }
         return instance;
     }
 
-    private TwitterOAuth(final String... args) {
-        new JCommander(this).parse(args);
+    private TwitterOAuth() {
         Properties props = new Properties();
 
         try {
-            if (null == oAuthFile) {
+            if (null == Params.oAuthFile) {
                 System.out.println("Using in-built authentication information");
                 /* MyRealOAuth.properties -> this file is not commited to the repo. 
                  Ask for it or provide your own keys. */
                 props.load(TwitterOAuth.class.getResourceAsStream("MyOAuth.properties"));
             } else {
-                System.out.println("Using authentication information from provided file: " + oAuthFile.getAbsolutePath());
+                System.out.println("Using authentication information from provided file: " + Params.oAuthFile.getAbsolutePath());
 
-                if (!oAuthFile.exists()) {
+                if (!Params.oAuthFile.exists()) {
                     throw new IllegalArgumentException("Provided authentication file does not exist!");
                 }
 
-                try (final FileReader fr = new FileReader(oAuthFile)) {
+                try (final FileReader fr = new FileReader(Params.oAuthFile)) {
                     props.load(fr);
                 }
             }
@@ -140,4 +136,10 @@ public class TwitterOAuth {
         return error;
     }
 
+    @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
+    public static final class Params implements CommandLineArgumentParser.ParametersObject {
+
+        @Parameter(names = "-oAuthFile", description = "File with OAuth Properties")
+        private static File oAuthFile;
+    }
 }
