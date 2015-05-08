@@ -455,7 +455,7 @@ public class TagTweets {
         }
     }
 
-    private class ShowTweetsTask<Void> extends Task {
+    private class ShowTweetsTask extends Task<Void> {
 
         private final BlockingQueue<TweetInfo> tweets = new ArrayBlockingQueue<>(5);
         private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);

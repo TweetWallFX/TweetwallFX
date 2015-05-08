@@ -152,9 +152,12 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
      *          Create Mesh
      *///=======================================================================
     private final float defaultAmplitude = 75.0f;
-    private final float defaultFrequency = 20.0f, defaultPeriod = 60.5f, defaultWaveLength = 80.25f;
+    private final float defaultFrequency = 20.0f;
+    private final float defaultPeriod = 60.5f;
+    private final float defaultWaveLength = 80.25f;
 
-    private int divX = 64, divY = 64;
+    private int divX = 64;
+    private int divY = 64;
     private int subX, subY;
 
     float[][][] pointCache;
@@ -170,12 +173,11 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     //==========================================================================
     private TriangleMesh createMesh() {
 
-        TriangleMesh m = newEmptyMesh();
-
-        float minX = -(float) getPrefWidth() / 2f,
-                maxX = (float) getPrefWidth() / 2f,
-                minY = -(float) getPrefHeight() / 2f,
-                maxY = (float) getPrefHeight() / 2f;
+        final TriangleMesh m = newEmptyMesh();
+        final float minX = -getPrefWidth() / 2f;
+        final float maxX = getPrefWidth() / 2f;
+        final float minY = -getPrefHeight() / 2f;
+        final float maxY = getPrefHeight() / 2f;
 
         subX = (int) getPrefWidth() / divX;
         subY = (int) getPrefHeight() / divY;

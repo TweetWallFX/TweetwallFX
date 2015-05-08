@@ -14,7 +14,10 @@ subprojects {
     version = '1.0'
     jar {
         manifest.attributes provider: 'gradle'
-    } 
+    }
+    compileJava {
+        options.compilerArgs << "-Xlint:all"// << "-Xlint:deprecation"
+    }
 }
 
 project(":TweetWallFX-Core"){
