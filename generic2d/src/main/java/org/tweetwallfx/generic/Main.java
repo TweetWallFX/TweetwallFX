@@ -21,15 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.netbeans;
+package org.tweetwallfx.generic;
 
-import java.util.List;
+import com.beust.jcommander.Parameter;
+import java.net.URL;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.openide.util.lookup.ServiceProvider;
+import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import org.tweetwallfx.controls.StopList;
 import org.tweetwallfx.twitter.TwitterOAuth;
 import org.tweetwallfx.twod.TagTweets;
@@ -37,20 +40,20 @@ import twitter4j.conf.Configuration;
 
 /**
  *
- * @author sven
+ * @author martin
  */
 public class Main extends Application {
 
     private Configuration conf;
-    private final String hashtag = "#netbeans OR #netbeansday";// #google";
     private TagTweets tweetsTask;
 
     @Override
     public void start(Stage primaryStage) {
+        CommandLineArgumentParser.parseArguments(getParameters().getRaw());
 
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
-        StopList.add(hashtag);
+        StopList.add(Params.query);
 
         final Service service = new Service<Void>() {
             @Override
@@ -58,8 +61,7 @@ public class Main extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        final List<String> rawParameters = getParameters().getRaw();
-                        conf = TwitterOAuth.getInstance(rawParameters.toArray(new String[rawParameters.size()])).readOAuth();
+                        conf = TwitterOAuth.getInstance().readOAuth();
                         return null;
                     }
                 };
@@ -68,15 +70,16 @@ public class Main extends Application {
         };
 
         service.setOnSucceeded(e -> {
-            if (!hashtag.isEmpty() && conf != null) {
-                tweetsTask = new TagTweets(conf, hashtag, borderPane);
+            if (!Params.query.isEmpty() && conf != null) {
+                tweetsTask = new TagTweets(conf, Params.query, borderPane);
                 tweetsTask.start();
             }
         });
 
-        primaryStage.setTitle("The JavaFX Tweetwall for NetBeans Day!");
+        primaryStage.setTitle(Params.title);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add(this.getClass().getResource("/netbeans.css").toExternalForm());
+
+        scene.getStylesheets().add(Params.stylesheet.toExternalForm());
         primaryStage.show();
         primaryStage.setFullScreen(true);
         service.start();
@@ -97,4 +100,14 @@ public class Main extends Application {
         launch(args);
     }
 
+    @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
+    public static final class Params implements CommandLineArgumentParser.ParametersObject {
+
+        @Parameter(names = "-query", description = "Query used for querying Twitter")
+        private static String query = "";
+        @Parameter(names = "-stylesheet", required = true, description = "The stylesheet to apply")
+        private static URL stylesheet;
+        @Parameter(names = "-title", description = "The title of the TweetWallStage")
+        private static String title = "The generic JavaFX Tweetwall!";
+    }
 }
