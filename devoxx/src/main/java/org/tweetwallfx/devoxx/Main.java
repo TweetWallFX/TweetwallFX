@@ -42,7 +42,7 @@ import twitter4j.conf.Configuration;
 public class Main extends Application {
 
     private Configuration conf;
-    private final String hashtag = "#devoxx";
+    private static final String hashtag = "#devoxx";
     private TagTweets tweetsTask;
 
     @Override

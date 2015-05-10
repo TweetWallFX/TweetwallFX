@@ -25,9 +25,12 @@ package org.tweetwallfx.twitter;
 
 import com.beust.jcommander.Parameter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Properties;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
@@ -81,11 +84,13 @@ public class TwitterOAuth {
                 System.out.println("Using in-built authentication information");
                 /* MyRealOAuth.properties -> this file is not commited to the repo. 
                  Ask for it or provide your own keys. */
-                props.load(TwitterOAuth.class.getResourceAsStream("MyOAuth.properties"));
+                try (final InputStream is = TwitterOAuth.class.getResourceAsStream("MyOAuth.properties")) {
+                    props.load(is);
+                }
             } else {
                 System.out.println("Using authentication information from provided file: " + Params.oAuthFile.getAbsolutePath());
 
-                try (final FileReader fr = new FileReader(Params.oAuthFile)) {
+                try (final Reader fr = new InputStreamReader(new FileInputStream(Params.oAuthFile), "UTF-8")) {
                     props.load(fr);
                 }
             }

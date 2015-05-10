@@ -75,9 +75,9 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
             @Override
             public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
                 if (newValue != null) {
-//                    otherNode = getScene().getCamera();
-//                    startBillboardBehavior();
-//                    sceneProperty().removeListener(this);
+                    otherNode = getScene().getCamera();
+                    startBillboardBehavior();
+                    sceneProperty().removeListener(this);
                 }
             }
         });
@@ -151,10 +151,10 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     /*==========================================================================
      *          Create Mesh
      *///=======================================================================
-    private final float defaultAmplitude = 75.0f;
-    private final float defaultFrequency = 20.0f;
-    private final float defaultPeriod = 60.5f;
-    private final float defaultWaveLength = 80.25f;
+    private static final float defaultAmplitude = 75.0f;
+    private static final float defaultFrequency = 20.0f;
+    private static final float defaultPeriod = 60.5f;
+    private static final float defaultWaveLength = 80.25f;
 
     private int divX = 64;
     private int divY = 64;
@@ -162,7 +162,7 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
 
     float[][][] pointCache;
 
-    private float holdPos, X;
+    private float holdPos;
 
     private TriangleMesh mesh;
 

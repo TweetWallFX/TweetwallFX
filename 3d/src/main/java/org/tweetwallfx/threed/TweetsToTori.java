@@ -26,6 +26,7 @@ package org.tweetwallfx.threed;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -91,18 +92,22 @@ public class TweetsToTori {
     }
 
     public void start() {
-        File file = new File(WORKING_DIR);
-        if (!file.exists()) {
-            try {
-                file.mkdir();
-            } catch (SecurityException se) {
+        File dir = new File(WORKING_DIR);
+        if (!dir.exists()) {
+            if (!dir.mkdir()) {
+                System.out.println("Failed creating dir: " + dir);
             }
         } else {
             try {
-                for (File f : file.listFiles()) {
-                    f.delete();
-                }
-            } catch (SecurityException se) {
+                Files.list(dir.toPath()).forEach(p -> {
+                    try {
+                        Files.delete(p);
+                    } catch (IOException ex) {
+                        System.out.println("Exception during temp file clean up" + ex);
+                    }
+                });
+            } catch (IOException ioex) {
+                System.out.println("Exception during temp file clean up" + ioex);
             }
         }
 
@@ -114,11 +119,12 @@ public class TweetsToTori {
         saveTweetsExecutor.shutdown();
         try {
             saveTweetsExecutor.awaitTermination(5, TimeUnit.SECONDS);
+
         } catch (InterruptedException ex) {
         }
     }
 
-    private class TweetsCreationTask extends Task<Void> {
+    private static class TweetsCreationTask extends Task<Void> {
 
         private final String searchText;
         private TwitterStream stream;
@@ -193,7 +199,7 @@ public class TweetsToTori {
         }
     }
 
-    private class TweetsSnapshotTask extends Task<Void> {
+    private static class TweetsSnapshotTask extends Task<Void> {
 
         private final BlockingQueue<Parent> tweets;
         private final BlockingQueue<BufferedImage> images;
@@ -261,7 +267,9 @@ public class TweetsToTori {
             try {
                 File img = new File(filename);
                 if (img.exists()) {
-                    img.delete();
+                    if (!img.delete()) {
+                        System.out.println("Failed deleting file: " + img);
+                    }
                 }
                 ImageIO.write(image, "png", new File(filename));
                 diffuseMaps.put(new Image(new File(filename).toURI().toString()));
