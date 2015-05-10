@@ -76,9 +76,9 @@ public class TweetWallFX extends Application {
     private Skybox skyBox;
     final Rotate rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
     private AdvancedCamera camera;
-    private final double cameraDistance = 5000;
+    private static final double cameraDistance = 5000;
     private final CameraTransformer cameraTransform = new CameraTransformer();
-    private final int MAX_TORI = 5;
+    private static final int MAX_TORI = 5;
     private final Group toriGroup = new Group();
     private final Group twToriGroup = new Group();
 
@@ -91,7 +91,7 @@ public class TweetWallFX extends Application {
 
     private Configuration conf;
     private CLogOut log;
-    private final String hashtag = "#Google";
+    private static final String hashtag = "#Google";
     private TweetsToTori tweetsTask;
 
     @Override

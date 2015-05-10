@@ -68,8 +68,8 @@ import org.tweetwallfx.twitter.TweetInfo;
 public class WordleSkin extends SkinBase<Wordle> {
 
     private final Random rand = new Random();
-    private final int dDeg = 10;
-    private final double dRadius = 5.0;
+    private static final int dDeg = 10;
+    private static final double dRadius = 5.0;
 
     // used for TagCloud
     private final Map<Word, Text> word2TextMap = new HashMap<>();
@@ -79,7 +79,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private double min;
     private final Pane pane;
     private List<Word> limitedWords;
-    private Set<Word> tweetWords = Collections.emptySet();
     private HBox hbox;
     private Point2D lowerLeft;
     private HBox mediaBox;
@@ -161,51 +160,9 @@ public class WordleSkin extends SkinBase<Wordle> {
                     break;
             }
         });
-
-        wordle.tweetInfoProperty.addListener((obs, oldValue, newValue) -> {
-            String text = newValue.getText();
-            tweetWords = pattern.splitAsStream(text)
-                    .filter(l -> l.length() > 2)
-                    .filter(l -> !l.startsWith("@"))
-                    .filter(l -> !l.startsWith("http:"))
-                    .filter(l -> !l.startsWith("https:"))
-                    .map(l -> l.toLowerCase())
-                    .filter(l -> !StopList.contains(l)).map(l -> new Word(l, -2)).collect(Collectors.toSet());
-
-        });
     }
 
-//    private void addTweetToCloud() {
-//        System.out.println("Add tweet to cloud");
-//        String text = getSkinnable().tweetInfoProperty.get().getText();
-//        tweetWords = pattern.splitAsStream(text)
-//                .filter(l -> l.length() > 2)
-//                .filter(l -> !l.startsWith("@"))
-//                .filter(l -> !l.startsWith("http:"))
-//                .filter(l -> !l.startsWith("https:"))
-//                .map(l -> l.toLowerCase())
-//                .filter(l -> !StopList.contains(l)).map(l -> new Word(l, 0)).collect(Collectors.toSet());                
-//        List<Word> words = getSkinnable().wordsProperty.get();
-//        words.addAll(tweetWords);
-//        Platform.runLater(() -> getSkinnable().wordsProperty.set(words));
-//    }
-    private void removeTweetFromCloud() {
-        tweetWords = Collections.emptySet();
-        updateCloud();
-    }
-
-//    private Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, double maxWidth) {
-//        double y = upperLeft.getY() + targetBounds.getMinY();
-//        double x = upperLeft.getX() + targetBounds.getMinX();
-//        double rightMargin = upperLeft.getX() + maxWidth;
-//        while (x + targetBounds.getWidth() > rightMargin) {
-//            y += targetBounds.getHeight();
-//            x -= maxWidth;
-//        }
-//        return new Point2D(x, y);
-//    }
     private Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
-        double y = upperLeft.getY() + targetBounds.getMinY();
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         double rightMargin = upperLeft.getX() + maxWidth;
         if (x + targetBounds.getWidth() > rightMargin) {
