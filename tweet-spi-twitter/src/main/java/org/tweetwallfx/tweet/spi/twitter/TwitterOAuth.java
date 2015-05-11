@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.twitter;
+package org.tweetwallfx.tweet.spi.twitter;
 
 import com.beust.jcommander.Parameter;
 import java.io.File;
@@ -63,7 +63,7 @@ import twitter4j.conf.ConfigurationBuilder;
  *
  * @author jpereda
  */
-public class TwitterOAuth {
+final class TwitterOAuth {
 
     private String error = "";
     private Configuration conf = null;

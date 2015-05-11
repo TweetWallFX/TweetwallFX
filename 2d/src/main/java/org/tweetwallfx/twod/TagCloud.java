@@ -34,18 +34,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.tweetwallfx.twitter.CLogOut;
-import org.tweetwallfx.twitter.TwitterOAuth;
-import twitter4j.conf.Configuration;
+import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
- *
  * @author sven
  */
 public class TagCloud extends Application {
 
-    private Configuration conf;
-    private CLogOut log;
+    private Tweeter tweeter;
     private final String hashtag = "#devoxx";
     private TagTweets tweetsTask;
 
@@ -66,7 +62,7 @@ public class TagCloud extends Application {
                     Task<Void> task = new Task<Void>() {
                         @Override
                         protected Void call() throws Exception {
-                            conf = TwitterOAuth.getInstance().readOAuth();
+                            tweeter = Tweeter.getInstance();
                             return null;
                         }
                     };
@@ -75,8 +71,8 @@ public class TagCloud extends Application {
             };
 
             service.setOnSucceeded(e -> {
-                if (!hashtag.isEmpty() && conf != null) {
-                    tweetsTask = new TagTweets(conf, hashtag, borderPane);
+                if (!hashtag.isEmpty() && tweeter != null) {
+                    tweetsTask = new TagTweets(tweeter, hashtag, borderPane);
                     tweetsTask.start();
                 }
             });

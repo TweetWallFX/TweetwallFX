@@ -34,17 +34,15 @@ import javafx.stage.Stage;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import org.tweetwallfx.controls.StopList;
-import org.tweetwallfx.twitter.TwitterOAuth;
+import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import twitter4j.conf.Configuration;
 
 /**
- *
  * @author martin
  */
 public class Main extends Application {
 
-    private Configuration conf;
+    private Tweeter tweeter;
     private TagTweets tweetsTask;
 
     @Override
@@ -61,7 +59,7 @@ public class Main extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        conf = TwitterOAuth.getInstance().readOAuth();
+                        tweeter = Tweeter.getInstance();
                         return null;
                     }
                 };
@@ -70,15 +68,14 @@ public class Main extends Application {
         };
 
         service.setOnSucceeded(e -> {
-            if (!Params.query.isEmpty() && conf != null) {
-                tweetsTask = new TagTweets(conf, Params.query, borderPane);
+            if (!Params.query.isEmpty() && tweeter != null) {
+                tweetsTask = new TagTweets(tweeter, Params.query, borderPane);
                 tweetsTask.start();
             }
         });
 
         primaryStage.setTitle(Params.title);
         primaryStage.setScene(scene);
-
         scene.getStylesheets().add(Params.stylesheet.toExternalForm());
         primaryStage.show();
         primaryStage.setFullScreen(true);

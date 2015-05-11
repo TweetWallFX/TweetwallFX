@@ -1,6 +1,9 @@
-include ':core', 'controls', ':2d', ':3d', ':devoxx', ':netbeans', ':javaone', ":generic2d"
+include ':cmdargs', ':tweet-api', ':tweet-spi-twitter', ':core', 'controls', ':2d', ':3d', ':devoxx', ':netbeans', ':javaone', ":generic2d"
 rootProject.name='TweetWallFX'
+project(":cmdargs").name = "TweetWallFX-CommandlineArguments"
 project(":controls").name = "TweetWallFX-Controls"
+project(":tweet-api").name = "TweetWallFX-Tweet-API"
+project(":tweet-spi-twitter").name = "TweetWallFX-Tweet-SPI-Twitter"
 project(":core").name = "TweetWallFX-Core"
 project(":2d").name = "TweetWallFX-2D"
 project(":3d").name = "TweetWallFX-3D"

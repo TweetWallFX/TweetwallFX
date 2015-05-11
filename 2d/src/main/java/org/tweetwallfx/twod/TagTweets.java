@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -39,7 +38,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,18 +68,12 @@ import org.tweetwallfx.controls.StopList;
 
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
-import org.tweetwallfx.twitter.TweetInfo;
-import twitter4j.FilterQuery;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.Status;
-import twitter4j.StatusAdapter;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
-import twitter4j.conf.Configuration;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetException;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.TweetQuery;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -97,37 +89,28 @@ public class TagTweets {
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
-
     private final Pattern pattern = Pattern.compile("\\s+");
-
     private final ExecutorService showTweetsExecutor = createExecutor("ShowTweets");
     private final ShowTweetsTask showTweetsTask;
-
     private Wordle wordle;
-
     private Map<String, Long> tree;
-
     private final String searchText;
-    private final Configuration conf;
+    private final Tweeter tweeter;
     private final BorderPane root;
     private final HBox hBottom = new HBox();
     private final HBox hWordle = new HBox();
-
     private final Comparator<Map.Entry<String, Long>> comparator = Comparator.comparingLong(Map.Entry::getValue);
-
     private final ObservableList<Word> obsFadeOutWords = FXCollections.<Word>observableArrayList();
     private final ObservableList<Text> obsFadeInWords = FXCollections.<Text>observableArrayList();
-    private Twitter twitter;
 
-    public TagTweets(Configuration conf, String searchText, BorderPane root) {
-        this.conf = conf;
+    public TagTweets(Tweeter tweeter, String searchText, BorderPane root) {
+        this.tweeter = tweeter;
         this.searchText = searchText;
         this.root = root;
-        this.showTweetsTask = new ShowTweetsTask(conf, searchText);
+        this.showTweetsTask = new ShowTweetsTask(tweeter, searchText);
     }
 
     public void start() {
-
         hWordle.setAlignment(Pos.CENTER);
         hWordle.setPadding(new Insets(20));
 //        hWordle.setStyle("-fx-border-width: 2px; -fx-border-color: red;");
@@ -149,15 +132,9 @@ public class TagTweets {
 
         try {
             System.out.println("** 1. Creating Tag Cloud for " + searchText);
-            Query query = new Query(searchText);
-            query.setCount(100);
-            twitter = new TwitterFactory(conf).getInstance();
-            QueryResult result = twitter.search(query);
-
-            buildTagCloud(result.getTweets());
+            buildTagCloud(tweeter.search(new TweetQuery().query(searchText).count(100)));
             createWordle();
-
-        } catch (TwitterException ex) {
+        } catch (TweetException ex) {
             System.out.println("Error Twitter: " + ex);
             return;
         }
@@ -177,25 +154,23 @@ public class TagTweets {
     private class TweetsCreationTask extends Task<Void> {
 
         private final String searchText;
-        private TwitterStream stream;
-        private final Configuration conf;
-        private final BlockingQueue<TweetInfo> tweets;
+        private TweetStream stream;
+        private final Tweeter tweeter;
+        private final BlockingQueue<Tweet> tweets;
 
-        public TweetsCreationTask(Configuration conf, String searchText, BlockingQueue<TweetInfo> tweets) {
-            this.conf = conf;
+        public TweetsCreationTask(Tweeter tweeter, String searchText, BlockingQueue<Tweet> tweets) {
+            this.tweeter = tweeter;
             this.searchText = searchText;
             this.tweets = tweets;
         }
 
         @Override
         protected Void call() throws Exception {
-            FilterQuery query = new FilterQuery();
-            query.track(new String[]{searchText});
-            if (conf != null) {
-                stream = new TwitterStreamFactory(conf).getInstance();
-                addListener(s -> {
+            if (tweeter != null) {
+                stream = tweeter.createTweetStream();
+                stream.onTweet(tweet -> {
                     try {
-                        TweetInfo tw = checkNewTweetHasTags(new TweetInfo(s));
+                        Tweet tw = checkNewTweetHasTags(tweet);
                         if (tw != null) {
                             tweets.put(tw);
                         }
@@ -203,24 +178,14 @@ public class TagTweets {
                         System.out.println("Error: " + ex);
                     }
                 });
-                stream.filter(query);
+                stream.filter(new TweetFilterQuery().track(new String[]{searchText}));
             }
+
             return null;
-
         }
 
-        private void addListener(Consumer<Status> consumer) {
-            stream.addListener(new StatusAdapter() {
-                @Override
-                public void onStatus(Status status) {
-                    consumer.accept(status);
-                }
-            });
-        }
-
-        private TweetInfo checkNewTweetHasTags(TweetInfo info) {
-
-            String status = info.getText().replaceAll("[^\\dA-Za-z ]", " ");
+        private Tweet checkNewTweetHasTags(Tweet tweet) {
+            String status = tweet.getText().replaceAll("[^\\dA-Za-z ]", " ");
 
             List<String> collect = pattern.splitAsStream(status)
                     .map(String::toLowerCase)
@@ -241,7 +206,7 @@ public class TagTweets {
 //                // return the tweet
 //                return info;
 //            }
-            return info;
+            return tweet;
 
 //            return null;
         }
@@ -249,26 +214,21 @@ public class TagTweets {
 
     private class TweetsUpdateTask extends Task<Void> {
 
-        private final BlockingQueue<TweetInfo> tweets;
-        private final BlockingQueue<Parent> parents;
+        private final BlockingQueue<Tweet> tweets;
 
-        TweetsUpdateTask(BlockingQueue<TweetInfo> tweets, BlockingQueue<Parent> parents) {
+        TweetsUpdateTask(BlockingQueue<Tweet> tweets, BlockingQueue<Parent> parents) {
             this.tweets = tweets;
-            this.parents = parents;
         }
 
-        private TweetInfo getTweet() throws InterruptedException, TwitterException {
-            TweetInfo tweet = tweets.poll(5, TimeUnit.SECONDS);
+        private Tweet getTweet() throws InterruptedException, TweetException {
+            Tweet tweet = tweets.poll(5, TimeUnit.SECONDS);
+
             if (tweet == null) {
-                Query query = new Query(searchText);
-                query.setCount(10);
-                QueryResult result = twitter.search(query);
-                long skipping = (long) (Math.random() * 10);
-                Optional<Status> status = result.getTweets().stream().skip(skipping).findFirst();
-                if (status.isPresent()) {
-                    tweet = new TweetInfo(status.get());
-                }
+                tweet = tweeter.search(new TweetQuery().query(searchText).count(10))
+                        .skip((long) (Math.random() * 10))
+                        .findFirst().orElse(null);
             }
+
             return tweet;
         }
 
@@ -279,7 +239,7 @@ public class TagTweets {
                     break;
                 }
 
-                TweetInfo tweet = getTweet();
+                Tweet tweet = getTweet();
                 if (null != tweet) {
 //                parents.put(createTweetInfoBox(tweets.take()));
                     Platform.runLater(() -> wordle.setTweet(tweet));
@@ -308,7 +268,7 @@ public class TagTweets {
             Platform.runLater(() -> wordle.wordsProperty().set(words));
         }
 
-        private Set<Word> addTweetToCloud(TweetInfo tweetInfo) {
+        private Set<Word> addTweetToCloud(Tweet tweetInfo) {
 //            System.out.println("Add tweet to cloud");
             String text = tweetInfo.getText();
             Set<Word> tweetWords = pattern.splitAsStream(text)
@@ -324,7 +284,7 @@ public class TagTweets {
             return tweetWords;
         }
 
-        private Parent createTweetInfoBox(TweetInfo info) {
+        private Parent createTweetInfoBox(Tweet info) {
 
             // update & redraw wordle with new/same words
             Platform.runLater(() -> createWordle());
@@ -335,7 +295,7 @@ public class TagTweets {
 
             HBox hImage = new HBox();
             hImage.setPadding(new Insets(10));
-            Image image = new Image(info.getImageURL(), 48, 48, true, false);
+            Image image = new Image(info.getUser().getProfileImageUrl(), 48, 48, true, false);
             ImageView imageView = new ImageView(image);
             Rectangle clip = new Rectangle(48, 48);
             clip.setArcWidth(10);
@@ -344,10 +304,10 @@ public class TagTweets {
             hImage.getChildren().add(imageView);
 
             HBox hName = new HBox(20);
-            Label name = new Label(info.getName());
+            Label name = new Label(info.getUser().getName());
             name.setStyle("-fx-font: 24px \"Andalus\"; -fx-text-fill: #292F33; -fx-font-weight: bold;");
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
-            Label handle = new Label("@" + info.getHandle() + " · " + df.format(info.getDate()));
+            Label handle = new Label("@" + info.getUser().getScreenName() + " · " + df.format(info.getCreatedAt()));
             handle.setStyle("-fx-font: 22px \"Andalus\"; -fx-text-fill: #8899A6;");
             hName.getChildren().addAll(name, handle);
 
@@ -457,7 +417,7 @@ public class TagTweets {
 
     private class ShowTweetsTask extends Task<Void> {
 
-        private final BlockingQueue<TweetInfo> tweets = new ArrayBlockingQueue<>(5);
+        private final BlockingQueue<Tweet> tweets = new ArrayBlockingQueue<>(5);
         private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);
         private final ExecutorService tweetsCreationExecutor = createExecutor("CreateTweets");
         private final ExecutorService tweetsUpdateExecutor = createExecutor("UpdateTweets");
@@ -466,8 +426,8 @@ public class TagTweets {
         private final TweetsUpdateTask tweetsUpdateTask;
         private final TweetsSnapshotTask tweetsSnapshotTask;
 
-        ShowTweetsTask(final Configuration conf, final String textSearch) {
-            tweetsCreationTask = new TweetsCreationTask(conf, textSearch, tweets);
+        ShowTweetsTask(final Tweeter tweeter, final String textSearch) {
+            tweetsCreationTask = new TweetsCreationTask(tweeter, textSearch, tweets);
             tweetsUpdateTask = new TweetsUpdateTask(tweets, parents);
             tweetsSnapshotTask = new TweetsSnapshotTask(parents);
 
@@ -508,10 +468,12 @@ public class TagTweets {
         return Executors.newSingleThreadExecutor(factory);
     }
 
-    private void buildTagCloud(List<Status> tweets) {
-        Stream<String> stringStream = tweets.stream()
-                //                .map(t -> t.getText());
-                .map(t -> t.getText().replaceAll("[.,!?:´`']((\\s+)|($))", " ").replaceAll("http[s]?:.*((\\s+)|($))", " ").replaceAll("['\"]", " "));
+    private void buildTagCloud(Stream<Tweet> tweets) {
+        Stream<String> stringStream = tweets
+                .map(t -> t.getText()
+                        .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
+                        .replaceAll("http[s]?:.*((\\s+)|($))", " ")
+                        .replaceAll("['\"]", " "));
         tree = stringStream
                 .flatMap(c -> pattern.splitAsStream(c))
                 .filter(l -> l.length() > 2)

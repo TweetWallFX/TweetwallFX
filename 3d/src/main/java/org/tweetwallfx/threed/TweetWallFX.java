@@ -51,9 +51,8 @@ import org.fxyz.cameras.CameraTransformer;
 import org.fxyz.extras.Skybox;
 import org.fxyz.tests.SkyBoxTest;
 import org.tweetwallfx.threed.billboard.DevoxxBillboardLogo;
+import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twitter.CLogOut;
-import org.tweetwallfx.twitter.TwitterOAuth;
-import twitter4j.conf.Configuration;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -89,7 +88,7 @@ public class TweetWallFX extends Application {
             front = new Image(SkyBoxTest.class.getResource("res/front.png").toExternalForm()),
             back = new Image(SkyBoxTest.class.getResource("res/back.png").toExternalForm());
 
-    private Configuration conf;
+    private Tweeter tweeter;
     private CLogOut log;
     private static final String hashtag = "#Google";
     private TweetsToTori tweetsTask;
@@ -197,7 +196,7 @@ public class TweetWallFX extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        conf = TwitterOAuth.getInstance().readOAuth();
+                        tweeter = Tweeter.getInstance();
                         return null;
                     }
                 };
@@ -206,9 +205,9 @@ public class TweetWallFX extends Application {
         };
 
         service.setOnSucceeded(e -> {
-            if (!hashtag.isEmpty() && conf != null) {
+            if (!hashtag.isEmpty() && tweeter != null) {
                 System.out.println("starting search for " + hashtag);
-                tweetsTask = new TweetsToTori(conf, hashtag, twToriGroup);
+                tweetsTask = new TweetsToTori(tweeter, hashtag, twToriGroup);
                 tweetsTask.start();
             }
         });

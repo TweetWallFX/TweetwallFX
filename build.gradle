@@ -38,19 +38,41 @@ subprojects {
     }
 }
 
-project(":TweetWallFX-Core"){
+project (":TweetWallFX-CommandlineArguments") {
+    dependencies {
+        compile group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80'
+        compile group: "com.beust", name: "jcommander", version: "1.48"
+    }
+}
+
+project(":TweetWallFX-Tweet-API") {
+    dependencies {
+        compile group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80'
+    }
+}
+
+project(":TweetWallFX-Tweet-SPI-Twitter") {
     dependencies {
         compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
-        compile group: "de.jensd", name: "fontawesomefx", version: "8.3"
+        compile group: "org.twitter4j", name: "twitter4j-stream", version: "4.0.3"
         compile group: "com.beust", name: "jcommander", version: "1.48"
+        compile project(':TweetWallFX-Tweet-API')
+        compile project(':TweetWallFX-CommandlineArguments')
+    }
+}
+
+project(":TweetWallFX-Core"){
+    dependencies {
+        compile group: "de.jensd", name: "fontawesomefx", version: "8.3"
         compile group: "log4j", name: "log4j", version: "1.2.17"
-        compile(group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80')
+        compile project(':TweetWallFX-Tweet-API')
+        compile project(':TweetWallFX-CommandlineArguments')
+        compile project(':TweetWallFX-Tweet-SPI-Twitter')
     }
 }
 
 project(":TweetWallFX-2D"){
     dependencies {
-        compile group: "org.twitter4j", name: "twitter4j-stream", version: "4.0.3"
         compile project(':TweetWallFX-Core')
         compile project(':TweetWallFX-Controls')
     }
@@ -58,7 +80,6 @@ project(":TweetWallFX-2D"){
 
 project(":TweetWallFX-3D"){
     dependencies {
-        compile group: "org.twitter4j", name: "twitter4j-stream", version: "4.0.3"
         compile fileTree(dir: 'libs', include: '*.jar')
         compile project(':TweetWallFX-Core')        
     }
@@ -88,7 +109,6 @@ project(":TweetWallFX-Devoxx"){
     dependencies {
         compile project(':TweetWallFX-2D')        
         compile project(':TweetWallFX-Controls')        
-        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
     }
 }
 
@@ -119,7 +139,7 @@ project(":TweetWallFX-NetBeans"){
     }    
     
     dependencies {
-        compile project(':TweetWallFX-Generic2D')        
+        compile project(':TweetWallFX-Generic2D')
     }
 }
 
@@ -130,11 +150,9 @@ project(":TweetWallFX-JavaOne"){
 }
 
 project(":TweetWallFX-Generic2D"){
-    
     dependencies {
         compile project(':TweetWallFX-2D')        
         compile project(':TweetWallFX-Controls')        
-        compile group: "org.twitter4j", name: "twitter4j-core", version: "4.0.3"
     }
 }
 

@@ -21,61 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.twitter;
+package org.tweetwallfx.tweet.spi.twitter;
 
-import java.util.Date;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import twitter4j.URLEntity;
 
-/**
- * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
- * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- *
- * @author jpereda
- */
-public class TweetInfo {
+final class TwitterUrlTweetEntry extends BaseTwitterTweetEntry<URLEntity> implements UrlTweetEntry {
 
-    private final Status status;
-
-    public TweetInfo(Status status) {
-        this.status = status;
-    }
-
-    public String getName() {
-        return status.getUser().getName();
-    }
-
-    public String getText() {
-        return status.getText();
-    }
-
-    public String getImageURL() {
-        return status.getUser().getProfileImageURL();
-    }
-
-    public String getHandle() {
-        return status.getUser().getScreenName();
-    }
-
-    public Date getDate() {
-        return status.getCreatedAt();
-    }
-
-    public MediaEntity[] getMediaEntities() {
-        return status.getMediaEntities();
-    }
-
-    public int getFavoriteCount() {
-        return status.getFavoriteCount();
-    }
-
-    public int getRetweetCount() {
-        return status.getRetweetCount();
+    TwitterUrlTweetEntry(final URLEntity urlEntity) {
+        super(urlEntity);
     }
 
     @Override
-    public String toString() {
-        return "TweetInfo{" + "status=" + status + '}';
+    public String getURL() {
+        return getT().getURL();
     }
 
+    @Override
+    public String getExpandedURL() {
+        return getT().getExpandedURL();
+    }
+
+    @Override
+    public String getDisplayURL() {
+        return getT().getDisplayURL();
+    }
 }
