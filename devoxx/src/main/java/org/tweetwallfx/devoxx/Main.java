@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx;
 
-import java.util.List;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -43,7 +42,7 @@ import twitter4j.conf.Configuration;
 public class Main extends Application {
 
     private Configuration conf;
-    private final String hashtag = "#devoxx";
+    private static final String hashtag = "#devoxx";
     private TagTweets tweetsTask;
 
     @Override
@@ -54,7 +53,7 @@ public class Main extends Application {
         Scene scene = new Scene(borderPane, 800, 600);
         StopList.add(hashtag);
 
-        final Service service = new Service<Void>() {
+        final Service<Void> service = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
                 Task<Void> task = new Task<Void>() {

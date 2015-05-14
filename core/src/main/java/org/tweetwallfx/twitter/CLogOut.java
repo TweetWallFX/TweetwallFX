@@ -48,7 +48,7 @@ public class CLogOut {
         final ByteArrayOutputStream stdStream = new ByteArrayOutputStream() {
             @Override
             public synchronized void flush() throws IOException {
-                String theString = toString();
+                String theString = toString("UTF-8");
 
                 /* OK:
                  Establishing connection.

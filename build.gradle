@@ -1,5 +1,10 @@
+apply plugin: 'build-dashboard'
+
 subprojects {
     apply plugin: 'java'
+
+    apply plugin: 'findbugs'
+    apply plugin: 'jacoco'
     apply plugin: 'eclipse'
     
     group = "org.tweetwallfx"
@@ -12,9 +17,25 @@ subprojects {
         testCompile 'junit:junit:4.11'
     }
     version = '1.0'
+    
     jar {
         manifest.attributes provider: 'gradle'
+    }
+
+    compileJava {
+        options.compilerArgs << "-Xlint:all"// << "-Xlint:deprecation"
     } 
+
+    findbugs {
+        ignoreFailures = false
+    }
+    
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
 }
 
 project(":TweetWallFX-Core"){
@@ -109,20 +130,6 @@ project(":TweetWallFX-JavaOne"){
 }
 
 project(":TweetWallFX-Generic2D"){
-    
-//    run {
-//        mainClassName = "org.tweetwallfx.generic.Main"        
-//        args = [
-//            "-oAuthFile", "MyOAuth.properties",
-//            "-stylesheet", file('netbeans.css').toURI().toURL().toString()
-//        ]
-//    }
-//    
-//    task('debug', dependsOn: 'classes', type: JavaExec) {
-//        classpath = sourceSets.main.runtimeClasspath
-//        args = ["-oAuthFile", "MyOAuth.properties"]        
-//        debug = true
-//    }    
     
     dependencies {
         compile project(':TweetWallFX-2D')        

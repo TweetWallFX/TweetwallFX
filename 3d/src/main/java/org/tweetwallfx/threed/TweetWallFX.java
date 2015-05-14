@@ -76,9 +76,9 @@ public class TweetWallFX extends Application {
     private Skybox skyBox;
     final Rotate rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
     private AdvancedCamera camera;
-    private final double cameraDistance = 5000;
+    private static final double cameraDistance = 5000;
     private final CameraTransformer cameraTransform = new CameraTransformer();
-    private final int MAX_TORI = 5;
+    private static final int MAX_TORI = 5;
     private final Group toriGroup = new Group();
     private final Group twToriGroup = new Group();
 
@@ -91,7 +91,7 @@ public class TweetWallFX extends Application {
 
     private Configuration conf;
     private CLogOut log;
-    private final String hashtag = "#Google";
+    private static final String hashtag = "#Google";
     private TweetsToTori tweetsTask;
 
     @Override
@@ -131,8 +131,8 @@ public class TweetWallFX extends Application {
 
         IntStream.range(0, MAX_TORI).boxed().forEach(i -> {
             Random r = new Random();
-            float randomRadius = (float) ((r.nextFloat() * 100) + 550);
-            float randomTubeRadius = (float) ((r.nextFloat() * 100) + 300);
+            float randomRadius = (r.nextFloat() * 100f) + 550f;
+            float randomTubeRadius = (r.nextFloat() * 100f) + 300f;
             Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
 
             SegmentedTorus torus = new SegmentedTorus(50, 42, 0, randomRadius, randomTubeRadius, randomColor);
@@ -191,7 +191,7 @@ public class TweetWallFX extends Application {
         log = CLogOut.getInstance();
         log.getMessages().addListener((ob, s, s1) -> System.out.println(s1));
 
-        final Service service = new Service<Void>() {
+        final Service<Void> service = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
                 Task<Void> task = new Task<Void>() {

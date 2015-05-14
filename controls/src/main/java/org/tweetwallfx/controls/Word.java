@@ -45,7 +45,7 @@ public class Word implements Comparable<Word> {
 
     @Override
     public int compareTo(Word o) {
-        return ((Double) weight).compareTo(o.weight);
+        return Double.compare(weight,o.weight);
     }
 
     public double getWeight() {
