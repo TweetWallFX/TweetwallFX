@@ -128,7 +128,7 @@ project(":TweetWallFX-NetBeans"){
     }
     
     task('debug', dependsOn: 'classes', type: JavaExec) {
-        main = "org.tweetwallfx.netbeans.Main"        
+        main = "org.tweetwallfx.generic.Main"        
         classpath = sourceSets.main.runtimeClasspath
         args = [
             "-oAuthFile", "MyOAuth.properties",
