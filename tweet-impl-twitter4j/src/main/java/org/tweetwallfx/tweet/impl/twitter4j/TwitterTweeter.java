@@ -69,7 +69,9 @@ public class TwitterTweeter extends Tweeter {
                 .locale(tweetQuery.getLocale())
                 .maxId(tweetQuery.getMaxId())
                 .query(tweetQuery.getQuery())
-                .resultType(Query.ResultType.valueOf(tweetQuery.getResultType().name()))
+                .resultType(null == tweetQuery.getResultType()
+                                ? null
+                                : Query.ResultType.valueOf(tweetQuery.getResultType().name()))
                 .since(tweetQuery.getSince())
                 .sinceId(tweetQuery.getSinceId())
                 .until(tweetQuery.getUntil());
