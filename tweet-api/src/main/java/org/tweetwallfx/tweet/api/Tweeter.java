@@ -25,11 +25,14 @@ package org.tweetwallfx.tweet.api;
 
 import java.util.Objects;
 import java.util.stream.Stream;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import org.openide.util.Lookup;
 
 public abstract class Tweeter {
 
     private static Tweeter INSTANCE;
+    private final ReadOnlyObjectWrapper<Exception> latestException = new ReadOnlyObjectWrapper<>(null);
 
     public static final Tweeter getInstance() {
         if (null == INSTANCE) {
@@ -49,5 +52,17 @@ public abstract class Tweeter {
 
     public abstract TweetStream createTweetStream();
 
-    public abstract Stream<Tweet> search(final TweetQuery tweeterQuery) throws TweetException;
+    public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
+
+    public ReadOnlyObjectProperty<Exception> latestException() {
+        return latestException.getReadOnlyProperty();
+    }
+
+    public final Exception getLatestException() {
+        return latestException.get();
+    }
+
+    protected final void setLatestException(Exception newValue) {
+        latestException.set(newValue);
+    }
 }

@@ -23,8 +23,8 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import org.tweetwallfx.tweet.api.TweetException;
 import java.util.stream.Stream;
+import org.apache.log4j.Logger;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -39,8 +39,11 @@ import twitter4j.TwitterFactory;
 @ServiceProvider(service = Tweeter.class)
 public class TwitterTweeter extends Tweeter {
 
+    private static final Logger LOGGER = Logger.getLogger(TwitterTweeter.class);
+
     public TwitterTweeter() {
-        TwitterOAuth.getInstance();
+        TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
+        TwitterOAuth.getConfiguration();
     }
 
     @Override
@@ -49,14 +52,17 @@ public class TwitterTweeter extends Tweeter {
     }
 
     @Override
-    public Stream<Tweet> search(final TweetQuery tweetQuery) throws TweetException {
-        final Twitter twitter = new TwitterFactory(TwitterOAuth.getInstance().readOAuth()).getInstance();
+    public Stream<Tweet> search(final TweetQuery tweetQuery) {
+        final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
+        final Query query = getQuery(tweetQuery);
         final QueryResult result;
 
         try {
-            result = twitter.search(getQuery(tweetQuery));
+            result = twitter.search(query);
         } catch (TwitterException ex) {
-            throw new TweetException(ex.getMessage(), ex);
+            setLatestException(ex);
+            LOGGER.error("Error getting QueryResult for " + query, ex);
+            return Stream.empty();
         }
 
         return result.getTweets().stream().map(TwitterTweet::new);

@@ -69,7 +69,6 @@ import org.tweetwallfx.controls.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetException;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
@@ -130,14 +129,9 @@ public class TagTweets {
 
         root.setCenter(hWordle);
 
-        try {
-            System.out.println("** 1. Creating Tag Cloud for " + searchText);
-            buildTagCloud(tweeter.search(new TweetQuery().query(searchText).count(100)));
-            createWordle();
-        } catch (TweetException ex) {
-            System.out.println("Error Twitter: " + ex);
-            return;
-        }
+        System.out.println("** 1. Creating Tag Cloud for " + searchText);
+        buildTagCloud(tweeter.search(new TweetQuery().query(searchText).count(100)));
+        createWordle();
 
         System.out.println("** 2. Starting new Tweets search for " + searchText);
         showTweetsExecutor.execute(showTweetsTask);
@@ -220,7 +214,7 @@ public class TagTweets {
             this.tweets = tweets;
         }
 
-        private Tweet getTweet() throws InterruptedException, TweetException {
+        private Tweet getTweet() throws InterruptedException {
             Tweet tweet = tweets.poll(5, TimeUnit.SECONDS);
 
             if (tweet == null) {

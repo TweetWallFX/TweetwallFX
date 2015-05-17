@@ -46,7 +46,7 @@ final class TwitterTweetStream implements TweetStream {
 
     @Override
     public void filter(final TweetFilterQuery filterQuery) {
-        final TwitterStream twitterStream = new TwitterStreamFactory(TwitterOAuth.getInstance().readOAuth()).getInstance();
+        final TwitterStream twitterStream = new TwitterStreamFactory(TwitterOAuth.getConfiguration()).getInstance();
 
         twitterStream.addListener(new StatusAdapter() {
 
