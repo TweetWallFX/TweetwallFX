@@ -68,7 +68,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private static final int dDeg = 10;
     private static final double dRadius = 5.0;
 
-    // used for TagCloud
     private final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
     private final List<TweetWordNode> tweetWordList = new ArrayList<>();

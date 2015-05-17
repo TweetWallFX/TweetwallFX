@@ -33,9 +33,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
-import org.tweetwallfx.controls.StopList;
+import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
+import org.tweetwallfx.tweet.TweetSetData;
 
 /**
  * @author martin
@@ -69,7 +70,7 @@ public class Main extends Application {
 
         service.setOnSucceeded(e -> {
             if (!Params.query.isEmpty() && tweeter != null) {
-                tweetsTask = new TagTweets(tweeter, Params.query, borderPane);
+                tweetsTask = new TagTweets(new TweetSetData(tweeter, Params.query), borderPane);
                 tweetsTask.start();
             }
         });

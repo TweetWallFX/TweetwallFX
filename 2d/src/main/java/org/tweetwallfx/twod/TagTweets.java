@@ -23,12 +23,10 @@
  */
 package org.tweetwallfx.twod;
 
+import org.tweetwallfx.tweet.TweetSetData;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -38,7 +36,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -56,15 +53,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.tweetwallfx.controls.StopList;
-
+import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetFilterQuery;
-import org.tweetwallfx.tweet.api.TweetStream;
-import org.tweetwallfx.tweet.api.Tweeter;
-import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
@@ -82,53 +74,34 @@ public class TagTweets {
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
-    private final Pattern pattern = Pattern.compile("\\s+");
     private final ExecutorService showTweetsExecutor = createExecutor("ShowTweets");
-    private final ShowTweetsTask showTweetsTask;
     private Wordle wordle;
-    private Map<String, Long> tree;
-    private final String searchText;
-    private final Tweeter tweeter;
+    private final TweetSetData tweetSetData;
     private final BorderPane root;
     private final HBox hBottom = new HBox();
     private final HBox hWordle = new HBox();
-    private final Comparator<Map.Entry<String, Long>> comparator = Comparator.comparingLong(Map.Entry::getValue);
     private final ObservableList<Word> obsFadeOutWords = FXCollections.<Word>observableArrayList();
     private final ObservableList<Text> obsFadeInWords = FXCollections.<Text>observableArrayList();
 
-    public TagTweets(Tweeter tweeter, String searchText, BorderPane root) {
-        this.tweeter = tweeter;
-        this.searchText = searchText;
+    public TagTweets(final TweetSetData tweetSetData, final BorderPane root) {
+        this.tweetSetData = tweetSetData;
         this.root = root;
-        this.showTweetsTask = new ShowTweetsTask(tweeter, searchText);
     }
 
     public void start() {
         hWordle.setAlignment(Pos.CENTER);
         hWordle.setPadding(new Insets(20));
-//        hWordle.setStyle("-fx-border-width: 2px; -fx-border-color: red;");
-//            VBox.setVgrow(hWordle,Priority.ALWAYS);            
-
-//            hBottom.setMinHeight(150);
-//            hBottom.setPrefHeight(150);
-//            VBox vbox = new VBox(hWordle, hBottom);
-//
-//            vbox.setMaxHeight(imageView.getFitHeight());
-//            
-//            stackPane.getChildren().addAll(imageView, vbox);
-//            
-//            root.getChildren().setAll(stackPane);
         hWordle.prefWidthProperty().bind(root.widthProperty());
         hWordle.prefHeightProperty().bind(root.heightProperty());
 
         root.setCenter(hWordle);
 
-        System.out.println("** 1. Creating Tag Cloud for " + searchText);
-        buildTagCloud(tweeter.search(new TweetQuery().query(searchText).count(100)));
+        System.out.println("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
+        tweetSetData.buildTree(100);
         createWordle();
 
-        System.out.println("** 2. Starting new Tweets search for " + searchText);
-        showTweetsExecutor.execute(showTweetsTask);
+        System.out.println("** 2. Starting new Tweets search for " + tweetSetData.getSearchText());
+        showTweetsExecutor.execute(new ShowTweetsTask());
     }
 
     public void stop() {
@@ -139,95 +112,21 @@ public class TagTweets {
         }
     }
 
-    private class TweetsCreationTask extends Task<Void> {
-
-        private final String searchText;
-        private TweetStream stream;
-        private final Tweeter tweeter;
-        private final BlockingQueue<Tweet> tweets;
-
-        public TweetsCreationTask(Tweeter tweeter, String searchText, BlockingQueue<Tweet> tweets) {
-            this.tweeter = tweeter;
-            this.searchText = searchText;
-            this.tweets = tweets;
-        }
-
-        @Override
-        protected Void call() throws Exception {
-            if (tweeter != null) {
-                stream = tweeter.createTweetStream();
-                stream.onTweet(tweet -> {
-                    try {
-                        Tweet tw = checkNewTweetHasTags(tweet);
-                        if (tw != null) {
-                            tweets.put(tw);
-                        }
-                    } catch (InterruptedException ex) {
-                        System.out.println("Error: " + ex);
-                    }
-                });
-                stream.filter(new TweetFilterQuery().track(new String[]{searchText}));
-            }
-
-            return null;
-        }
-
-        private Tweet checkNewTweetHasTags(Tweet tweet) {
-            String status = tweet.getText().replaceAll("[^\\dA-Za-z ]", " ");
-
-            List<String> collect = pattern.splitAsStream(status)
-                    .map(String::toLowerCase)
-                    .collect(Collectors.toList());
-
-            // add words to tree and update weights
-            collect.stream()
-                    .filter(w -> w.length() > 2)
-                    .filter(w -> !StopList.contains(w))
-                    .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1l));
-
-//            // check if there is any word in the tags in the wall 
-//            if (tree.entrySet().stream()
-//                    .sorted(comparator.reversed())
-//                    .limit(NUM_MAX_WORDS)
-//                    .anyMatch(entry -> collect.contains(entry.getKey()))) {
-//
-//                // return the tweet
-//                return info;
-//            }
-            return tweet;
-
-//            return null;
-        }
-    }
-
     private class TweetsUpdateTask extends Task<Void> {
 
-        private final BlockingQueue<Tweet> tweets;
+        private final Pattern pattern = Pattern.compile("\\s+");
+        private final TweetSetData tweetSetData;
+        private final Wordle wordle;
 
-        TweetsUpdateTask(BlockingQueue<Tweet> tweets, BlockingQueue<Parent> parents) {
-            this.tweets = tweets;
-        }
-
-        private Tweet getTweet() throws InterruptedException {
-            Tweet tweet = tweets.poll(5, TimeUnit.SECONDS);
-
-            if (tweet == null) {
-                tweet = tweeter.search(new TweetQuery().query(searchText).count(10))
-                        .skip((long) (Math.random() * 10))
-                        .findFirst().orElse(null);
-            }
-
-            return tweet;
+        TweetsUpdateTask(final TweetSetData tweetSetData, final Wordle wordle) {
+            this.tweetSetData = tweetSetData;
+            this.wordle = wordle;
         }
 
         @Override
         protected Void call() throws Exception {
-            while (true) {
-                if (isCancelled()) {
-                    break;
-                }
-
-                Tweet tweet = getTweet();
+            while (!isCancelled()) {
+                Tweet tweet = tweetSetData.getNextOrRandomTweet(5, 10);
                 if (null != tweet) {
 //                parents.put(createTweetInfoBox(tweets.take()));
                     Platform.runLater(() -> wordle.setTweet(tweet));
@@ -237,12 +136,14 @@ public class TagTweets {
                     Thread.sleep(8000);
                     Platform.runLater(() -> wordle.setLayoutMode(Wordle.LayoutMode.WORDLE));
                     Thread.sleep(5000);
-//                    removeTweetFromCloud(tweetWords);
-                    Platform.runLater(()
-                            -> wordle.setWords(tree.entrySet().stream()
-                                    .sorted(comparator.reversed())
-                                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList()))
-                    );
+//                removeTweetFromCloud(tweetWords);
+                    Platform.runLater(() -> wordle.setWords(tweetSetData.getTree()
+                            .entrySet()
+                            .stream()
+                            .sorted(TweetSetData.COMPARATOR.reversed())
+                            .limit(TagTweets.NUM_MAX_WORDS)
+                            .map((java.util.Map.Entry<String, Long> entry) -> new Word(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList())));
                     Thread.sleep(5000);
                 }
             }
@@ -250,13 +151,12 @@ public class TagTweets {
         }
 
         private Set<Word> addTweetToCloud(Tweet tweet) {
-//            System.out.println("Add tweet to cloud");
+//        System.out.println("Add tweet to cloud");
             String text = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class);
             Set<Word> tweetWords = pattern.splitAsStream(text)
                     .filter(l -> l.length() > 2)
                     .filter(l -> !StopList.contains(l))
                     .map(l -> new Word(l, -2))
-                    .peek(System.out::println)
                     .collect(Collectors.toSet());
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
@@ -279,10 +179,7 @@ public class TagTweets {
 
         @Override
         protected Void call() throws Exception {
-            while (true) {
-                if (isCancelled()) {
-                    break;
-                }
+            while (!isCancelled()) {
                 snapshotTweet(tweets.take());
             }
             return null;
@@ -331,18 +228,17 @@ public class TagTweets {
 
     private class ShowTweetsTask extends Task<Void> {
 
-        private final BlockingQueue<Tweet> tweets = new ArrayBlockingQueue<>(5);
         private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);
         private final ExecutorService tweetsCreationExecutor = createExecutor("CreateTweets");
         private final ExecutorService tweetsUpdateExecutor = createExecutor("UpdateTweets");
         private final ExecutorService tweetsSnapshotExecutor = createExecutor("TakeSnapshots");
-        private final TweetsCreationTask tweetsCreationTask;
-        private final TweetsUpdateTask tweetsUpdateTask;
-        private final TweetsSnapshotTask tweetsSnapshotTask;
+        private final Task<Void> tweetsCreationTask;
+        private final Task<Void> tweetsUpdateTask;
+        private final Task<Void> tweetsSnapshotTask;
 
-        ShowTweetsTask(final Tweeter tweeter, final String textSearch) {
-            tweetsCreationTask = new TweetsCreationTask(tweeter, textSearch, tweets);
-            tweetsUpdateTask = new TweetsUpdateTask(tweets, parents);
+        ShowTweetsTask() {
+            tweetsCreationTask = tweetSetData.getCreationTask();
+            tweetsUpdateTask = new TweetsUpdateTask(tweetSetData, wordle);
             tweetsSnapshotTask = new TweetsSnapshotTask(parents);
 
             setOnCancelled(e -> {
@@ -350,7 +246,6 @@ public class TagTweets {
                 tweetsUpdateTask.cancel();
                 tweetsSnapshotTask.cancel();
             });
-
         }
 
         @Override
@@ -382,21 +277,6 @@ public class TagTweets {
         return Executors.newSingleThreadExecutor(factory);
     }
 
-    private void buildTagCloud(Stream<Tweet> tweets) {
-        Stream<String> stringStream = tweets
-                .map(t -> t.getText()
-                        .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
-                        .replaceAll("http[s]?:.*((\\s+)|($))", " ")
-                        .replaceAll("['\"]", " "));
-        tree = stringStream
-                .flatMap(c -> pattern.splitAsStream(c))
-                .filter(l -> l.length() > 2)
-                .filter(l -> !l.startsWith("@"))
-                .map(l -> l.toLowerCase())
-                .filter(l -> !StopList.contains(l))
-                .collect(Collectors.groupingBy(String::toLowerCase, TreeMap::new, Collectors.counting()));
-    }
-
     private void createWordle() {
         if (null == wordle) {
             wordle = new Wordle();
@@ -405,8 +285,8 @@ public class TagTweets {
             wordle.prefHeightProperty().bind(hWordle.heightProperty());
         }
         Platform.runLater(()
-                -> wordle.setWords(tree.entrySet().stream()
-                        .sorted(comparator.reversed())
+                -> wordle.setWords(tweetSetData.getTree().entrySet().stream()
+                        .sorted(TweetSetData.COMPARATOR.reversed())
                         .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList()))
         );
     }
