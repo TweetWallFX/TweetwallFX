@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.tweet.spi.twitter;
+package org.tweetwallfx.tweet.impl.twitter4j;
 
 import java.util.Arrays;
 import java.util.Date;
