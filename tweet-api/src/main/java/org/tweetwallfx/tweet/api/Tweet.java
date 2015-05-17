@@ -23,8 +23,18 @@
  */
 package org.tweetwallfx.tweet.api;
 
+import java.util.Arrays;
+import java.util.Collection;
 import org.tweetwallfx.tweet.api.entry.BasicEntry;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.function.Consumer;
+import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.SymbolTweetEntry;
+import org.tweetwallfx.tweet.api.entry.TweetEntry;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 public interface Tweet extends BasicEntry {
 
@@ -49,6 +59,51 @@ public interface Tweet extends BasicEntry {
     User getUser();
 
     boolean isRetweet();
+
+    public default String getTextWithout(final Class<? extends TweetEntry>... entriesToRemove) {
+        if (null == entriesToRemove || 0 == entriesToRemove.length) {
+            return getText();
+        }
+
+        final Collection<Class<? extends TweetEntry>> entriesToRemoveCollection
+                = new HashSet<>(Arrays.asList(entriesToRemove));
+
+        entriesToRemoveCollection.remove(null);
+
+        if (entriesToRemoveCollection.isEmpty()) {
+            return getText();
+        }
+
+        final StringBuilder sb = new StringBuilder(getText());
+        final Consumer<TweetEntry> consumer = entry -> {
+            for (int i = entry.getStart(); i < entry.getEnd(); i++) {
+                sb.setCharAt(i, ' ');
+            }
+        };
+
+        if (entriesToRemoveCollection.contains(HashtagTweetEntry.class)) {
+            Arrays.stream(getHashtagEntries()).forEach(consumer);
+        }
+
+        if (entriesToRemoveCollection.contains(MediaTweetEntry.class)) {
+            Arrays.stream(getMediaEntries()).forEach(consumer);
+        }
+
+        if (entriesToRemoveCollection.contains(SymbolTweetEntry.class)) {
+            Arrays.stream(getSymbolEntries()).forEach(consumer);
+        }
+
+        if (entriesToRemoveCollection.contains(UrlTweetEntry.class)) {
+            Arrays.stream(getUrlEntries()).forEach(consumer);
+        }
+
+        if (entriesToRemoveCollection.contains(UserMentionTweetEntry.class)) {
+            Arrays.stream(getUserMentionEntries()).forEach(consumer);
+        }
+
+        return sb.toString().replaceAll("  *", " ");
+    }
+
     /**
      * Available but not implemented. {@code
      *

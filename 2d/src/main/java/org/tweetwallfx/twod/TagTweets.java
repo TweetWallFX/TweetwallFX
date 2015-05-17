@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.twod;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -54,15 +52,9 @@ import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.StopList;
 
@@ -73,6 +65,8 @@ import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -255,95 +249,21 @@ public class TagTweets {
             return null;
         }
 
-        private void removeTweetFromCloud(Set<Word> tweetWords) {
-            System.out.println("Remove tweet from cloud");
-            List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
-            words.removeAll(tweetWords);
-            Platform.runLater(() -> wordle.wordsProperty().set(words));
-        }
-
-        private Set<Word> addTweetToCloud(Tweet tweetInfo) {
+        private Set<Word> addTweetToCloud(Tweet tweet) {
 //            System.out.println("Add tweet to cloud");
-            String text = tweetInfo.getText();
+            String text = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class);
             Set<Word> tweetWords = pattern.splitAsStream(text)
                     .filter(l -> l.length() > 2)
-                    .filter(l -> !l.startsWith("@"))
-                    .filter(l -> !l.startsWith("http:"))
-                    .filter(l -> !l.startsWith("https:"))
-                    .filter(l -> !StopList.contains(l)).map(l -> new Word(l, -2)).collect(Collectors.toSet());
+                    .filter(l -> !StopList.contains(l))
+                    .map(l -> new Word(l, -2))
+                    .peek(System.out::println)
+                    .collect(Collectors.toSet());
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
             words.addAll(tweetWords);
             Platform.runLater(() -> wordle.wordsProperty().set(words));
             return tweetWords;
         }
-
-        private Parent createTweetInfoBox(Tweet info) {
-
-            // update & redraw wordle with new/same words
-            Platform.runLater(() -> createWordle());
-
-            HBox hbox = new HBox(20);
-            hbox.setStyle("-fx-padding: 20px;");
-            hbox.setPrefHeight(150);
-
-            HBox hImage = new HBox();
-            hImage.setPadding(new Insets(10));
-            Image image = new Image(info.getUser().getProfileImageUrl(), 48, 48, true, false);
-            ImageView imageView = new ImageView(image);
-            Rectangle clip = new Rectangle(48, 48);
-            clip.setArcWidth(10);
-            clip.setArcHeight(10);
-            imageView.setClip(clip);
-            hImage.getChildren().add(imageView);
-
-            HBox hName = new HBox(20);
-            Label name = new Label(info.getUser().getName());
-            name.setStyle("-fx-font: 24px \"Andalus\"; -fx-text-fill: #292F33; -fx-font-weight: bold;");
-            DateFormat df = new SimpleDateFormat("HH:mm:ss");
-            Label handle = new Label("@" + info.getUser().getScreenName() + " · " + df.format(info.getCreatedAt()));
-            handle.setStyle("-fx-font: 22px \"Andalus\"; -fx-text-fill: #8899A6;");
-            hName.getChildren().addAll(name, handle);
-
-            List<String> words = tree.entrySet().stream()
-                    .sorted(comparator.reversed())
-                    .limit(NUM_MAX_WORDS)
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
-
-            List<String> fadeOutWords = new ArrayList<>();
-            List<Text> fadeInWords = new ArrayList<>();
-            System.out.println("Tw: " + info.getText());
-            TextFlow flow = new TextFlow();
-            pattern.splitAsStream(info.getText())
-                    .forEach(w -> {
-                        Text textWord = new Text(w.concat(" "));
-                        String color = "#292F33";
-                        if (words.stream().anyMatch(tag -> {
-                            if (w.toLowerCase().contains(tag)) {
-                                fadeOutWords.add(tag);
-                                return true;
-                            } else {
-                                fadeInWords.add(textWord);
-                            }
-                            return false;
-                        })) {
-                            color = "red";
-                        }
-                        textWord.setStyle("-fx-font: 18px \"Andalus\"; -fx-fill: " + color + ";");
-                        flow.getChildren().add(textWord);
-                    });
-//            List<Word> wordsToFade = wordle.formatWords(fadeOutWords);
-//            obsFadeOutWords.setAll(wordsToFade);
-            obsFadeInWords.setAll(fadeInWords);
-
-            VBox vbox = new VBox(10);
-            vbox.getChildren().addAll(hName, flow);
-            hbox.getChildren().addAll(hImage, vbox);
-
-            return hbox;
-        }
-
     }
 
     private class TweetsSnapshotTask extends Task<Void> {
