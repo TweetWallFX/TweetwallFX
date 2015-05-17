@@ -40,6 +40,8 @@ import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 /**
  * @author martin
@@ -118,7 +120,8 @@ public final class TweetSetData {
     }
 
     public void updateTree(final Tweet tweet) {
-        final String status = tweet.getText().replaceAll("[^\\dA-Za-z ]", " ");
+        final String status = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class)
+                .replaceAll("[^\\dA-Za-z ]", " ");
         // add words to tree and update weights
 
         pattern.splitAsStream(status)
@@ -150,7 +153,7 @@ public final class TweetSetData {
                     System.out.println("Error: " + ex);
                 }
             });
-            stream.filter(new TweetFilterQuery().track(new String[]{tweetSetData.getSearchText()}));
+            stream.filter(new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(tweetSetData.getSearchText()).toArray(n -> new String[n])));
 
             return null;
         }
