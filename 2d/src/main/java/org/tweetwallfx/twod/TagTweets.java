@@ -31,8 +31,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -56,6 +54,7 @@ import javafx.util.Duration;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
+import org.tweetwallfx.tweet.ThreadingHelper;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
@@ -74,7 +73,7 @@ public class TagTweets {
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
-    private final ExecutorService showTweetsExecutor = createExecutor("ShowTweets");
+    private final ExecutorService showTweetsExecutor = ThreadingHelper.createSingleThreadExecutor("ShowTweets");
     private Wordle wordle;
     private final TweetSetData tweetSetData;
     private final BorderPane root;
@@ -229,9 +228,9 @@ public class TagTweets {
     private class ShowTweetsTask extends Task<Void> {
 
         private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);
-        private final ExecutorService tweetsCreationExecutor = createExecutor("CreateTweets");
-        private final ExecutorService tweetsUpdateExecutor = createExecutor("UpdateTweets");
-        private final ExecutorService tweetsSnapshotExecutor = createExecutor("TakeSnapshots");
+        private final ExecutorService tweetsCreationExecutor = ThreadingHelper.createSingleThreadExecutor("CreateTweets");
+        private final ExecutorService tweetsUpdateExecutor = ThreadingHelper.createSingleThreadExecutor("UpdateTweets");
+        private final ExecutorService tweetsSnapshotExecutor = ThreadingHelper.createSingleThreadExecutor("TakeSnapshots");
         private final Task<Void> tweetsCreationTask;
         private final Task<Void> tweetsUpdateTask;
         private final Task<Void> tweetsSnapshotTask;
@@ -265,16 +264,6 @@ public class TagTweets {
 
             return null;
         }
-    }
-
-    private ExecutorService createExecutor(final String name) {
-        ThreadFactory factory = r -> {
-            Thread t = new Thread(r);
-            t.setName(name);
-            t.setDaemon(true);
-            return t;
-        };
-        return Executors.newSingleThreadExecutor(factory);
     }
 
     private void createWordle() {
