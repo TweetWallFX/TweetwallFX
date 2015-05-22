@@ -124,11 +124,16 @@ project(":TweetWallFX-NetBeans"){
         args "-query", "#netbeans OR #netbeansday"
         args "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
     }
+
+    run {
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+    }
     
     dependencies {
         compile project(':TweetWallFX-Generic2D')
-        runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
     }
+    
+    task('runWithTwitter4J', dependsOn:'run')
 }
 
 project(":TweetWallFX-JavaOne") {
