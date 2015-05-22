@@ -111,7 +111,7 @@ public class TagTweets {
         }
     }
 
-    private class TweetsUpdateTask extends Task<Void> {
+    private static class TweetsUpdateTask extends Task<Void> {
 
         private final Pattern pattern = Pattern.compile("\\s+");
         private final TweetSetData tweetSetData;
