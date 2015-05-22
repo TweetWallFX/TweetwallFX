@@ -39,11 +39,6 @@ subprojects {
     tasks.withType(JavaExec) {
         args "-oAuthFile", "MyOAuth.properties"
     }
-
-    task('debug', dependsOn: 'classes', type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        debug = true
-    }    
 }
 
 project (":TweetWallFX-CommandlineArguments") {
@@ -102,11 +97,17 @@ project(":TweetWallFX-Controls"){
 project(":TweetWallFX-Devoxx"){
     
     apply plugin: "application"
-    
+    mainClassName = "org.tweetwallfx.devoxx.Main"
+
     tasks.withType(JavaExec) {
-        main "org.tweetwallfx.devoxx.Main"        
+        main mainClassName
     }
-    
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath = sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
     dependencies {
         compile project(':TweetWallFX-2D')
         compile project(':TweetWallFX-Controls')
@@ -117,9 +118,10 @@ project(":TweetWallFX-Devoxx"){
 project(":TweetWallFX-NetBeans"){
     
     apply plugin: "application"
-    
+    mainClassName = "org.tweetwallfx.generic.Main"
+
     tasks.withType(JavaExec) {
-        main "org.tweetwallfx.generic.Main"
+        main mainClassName
         args "-title", "The JavaFX Tweetwall for NetBeans Day!"
         args "-query", "#netbeans OR #netbeansday"
         args "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
@@ -127,8 +129,13 @@ project(":TweetWallFX-NetBeans"){
 
     run {
         classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+    }    
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+        debug = true
     }
-    
+
     dependencies {
         compile project(':TweetWallFX-Generic2D')
     }
