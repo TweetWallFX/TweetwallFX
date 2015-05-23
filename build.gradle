@@ -2,7 +2,6 @@ apply plugin: 'build-dashboard'
 
 subprojects {
     apply plugin: 'java'
-
     apply plugin: 'findbugs'
     apply plugin: 'jacoco'
     apply plugin: 'eclipse'
@@ -36,6 +35,10 @@ subprojects {
             html.enabled = true
         }
     }
+    
+    tasks.withType(JavaExec) {
+        args "-oAuthFile", "MyOAuth.properties"
+    }
 }
 
 project (":TweetWallFX-CommandlineArguments") {
@@ -68,7 +71,6 @@ project(":TweetWallFX-Core"){
         compile group: "log4j", name: "log4j", version: "1.2.17"
         compile project(':TweetWallFX-Tweet-API')
         compile project(':TweetWallFX-CommandlineArguments')
-        compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
     }
 }
 
@@ -82,91 +84,80 @@ project(":TweetWallFX-2D"){
 project(":TweetWallFX-3D"){
     dependencies {
         compile fileTree(dir: 'libs', include: '*.jar')
-        compile project(':TweetWallFX-Core')        
+        compile project(':TweetWallFX-Core')
     }
 }
 
 project(":TweetWallFX-Controls"){
     dependencies {
-        compile project(':TweetWallFX-Core')        
+        compile project(':TweetWallFX-Core')
     }
 }
 
 project(":TweetWallFX-Devoxx"){
     
     apply plugin: "application"
-    
-    run {
-        mainClassName = "org.tweetwallfx.devoxx.Main"        
-        args = ["-oAuthFile", "MyOAuth.properties"]
+    mainClassName = "org.tweetwallfx.devoxx.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
     }
-    
+
     task('debug', dependsOn: 'classes', type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
-        args = ["-oAuthFile", "MyOAuth.properties"]
         debug = true
-    }    
-    
+    }
+
     dependencies {
-        compile project(':TweetWallFX-2D')        
-        compile project(':TweetWallFX-Controls')        
+        compile project(':TweetWallFX-2D')
+        compile project(':TweetWallFX-Controls')
+        runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
     }
 }
 
 project(":TweetWallFX-NetBeans"){
     
     apply plugin: "application"
-    
-    run {
-        mainClassName = "org.tweetwallfx.generic.Main"        
-        args = [
-            "-oAuthFile", "MyOAuth.properties",
-            "-title", "The JavaFX Tweetwall for NetBeans Day!",
-            "-query", "#netbeans OR #netbeansday",
-            "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
-        ]
+    mainClassName = "org.tweetwallfx.generic.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+        args "-title", "The JavaFX Tweetwall for NetBeans Day!"
+        args "-query", "#netbeans OR #netbeansday"
+        args "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
     }
-    
-    task('debug', dependsOn: 'classes', type: JavaExec) {
-        main = "org.tweetwallfx.generic.Main"        
-        classpath = sourceSets.main.runtimeClasspath
-        args = [
-            "-oAuthFile", "MyOAuth.properties",
-            "-title", "The JavaFX Tweetwall for NetBeans Day!",
-            "-query", "#netbeans OR #netbeansday",
-            "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
-        ]
-        debug = true
+
+    run {
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
     }    
-    
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
     dependencies {
         compile project(':TweetWallFX-Generic2D')
     }
+    
+    task('runWithTwitter4J', dependsOn:'run')
 }
 
-project(":TweetWallFX-JavaOne"){
+project(":TweetWallFX-JavaOne") {
     dependencies {
-        compile project(':TweetWallFX-2D')        
+        compile project(':TweetWallFX-2D')
     }
 }
 
-project(":TweetWallFX-Generic2D"){
+project(":TweetWallFX-Generic2D") {
     dependencies {
-        compile project(':TweetWallFX-2D')        
-        compile project(':TweetWallFX-Controls')        
+        compile project(':TweetWallFX-2D')
+        compile project(':TweetWallFX-Controls')
     }
 }
 
 description = 'TweetWallFX'
 
-task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:build',  type:(JavaExec)) {
-    classpath = project(":TweetWallFX-Devoxx").sourceSets.main.runtimeClasspath
-    main = "org.tweetwallfx.devoxx.DevoxxTweetWall"
-    args = ["-oAuthFile", "MyOAuth.properties"]
-}
+task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
 
-task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:build',  type:(JavaExec)) {
-    classpath = project(":TweetWallFX-NetBeans").sourceSets.main.runtimeClasspath
-    main = "org.tweetwallfx.netbeans.Main"
-    args = ["-oAuthFile", "MyOAuth.properties"]
-}
+task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')
