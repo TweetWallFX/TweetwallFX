@@ -111,7 +111,7 @@ public class TagTweets {
         }
     }
 
-    private class TweetsUpdateTask extends Task<Void> {
+    private static class TweetsUpdateTask extends Task<Void> {
 
         private final Pattern pattern = Pattern.compile("\\s+");
         private final TweetSetData tweetSetData;
@@ -172,7 +172,7 @@ public class TagTweets {
         private final ParallelTransition parallelTexts = new ParallelTransition();
         private final SequentialTransition sequential = new SequentialTransition(parallelWords, parallelTexts);
 
-        TweetsSnapshotTask(BlockingQueue<Parent> tweets) {
+        TweetsSnapshotTask(final BlockingQueue<Parent> tweets) {
             this.tweets = tweets;
         }
 
