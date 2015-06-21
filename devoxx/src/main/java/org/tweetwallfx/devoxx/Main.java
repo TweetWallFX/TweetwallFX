@@ -23,26 +23,26 @@
  */
 package org.tweetwallfx.devoxx;
 
+import com.beust.jcommander.Parameter;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
-import org.tweetwallfx.controls.StopList;
-import org.tweetwallfx.twitter.TwitterOAuth;
+import org.tweetwallfx.tweet.StopList;
+import org.tweetwallfx.tweet.TweetSetData;
+import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import twitter4j.conf.Configuration;
 
 /**
- *
  * @author sven
  */
 public class Main extends Application {
 
-    private Configuration conf;
-    private static final String hashtag = "#devoxx";
+    private Tweeter tweeter;
     private TagTweets tweetsTask;
 
     @Override
@@ -51,7 +51,7 @@ public class Main extends Application {
 
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
-        StopList.add(hashtag);
+        StopList.add(Params.query);
 
         final Service<Void> service = new Service<Void>() {
             @Override
@@ -59,7 +59,7 @@ public class Main extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        conf = TwitterOAuth.getInstance().readOAuth();
+                        tweeter = Tweeter.getInstance();
                         return null;
                     }
                 };
@@ -68,15 +68,15 @@ public class Main extends Application {
         };
 
         service.setOnSucceeded(e -> {
-            if (!hashtag.isEmpty() && conf != null) {
-                tweetsTask = new TagTweets(conf, hashtag, borderPane);
+            if (!Params.query.isEmpty() && tweeter != null) {
+                tweetsTask = new TagTweets(new TweetSetData(tweeter, Params.query), borderPane);
                 tweetsTask.start();
             }
         });
 
-        primaryStage.setTitle("The JavaFX Tweetwall for Devoxx!");
+        primaryStage.setTitle(Params.title);
         primaryStage.setScene(scene);
-//        scene.getStylesheets().add(this.getClass().getResource("/devoxx.css").toExternalForm());
+//        scene.getStylesheets().add(Params.stylesheet.toExternalForm());
         primaryStage.show();
         primaryStage.setFullScreen(true);
         service.start();
@@ -97,4 +97,14 @@ public class Main extends Application {
         launch(args);
     }
 
+    @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
+    public static final class Params implements CommandLineArgumentParser.ParametersObject {
+
+        @Parameter(names = "-query", description = "Query used for querying Twitter")
+        private static String query = "#devoxx";
+//        @Parameter(names = "-stylesheet", required = true, description = "The stylesheet to apply")
+//        private static URL stylesheet;
+        @Parameter(names = "-title", description = "The title of the TweetWallStage")
+        private static String title = "The JavaFX Tweetwall for Devoxx!";
+}
 }

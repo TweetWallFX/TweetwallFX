@@ -37,7 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
@@ -56,13 +55,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javax.imageio.ImageIO;
-import org.tweetwallfx.twitter.TweetInfo;
-import twitter4j.FilterQuery;
-import twitter4j.Status;
-import twitter4j.StatusAdapter;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
-import twitter4j.conf.Configuration;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -86,9 +82,9 @@ public class TweetsToTori {
 
     private final Group tori;
 
-    public TweetsToTori(Configuration conf, String searchText, Group tori) {
+    public TweetsToTori(final Tweeter tweeter, String searchText, Group tori) {
         this.tori = tori;
-        this.saveTweetsTask = new SaveTweetsTask(conf, searchText);
+        this.saveTweetsTask = new SaveTweetsTask(tweeter, searchText);
     }
 
     public void start() {
@@ -127,52 +123,41 @@ public class TweetsToTori {
     private static class TweetsCreationTask extends Task<Void> {
 
         private final String searchText;
-        private TwitterStream stream;
-        private final Configuration conf;
+        private TweetStream stream;
+        private final Tweeter tweeter;
         private final BlockingQueue<Parent> tweets;
 
-        public TweetsCreationTask(Configuration conf, String searchText, BlockingQueue<Parent> tweets) {
-            this.conf = conf;
+        public TweetsCreationTask(Tweeter tweeter, String searchText, BlockingQueue<Parent> tweets) {
+            this.tweeter = tweeter;
             this.searchText = searchText;
             this.tweets = tweets;
         }
 
         @Override
         protected Void call() throws Exception {
-            FilterQuery query = new FilterQuery();
-            query.track(new String[]{searchText});
-            if (conf != null) {
-                stream = new TwitterStreamFactory(conf).getInstance();
-                addListener(s -> {
+            if (tweeter != null) {
+                stream = tweeter.createTweetStream();
+                stream.onTweet(tweet -> {
                     try {
-                        System.out.println("Tw: " + s.getText());
-                        tweets.put(createTweetInfoBox(new TweetInfo(s)));
+                        System.out.println("Tw: " + tweet.getText());
+                        tweets.put(createTweetInfoBox(tweet));
                     } catch (InterruptedException ex) {
                         System.out.println("Error: " + ex);
                     }
                 });
-                stream.filter(query);
+                stream.filter(new TweetFilterQuery().track(new String[]{searchText}));
             }
+
             return null;
-
         }
 
-        private void addListener(Consumer<Status> consumer) {
-            stream.addListener(new StatusAdapter() {
-                @Override
-                public void onStatus(Status status) {
-                    consumer.accept(status);
-                }
-            });
-        }
-
-        private Parent createTweetInfoBox(TweetInfo info) {
+        private static Parent createTweetInfoBox(Tweet info) {
             HBox hbox = new HBox(20);
             hbox.setStyle("-fx-padding: 20px;");
 
             HBox hImage = new HBox();
             hImage.setPadding(new Insets(10));
-            Image image = new Image(info.getImageURL(), 48, 48, true, false);
+            Image image = new Image(info.getUser().getProfileImageUrl(), 48, 48, true, false);
             ImageView imageView = new ImageView(image);
             Rectangle clip = new Rectangle(48, 48);
             clip.setArcWidth(10);
@@ -181,10 +166,10 @@ public class TweetsToTori {
             hImage.getChildren().add(imageView);
 
             HBox hName = new HBox(20);
-            Label name = new Label(info.getName());
+            Label name = new Label(info.getUser().getName());
             name.setStyle("-fx-font: 32px \"Andalus\"; -fx-text-fill: #292F33; -fx-font-weight: bold;");
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
-            Label handle = new Label("@" + info.getHandle() + " · " + df.format(info.getDate()));
+            Label handle = new Label("@" + info.getUser().getScreenName() + " · " + df.format(info.getCreatedAt()));
             handle.setStyle("-fx-font: 28px \"Andalus\"; -fx-text-fill: #8899A6;");
             hName.getChildren().addAll(name, handle);
 
@@ -325,8 +310,8 @@ public class TweetsToTori {
         private final PngsExportTask imagesExportTask;
         private final ToriImageTask toriImagesTask;
 
-        SaveTweetsTask(final Configuration conf, final String textSearch) {
-            tweetsCreationTask = new TweetsCreationTask(conf, textSearch, tweets);
+        SaveTweetsTask(final Tweeter tweeter, final String textSearch) {
+            tweetsCreationTask = new TweetsCreationTask(tweeter, textSearch, tweets);
             tweetsSnapshotTask = new TweetsSnapshotTask(tweets, bufferedImages);
             imagesExportTask = new PngsExportTask(bufferedImages, diffuseMaps);
             toriImagesTask = new ToriImageTask(diffuseMaps);
