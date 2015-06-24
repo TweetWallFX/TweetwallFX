@@ -115,7 +115,7 @@ project(":TweetWallFX-Devoxx"){
     }
 }
 
-project(":TweetWallFX-NetBeans"){
+project(":TweetWallFX-NetBeans") {
     
     apply plugin: "application"
     mainClassName = "org.tweetwallfx.generic.Main"
@@ -144,9 +144,31 @@ project(":TweetWallFX-NetBeans"){
 }
 
 project(":TweetWallFX-JavaOne") {
-    dependencies {
-        compile project(':TweetWallFX-2D')
+
+    apply plugin: "application"
+    mainClassName = "org.tweetwallfx.generic.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+        args "-title", "The JavaFX Tweetwall for JavaOne!"
+        args "-query", "#javaonebr OR #javaone"
+        args "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
     }
+
+    run {
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+    }    
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Generic2D')
+    }
+    
+    task('runWithTwitter4J', dependsOn:'run')
 }
 
 project(":TweetWallFX-Generic2D") {
