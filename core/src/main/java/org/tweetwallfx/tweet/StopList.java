@@ -23,32 +23,55 @@
  */
 package org.tweetwallfx.tweet;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author MICHELB
  */
-public class StopList {
+public final class StopList {
 
     //TODO: Init from file.
     //TODO: Add I18N support
     private StopList() {
     }
 
-    private static final List<String> stopList = new ArrayList<>(
-            Arrays.asList("http", "https", "has", "have", "do", "for", "are", "the", "and",
+    private static final Set<String> stopList = new HashSet<>(
+            Arrays.asList(
+                    //twitter related
+                    "rt", "http", "https", 
+                    //other
+                    "has", "have", "do", "for", "are", "the", "and",
                     "with", "here", "active", "see", "next", "will", "any", "off", "there", "while", "just", "all", "from", "got", "think", "nice",
                     "ask", "can", "you", "week", "some", "not", "didn", "isn", "per", "how", "show", "out", "but", "last", "your", "one", "should",
-                    "now", "also", "done", "will", "become", "did", "what", "when", "let", "that", "this", "always", "where", "our"));
+                    "now", "also", "done", "will", "become", "did", "what", "when", "let", "that", "this", "always", "where", "our", "his", "her", "of"));
 
-    public static boolean add(String stopword) {
-        return stopList.add(stopword);
+    /**
+     * Add a word to stop list.
+     * @param stopword to add.
+     */
+    public static void add(String stopword) {
+        stopList.add(stopword);
     }
 
-    public static boolean contains(String string) {
-        return stopList.contains(string);
+    /**
+     * Add words to stop list.
+     * @param stopwords to add.
+     */
+    public static void add(String ... stopwords) {
+        Collections.addAll(stopList, stopwords);
+    }
+
+    /**
+     * Check if the word is in stop list.
+     * Word is checked lowercase.
+     * @param word to be checked.
+     * @return true if contained.
+     */
+    public static boolean contains(String word) {
+        return stopList.contains(word.toLowerCase());
     }
 }
