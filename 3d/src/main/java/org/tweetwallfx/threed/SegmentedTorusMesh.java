@@ -308,8 +308,8 @@ public class SegmentedTorusMesh extends MeshView {
                         points[index + 2] = (float) ((radius + tRadius * Math.cos((-1d + 2d * dy) * Math.PI)) * (Math.sin((-1d + 2d * dx) * Math.PI) + yOffset));
                         points[index + 1] = (float) (1.5 * tRadius * Math.sin((-1d + 2d * dy) * Math.PI) * zOffset);
                         index = (y - crop) * numDivX * texCoordSize + ((x - crop) * texCoordSize);
-                        texCoords[index] = (((float) (x - crop)) / ((float) (subDivX - 2f * crop)));
-                        texCoords[index + 1] = (((float) (y - crop)) / ((float) (subDivY - 2f * crop)));
+                        texCoords[index] = ((float) (x - crop)) / (subDivX - 2f * crop);
+                        texCoords[index + 1] = ((float) (y - crop)) / (subDivY - 2f * crop);
                     }
                 }
             }

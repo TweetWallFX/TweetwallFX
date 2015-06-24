@@ -21,53 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.twitter;
+package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Date;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
+import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
+import twitter4j.HashtagEntity;
 
-/**
- * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
- * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- *
- * @author jpereda
- */
-public class TweetInfo {
+final class TwitterHashtagTweetEntry extends BaseTwitterTweetEntry<HashtagEntity> implements HashtagTweetEntry {
 
-    private final Status status;
-
-    public TweetInfo(Status status) {
-        this.status = status;
+    TwitterHashtagTweetEntry(final HashtagEntity hashtagEntity) {
+        super(hashtagEntity);
     }
-
-    public String getName() {
-        return status.getUser().getName();
-    }
-
-    public String getText() {
-        return status.getText();
-    }
-
-    public String getImageURL() {
-        return status.getUser().getProfileImageURL();
-    }
-
-    public String getHandle() {
-        return status.getUser().getScreenName();
-    }
-
-    public Date getDate() {
-        return status.getCreatedAt();
-    }
-
-    public MediaEntity[] getMediaEntities() {
-        return status.getMediaEntities();
-    }
-
-    @Override
-    public String toString() {
-        return "TweetInfo{" + "status=" + status + '}';
-    }
-
 }

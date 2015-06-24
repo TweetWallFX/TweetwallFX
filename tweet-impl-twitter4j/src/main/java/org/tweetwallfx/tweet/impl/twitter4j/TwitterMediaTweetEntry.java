@@ -21,64 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls;
+package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Objects;
+import java.util.Map;
+import java.util.TreeMap;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import twitter4j.MediaEntity;
 
-/**
- *
- * @author sven
- */
-public class Word implements Comparable<Word> {
+final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> implements MediaTweetEntry {
 
-    private String text;
-    private double weight;
-
-    public Word(String text, double weight) {
-        this.text = text;
-        this.weight = weight;
-    }
-
-    public String getText() {
-        return text;
+    TwitterMediaTweetEntry(final MediaEntity mediaEntity) {
+        super(mediaEntity);
     }
 
     @Override
-    public int compareTo(Word o) {
-        return Double.compare(weight,o.weight);
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public long getId() {
+        return getT().getId();
     }
 
     @Override
-    public String toString() {
-        return "Word{" + "text=" + text + ", weight=" + weight + '}';
+    public String getMediaUrl() {
+        return getT().getMediaURL();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(this.text);
+    public Map<Integer, Size> getSizes() {
+        final Map<Integer, Size> map = new TreeMap<>();
+
+        getT().getSizes().entrySet().stream().forEach(e -> map.put(
+                e.getKey(),
+                MediaTweetEntry.createSize(
+                        e.getValue().getWidth(),
+                        e.getValue().getHeight(),
+                        e.getValue().getResize())));
+
+        return map;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Word other = (Word) obj;
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
+    public String getType() {
+        return getT().getType();
     }
-
 }

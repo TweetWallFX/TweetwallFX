@@ -21,64 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls;
+package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Objects;
+import org.tweetwallfx.tweet.api.entry.TweetEntry;
+import twitter4j.TweetEntity;
 
-/**
- *
- * @author sven
- */
-public class Word implements Comparable<Word> {
+public class BaseTwitterTweetEntry<T extends TweetEntity> implements TweetEntry {
 
-    private String text;
-    private double weight;
+    private final T t;
 
-    public Word(String text, double weight) {
-        this.text = text;
-        this.weight = weight;
+    public BaseTwitterTweetEntry(T t) {
+        this.t = t;
     }
 
-    public String getText() {
-        return text;
+    protected T getT() {
+        return t;
     }
 
     @Override
-    public int compareTo(Word o) {
-        return Double.compare(weight,o.weight);
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public final String getText() {
+        return t.getText();
     }
 
     @Override
-    public String toString() {
-        return "Word{" + "text=" + text + ", weight=" + weight + '}';
+    public final int getStart() {
+        return t.getStart();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(this.text);
+    public final int getEnd() {
+        return t.getEnd();
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Word other = (Word) obj;
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
-    }
-
 }

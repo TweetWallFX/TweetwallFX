@@ -65,13 +65,13 @@ public class FXTimer {
     public static final long minFPS = 10;
     public static final long targetFPS = 60;
     public static final long maxFPS = 120;
-    public static final long OPTIMAL_TIME = (long) (1000000000 / targetFPS);
-    public static long frame = 0;
+    public static final long OPTIMAL_TIME = 1000000000L / targetFPS;
+    private static long frame = 0;
 
-    public long now = 0,
-            updateLength = 0,
-            lastLoopTime = 0,
-            lastFpsTime = 0;
+    public long now = 0;
+    public long updateLength  = 0;
+    public long lastLoopTime  = 0;
+    public long lastFpsTime  = 0;
     public float delta;
 
     private Runnable runnable;
@@ -250,7 +250,7 @@ public class FXTimer {
                     lastFrameTime.set(lastLoopTime);
                     deltaTime.set(delta);
                     elapsedTime.set(now - getStartTime());
-                    delay.set(Duration.millis((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000));
+                    delay.set(Duration.millis((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000D));
                     cycleDuration.set(DurationUtils.fpsToMillis(getFPS()));
                 } else {
                     if (runnable != null) {

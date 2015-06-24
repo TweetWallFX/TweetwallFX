@@ -23,17 +23,16 @@
  */
 package org.tweetwallfx.controls;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
@@ -58,19 +57,17 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
-import org.tweetwallfx.twitter.TweetInfo;
+import org.tweetwallfx.tweet.api.Tweet;
 
 /**
- *
  * @author sven
  */
 public class WordleSkin extends SkinBase<Wordle> {
 
     private final Random rand = new Random();
-    private final int dDeg = 10;
-    private final double dRadius = 5.0;
+    private static final int dDeg = 10;
+    private static final double dRadius = 5.0;
 
-    // used for TagCloud
     private final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
     private final List<TweetWordNode> tweetWordList = new ArrayList<>();
@@ -78,7 +75,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private double min;
     private final Pane pane;
     private List<Word> limitedWords;
-    private Set<Word> tweetWords = Collections.emptySet();
     private HBox hbox;
     private Point2D lowerLeft;
     private HBox mediaBox;
@@ -160,51 +156,9 @@ public class WordleSkin extends SkinBase<Wordle> {
                     break;
             }
         });
-
-        wordle.tweetInfoProperty.addListener((obs, oldValue, newValue) -> {
-            String text = newValue.getText();
-            tweetWords = pattern.splitAsStream(text)
-                    .filter(l -> l.length() > 2)
-                    .filter(l -> !l.startsWith("@"))
-                    .filter(l -> !l.startsWith("http:"))
-                    .filter(l -> !l.startsWith("https:"))
-                    .map(l -> l.toLowerCase())
-                    .filter(l -> !StopList.contains(l)).map(l -> new Word(l, -2)).collect(Collectors.toSet());
-
-        });
     }
 
-//    private void addTweetToCloud() {
-//        System.out.println("Add tweet to cloud");
-//        String text = getSkinnable().tweetInfoProperty.get().getText();
-//        tweetWords = pattern.splitAsStream(text)
-//                .filter(l -> l.length() > 2)
-//                .filter(l -> !l.startsWith("@"))
-//                .filter(l -> !l.startsWith("http:"))
-//                .filter(l -> !l.startsWith("https:"))
-//                .map(l -> l.toLowerCase())
-//                .filter(l -> !StopList.contains(l)).map(l -> new Word(l, 0)).collect(Collectors.toSet());                
-//        List<Word> words = getSkinnable().wordsProperty.get();
-//        words.addAll(tweetWords);
-//        Platform.runLater(() -> getSkinnable().wordsProperty.set(words));
-//    }
-    private void removeTweetFromCloud() {
-        tweetWords = Collections.emptySet();
-        updateCloud();
-    }
-
-//    private Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, double maxWidth) {
-//        double y = upperLeft.getY() + targetBounds.getMinY();
-//        double x = upperLeft.getX() + targetBounds.getMinX();
-//        double rightMargin = upperLeft.getX() + maxWidth;
-//        while (x + targetBounds.getWidth() > rightMargin) {
-//            y += targetBounds.getHeight();
-//            x -= maxWidth;
-//        }
-//        return new Point2D(x, y);
-//    }
     private Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
-        double y = upperLeft.getY() + targetBounds.getMinY();
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         double rightMargin = upperLeft.getX() + maxWidth;
         if (x + targetBounds.getWidth() > rightMargin) {
@@ -224,7 +178,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     private void cloudToTweet() {
 
         Bounds layoutBounds = pane.getLayoutBounds();
-        TweetInfo tweetInfo = getSkinnable().tweetInfoProperty.get();
+        Tweet tweetInfo = getSkinnable().tweetInfoProperty.get();
 
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - logo.getImage().getHeight()) / 4d);
 
@@ -310,7 +264,7 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         HBox hImage = new HBox();
         hImage.setPadding(new Insets(10));
-        Image image = new Image(tweetInfo.getImageURL(), 64, 64, true, false);
+        Image image = new Image(tweetInfo.getUser().getProfileImageUrl(), 64, 64, true, false);
         ImageView imageView = new ImageView(image);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
@@ -319,11 +273,26 @@ public class WordleSkin extends SkinBase<Wordle> {
         hImage.getChildren().add(imageView);
 
 //        HBox hName = new HBox(20);
-        Label name = new Label(tweetInfo.getName());
+        Label name = new Label(tweetInfo.getUser().getName());
         name.getStyleClass().setAll("name");
-//        name.setStyle("-fx-font: 36px \"Calibri\"; -fx-text-fill: #e1ecee; -fx-font-weight: bold;");
+
+//        faiFavCount.setGlyphName("TWITTER");
+//        faiFavCount.setGlyphName("TWITTER_SIGN");
+        FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
+        faiFavCount.setGlyphName("THUMBS_UP");
+        faiFavCount.setGlyphSize(24);
+        FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
+        faiReTwCount.setGlyphName("RETWEET");
+        faiReTwCount.setGlyphSize(24);
+        
+        Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+        favCount.getStyleClass().setAll("handle");
+        
+        Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+        reTwCount.getStyleClass().setAll("handle");
+
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Label handle = new Label("@" + tweetInfo.getHandle() + " · " + df.format(tweetInfo.getDate()));
+        Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " · " + df.format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
 //        handle.setStyle("-fx-font: 28px \"Calibri\"; -fx-text-fill: #8899A6;");
 //        hName.getChildren().addAll(name, handle);
@@ -331,17 +300,17 @@ public class WordleSkin extends SkinBase<Wordle> {
 
 //        VBox vbox = new VBox(10);
 //        vbox.getChildren().addAll(hName);
-        hbox.getChildren().addAll(hImage, name, handle);
+        hbox.getChildren().addAll(hImage, name, handle, faiReTwCount, reTwCount, faiFavCount, favCount);
 
         hbox.setOpacity(0);
         hbox.setAlignment(Pos.CENTER);
         pane.getChildren().add(hbox);
 
-        if (tweetInfo.getMediaEntities().length > 0) {
+        if (tweetInfo.getMediaEntries().length > 0) {
 //            System.out.println("Media detected: " + tweetInfo.getText() + " " + Arrays.toString(tweetInfo.getMediaEntities()));
             mediaBox = new HBox();
             hImage.setPadding(new Insets(10));
-            Image mediaImage = new Image(tweetInfo.getMediaEntities()[0].getMediaURL());
+            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
             ImageView mediaView = new ImageView(mediaImage);
             mediaView.setPreserveRatio(true);
             mediaView.setCache(true);
@@ -541,7 +510,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         // maxFont = 48
         // minFont = 18
 
-        double size = defaultFont.getSize();
+        double size;
         if (weight == -1) {
             size = TWEET_FONT_SIZE;
         } else if (weight == -2) {
@@ -573,7 +542,7 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     private final Pattern pattern = Pattern.compile("\\s+");
 
-    private List<TweetWord> recalcTweetLayout(TweetInfo info) {
+    private List<TweetWord> recalcTweetLayout(Tweet info) {
         TextFlow flow = new TextFlow();
         flow.setMaxWidth(300);
         pattern.splitAsStream(info.getText())
@@ -664,7 +633,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                         break;
                     }
                 }
-                radius += this.dRadius;
+                radius += WordleSkin.dRadius;
             }
         }
 

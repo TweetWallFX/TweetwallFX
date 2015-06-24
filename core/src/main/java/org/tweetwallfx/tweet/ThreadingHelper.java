@@ -21,64 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls;
+package org.tweetwallfx.tweet;
 
-import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
- *
- * @author sven
+ * @author martin
  */
-public class Word implements Comparable<Word> {
+public class ThreadingHelper {
 
-    private String text;
-    private double weight;
-
-    public Word(String text, double weight) {
-        this.text = text;
-        this.weight = weight;
+    private ThreadingHelper() {
     }
 
-    public String getText() {
-        return text;
+    public static ThreadFactory createSimpleThreadFactory(final String name) {
+        return r -> {
+            Thread t = new Thread(r);
+            t.setName(name);
+            t.setDaemon(true);
+            return t;
+        };
     }
 
-    @Override
-    public int compareTo(Word o) {
-        return Double.compare(weight,o.weight);
+    public static ExecutorService createSingleThreadExecutor(final String name) {
+        return Executors.newSingleThreadExecutor(createSimpleThreadFactory(name));
     }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    @Override
-    public String toString() {
-        return "Word{" + "text=" + text + ", weight=" + weight + '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this.text);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Word other = (Word) obj;
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
-    }
-
 }

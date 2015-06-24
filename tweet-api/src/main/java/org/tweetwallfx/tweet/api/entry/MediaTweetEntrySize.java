@@ -21,64 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls;
+package org.tweetwallfx.tweet.api.entry;
 
-import java.util.Objects;
+final class MediaTweetEntrySize implements MediaTweetEntry.Size {
 
-/**
- *
- * @author sven
- */
-public class Word implements Comparable<Word> {
+    private static final long serialVersionUID = 6285237827L;
+    private final int width;
+    private final int height;
+    private final int resize;
 
-    private String text;
-    private double weight;
-
-    public Word(String text, double weight) {
-        this.text = text;
-        this.weight = weight;
-    }
-
-    public String getText() {
-        return text;
+    public MediaTweetEntrySize(final int width, final int height, final int resize) {
+        this.width = width;
+        this.height = height;
+        this.resize = resize;
     }
 
     @Override
-    public int compareTo(Word o) {
-        return Double.compare(weight,o.weight);
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public int getWidth() {
+        return width;
     }
 
     @Override
-    public String toString() {
-        return "Word{" + "text=" + text + ", weight=" + weight + '}';
+    public int getHeight() {
+        return height;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(this.text);
+    public int getResize() {
+        return resize;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Word other = (Word) obj;
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
-    }
-
 }
