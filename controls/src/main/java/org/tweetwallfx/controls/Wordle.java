@@ -35,10 +35,9 @@ import javafx.css.Styleable;
 import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import org.tweetwallfx.twitter.TweetInfo;
+import org.tweetwallfx.tweet.api.Tweet;
 
 /**
- *
  * @author sven
  */
 public class Wordle extends Control {
@@ -49,7 +48,7 @@ public class Wordle extends Control {
     }
 
     ObjectProperty<List<Word>> wordsProperty = new SimpleObjectProperty<>(new ArrayList<>());
-    ObjectProperty<TweetInfo> tweetInfoProperty = new SimpleObjectProperty<>();
+    ObjectProperty<Tweet> tweetInfoProperty = new SimpleObjectProperty<>();
 
     ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
 
@@ -57,11 +56,11 @@ public class Wordle extends Control {
         getStyleClass().setAll("wordle");
     }
 
-    public void setTweet(TweetInfo status) {
+    public void setTweet(Tweet status) {
         tweetInfoProperty.set(status);
     }
 
-    public ObjectProperty<TweetInfo> tweetInfoProperty() {
+    public ObjectProperty<Tweet> tweetInfoProperty() {
         return tweetInfoProperty;
     }
 

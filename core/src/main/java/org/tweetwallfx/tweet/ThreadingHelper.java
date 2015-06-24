@@ -21,61 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.twitter;
+package org.tweetwallfx.tweet;
 
-import java.util.Date;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
- * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
- * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- *
- * @author jpereda
+ * @author martin
  */
-public class TweetInfo {
+public class ThreadingHelper {
 
-    private final Status status;
-
-    public TweetInfo(Status status) {
-        this.status = status;
+    private ThreadingHelper() {
     }
 
-    public String getName() {
-        return status.getUser().getName();
+    public static ThreadFactory createSimpleThreadFactory(final String name) {
+        return r -> {
+            Thread t = new Thread(r);
+            t.setName(name);
+            t.setDaemon(true);
+            return t;
+        };
     }
 
-    public String getText() {
-        return status.getText();
+    public static ExecutorService createSingleThreadExecutor(final String name) {
+        return Executors.newSingleThreadExecutor(createSimpleThreadFactory(name));
     }
-
-    public String getImageURL() {
-        return status.getUser().getProfileImageURL();
-    }
-
-    public String getHandle() {
-        return status.getUser().getScreenName();
-    }
-
-    public Date getDate() {
-        return status.getCreatedAt();
-    }
-
-    public MediaEntity[] getMediaEntities() {
-        return status.getMediaEntities();
-    }
-
-    public int getFavoriteCount() {
-        return status.getFavoriteCount();
-    }
-
-    public int getRetweetCount() {
-        return status.getRetweetCount();
-    }
-
-    @Override
-    public String toString() {
-        return "TweetInfo{" + "status=" + status + '}';
-    }
-
 }

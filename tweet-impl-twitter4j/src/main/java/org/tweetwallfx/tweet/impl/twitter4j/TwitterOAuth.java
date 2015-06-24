@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.twitter;
+package org.tweetwallfx.tweet.impl.twitter4j;
 
 import com.beust.jcommander.Parameter;
 import java.io.File;
@@ -32,6 +32,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import org.tweetwallfx.cmdargs.RegularFileValueValidator;
@@ -63,20 +66,30 @@ import twitter4j.conf.ConfigurationBuilder;
  *
  * @author jpereda
  */
-public class TwitterOAuth {
+final class TwitterOAuth {
 
-    private String error = "";
-    private Configuration conf = null;
-    private static TwitterOAuth instance = null;
-
-    public static TwitterOAuth getInstance() {
-        if (instance == null) {
-            instance = new TwitterOAuth();
-        }
-        return instance;
-    }
+    private static Configuration configuration = null;
+    private static final AtomicBoolean INITIATED = new AtomicBoolean(false);
+    private static final ReadOnlyObjectWrapper<Exception> exception = new ReadOnlyObjectWrapper<>(null);
 
     private TwitterOAuth() {
+    }
+
+    public static ReadOnlyObjectProperty<Exception> exception() {
+        return exception.getReadOnlyProperty();
+    }
+    
+    public static Configuration getConfiguration() {
+        synchronized (TwitterOAuth.class) {
+            if (INITIATED.compareAndSet(false, true)) {
+                configuration = createConfiguration();
+            }
+        }
+
+        return configuration;
+    }
+
+    private static Configuration createConfiguration() {
         Properties props = new Properties();
 
         try {
@@ -96,8 +109,12 @@ public class TwitterOAuth {
             }
         } catch (FileNotFoundException ex) {
             System.out.println("Error finding properties file: " + ex);
+            exception.set(ex);
+            return null;
         } catch (IOException ex) {
             System.out.println("Error loading properties file: " + ex);
+            exception.set(ex);
+            return null;
         }
 
         ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -106,7 +123,7 @@ public class TwitterOAuth {
         builder.setOAuthConsumerSecret(props.getProperty("oauth.consumerSecret"));
         builder.setOAuthAccessToken(props.getProperty("oauth.accessToken"));
         builder.setOAuthAccessTokenSecret(props.getProperty("oauth.accessTokenSecret"));
-        conf = builder.build();
+        Configuration conf = builder.build();
 
         // check Configuration
         if (conf.getOAuthConsumerKey() != null && !conf.getOAuthConsumerKey().isEmpty()
@@ -117,25 +134,18 @@ public class TwitterOAuth {
             try {
                 User user = twitter.verifyCredentials();
                 System.out.println("User " + user.getName() + " validated");
-                error = "";
             } catch (TwitterException ex) {
-                error = "Error: " + ex.getErrorMessage();
+                exception.set(ex);
                 //  statusCode=400, message=Bad Authentication data -> wrong token
                 //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
                 System.out.println("Error credentials: " + ex.getStatusCode() + " " + ex.getErrorMessage());
                 conf = null;
             }
         } else {
-            error = "Error: Missing credentials";
+            exception.set(new IllegalStateException("Missing credentials!"));
         }
-    }
 
-    public Configuration readOAuth() {
         return conf;
-    }
-
-    public String getError() {
-        return error;
     }
 
     @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
