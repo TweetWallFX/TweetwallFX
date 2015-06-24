@@ -24,7 +24,8 @@
 
 .wordle {
     -fx-background-color: linear-gradient(to bottom, gray, white 75%);
-    -fx-graphic: url(tweetwalllogo.png)
+    -fx-graphic: url(tweetwalllogo.png);
+    -fx-fav-icons-visible: false;
 }
 
 .wordle .tag {
@@ -41,3 +42,14 @@
     -fx-font: 28px "Calibri";
     -fx-text-fill: #8899A6;   
 }
+
+.favoriteCount{
+    -glyph-name: "THUMBS_UP";
+    -glyph-size: 24px;
+}
+
+.retweetCount{
+    -glyph-name: "RETWEET";
+    -glyph-size: 24px;
+}
+
