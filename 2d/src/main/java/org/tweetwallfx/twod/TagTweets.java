@@ -32,6 +32,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.animation.Interpolator;
@@ -113,7 +114,9 @@ public class TagTweets {
 
     private static class TweetsUpdateTask extends Task<Void> {
 
-        private final Pattern pattern = Pattern.compile("\\s+");
+        private final Pattern pattern = Pattern.compile("\\s+");                    //Splitter for new tweet text to words.
+        private final Pattern trimPattern = Pattern.compile("(\\S+?)[.,!?:;´`']+"); //cut of bad word tails.
+        private final Pattern urlPattern = Pattern.compile("http[s]?:.*");          //url pattern
         private final TweetSetData tweetSetData;
         private final Wordle wordle;
 
@@ -149,14 +152,25 @@ public class TagTweets {
             return null;
         }
 
+        private String trimTail(final String s) {
+            Matcher matcher = trimPattern.matcher(s);
+            if (matcher.matches()) {
+                return matcher.group(1);
+            } else {
+                return s;
+            }
+        }
+        
         private Set<Word> addTweetToCloud(Tweet tweet) {
 //        System.out.println("Add tweet to cloud");
             String text = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class);
             Set<Word> tweetWords = pattern.splitAsStream(text)
-                    .filter(l -> l.length() > 2)
-                    .filter(l -> !StopList.contains(l))
-                    .map(l -> new Word(l, -2))
-                    .collect(Collectors.toSet());
+                    .map(l -> trimTail(l))                          //no bad word tails
+                    .filter(l -> l.length() > 2)                    //longer than 2 characters
+                    .filter(l -> !urlPattern.matcher(l).matches())  //no url
+                    .filter(l -> !StopList.contains(l))             //not in stoplist
+                    .map(l -> new Word(l, -2))                      //convert to Word
+                    .collect(Collectors.toSet());                   //collect
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
             words.addAll(tweetWords);
