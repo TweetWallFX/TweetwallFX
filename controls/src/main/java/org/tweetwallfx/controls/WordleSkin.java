@@ -39,6 +39,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -80,11 +81,12 @@ public class WordleSkin extends SkinBase<Wordle> {
     private HBox mediaBox;
 
     private ImageView logo;
+    private final Boolean favIconsVisible;
 
     public WordleSkin(Wordle wordle) {
         super(wordle);
-
         pane = new Pane();
+        pane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
 
         getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
             if (null != logo) {
@@ -156,6 +158,8 @@ public class WordleSkin extends SkinBase<Wordle> {
                     break;
             }
         });
+        favIconsVisible = wordle.favIconsVisibleProperty().get();
+
     }
 
     private Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
@@ -276,31 +280,24 @@ public class WordleSkin extends SkinBase<Wordle> {
         Label name = new Label(tweetInfo.getUser().getName());
         name.getStyleClass().setAll("name");
 
-//        faiFavCount.setGlyphName("TWITTER");
-//        faiFavCount.setGlyphName("TWITTER_SIGN");
-        FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
-        faiFavCount.setGlyphName("THUMBS_UP");
-        faiFavCount.setGlyphSize(24);
-        FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
-        faiReTwCount.setGlyphName("RETWEET");
-        faiReTwCount.setGlyphSize(24);
-        
-        Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
-        favCount.getStyleClass().setAll("handle");
-        
-        Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
-        reTwCount.getStyleClass().setAll("handle");
-
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " · " + df.format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
-//        handle.setStyle("-fx-font: 28px \"Calibri\"; -fx-text-fill: #8899A6;");
-//        hName.getChildren().addAll(name, handle);
-//        hName.setAlignment(Pos.BOTTOM_CENTER);
+        hbox.getChildren().addAll(hImage, name, handle);
+        if (favIconsVisible) {
+            FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
+            faiFavCount.getStyleClass().setAll("favoriteCount");
+            FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
+            faiReTwCount.getStyleClass().setAll("retweetCount");
 
-//        VBox vbox = new VBox(10);
-//        vbox.getChildren().addAll(hName);
-        hbox.getChildren().addAll(hImage, name, handle, faiReTwCount, reTwCount, faiFavCount, favCount);
+            Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+            favCount.getStyleClass().setAll("handle");
+
+            Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+            reTwCount.getStyleClass().setAll("handle");
+
+            hbox.getChildren().addAll(faiReTwCount, reTwCount, faiFavCount, favCount);
+        }
 
         hbox.setOpacity(0);
         hbox.setAlignment(Pos.CENTER);

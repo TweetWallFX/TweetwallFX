@@ -29,6 +29,7 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableStringProperty;
 import javafx.css.StyleConverter;
 import javafx.css.Styleable;
@@ -101,6 +102,23 @@ public class Wordle extends Control {
         return logo;
     }
 
+    private SimpleStyleableBooleanProperty favIconsVisible;
+
+    public Boolean isFavIconsVisible() {
+        return favIconsVisible.get();
+    }
+
+    public void setFavIconsVisible(Boolean value) {
+        favIconsVisible.set(value);
+    }
+
+    public SimpleStyleableBooleanProperty favIconsVisibleProperty() {
+        if (favIconsVisible == null) {
+            favIconsVisible = new SimpleStyleableBooleanProperty(StyleableProperties.FAVICONS_VISIBLE, Wordle.this, "-fx-fav-icons-visible", true);
+        }
+        return favIconsVisible;
+    }
+
     @Override
     public String getUserAgentStylesheet() {
         return this.getClass().getResource("wordle.css").toExternalForm();
@@ -121,13 +139,30 @@ public class Wordle extends Control {
                         return control.logoProperty();
                     }
                 };
+
+        private static final CssMetaData< Wordle, Boolean> FAVICONS_VISIBLE
+                = new CssMetaData<Wordle, Boolean>("-fx-fav-icons-visible",
+                        StyleConverter.getBooleanConverter()) {
+
+                    @Override
+                    public boolean isSettable(Wordle control) {
+                        return control.favIconsVisible == null || !control.favIconsVisible.isBound();
+                    }
+
+                    @Override
+                    public StyleableProperty<Boolean> getStyleableProperty(Wordle control) {
+                        return control.favIconsVisibleProperty();
+                    }
+                };
+
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables
                     = new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
-                    LOGO_GRAPHIC
+                    LOGO_GRAPHIC,
+                    FAVICONS_VISIBLE
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
