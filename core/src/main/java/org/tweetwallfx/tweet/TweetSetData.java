@@ -34,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
@@ -51,7 +53,7 @@ public final class TweetSetData {
     public static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
     private static final Pattern pattern = Pattern.compile("\\s+");
     private final Tweeter tweeter;
-    private final String searchText;
+    private final StringProperty searchText;
     private final BlockingQueue<Tweet> transferTweets;
     private final TweetsCreationTask tweetsCreationTask;
     private Map<String, Long> tree;
@@ -62,7 +64,7 @@ public final class TweetSetData {
 
     public TweetSetData(final Tweeter tweeter, final String searchText, final int transferSize) {
         this.tweeter = Objects.requireNonNull(tweeter, "tweeter must not be null!");
-        this.searchText = searchText;
+        this.searchText = new SimpleStringProperty(searchText); 
         this.transferTweets = new ArrayBlockingQueue<>(transferSize);
         this.tweetsCreationTask = new TweetsCreationTask(this);
     }
@@ -72,15 +74,22 @@ public final class TweetSetData {
     }
 
     public String getSearchText() {
-        return searchText;
+        return searchText.getValue();
     }
 
+    public void setNewSearchText(String newSearchText) {
+        this.searchText.setValue(newSearchText);
+        // *********************************** //
+        // don't know how to proceed to change Tweed in this Class
+        // *********************************** //
+    }
+    
     public Tweet getNextOrRandomTweet(final int waitSeconds, final int random) throws InterruptedException {
         Tweet tweet = transferTweets.poll(5, TimeUnit.SECONDS);
 
         if (tweet == null) {
             tweet = tweeter.search(new TweetQuery()
-                    .query(searchText)
+                    .query(searchText.getValue())
                     .count(10))
                     .skip((long) (Math.random() * 10))
                     .findFirst()
@@ -104,7 +113,7 @@ public final class TweetSetData {
 
     public void buildTree(final int numberOfTweets) {
         final Stream<String> stringStream = tweeter
-                .search(new TweetQuery().query(searchText).count(100))
+                .search(new TweetQuery().query(searchText.getValue()).count(100))
                 .map(t -> t.getText()
                         .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                         .replaceAll("http[s]?:.*((\\s+)|($))", " ")

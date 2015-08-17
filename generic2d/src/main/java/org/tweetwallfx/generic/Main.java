@@ -25,18 +25,22 @@ package org.tweetwallfx.generic;
 
 import com.beust.jcommander.Parameter;
 import java.net.URL;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
 import org.tweetwallfx.tweet.StopList;
+import org.tweetwallfx.tweet.TweetSetData;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import org.tweetwallfx.tweet.TweetSetData;
 
 /**
  * @author martin
@@ -78,6 +82,24 @@ public class Main extends Application {
         primaryStage.setTitle(Params.title);
         primaryStage.setScene(scene);
         scene.getStylesheets().add(Params.stylesheet.toExternalForm());
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (event.getCode() == KeyCode.NUMBER_SIGN) { //Hash Key pressed
+                
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Enter new HashTa");
+                dialog.setHeaderText("Enter some text, or use default value.");
+
+                Optional<String> result = dialog.showAndWait();
+                String entered = "none.";
+
+                if (result.isPresent()) {
+
+                    entered = result.get();
+                }
+                System.out.println("Text entered:" + entered);
+
+            }
+        });
         primaryStage.show();
         primaryStage.setFullScreen(true);
         service.start();
