@@ -12,7 +12,6 @@ subprojects {
         jcenter()
     }
     dependencies {
-        //        compile fileTree(dir: 'libs', include: '*.jar')
         testCompile 'junit:junit:4.11'
     }
     version = '1.0'
@@ -22,7 +21,7 @@ subprojects {
     }
 
     compileJava {
-        options.compilerArgs << "-Xlint:all"// << "-Xlint:deprecation"
+        options.compilerArgs << "-Xlint:all"
     } 
 
     findbugs {
@@ -129,7 +128,8 @@ project(":TweetWallFX-NetBeans") {
 
     run {
         classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
-    }    
+    }
+
     task('debug', dependsOn: 'classes', type: JavaExec) {
         classpath sourceSets.main.runtimeClasspath
         classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
@@ -151,13 +151,14 @@ project(":TweetWallFX-JavaOne") {
     tasks.withType(JavaExec) {
         main mainClassName
         args "-title", "The JavaFX Tweetwall for JavaOne!"
-        args "-query", "#javaonebr OR #javaone"
-        args "-stylesheet", file('src/main/resources/netbeans.css').toURI().toURL().toString()
+        args "-query", "#javaone"
+        args "-stylesheet", file('src/main/resources/javaone.css').toURI().toURL().toString()
     }
 
     run {
         classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
-    }    
+    }
+
     task('debug', dependsOn: 'classes', type: JavaExec) {
         classpath sourceSets.main.runtimeClasspath
         classpath project(':TweetWallFX-Tweet-Impl-Twitter4J').sourceSets.main.runtimeClasspath
@@ -181,5 +182,5 @@ project(":TweetWallFX-Generic2D") {
 description = 'TweetWallFX'
 
 task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
-
+task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
 task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')
