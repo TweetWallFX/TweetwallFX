@@ -23,16 +23,13 @@
  */
 package org.tweetwallfx.generic;
 
-import com.beust.jcommander.Parameter;
-import java.net.URL;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.openide.util.lookup.ServiceProvider;
-import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
@@ -43,16 +40,17 @@ import org.tweetwallfx.tweet.TweetSetData;
  */
 public class Main extends Application {
 
+    private static final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+    private static final String title = Configuration.getInstance().getConfig("tweetwall.title");
+    private static final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
     private Tweeter tweeter;
     private TagTweets tweetsTask;
 
     @Override
     public void start(Stage primaryStage) {
-        CommandLineArgumentParser.parseArguments(getParameters().getRaw());
-
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
-        StopList.add(Params.query);
+        StopList.add(query);
 
         final Service<Void> service = new Service<Void>() {
             @Override
@@ -69,15 +67,24 @@ public class Main extends Application {
         };
 
         service.setOnSucceeded(e -> {
-            if (!Params.query.isEmpty() && tweeter != null) {
-                tweetsTask = new TagTweets(new TweetSetData(tweeter, Params.query), borderPane);
+            if (!query.isEmpty() && tweeter != null) {
+                tweetsTask = new TagTweets(new TweetSetData(tweeter, query), borderPane);
                 tweetsTask.start();
             }
         });
+        service.setOnFailed(e -> {
+            System.err.println("FAILED!");
+            Main.this.stop();
+            primaryStage.close();
+        });
 
-        primaryStage.setTitle(Params.title);
+        primaryStage.setTitle(title);
         primaryStage.setScene(scene);
-        scene.getStylesheets().add(Params.stylesheet.toExternalForm());
+        
+        if (null != stylesheet) {
+            scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(stylesheet).toExternalForm());
+        }
+
         primaryStage.show();
         primaryStage.setFullScreen(true);
         service.start();
@@ -96,16 +103,5 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-    }
-
-    @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
-    public static final class Params implements CommandLineArgumentParser.ParametersObject {
-
-        @Parameter(names = "-query", description = "Query used for querying Twitter")
-        private static String query = "";
-        @Parameter(names = "-stylesheet", required = true, description = "The stylesheet to apply")
-        private static URL stylesheet;
-        @Parameter(names = "-title", description = "The title of the TweetWallStage")
-        private static String title = "The generic JavaFX Tweetwall!";
     }
 }

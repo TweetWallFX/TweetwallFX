@@ -1,13 +1,15 @@
 rootProject.name='TweetWallFX'
 
-include ':cmdargs'
-project(":cmdargs").name = "TweetWallFX-CommandlineArguments"
-include 'controls'
+include ':config'
+project(":config").name = "TweetWallFX-Configuration"
+include ':controls'
 project(":controls").name = "TweetWallFX-Controls"
 include ':tweet-api'
 project(":tweet-api").name = "TweetWallFX-Tweet-API"
 include ':tweet-impl-twitter4j'
 project(":tweet-impl-twitter4j").name = "TweetWallFX-Tweet-Impl-Twitter4J"
+include ':tweet-impl-twitter4j-oauth'
+project(":tweet-impl-twitter4j-oauth").name = "TweetWallFX-Tweet-Impl-Twitter4J-OAuth"
 include ':core'
 project(":core").name = "TweetWallFX-Core"
 include ':2d'
