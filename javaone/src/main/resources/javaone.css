@@ -21,35 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+.root {
+    -color-java-blue: #5382A1;
+    -color-java-blue-uncoated: #7993a5;    
+    -color-java-orange: #FFA518;
+    -color-java-orange-uncoated: #ffb838;
+}
 
 .wordle {
-    -fx-background-color: linear-gradient(to bottom, gray, white 75%);
-    -fx-graphic: url(tweetwalllogo.png);
-    -fx-fav-icons-visible: false;
+    -fx-background-color: white;
+    -fx-graphic: url(JavaOne-vert-clr.png);
 }
 
 .wordle .tag {
-    -fx-fill: DarkBlue;     
+    -fx-fill: -color-java-blue !important;     
 }
 
 .wordle .name {
     -fx-font: 36px "Calibri"; 
-    -fx-text-fill: darkgray; 
+    -fx-text-fill: -color-java-blue !important; 
     -fx-font-weight: bold;    
 }
 
 .wordle .handle {
     -fx-font: 28px "Calibri";
-    -fx-text-fill: #8899A6;   
+    -fx-text-fill: -color-java-blue !important;   
 }
-
-.favoriteCount{
-    -glyph-name: "THUMBS_UP";
-    -glyph-size: 24px;
-}
-
-.retweetCount{
-    -glyph-name: "RETWEET";
-    -glyph-size: 24px;
-}
-

@@ -23,7 +23,7 @@
  */
 .wordle {
     -fx-background-color: linear-gradient(to bottom, lightblue, white 75%);
-    -fx-graphic: url(netbeans-logo.png)
+    -fx-graphic: url(netbeans-logo.png);
 }
 
 .wordle .tag {
