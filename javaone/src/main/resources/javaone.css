@@ -21,27 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.cmdargs;
+.root {
+    -color-java-blue: #5382A1;
+    -color-java-blue-uncoated: #7993a5;    
+    -color-java-orange: #FFA518;
+    -color-java-orange-uncoated: #ffb838;
+}
 
-import com.beust.jcommander.ParameterException;
-import java.io.File;
+.wordle {
+    -fx-background-color: white;
+    -fx-graphic: url(JavaOne-vert-clr.png);
+}
 
-/**
- * Parameter value validator for files that checks if the declared
- * {@link java.io.File} exists and is a regular {@link java.io.File}. If that is
- * not the case then a {@link com.beust.jcommander.ParameterException} will be
- * thrown.
- *
- * @author martin
- */
-public class RegularFileValueValidator extends FileExistsValueValidator {
+.wordle .tag {
+    -fx-fill: -color-java-blue !important;     
+}
 
-    @Override
-    public void validate(String string, File t) throws ParameterException {
-        super.validate(string, t);
+.wordle .name {
+    -fx-font: 36px "Calibri"; 
+    -fx-text-fill: -color-java-blue !important; 
+    -fx-font-weight: bold;    
+}
 
-        if (!t.isFile()) {
-            throw new ParameterException(t.getAbsolutePath() + " is not a regular file!");
-        }
-    }
+.wordle .handle {
+    -fx-font: 28px "Calibri";
+    -fx-text-fill: -color-java-blue !important;   
 }

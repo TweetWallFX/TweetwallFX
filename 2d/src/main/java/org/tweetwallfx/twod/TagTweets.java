@@ -31,9 +31,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.animation.Interpolator;
@@ -56,6 +55,7 @@ import javafx.util.Duration;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
+import org.tweetwallfx.tweet.ThreadingHelper;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
@@ -74,7 +74,7 @@ public class TagTweets {
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
-    private final ExecutorService showTweetsExecutor = createExecutor("ShowTweets");
+    private final ExecutorService showTweetsExecutor = ThreadingHelper.createSingleThreadExecutor("ShowTweets");
     private Wordle wordle;
     private final TweetSetData tweetSetData;
     private final BorderPane root;
@@ -112,9 +112,11 @@ public class TagTweets {
         }
     }
 
-    private class TweetsUpdateTask extends Task<Void> {
+    private static class TweetsUpdateTask extends Task<Void> {
 
-        private final Pattern pattern = Pattern.compile("\\s+");
+        private final Pattern pattern = Pattern.compile("\\s+");                    //Splitter for new tweet text to words.
+        private final Pattern trimPattern = Pattern.compile("(\\S+?)[.,!?:;´`']+"); //cut of bad word tails.
+        private final Pattern urlPattern = Pattern.compile("http[s]?:.*");          //url pattern
         private final TweetSetData tweetSetData;
         private final Wordle wordle;
 
@@ -150,14 +152,25 @@ public class TagTweets {
             return null;
         }
 
+        private String trimTail(final String s) {
+            Matcher matcher = trimPattern.matcher(s);
+            if (matcher.matches()) {
+                return matcher.group(1);
+            } else {
+                return s;
+            }
+        }
+        
         private Set<Word> addTweetToCloud(Tweet tweet) {
 //        System.out.println("Add tweet to cloud");
             String text = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class);
             Set<Word> tweetWords = pattern.splitAsStream(text)
-                    .filter(l -> l.length() > 2)
-                    .filter(l -> !StopList.contains(l))
-                    .map(l -> new Word(l, -2))
-                    .collect(Collectors.toSet());
+                    .map(l -> trimTail(l))                          //no bad word tails
+                    .filter(l -> l.length() > 2)                    //longer than 2 characters
+                    .filter(l -> !urlPattern.matcher(l).matches())  //no url
+                    .filter(l -> !StopList.contains(l))             //not in stoplist
+                    .map(l -> new Word(l, -2))                      //convert to Word
+                    .collect(Collectors.toSet());                   //collect
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
             words.addAll(tweetWords);
@@ -173,7 +186,7 @@ public class TagTweets {
         private final ParallelTransition parallelTexts = new ParallelTransition();
         private final SequentialTransition sequential = new SequentialTransition(parallelWords, parallelTexts);
 
-        TweetsSnapshotTask(BlockingQueue<Parent> tweets) {
+        TweetsSnapshotTask(final BlockingQueue<Parent> tweets) {
             this.tweets = tweets;
         }
 
@@ -229,9 +242,9 @@ public class TagTweets {
     private class ShowTweetsTask extends Task<Void> {
 
         private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);
-        private final ExecutorService tweetsCreationExecutor = createExecutor("CreateTweets");
-        private final ExecutorService tweetsUpdateExecutor = createExecutor("UpdateTweets");
-        private final ExecutorService tweetsSnapshotExecutor = createExecutor("TakeSnapshots");
+        private final ExecutorService tweetsCreationExecutor = ThreadingHelper.createSingleThreadExecutor("CreateTweets");
+        private final ExecutorService tweetsUpdateExecutor = ThreadingHelper.createSingleThreadExecutor("UpdateTweets");
+        private final ExecutorService tweetsSnapshotExecutor = ThreadingHelper.createSingleThreadExecutor("TakeSnapshots");
         private final Task<Void> tweetsCreationTask;
         private final Task<Void> tweetsUpdateTask;
         private final Task<Void> tweetsSnapshotTask;
@@ -265,16 +278,6 @@ public class TagTweets {
 
             return null;
         }
-    }
-
-    private ExecutorService createExecutor(final String name) {
-        ThreadFactory factory = r -> {
-            Thread t = new Thread(r);
-            t.setName(name);
-            t.setDaemon(true);
-            return t;
-        };
-        return Executors.newSingleThreadExecutor(factory);
     }
 
     private void createWordle() {

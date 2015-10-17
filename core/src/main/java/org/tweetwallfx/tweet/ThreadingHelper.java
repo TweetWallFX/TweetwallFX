@@ -21,27 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.cmdargs;
+package org.tweetwallfx.tweet;
 
-import com.beust.jcommander.IValueValidator;
-import com.beust.jcommander.ParameterException;
-import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
- * Parameter value validator for files that checks if the declared
- * {@link java.io.File} exists. If that is not the case then a
- * {@link com.beust.jcommander.ParameterException} will be thrown.
- *
  * @author martin
  */
-public class FileExistsValueValidator implements IValueValidator<File> {
+public class ThreadingHelper {
 
-    @Override
-    public void validate(String string, File t) throws ParameterException {
-        if (null == t) {
-            throw new ParameterException(string + " is not set!");
-        } else if (!t.exists()) {
-            throw new ParameterException(t.getAbsolutePath() + " does not exist!");
-        }
+    private ThreadingHelper() {
+    }
+
+    public static ThreadFactory createSimpleThreadFactory(final String name) {
+        return r -> {
+            Thread t = new Thread(r);
+            t.setName(name);
+            t.setDaemon(true);
+            return t;
+        };
+    }
+
+    public static ExecutorService createSingleThreadExecutor(final String name) {
+        return Executors.newSingleThreadExecutor(createSimpleThreadFactory(name));
     }
 }
