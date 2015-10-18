@@ -23,21 +23,9 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import com.beust.jcommander.Parameter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.openide.util.lookup.ServiceProvider;
-import org.tweetwallfx.cmdargs.CommandLineArgumentParser;
-import org.tweetwallfx.cmdargs.RegularFileValueValidator;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -90,39 +78,12 @@ final class TwitterOAuth {
     }
 
     private static Configuration createConfiguration() {
-        Properties props = new Properties();
-
-        try {
-            if (null == Params.oAuthFile) {
-                System.out.println("Using in-built authentication information");
-                /* MyRealOAuth.properties -> this file is not commited to the repo. 
-                 Ask for it or provide your own keys. */
-                try (final InputStream is = TwitterOAuth.class.getResourceAsStream("MyOAuth.properties")) {
-                    props.load(is);
-                }
-            } else {
-                System.out.println("Using authentication information from provided file: " + Params.oAuthFile.getAbsolutePath());
-
-                try (final Reader fr = new InputStreamReader(new FileInputStream(Params.oAuthFile), "UTF-8")) {
-                    props.load(fr);
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println("Error finding properties file: " + ex);
-            exception.set(ex);
-            return null;
-        } catch (IOException ex) {
-            System.out.println("Error loading properties file: " + ex);
-            exception.set(ex);
-            return null;
-        }
-
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(false);
-        builder.setOAuthConsumerKey(props.getProperty("oauth.consumerKey"));
-        builder.setOAuthConsumerSecret(props.getProperty("oauth.consumerSecret"));
-        builder.setOAuthAccessToken(props.getProperty("oauth.accessToken"));
-        builder.setOAuthAccessTokenSecret(props.getProperty("oauth.accessTokenSecret"));
+        builder.setOAuthConsumerKey(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerKey"));
+        builder.setOAuthConsumerSecret(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerSecret"));
+        builder.setOAuthAccessToken(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessToken"));
+        builder.setOAuthAccessTokenSecret(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessTokenSecret"));
         Configuration conf = builder.build();
 
         // check Configuration
@@ -146,12 +107,5 @@ final class TwitterOAuth {
         }
 
         return conf;
-    }
-
-    @ServiceProvider(service = CommandLineArgumentParser.ParametersObject.class)
-    public static final class Params implements CommandLineArgumentParser.ParametersObject {
-
-        @Parameter(names = "-oAuthFile", description = "File with OAuth Properties", validateValueWith = RegularFileValueValidator.class)
-        private static File oAuthFile;
     }
 }
