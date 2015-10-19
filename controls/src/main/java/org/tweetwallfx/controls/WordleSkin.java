@@ -82,6 +82,7 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     private ImageView logo;
     private final Boolean favIconsVisible;
+    private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
 
     public WordleSkin(Wordle wordle) {
         super(wordle);
@@ -281,7 +282,6 @@ public class WordleSkin extends SkinBase<Wordle> {
         Label name = new Label(tweetInfo.getUser().getName());
         name.getStyleClass().setAll("name");
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " · " + df.format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
         hbox.getChildren().addAll(hImage, name, handle);
