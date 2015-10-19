@@ -52,6 +52,10 @@ public class Wordle extends Control {
     ObjectProperty<Tweet> tweetInfoProperty = new SimpleObjectProperty<>();
 
     ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
+    private SimpleStyleableStringProperty logo;
+    private SimpleStyleableBooleanProperty favIconsVisible;
+    
+    private String userAgentStylesheet = null;
 
     public Wordle() {
         getStyleClass().setAll("wordle");
@@ -85,7 +89,6 @@ public class Wordle extends Control {
     protected Skin<?> createDefaultSkin() {
         return new WordleSkin(this);
     }
-    private SimpleStyleableStringProperty logo;
 
     public String getLogo() {
         return logo.get();
@@ -101,8 +104,6 @@ public class Wordle extends Control {
         }
         return logo;
     }
-
-    private SimpleStyleableBooleanProperty favIconsVisible;
 
     public Boolean isFavIconsVisible() {
         return favIconsVisible.get();
@@ -121,7 +122,10 @@ public class Wordle extends Control {
 
     @Override
     public String getUserAgentStylesheet() {
-        return this.getClass().getResource("wordle.css").toExternalForm();
+        if (null == userAgentStylesheet) {
+            userAgentStylesheet = this.getClass().getResource("wordle.css").toExternalForm();
+        }
+        return userAgentStylesheet;
     }
 
     private static class StyleableProperties {
