@@ -40,9 +40,9 @@ import org.tweetwallfx.tweet.TweetSetData;
  */
 public class Main extends Application {
 
-    private static final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
-    private static final String title = Configuration.getInstance().getConfig("tweetwall.title");
-    private static final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
+    private final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+    private final String title = Configuration.getInstance().getConfig("tweetwall.title");
+    private final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
     private Tweeter tweeter;
     private TagTweets tweetsTask;
 
