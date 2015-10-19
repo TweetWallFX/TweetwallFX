@@ -25,7 +25,7 @@
 .wordle {
     -fx-background-color: linear-gradient(to bottom, gray, white 75%);
     -fx-graphic: url(tweetwalllogo.png);
-    -fx-fav-icons-visible: false;
+    -fx-fav-icons-visible: true;
 }
 
 .wordle .tag {
