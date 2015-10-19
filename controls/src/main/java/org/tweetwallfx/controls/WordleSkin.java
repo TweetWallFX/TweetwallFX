@@ -24,11 +24,14 @@
 package org.tweetwallfx.controls;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,6 +86,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     private ImageView logo;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
+    private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
+    private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
 
     public WordleSkin(Wordle wordle) {
         super(wordle);
@@ -270,8 +275,10 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         HBox hImage = new HBox();
         hImage.setPadding(new Insets(10));
-        Image image = new Image(tweetInfo.getUser().getProfileImageUrl(), 64, 64, true, false);
-        ImageView imageView = new ImageView(image);
+
+        Image profileImage = profileImageCache.get(tweetInfo.getUser().getProfileImageUrl());
+//        Image profileImage = new Image(tweetInfo.getUser().getProfileImageUrl(), 64, 64, true, false);
+        ImageView imageView = new ImageView(profileImage);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
         clip.setArcHeight(10);
@@ -308,7 +315,8 @@ public class WordleSkin extends SkinBase<Wordle> {
 //            System.out.println("Media detected: " + tweetInfo.getText() + " " + Arrays.toString(tweetInfo.getMediaEntities()));
             mediaBox = new HBox();
             hImage.setPadding(new Insets(10));
-            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
+            Image mediaImage = mediaImageCache.get(tweetInfo.getMediaEntries()[0].getMediaUrl());
+//            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
             ImageView mediaView = new ImageView(mediaImage);
             mediaView.setPreserveRatio(true);
             mediaView.setCache(true);
@@ -775,4 +783,57 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     }
 
+    private static class ImageCache {
+    
+        private final int MAX_SIZE = 10;
+        private final Map<String, Reference<Image>> cache = new HashMap<>();
+        private final LinkedList<String> lru = new LinkedList<>();
+        private final ImageCreator creator;
+
+        public ImageCache(final ImageCreator creator) {
+            this.creator = creator;
+        }
+        
+        public Image get(final String url) {
+            Image image;
+            Reference<Image> imageRef = cache.get(url);
+            if (null == imageRef || (null == (image = imageRef.get()))) {
+                image = creator.create(url);
+                cache.put(url, new SoftReference<>(image));
+                lru.addFirst(url);
+            } else {
+                if (!url.equals(lru.peekFirst())) {
+                    lru.remove(url);
+                    lru.addFirst(url);
+                }
+            }
+
+            if (lru.size() > MAX_SIZE) {
+                String oldest = lru.removeLast();
+                cache.remove(oldest);
+            }
+            
+            return image;
+        }
+
+        public static interface ImageCreator {
+            Image create(String url);
+        }
+        
+        public static class DefaultImageCreator implements ImageCreator {
+
+            @Override
+            public Image create(final String url) {
+                return new Image(url);
+            }
+        }
+        public static class ProfileImageCreator implements ImageCreator {
+
+            @Override
+            public Image create(final String url) {
+                return new Image(url, 64, 64, true, false);
+            }
+        }
+    }
+    
 }
