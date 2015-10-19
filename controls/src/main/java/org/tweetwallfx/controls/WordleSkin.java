@@ -647,10 +647,15 @@ public class WordleSkin extends SkinBase<Wordle> {
                             || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
                         useable = false;
                     }
-                    for (int prev = 0; prev < i; ++prev) {
-                        if (mayBe.intersects(boundsList.get(prev)) || (null != logo && mayBe.intersects(logoBounds))) {
-                            useable = false;
-                            break;
+                    if (useable) {
+                        useable = (null != logo && !mayBe.intersects(logoBounds));
+                    }
+                    if (useable) {
+                        for (int prev = 0; prev < i; ++prev) {
+                            if (mayBe.intersects(boundsList.get(prev))) {
+                                useable = false;
+                                break;
+                            }
                         }
                     }
                     if (useable || doFinish) {
