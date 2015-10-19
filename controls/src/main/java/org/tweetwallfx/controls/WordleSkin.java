@@ -289,7 +289,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         Label name = new Label(tweetInfo.getUser().getName());
         name.getStyleClass().setAll("name");
 
-        Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " · " + df.format(tweetInfo.getCreatedAt()));
+        Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " - " + df.format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
         hbox.getChildren().addAll(hImage, name, handle);
         if (favIconsVisible) {
