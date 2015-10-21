@@ -46,10 +46,23 @@
 .favoriteCount{
     -glyph-name: "THUMBS_UP";
     -glyph-size: 24px;
+    -fx-fill: #8899A6;   
 }
 
 .retweetCount{
     -glyph-name: "RETWEET";
     -glyph-size: 24px;
+    -fx-fill: #8899A6;   
+}
+
+.retweetBack{
+    -glyph-name: "SQUARE"; 
+    -glyph-size: 24px;    
+    -fx-fill: yellowgreen; 
+}
+.retweetFront{
+    -glyph-name: "RETWEET";
+    -glyph-size: 16px;    
+    -fx-fill: white; 
 }
 
