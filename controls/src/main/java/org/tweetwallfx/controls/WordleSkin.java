@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls;
 
+import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -285,6 +286,17 @@ public class WordleSkin extends SkinBase<Wordle> {
         imageView.setClip(clip);
         hImage.getChildren().add(imageView);
 
+        if (tweetInfo.isRetweet()) {
+            FontAwesomeIcon retweetIconBack = new FontAwesomeIcon();
+            retweetIconBack.getStyleClass().addAll("retweetBack");
+            FontAwesomeIcon retweetIconFront = new FontAwesomeIcon();
+            retweetIconFront.getStyleClass().addAll("retweetFront");
+            
+            GlyphsStack stackedIcon = GlyphsStack.create()
+                    .add(retweetIconBack)
+                    .add(retweetIconFront);
+            hbox.getChildren().add(stackedIcon);
+        }
 //        HBox hName = new HBox(20);
         Label name = new Label(tweetInfo.getUser().getName());
         name.getStyleClass().setAll("name");
@@ -293,18 +305,21 @@ public class WordleSkin extends SkinBase<Wordle> {
         handle.getStyleClass().setAll("handle");
         hbox.getChildren().addAll(hImage, name, handle);
         if (favIconsVisible) {
-            FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
-            faiFavCount.getStyleClass().setAll("favoriteCount");
-            FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
-            faiReTwCount.getStyleClass().setAll("retweetCount");
+            if (0 < tweetInfo.getRetweetCount()) {
+                FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
+                faiReTwCount.getStyleClass().setAll("retweetCount");
 
-            Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
-            favCount.getStyleClass().setAll("handle");
-
-            Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
-            reTwCount.getStyleClass().setAll("handle");
-
-            hbox.getChildren().addAll(faiReTwCount, reTwCount, faiFavCount, favCount);
+                Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+                reTwCount.getStyleClass().setAll("handle");
+                hbox.getChildren().addAll(faiReTwCount, reTwCount);
+            }
+            if (0 < tweetInfo.getFavoriteCount()) {
+                FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
+                faiFavCount.getStyleClass().setAll("favoriteCount");
+                Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+                favCount.getStyleClass().setAll("handle");
+                hbox.getChildren().addAll(faiFavCount, favCount);
+            }
         }
 
         hbox.setOpacity(0);
