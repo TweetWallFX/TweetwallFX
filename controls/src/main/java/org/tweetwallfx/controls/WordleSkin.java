@@ -328,29 +328,35 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         if (tweetInfo.getMediaEntries().length > 0) {
 //            System.out.println("Media detected: " + tweetInfo.getText() + " " + Arrays.toString(tweetInfo.getMediaEntities()));
-            mediaBox = new HBox();
+            mediaBox = new HBox(10);
+            mediaBox.setOpacity(0);
+            mediaBox.setPadding(new Insets(10));
+            mediaBox.setAlignment(Pos.CENTER);
+            mediaBox.setLayoutX(logo.getImage().getWidth() + 10);
+            mediaBox.setLayoutY(lowerLeft.getY() + 100);
+//            mediaBox.setMaxSize(layoutBounds.getWidth() / 2d, Math.max(50, layoutBounds.getHeight() - 50 - hbox.getLayoutY()));
+            mediaBox.setMaxSize(layoutBounds.getWidth() - (logo.getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - (lowerLeft.getY() + 100)));
+            FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
+            ft.setToValue(1);
+            fadeInTransitions.add(ft);
             hImage.setPadding(new Insets(10));
-            Image mediaImage = mediaImageCache.get(tweetInfo.getMediaEntries()[0].getMediaUrl());
-//            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
-            ImageView mediaView = new ImageView(mediaImage);
-            mediaView.setPreserveRatio(true);
-            mediaView.setCache(true);
-            mediaView.setSmooth(true);
+            int imageCount = Math.min(3, tweetInfo.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            for (int i = 0; i < imageCount; i++) {
+                Image mediaImage = mediaImageCache.get(tweetInfo.getMediaEntries()[i].getMediaUrl());
+    //            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
+                ImageView mediaView = new ImageView(mediaImage);
+                mediaView.setPreserveRatio(true);
+                mediaView.setCache(true);
+                mediaView.setSmooth(true);
 //            Rectangle clip = new Rectangle(64, 64);
 //            clip.setArcWidth(10);
 //            clip.setArcHeight(10);
 //            imageView.setClip(clip);
-            mediaBox.getChildren().add(mediaView);
-            mediaBox.setOpacity(0);
-            mediaBox.setLayoutX(layoutBounds.getWidth() / 2d);
-            mediaBox.setLayoutY(lowerLeft.getY() + 100);
-            mediaBox.setMaxSize(layoutBounds.getWidth() / 2d, layoutBounds.getHeight() - 50);
-            mediaView.setFitWidth(mediaBox.getWidth() - 10);
-            mediaView.setFitHeight(mediaBox.getHeight() - 10);
+                mediaView.setFitWidth((mediaBox.getMaxWidth() - 10) / imageCount);
+                mediaView.setFitHeight(mediaBox.getMaxHeight() - 10);
+                mediaBox.getChildren().add(mediaView);
+            }
             // add fade in for image and meta data
-            FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
-            ft.setToValue(1);
-            fadeInTransitions.add(ft);
             pane.getChildren().add(mediaBox);
         }
 
@@ -599,7 +605,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                 .forEach(w -> {
                     Text textWord = new Text(w.concat(" "));
                     textWord.getStyleClass().setAll("tag");
-                    String color = "#292F33";
+//                    String color = "#292F33";
 //                    textWord.setStyle("-fx-fill: " + color + ";");
                     textWord.setFont(Font.font(defaultFont.getFamily(), TWEET_FONT_SIZE));
                     flow.getChildren().add(textWord);
