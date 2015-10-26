@@ -446,18 +446,20 @@ public class WordleSkin extends SkinBase<Wordle> {
         tweetWordList.clear();
 
         if (null != hbox) {
-            FadeTransition ft = new FadeTransition(defaultDuration, hbox);
+            Node hboxNode = hbox;
+            FadeTransition ft = new FadeTransition(defaultDuration, hboxNode);
             ft.setToValue(0);
             ft.setOnFinished(event -> {
-                pane.getChildren().remove(hbox);
+                pane.getChildren().remove(hboxNode);
             });
             fadeOutTransitions.add(ft);
         }
         if (null != mediaBox) {
-            FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
+            Node mediaBoxNode = mediaBox;
+            FadeTransition ft = new FadeTransition(defaultDuration, mediaBoxNode);
             ft.setToValue(0);
             ft.setOnFinished(event -> {
-                pane.getChildren().remove(mediaBox);
+                pane.getChildren().remove(mediaBoxNode);
             });
             fadeOutTransitions.add(ft);
         }
