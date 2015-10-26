@@ -163,7 +163,9 @@ public class TagTweets {
         
         private Set<Word> addTweetToCloud(Tweet tweet) {
 //        System.out.println("Add tweet to cloud");
-            String text = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class);
+            String text = tweet.getTextWithout(UrlTweetEntry.class)
+                    .getTextWithout(UserMentionTweetEntry.class)
+                    .get();
             Set<Word> tweetWords = pattern.splitAsStream(text)
                     .map(l -> trimTail(l))                          //no bad word tails
                     .filter(l -> l.length() > 2)                    //longer than 2 characters
