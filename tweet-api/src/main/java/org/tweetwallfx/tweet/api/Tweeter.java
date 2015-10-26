@@ -23,11 +23,11 @@
  */
 package org.tweetwallfx.tweet.api;
 
-import java.util.Objects;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import java.util.stream.Stream;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.openide.util.Lookup;
 
 public abstract class Tweeter {
 
@@ -45,9 +45,13 @@ public abstract class Tweeter {
     }
 
     private static void createInstance() {
-        INSTANCE = Objects.requireNonNull(
-                Lookup.getDefault().lookup(Tweeter.class),
-                "No implementation of Tweeter found!");
+        final Iterator<Tweeter> itTweeter = ServiceLoader.load(Tweeter.class).iterator();
+        
+        if (itTweeter.hasNext()) {
+            INSTANCE = itTweeter.next();
+        } else {
+            throw new IllegalStateException("No implementation of Tweeter found!");
+        }
     }
 
     public abstract TweetStream createTweetStream();
