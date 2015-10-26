@@ -22,6 +22,7 @@ subprojects {
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
+        options.compilerArgs << "-Werror"
     } 
 
     findbugs {
