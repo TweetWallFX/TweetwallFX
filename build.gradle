@@ -173,6 +173,19 @@ project(":TweetWallFX-Generic2D") {
 
 description = 'TweetWallFX'
 
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+    rootProject.allprojects.each {p ->
+        if (p.hasProperty('sourceSets')) {
+            p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+                if (!srcDir.isDirectory()) {
+                    println "Creating source folder: ${srcDir}"
+                    srcDir.mkdirs()
+                }
+            }
+        }
+    }
+}
+
 task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
 task ('runDevoxx2015', dependsOn: ':TweetWallFX-Devoxx-2015:run')
 task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
