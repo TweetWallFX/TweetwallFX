@@ -81,8 +81,8 @@ public final class TweetSetData {
         if (tweet == null) {
             tweet = tweeter.search(new TweetQuery()
                     .query(searchText)
-                    .count(10))
-                    .skip((long) (Math.random() * 10))
+                    .count(random))
+                    .skip((long) (Math.random() * random))
                     .findFirst()
                     .orElse(null);
         }
