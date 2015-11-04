@@ -53,6 +53,7 @@ public class Wordle extends Control {
 
     ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
     private SimpleStyleableStringProperty logo;
+    private SimpleStyleableStringProperty backgroundGraphic;
     private SimpleStyleableBooleanProperty favIconsVisible;
     
     private String userAgentStylesheet = null;
@@ -105,6 +106,21 @@ public class Wordle extends Control {
         return logo;
     }
 
+    public String getBackgroundGraphic() {
+        return backgroundGraphic.get();
+    }
+
+    public void setBackgroundGraphic(String value) {
+        backgroundGraphic.set(value);
+    }
+
+    public SimpleStyleableStringProperty backgroundGraphicProperty() {
+        if (backgroundGraphic == null) {
+            backgroundGraphic = new SimpleStyleableStringProperty(StyleableProperties.BACKGROUND_GRAPHIC, Wordle.this, "background", null);
+        }
+        return backgroundGraphic;
+    }
+
     public Boolean isFavIconsVisible() {
         return favIconsVisible.get();
     }
@@ -144,6 +160,20 @@ public class Wordle extends Control {
                     }
                 };
 
+        private static final CssMetaData< Wordle, String> BACKGROUND_GRAPHIC
+                = new CssMetaData<Wordle, String>("-fx-background-graphic",
+                        StyleConverter.getUrlConverter(), null) {
+                    @Override
+                    public boolean isSettable(Wordle control) {
+                        return control.backgroundGraphic == null || !control.backgroundGraphic.isBound();
+                    }
+
+                    @Override
+                    public StyleableProperty<String> getStyleableProperty(Wordle control) {
+                        return control.backgroundGraphicProperty();
+                    }
+                };
+
         private static final CssMetaData< Wordle, Boolean> FAVICONS_VISIBLE
                 = new CssMetaData<Wordle, Boolean>("-fx-fav-icons-visible",
                         StyleConverter.getBooleanConverter()) {
@@ -166,6 +196,7 @@ public class Wordle extends Control {
                     = new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                     LOGO_GRAPHIC,
+                    BACKGROUND_GRAPHIC,
                     FAVICONS_VISIBLE
             );
             STYLEABLES = Collections.unmodifiableList(styleables);

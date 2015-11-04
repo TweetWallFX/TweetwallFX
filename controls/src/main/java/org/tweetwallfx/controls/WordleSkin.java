@@ -56,12 +56,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**
@@ -79,45 +81,47 @@ public class WordleSkin extends SkinBase<Wordle> {
     private double max;
     private double min;
     private final Pane pane;
+    private final Pane stackPane;
+    private final Pane backgroundPane;
     private List<Word> limitedWords;
     private HBox hbox;
     private Point2D lowerLeft;
     private HBox mediaBox;
 
     private ImageView logo;
+    private ImageView backgroundImage;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
     private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
 
+    
     public WordleSkin(Wordle wordle) {
         super(wordle);
+        //create panes
+        stackPane = new StackPane();
+        backgroundPane = new Pane();
         pane = new Pane();
-        pane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
 
+        //assemble panes
+        stackPane.getChildren().addAll(backgroundPane, pane);
+        this.getChildren().add(stackPane);
+        //assign style
+        stackPane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
+        
         getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
-            if (null != logo) {
-                pane.getChildren().remove(logo);
-            }
-            System.out.println("Logo: " + newValue);
-            logo = new ImageView(newValue);
-
-            pane.getChildren().add(logo);
-            logo.setLayoutX(0);
-            logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+            updateLogo(newValue);
         });
 
-        System.out.println("LOGO: " + getSkinnable().logoProperty().getValue());
+        getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue) -> {
+            updateBackgroundGraphic(newValue);
+        });
 
-        logo = new ImageView(getSkinnable().logoProperty().getValue());
-        logo.getStyleClass().setAll("logo");
-
-        pane.getChildren().add(logo);
-        logo.setLayoutX(0);
-        logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+        updateBackgroundGraphic(getSkinnable().backgroundGraphicProperty().getValue());
+        updateLogo(getSkinnable().logoProperty().getValue());
 
 //        pane.setStyle("-fx-border-width: 1px; -fx-border-color: black;");
-        this.getChildren().add(pane);
+//        this.getChildren().add(pane);
         updateCloud();
 
         wordle.wordsProperty.addListener((obs, oldValue, newValue) -> {
@@ -169,6 +173,45 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     }
 
+    private void updateLogo(final String newLogo) {
+        if (null != logo) {
+            pane.getChildren().remove(logo);
+            logo = null;
+        }
+        System.out.println("Logo: " + newLogo);
+        if (null != newLogo && !newLogo.isEmpty()) {
+            logo = new ImageView(newLogo);
+
+            pane.getChildren().add(logo);
+            logo.setLayoutX(0);
+            logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+        }
+    }
+
+    private void updateBackgroundGraphic(final String newBackgroundGraphic) {
+        if (null != backgroundImage) {
+            backgroundPane.getChildren().remove(backgroundImage);
+            backgroundImage = null;
+        }
+        System.out.println("BackgroundGraphic: " + newBackgroundGraphic);
+        if (null != newBackgroundGraphic && !newBackgroundGraphic.isEmpty()) {
+            backgroundImage = new ImageView(newBackgroundGraphic);
+
+
+//            Bounds layoutBounds = backgroundPane.getLayoutBounds();
+            Bounds layoutBounds = backgroundPane.getBoundsInLocal();
+            backgroundImage.setFitWidth(layoutBounds.getWidth());
+            backgroundImage.setFitHeight(layoutBounds.getHeight());
+
+            backgroundImage.setPreserveRatio(true);
+            backgroundImage.autosize();
+
+            backgroundPane.getChildren().add(backgroundImage);
+//        logo.setLayoutX(0);
+//        logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+        }
+    }
+
     private Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         double rightMargin = upperLeft.getX() + maxWidth;
@@ -187,7 +230,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     Point2D tweetLineOffset = new Point2D(0, 0);
 
     private void cloudToTweet() {
-
+        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+        startupLogger.trace("cloudToTweet()");
         Bounds layoutBounds = pane.getLayoutBounds();
         Tweet tweetInfo = getSkinnable().tweetInfoProperty.get();
 
@@ -377,6 +421,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     }
 
     private void tweetToCloud() {
+        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+        startupLogger.trace("tweetToCloud()");
         List<Word> sortedWords = new ArrayList<>(getSkinnable().wordsProperty().getValue());
 
         if (sortedWords.isEmpty()) {

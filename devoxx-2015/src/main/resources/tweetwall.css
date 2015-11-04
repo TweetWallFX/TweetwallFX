@@ -36,6 +36,7 @@
 .wordle {
     -fx-background-color: white;
     -fx-graphic: url(JavaOne-vert-clr.png);
+    -fx-background-graphic: url(Devoxx2015Jigsaw.jpg);
 }
 
 .wordle .tag {

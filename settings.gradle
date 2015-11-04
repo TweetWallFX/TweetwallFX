@@ -19,6 +19,8 @@ project(":3d").name = "TweetWallFX-3D"
 
 include ':devoxx'
 project(":devoxx").name = "TweetWallFX-Devoxx"
+include ':devoxx-2015'
+project(":devoxx-2015").name = "TweetWallFX-Devoxx-2015"
 include ':netbeans'
 project(":netbeans").name = "TweetWallFX-NetBeans"
 include ':javaone'
