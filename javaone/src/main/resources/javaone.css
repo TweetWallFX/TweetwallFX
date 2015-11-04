@@ -28,6 +28,11 @@
     -color-java-orange-uncoated: #ffb838;
 }
 
+.statusline {
+    -fx-font: 12px "Calibri"; 
+    -fx-text-fill: -color-java-blue !important;     
+}
+
 .wordle {
     -fx-background-color: white;
     -fx-graphic: url(JavaOne-vert-clr.png);

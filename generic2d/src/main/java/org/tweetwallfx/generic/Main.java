@@ -28,9 +28,14 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.StopList;
+import org.tweetwallfx.tweet.StringPropertyAppender;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
 import org.tweetwallfx.tweet.TweetSetData;
@@ -40,6 +45,9 @@ import org.tweetwallfx.tweet.TweetSetData;
  */
 public class Main extends Application {
 
+    private static final String STARTUP = "org.tweetwallfx.startup";
+    Logger startupLogger = Logger.getLogger(STARTUP);
+    
     private static final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
     private static final String title = Configuration.getInstance().getConfig("tweetwall.title");
     private static final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
@@ -51,14 +59,25 @@ public class Main extends Application {
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
         StopList.add(query);
+        startupLogger.addAppender(new StringPropertyAppender());
+        startupLogger.setLevel(Level.TRACE);
 
+        HBox statusLineHost = new HBox();
+        Text statusLineText = new Text();
+        statusLineText.getStyleClass().addAll("statusline");
+        statusLineText.textProperty().bind(((StringPropertyAppender)startupLogger.getAppender(StringPropertyAppender.class.getName())).stringProperty());
+        statusLineHost.getChildren().add(statusLineText);
+        borderPane.setBottom(statusLineHost);
+        
         final Service<Void> service = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
+                        startupLogger.trace("Create Tweeter ...");
                         tweeter = Tweeter.getInstance();
+                        startupLogger.trace("Tweeter created!");
                         return null;
                     }
                 };
@@ -67,6 +86,7 @@ public class Main extends Application {
         };
 
         service.setOnSucceeded(e -> {
+            startupLogger.trace("Start Tweet task ...");
             if (!query.isEmpty() && tweeter != null) {
                 tweetsTask = new TagTweets(new TweetSetData(tweeter, query), borderPane);
                 tweetsTask.start();

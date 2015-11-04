@@ -52,6 +52,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
@@ -71,6 +72,8 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
  * @author José Pereda
  */
 public class TagTweets {
+    private static final String STARTUP = "org.tweetwallfx.startup";
+    Logger startupLogger = Logger.getLogger(STARTUP);
 
     private final static int MIN_WEIGHT = 4;
     private final static int NUM_MAX_WORDS = 40;
@@ -89,6 +92,7 @@ public class TagTweets {
     }
 
     public void start() {
+        startupLogger.trace("TagTweets.start");
         hWordle.setAlignment(Pos.CENTER);
         hWordle.setPadding(new Insets(20));
         hWordle.prefWidthProperty().bind(root.widthProperty());
@@ -97,10 +101,15 @@ public class TagTweets {
         root.setCenter(hWordle);
 
         System.out.println("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
+        startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
+        
         tweetSetData.buildTree(100);
+        startupLogger.trace("** create wordle");
         createWordle();
+        startupLogger.trace("** create wordle done");
 
         System.out.println("** 2. Starting new Tweets search for " + tweetSetData.getSearchText());
+        startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
         showTweetsExecutor.execute(new ShowTweetsTask());
     }
 
