@@ -1,0 +1,55 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2014-2015 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+.root {
+    -color-java-blue: #5382A1;
+    -color-java-blue-uncoated: #7993a5;    
+    -color-java-orange: #FFA518;
+    -color-java-orange-uncoated: #ffb838;
+}
+
+.statusline {
+    -fx-font: 12px "Calibri"; 
+    -fx-text-fill: -color-java-blue !important;     
+}
+
+.wordle {
+    -fx-background-color: white;
+    -fx-graphic: url(JavaOne-vert-clr.png);
+    -fx-background-graphic: url(Devoxx2015Jigsaw.jpg);
+}
+
+.wordle .tag {
+    -fx-fill: -color-java-blue !important;     
+}
+
+.wordle .name {
+    -fx-font: 36px "Calibri"; 
+    -fx-text-fill: -color-java-blue !important; 
+    -fx-font-weight: bold;    
+}
+
+.wordle .handle {
+    -fx-font: 28px "Calibri";
+    -fx-text-fill: -color-java-blue !important;   
+}
