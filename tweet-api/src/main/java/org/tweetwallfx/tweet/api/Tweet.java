@@ -24,10 +24,10 @@
 package org.tweetwallfx.tweet.api;
 
 import java.util.Arrays;
-import java.util.Collection;
 import org.tweetwallfx.tweet.api.entry.BasicEntry;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -60,48 +60,61 @@ public interface Tweet extends BasicEntry {
 
     boolean isRetweet();
 
-    public default String getTextWithout(final Class<? extends TweetEntry>... entriesToRemove) {
-        if (null == entriesToRemove || 0 == entriesToRemove.length) {
-            return getText();
+    public default TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
+        return new TextExtractor(this).getTextWithout(entryToRemove);
+    }
+
+    public static final class TextExtractor {
+
+        private final Set<Class<? extends TweetEntry>> entriesToRemove = new HashSet<>();
+        private final Tweet tweet;
+
+        public TextExtractor(final Tweet tweet) {
+            this.tweet = tweet;
         }
 
-        final Collection<Class<? extends TweetEntry>> entriesToRemoveCollection
-                = new HashSet<>(Arrays.asList(entriesToRemove));
-
-        entriesToRemoveCollection.remove(null);
-
-        if (entriesToRemoveCollection.isEmpty()) {
-            return getText();
-        }
-
-        final StringBuilder sb = new StringBuilder(getText());
-        final Consumer<TweetEntry> consumer = entry -> {
-            for (int i = entry.getStart(); i < entry.getEnd(); i++) {
-                sb.setCharAt(i, ' ');
+        public TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
+            if (null != entryToRemove) {
+                entriesToRemove.add(entryToRemove);
             }
-        };
 
-        if (entriesToRemoveCollection.contains(HashtagTweetEntry.class)) {
-            Arrays.stream(getHashtagEntries()).forEach(consumer);
+            return this;
         }
 
-        if (entriesToRemoveCollection.contains(MediaTweetEntry.class)) {
-            Arrays.stream(getMediaEntries()).forEach(consumer);
-        }
+        public String get() {
+            if (entriesToRemove.isEmpty()) {
+                return tweet.getText();
+            }
 
-        if (entriesToRemoveCollection.contains(SymbolTweetEntry.class)) {
-            Arrays.stream(getSymbolEntries()).forEach(consumer);
-        }
+            final StringBuilder sb = new StringBuilder(tweet.getText());
+            final Consumer<TweetEntry> consumer = entry -> {
+                for (int i = entry.getStart(); i < entry.getEnd(); i++) {
+                    sb.setCharAt(i, ' ');
+                }
+            };
 
-        if (entriesToRemoveCollection.contains(UrlTweetEntry.class)) {
-            Arrays.stream(getUrlEntries()).forEach(consumer);
-        }
+            if (entriesToRemove.contains(HashtagTweetEntry.class)) {
+                Arrays.stream(tweet.getHashtagEntries()).forEach(consumer);
+            }
 
-        if (entriesToRemoveCollection.contains(UserMentionTweetEntry.class)) {
-            Arrays.stream(getUserMentionEntries()).forEach(consumer);
-        }
+            if (entriesToRemove.contains(MediaTweetEntry.class)) {
+                Arrays.stream(tweet.getMediaEntries()).forEach(consumer);
+            }
 
-        return sb.toString().replaceAll("  *", " ");
+            if (entriesToRemove.contains(SymbolTweetEntry.class)) {
+                Arrays.stream(tweet.getSymbolEntries()).forEach(consumer);
+            }
+
+            if (entriesToRemove.contains(UrlTweetEntry.class)) {
+                Arrays.stream(tweet.getUrlEntries()).forEach(consumer);
+            }
+
+            if (entriesToRemove.contains(UserMentionTweetEntry.class)) {
+                Arrays.stream(tweet.getUserMentionEntries()).forEach(consumer);
+            }
+
+            return sb.toString().replaceAll("  *", " ");
+        }
     }
 
     /**

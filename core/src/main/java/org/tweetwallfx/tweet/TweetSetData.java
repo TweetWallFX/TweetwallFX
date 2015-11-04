@@ -120,7 +120,9 @@ public final class TweetSetData {
     }
 
     public void updateTree(final Tweet tweet) {
-        final String status = tweet.getTextWithout(UrlTweetEntry.class, UserMentionTweetEntry.class)
+        final String status = tweet.getTextWithout(UrlTweetEntry.class)
+                .getTextWithout(UserMentionTweetEntry.class)
+                .get()
                 .replaceAll("[^\\dA-Za-z ]", " ");
         // add words to tree and update weights
 

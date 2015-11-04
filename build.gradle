@@ -22,6 +22,7 @@ subprojects {
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
+        options.compilerArgs << "-Werror"
     } 
 
     findbugs {
@@ -38,14 +39,12 @@ subprojects {
 
 project (":TweetWallFX-Configuration") {
     dependencies {
-        compile group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80'
         compile group: "log4j", name: "log4j", version: "1.2.17"
     }
 }
 
 project(":TweetWallFX-Tweet-API") {
     dependencies {
-        compile group: 'org.netbeans.api', name: 'org-openide-util-lookup', version: 'RELEASE80'
     }
 }
 

@@ -25,7 +25,6 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 
 import java.util.stream.Stream;
 import org.apache.log4j.Logger;
-import org.openide.util.lookup.ServiceProvider;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
@@ -36,7 +35,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
-@ServiceProvider(service = Tweeter.class)
 public class TwitterTweeter extends Tweeter {
 
     private static final Logger LOGGER = Logger.getLogger(TwitterTweeter.class);
