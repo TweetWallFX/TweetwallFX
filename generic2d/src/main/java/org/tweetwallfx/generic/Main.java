@@ -93,7 +93,9 @@ public class Main extends Application {
             }
         });
         service.setOnFailed(e -> {
-            System.err.println("FAILED!");
+            Throwable exception = e.getSource().getException();
+            System.err.println("FAILED! " + exception);
+            System.err.println("Cause!  " + (null != exception?exception.getCause():"Unknown!"));
             Main.this.stop();
             primaryStage.close();
         });
