@@ -214,7 +214,6 @@ public class TagTweets {
             // render the chart in an offscreen scene (scene is used to allow css processing) and snapshot it to an image.
             // the snapshot is done in runlater as it must occur on the javafx application thread.
             Platform.runLater(() -> {
-                hBottom.getChildren().setAll(tweetContainer);
                 // animation
                 obsFadeOutWords.stream().forEach(w -> parallelWords.getChildren().add(fadeOut(w)));
                 obsFadeInWords.stream().forEach(w -> parallelTexts.getChildren().add(fadeIn(w)));

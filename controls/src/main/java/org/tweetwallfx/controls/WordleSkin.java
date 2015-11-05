@@ -43,7 +43,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -54,6 +55,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -82,7 +84,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private double min;
     private final Pane pane;
     private final Pane stackPane;
-    private final Pane backgroundPane;
     private List<Word> limitedWords;
     private HBox hbox;
     private Point2D lowerLeft;
@@ -100,11 +101,11 @@ public class WordleSkin extends SkinBase<Wordle> {
         super(wordle);
         //create panes
         stackPane = new StackPane();
-        backgroundPane = new Pane();
         pane = new Pane();
-
+        pane.prefWidthProperty().bind(stackPane.widthProperty());
+        pane.prefHeightProperty().bind(stackPane.heightProperty());
         //assemble panes
-        stackPane.getChildren().addAll(backgroundPane, pane);
+        stackPane.getChildren().addAll(pane);
         this.getChildren().add(stackPane);
         //assign style
         stackPane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
@@ -190,25 +191,29 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     private void updateBackgroundGraphic(final String newBackgroundGraphic) {
         if (null != backgroundImage) {
-            backgroundPane.getChildren().remove(backgroundImage);
+            stackPane.getChildren().remove(backgroundImage);
             backgroundImage = null;
         }
-        System.out.println("BackgroundGraphic: " + newBackgroundGraphic);
         if (null != newBackgroundGraphic && !newBackgroundGraphic.isEmpty()) {
-            backgroundImage = new ImageView(newBackgroundGraphic);
+            backgroundImage = new ImageView(newBackgroundGraphic) {
+                @Override
+                public double minHeight(double width) {
+                    return 10; 
+                }
 
+                @Override
+                public double minWidth(double height) {
+                    return 10;
+                }
+                
+            };
 
-//            Bounds layoutBounds = backgroundPane.getLayoutBounds();
-            Bounds layoutBounds = backgroundPane.getBoundsInLocal();
-            backgroundImage.setFitWidth(layoutBounds.getWidth());
-            backgroundImage.setFitHeight(layoutBounds.getHeight());
+            backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
+            backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
 
             backgroundImage.setPreserveRatio(true);
-            backgroundImage.autosize();
 
-            backgroundPane.getChildren().add(backgroundImage);
-//        logo.setLayoutX(0);
-//        logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+            stackPane.getChildren().add(0, backgroundImage);
         }
     }
 
