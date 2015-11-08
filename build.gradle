@@ -182,6 +182,25 @@ project(":TweetWallFX-Generic2D") {
     }
 }
 
+project(":TweetWallFX-EmbeddableTest") {
+    apply plugin: 'application'
+    mainClassName = "Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+    }
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Embeddable')
+        runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+}
+
 project(":TweetWallFX-Embeddable") {
     apply plugin: "java"
     apply plugin: 'cz.kubacki.nbm'
