@@ -26,7 +26,10 @@ package org.tweetwallfx.generic;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -58,6 +61,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
+        
+        if (null != stylesheet) {
+            scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(stylesheet).toExternalForm());
+        }        
+        
         StopList.add(query);
         startupLogger.addAppender(new StringPropertyAppender());
         startupLogger.setLevel(Level.TRACE);
@@ -67,7 +75,6 @@ public class Main extends Application {
         statusLineText.getStyleClass().addAll("statusline");
         statusLineText.textProperty().bind(((StringPropertyAppender)startupLogger.getAppender(StringPropertyAppender.class.getName())).stringProperty());
         statusLineHost.getChildren().add(statusLineText);
-        borderPane.setBottom(statusLineHost);
         
         final Service<Void> service = new Service<Void>() {
             @Override
@@ -97,14 +104,21 @@ public class Main extends Application {
             Main.this.stop();
             primaryStage.close();
         });
+        
+        scene.setOnKeyTyped((KeyEvent event) -> {
+            if (event.isMetaDown() && event.getCharacter().equals("d")) {
+                if (null == statusLineHost.getParent()) {
+                    borderPane.setBottom(statusLineHost);
+                }
+                else {
+                    borderPane.getChildren().remove(statusLineHost);
+                }
+            }
+        });
 
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
         
-        if (null != stylesheet) {
-            scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(stylesheet).toExternalForm());
-        }
-
         primaryStage.show();
         primaryStage.setFullScreen(true);
         service.start();
