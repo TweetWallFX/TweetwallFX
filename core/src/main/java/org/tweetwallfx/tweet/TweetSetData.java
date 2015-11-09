@@ -108,7 +108,7 @@ public final class TweetSetData {
                 .map(t -> t.getText()
                         .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                         .replaceAll("http[s]?:.*((\\s+)|($))", " ")
-                        .replaceAll("['\"]", " "));
+                        .replaceAll("['\"()]", " "));
 
         tree = stringStream
                 .flatMap(c -> pattern.splitAsStream(c))

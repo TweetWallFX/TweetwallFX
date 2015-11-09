@@ -44,7 +44,7 @@ public final class StopList {
                     //twitter related
                     "rt", "http", "https", 
                     //other
-                    "has", "have", "do", "for", "are", "the", "and",
+                    "has", "have", "do", "for", "are", "the", "and", "about", "use", "using", "between", "like", "them", "away", "throw",
                     "with", "here", "active", "see", "next", "will", "any", "off", "there", "while", "just", "all", "from", "got", "think", "nice",
                     "ask", "can", "you", "week", "some", "not", "didn", "isn", "per", "how", "show", "out", "but", "last", "your", "one", "should",
                     "now", "also", "done", "will", "become", "did", "what", "when", "let", "that", "this", "always", "where", "our", "his", "her", "of"));

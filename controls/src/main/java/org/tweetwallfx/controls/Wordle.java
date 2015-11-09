@@ -29,13 +29,17 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.CssMetaData;
+import javafx.css.ParsedValue;
 import javafx.css.SimpleStyleableBooleanProperty;
+import javafx.css.SimpleStyleableIntegerProperty;
 import javafx.css.SimpleStyleableStringProperty;
 import javafx.css.StyleConverter;
 import javafx.css.Styleable;
+import javafx.css.StyleableIntegerProperty;
 import javafx.css.StyleableProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.text.Font;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**
@@ -55,7 +59,8 @@ public class Wordle extends Control {
     private SimpleStyleableStringProperty logo;
     private SimpleStyleableStringProperty backgroundGraphic;
     private SimpleStyleableBooleanProperty favIconsVisible;
-    
+    private SimpleStyleableIntegerProperty displayedNumberOfTagsProperty;
+
     private String userAgentStylesheet = null;
 
     public Wordle() {
@@ -136,6 +141,21 @@ public class Wordle extends Control {
         return favIconsVisible;
     }
 
+    public Integer getDisplayedTagNum() {
+        return displayedNumberOfTagsProperty.get();
+    }
+
+    public void setDisplayedNumberOfTags(Integer value) {
+        displayedNumberOfTagsProperty.set(value);
+    }
+
+    public SimpleStyleableIntegerProperty displayedNumberOfTagsProperty() {
+        if (displayedNumberOfTagsProperty == null) {
+            displayedNumberOfTagsProperty = new SimpleStyleableIntegerProperty(StyleableProperties.DISPLAYED_TAGS_NUMBER, Wordle.this, "-fx-display-tag-num", 50);
+        }
+        return displayedNumberOfTagsProperty;
+    }
+
     @Override
     public String getUserAgentStylesheet() {
         if (null == userAgentStylesheet) {
@@ -149,45 +169,66 @@ public class Wordle extends Control {
         private static final CssMetaData< Wordle, String> LOGO_GRAPHIC
                 = new CssMetaData<Wordle, String>("-fx-graphic",
                         StyleConverter.getUrlConverter(), null) {
-                    @Override
-                    public boolean isSettable(Wordle control) {
-                        return control.logo == null || !control.logo.isBound();
-                    }
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.logo == null || !control.logo.isBound();
+            }
 
-                    @Override
-                    public StyleableProperty<String> getStyleableProperty(Wordle control) {
-                        return control.logoProperty();
-                    }
-                };
+            @Override
+            public StyleableProperty<String> getStyleableProperty(Wordle control) {
+                return control.logoProperty();
+            }
+        };
 
         private static final CssMetaData< Wordle, String> BACKGROUND_GRAPHIC
                 = new CssMetaData<Wordle, String>("-fx-background-graphic",
                         StyleConverter.getUrlConverter(), null) {
-                    @Override
-                    public boolean isSettable(Wordle control) {
-                        return control.backgroundGraphic == null || !control.backgroundGraphic.isBound();
-                    }
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.backgroundGraphic == null || !control.backgroundGraphic.isBound();
+            }
 
-                    @Override
-                    public StyleableProperty<String> getStyleableProperty(Wordle control) {
-                        return control.backgroundGraphicProperty();
-                    }
-                };
+            @Override
+            public StyleableProperty<String> getStyleableProperty(Wordle control) {
+                return control.backgroundGraphicProperty();
+            }
+        };
 
         private static final CssMetaData< Wordle, Boolean> FAVICONS_VISIBLE
                 = new CssMetaData<Wordle, Boolean>("-fx-fav-icons-visible",
                         StyleConverter.getBooleanConverter()) {
 
-                    @Override
-                    public boolean isSettable(Wordle control) {
-                        return control.favIconsVisible == null || !control.favIconsVisible.isBound();
-                    }
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.favIconsVisible == null || !control.favIconsVisible.isBound();
+            }
 
-                    @Override
-                    public StyleableProperty<Boolean> getStyleableProperty(Wordle control) {
-                        return control.favIconsVisibleProperty();
+            @Override
+            public StyleableProperty<Boolean> getStyleableProperty(Wordle control) {
+                return control.favIconsVisibleProperty();
+            }
+        };
+
+        private static final CssMetaData<Wordle, Number> DISPLAYED_TAGS_NUMBER
+                = new CssMetaData<Wordle, Number>("-fx-display-tag-num",
+                        new StyleConverter<String, Number>() {
+                    public Integer convert(ParsedValue<String, Number> value, Font not_used) {
+                        String str = value.getValue();
+                        System.out.println("Initial value for display tags num: " + str);
+                        return Integer.valueOf(str);
                     }
-                };
+                }) {
+
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.displayedNumberOfTagsProperty == null || !control.displayedNumberOfTagsProperty.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Number> getStyleableProperty(Wordle control) {
+                return control.displayedNumberOfTagsProperty();
+            }
+        };
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
@@ -197,7 +238,8 @@ public class Wordle extends Control {
             Collections.addAll(styleables,
                     LOGO_GRAPHIC,
                     BACKGROUND_GRAPHIC,
-                    FAVICONS_VISIBLE
+                    FAVICONS_VISIBLE,
+                    DISPLAYED_TAGS_NUMBER
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
