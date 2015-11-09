@@ -43,8 +43,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -53,9 +51,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -88,6 +86,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     private HBox hbox;
     private Point2D lowerLeft;
     private HBox mediaBox;
+
+    private int displayCloudTags = 25;
 
     private ImageView logo;
     private ImageView backgroundImage;
@@ -171,18 +171,18 @@ public class WordleSkin extends SkinBase<Wordle> {
             }
         });
         favIconsVisible = wordle.favIconsVisibleProperty().get();
-
+        displayCloudTags = wordle.displayedNumberOfTagsProperty().get();
     }
 
     private void updateLogo(final String newLogo) {
         if (null != logo) {
             pane.getChildren().remove(logo);
             logo = null;
-        }
+        }   
         System.out.println("Logo: " + newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             logo = new ImageView(newLogo);
-
+            logo.getStyleClass().add("logo");            
             pane.getChildren().add(logo);
             logo.setLayoutX(0);
             logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
@@ -208,10 +208,20 @@ public class WordleSkin extends SkinBase<Wordle> {
                 
             };
 
+            backgroundImage.getStyleClass().add("bg-image");
+            
             backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
             backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
 
             backgroundImage.setPreserveRatio(true);
+            backgroundImage.setCache(true);
+            backgroundImage.setSmooth(true);
+            
+//            SepiaTone sepiaTone = new SepiaTone();
+// 
+//            sepiaTone.setLevel(0.9);
+//            
+//            backgroundImage.setEffect(sepiaTone);
 
             stackPane.getChildren().add(0, backgroundImage);
         }
@@ -380,10 +390,11 @@ public class WordleSkin extends SkinBase<Wordle> {
             mediaBox = new HBox(10);
             mediaBox.setOpacity(0);
             mediaBox.setPadding(new Insets(10));
-            mediaBox.setAlignment(Pos.CENTER);
+            mediaBox.setAlignment(Pos.CENTER_RIGHT);
             mediaBox.setLayoutX(logo.getImage().getWidth() + 10);
             mediaBox.setLayoutY(lowerLeft.getY() + 100);
-//            mediaBox.setMaxSize(layoutBounds.getWidth() / 2d, Math.max(50, layoutBounds.getHeight() - 50 - hbox.getLayoutY()));
+            // ensure media box fills the complete area, so that layouting from right to left works
+            mediaBox.setMinSize(layoutBounds.getWidth() - (logo.getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - (lowerLeft.getY() + 100)));
             mediaBox.setMaxSize(layoutBounds.getWidth() - (logo.getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - (lowerLeft.getY() + 100)));
             FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
             ft.setToValue(1);
@@ -434,7 +445,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             return;
         }
 
-        limitedWords = sortedWords.stream().limit(MAX_CLOUD_TAGS).collect(Collectors.toList());
+        limitedWords = sortedWords.stream().limit(displayCloudTags).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
 
         max = limitedWords.get(0).getWeight();
@@ -533,7 +544,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             return;
         }
 
-        limitedWords = sortedWords.stream().limit(MAX_CLOUD_TAGS).collect(Collectors.toList());
+        limitedWords = sortedWords.stream().limit(displayCloudTags).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
 
         max = limitedWords.get(0).getWeight();
@@ -611,8 +622,6 @@ public class WordleSkin extends SkinBase<Wordle> {
         morph.play();
     }
 
-    private static final int MAX_CLOUD_TAGS = 50;
-
     private final Font defaultFont = Font.font("Calibri", FontWeight.BOLD, MINIMUM_FONT_SIZE);
 
     private double getFontSize(double weight) {
@@ -666,7 +675,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         flow.requestLayout();
         return flow.getChildren().stream().map(node -> new TweetWord(node.getBoundsInParent(), ((Text) node).getText())).collect(Collectors.toList());
     }
-    private static final int TWEET_FONT_SIZE = 72;
+    private static final int TWEET_FONT_SIZE = 54;
     private static final int MINIMUM_FONT_SIZE = 36;
     private static final int MAX_FONT_SIZE = 72;
 
