@@ -21,35 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Bold';
+    src: url('Roboto-Bold.ttf');
+}
+
 .root {
-    -color-java-blue: #5382A1;
-    -color-java-blue-uncoated: #7993a5;    
-    -color-java-orange: #FFA518;
-    -color-java-orange-uncoated: #ffb838;
+    -fx-font-family: 'Roboto'; 
 }
 
 .statusline {
-    -fx-font: 12px "Calibri"; 
-    -fx-text-fill: -color-java-blue !important;     
+    /*-fx-font: 12px "Calibri";*/ 
+    -fx-text-fill: red !important;     
 }
 
 .wordle {
     -fx-background-color: white;
-    -fx-graphic: url(JavaOne-vert-clr.png);
+    -fx-graphic: url(Devoxx-Logo.png);
     -fx-background-graphic: url(Devoxx2015Jigsaw.jpg);
+    -fx-display-tag-num: 25;
+}
+.wordle .bg-image {
+    -fx-opacity: 0.3;
+}
+
+.wordle .logo {
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+    -fx-translate-x: -50;
+    -fx-translate-y: -100%;
 }
 
 .wordle .tag {
-    -fx-fill: -color-java-blue !important;     
+    /*-fx-font-family: "Calibri";*/
+    -fx-fill: #f5af33 !important;
+    -fx-stroke: black;
+    -fx-stroke-width: 0.5;    
+    /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
+    /*-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
 }
 
 .wordle .name {
-    -fx-font: 36px "Calibri"; 
-    -fx-text-fill: -color-java-blue !important; 
+    -fx-font-size: 36px; 
+    -fx-text-fill: tan; 
     -fx-font-weight: bold;    
 }
 
 .wordle .handle {
-    -fx-font: 28px "Calibri";
-    -fx-text-fill: -color-java-blue !important;   
+    -fx-font-size: 28px;
+    -fx-text-fill: tan;   
 }
