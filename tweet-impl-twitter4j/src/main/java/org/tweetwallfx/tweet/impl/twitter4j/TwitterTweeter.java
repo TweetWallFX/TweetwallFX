@@ -79,56 +79,44 @@ public class TwitterTweeter extends Tweeter {
 
     private static Query getQuery(final TweetQuery tweetQuery) {
         final Query query = new Query();
-        
+
         if (null != tweetQuery.getCount()) {
             query.setCount(tweetQuery.getCount());
         }
-        
+
         if (null != tweetQuery.getLang()) {
             query.setLang(tweetQuery.getLang());
         }
-        
+
         if (null != tweetQuery.getLocale()) {
             query.setLocale(tweetQuery.getLocale());
         }
-        
+
         if (null != tweetQuery.getMaxId()) {
             query.setMaxId(tweetQuery.getMaxId());
         }
-        
+
         if (null != tweetQuery.getQuery()) {
             query.setQuery(tweetQuery.getQuery());
         }
-        
+
         if (null != tweetQuery.getResultType()) {
             query.setResultType(Query.ResultType.valueOf(tweetQuery.getResultType().name()));
         }
-        
+
         if (null != tweetQuery.getSince()) {
             query.setSince(tweetQuery.getSince());
         }
-        
+
         if (null != tweetQuery.getSinceId()) {
             query.setSinceId(tweetQuery.getSinceId());
         }
-        
+
         if (null != tweetQuery.getUntil()) {
             query.setUntil(tweetQuery.getUntil());
         }
-        
+
         return query;
-//        return new Query()
-//                .count(tweetQuery.getCount())
-//                .lang(tweetQuery.getLang())
-//                .locale(tweetQuery.getLocale())
-//                .maxId(tweetQuery.getMaxId())
-//                .query(tweetQuery.getQuery())
-//                .resultType(null == tweetQuery.getResultType()
-//                        ? null
-//                        : Query.ResultType.valueOf(tweetQuery.getResultType().name()))
-//                .since(tweetQuery.getSince())
-//                .sinceId(tweetQuery.getSinceId())
-//                .until(tweetQuery.getUntil());
     }
 
     private static class PagedIterator implements Iterator<Tweet> {
@@ -136,6 +124,7 @@ public class TwitterTweeter extends Tweeter {
         private final TwitterTweeter tweeter;
         private QueryResult queryResult;
         private Iterator<Status> statuses;
+        private static final Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
 
         public PagedIterator(final TwitterTweeter tweeter, final Query query) {
             this.tweeter = tweeter;
@@ -149,9 +138,11 @@ public class TwitterTweeter extends Tweeter {
                 final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
 
                 try {
+                    startupLogger.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
                     statuses = queryResult.getTweets().iterator();
                 } catch (TwitterException ex) {
+                    startupLogger.trace("Querying next page failed: " + query, ex);
                     tweeter.setLatestException(ex);
                     LOGGER.error("Error getting QueryResult for " + query, ex);
                     queryResult = null;
