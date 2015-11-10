@@ -30,10 +30,10 @@ public final class TweetQuery {
     private String query = null;
     private String lang = null;
     private String locale = null;
-    private long maxId = -1l;
-    private int count = -1;
+    private Long maxId = null;
+    private Integer count = null;
     private String since = null;
-    private long sinceId = -1;
+    private Long sinceId = null;
 //    private String geocode = null;
     private String until = null;
     private ResultType resultType = null;
@@ -140,7 +140,7 @@ public final class TweetQuery {
      *
      * @return maxId
      */
-    public long getMaxId() {
+    public Long getMaxId() {
         return maxId;
     }
 
@@ -149,7 +149,7 @@ public final class TweetQuery {
      *
      * @param maxId maxId
      */
-    public void setMaxId(long maxId) {
+    public void setMaxId(Long maxId) {
         this.maxId = maxId;
     }
 
@@ -159,7 +159,7 @@ public final class TweetQuery {
      * @param maxId maxId
      * @return this instance
      */
-    public TweetQuery maxId(long maxId) {
+    public TweetQuery maxId(Long maxId) {
         setMaxId(maxId);
         return this;
     }
@@ -169,7 +169,7 @@ public final class TweetQuery {
      *
      * @return count
      */
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 
@@ -178,7 +178,7 @@ public final class TweetQuery {
      *
      * @param count the number of tweets to return per page
      */
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
@@ -188,7 +188,7 @@ public final class TweetQuery {
      * @param count the number of tweets to return per page
      * @return the instance
      */
-    public TweetQuery count(int count) {
+    public TweetQuery count(Integer count) {
         setCount(count);
         return this;
     }
@@ -230,7 +230,7 @@ public final class TweetQuery {
      *
      * @return sinceId
      */
-    public long getSinceId() {
+    public Long getSinceId() {
         return sinceId;
     }
 
@@ -239,7 +239,7 @@ public final class TweetQuery {
      *
      * @param sinceId returns tweets with status ids greater than the given id
      */
-    public void setSinceId(long sinceId) {
+    public void setSinceId(Long sinceId) {
         this.sinceId = sinceId;
     }
 
@@ -249,7 +249,7 @@ public final class TweetQuery {
      * @param sinceId returns tweets with status ids greater than the given id
      * @return the instance
      */
-    public TweetQuery sinceId(long sinceId) {
+    public TweetQuery sinceId(Long sinceId) {
         setSinceId(sinceId);
         return this;
     }
@@ -383,9 +383,9 @@ public final class TweetQuery {
 
         final TweetQuery query1 = (TweetQuery) o;
 
-        return count == query1.count
-                && this.maxId == query1.maxId
-                && sinceId == query1.sinceId
+        return Objects.equals(count, query1.count)
+                && Objects.equals(maxId, query1.maxId)
+                && Objects.equals(sinceId, query1.sinceId)
 //                && Objects.equals(geocode, query1.geocode)
                 && Objects.equals(lang, query1.lang)
                 && Objects.equals(locale, query1.locale)
@@ -401,10 +401,10 @@ public final class TweetQuery {
         result = 31 * result + Objects.hashCode(query);
         result = 31 * result + Objects.hashCode(lang);
         result = 31 * result + Objects.hashCode(locale);
-        result = 31 * result + Long.hashCode(maxId);
-        result = 31 * result + count;
+        result = 31 * result + Objects.hashCode(maxId);
+        result = 31 * result + Objects.hashCode(count);
         result = 31 * result + Objects.hashCode(since);
-        result = 31 * result + Long.hashCode(sinceId);
+        result = 31 * result + Objects.hashCode(sinceId);
 //        result = 31 * result + Objects.hashCode(geocode);
         result = 31 * result + Objects.hashCode(until);
         result = 31 * result + Objects.hashCode(resultType);

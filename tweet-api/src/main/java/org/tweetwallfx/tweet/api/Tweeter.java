@@ -58,6 +58,8 @@ public abstract class Tweeter {
 
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 
+    public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery);
+
     public ReadOnlyObjectProperty<Exception> latestException() {
         return latestException.getReadOnlyProperty();
     }
