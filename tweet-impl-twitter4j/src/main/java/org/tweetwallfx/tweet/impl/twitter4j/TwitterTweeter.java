@@ -23,7 +23,10 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -31,6 +34,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import twitter4j.Query;
 import twitter4j.QueryResult;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -66,18 +70,109 @@ public class TwitterTweeter extends Tweeter {
         return result.getTweets().stream().map(TwitterTweet::new);
     }
 
+    @Override
+    public Stream<Tweet> searchPaged(final TweetQuery tweetQuery) {
+        final Query query = getQuery(tweetQuery);
+        final Iterable<Tweet> iterable = () -> new PagedIterator(this, query);
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
     private static Query getQuery(final TweetQuery tweetQuery) {
-        return new Query()
-                .count(tweetQuery.getCount())
-                .lang(tweetQuery.getLang())
-                .locale(tweetQuery.getLocale())
-                .maxId(tweetQuery.getMaxId())
-                .query(tweetQuery.getQuery())
-                .resultType(null == tweetQuery.getResultType()
-                                ? null
-                                : Query.ResultType.valueOf(tweetQuery.getResultType().name()))
-                .since(tweetQuery.getSince())
-                .sinceId(tweetQuery.getSinceId())
-                .until(tweetQuery.getUntil());
+        final Query query = new Query();
+
+        if (null != tweetQuery.getCount()) {
+            query.setCount(tweetQuery.getCount());
+        }
+
+        if (null != tweetQuery.getLang()) {
+            query.setLang(tweetQuery.getLang());
+        }
+
+        if (null != tweetQuery.getLocale()) {
+            query.setLocale(tweetQuery.getLocale());
+        }
+
+        if (null != tweetQuery.getMaxId()) {
+            query.setMaxId(tweetQuery.getMaxId());
+        }
+
+        if (null != tweetQuery.getQuery()) {
+            query.setQuery(tweetQuery.getQuery());
+        }
+
+        if (null != tweetQuery.getResultType()) {
+            query.setResultType(Query.ResultType.valueOf(tweetQuery.getResultType().name()));
+        }
+
+        if (null != tweetQuery.getSince()) {
+            query.setSince(tweetQuery.getSince());
+        }
+
+        if (null != tweetQuery.getSinceId()) {
+            query.setSinceId(tweetQuery.getSinceId());
+        }
+
+        if (null != tweetQuery.getUntil()) {
+            query.setUntil(tweetQuery.getUntil());
+        }
+
+        return query;
+    }
+
+    private static class PagedIterator implements Iterator<Tweet> {
+
+        private final TwitterTweeter tweeter;
+        private QueryResult queryResult;
+        private Iterator<Status> statuses;
+        private static final Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+
+        public PagedIterator(final TwitterTweeter tweeter, final Query query) {
+            this.tweeter = tweeter;
+            queryNext(query);
+        }
+
+        private void queryNext(final Query query) {
+            if (null == query) {
+                statuses = null;
+            } else {
+                final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
+
+                try {
+                    startupLogger.trace("Querying next page: " + query);
+                    queryResult = twitter.search(query);
+                    statuses = queryResult.getTweets().iterator();
+                } catch (TwitterException ex) {
+                    startupLogger.trace("Querying next page failed: " + query, ex);
+                    tweeter.setLatestException(ex);
+                    LOGGER.error("Error getting QueryResult for " + query, ex);
+                    queryResult = null;
+                    statuses = null;
+                }
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (null == statuses) {
+                // no more twitter status messages
+                return false;
+            } else if (statuses.hasNext()) {
+                // twitter status messages available
+                return true;
+            } else {
+                // query next twitter status messages page
+                queryNext(queryResult.nextQuery());
+                return null != statuses && statuses.hasNext();
+            }
+        }
+
+        @Override
+        public Tweet next() {
+            if (hasNext()) {
+                return new TwitterTweet(statuses.next());
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
     }
 }

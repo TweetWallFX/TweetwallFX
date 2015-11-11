@@ -232,4 +232,9 @@ final class TwitterTweet implements Tweet {
             return user.isVerified();
         }
     }
+
+    @Override
+    public String toString() {
+        return "TwitterTweet{" + "status=" + status + '}';
+    }
 }
