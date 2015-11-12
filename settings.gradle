@@ -27,3 +27,7 @@ include ':javaone'
 project(":javaone").name = "TweetWallFX-JavaOne"
 include ':generic2d'
 project(":generic2d").name = "TweetWallFX-Generic2D"
+include ':embeddable'
+project(":embeddable").name = "TweetWallFX-Embeddable"
+include ':embeddabletest'
+project(":embeddabletest").name = "TweetWallFX-EmbeddableTest"

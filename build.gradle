@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    
+    dependencies {
+        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.9.0"
+        gradleApi()
+    }
+}
+
 apply plugin: 'build-dashboard'
 
 subprojects {
@@ -169,6 +180,51 @@ project(":TweetWallFX-Generic2D") {
         compile project(':TweetWallFX-2D')
         compile project(':TweetWallFX-Controls')
     }
+}
+
+project(":TweetWallFX-EmbeddableTest") {
+    apply plugin: 'application'
+    mainClassName = "Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+    }
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Embeddable')
+        runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+}
+
+project(":TweetWallFX-Embeddable") {
+    apply plugin: "java"
+    apply plugin: 'cz.kubacki.nbm'
+    
+    dependencies {
+        compile project(':TweetWallFX-2D')
+        compile project(':TweetWallFX-Controls')
+        runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+    
+    task copyToLib(type: Copy) {
+        into "$buildDir/lib"
+        from configurations.runtime
+    }    
+    
+    nbm {
+//        moduleName = "org.tweetwallfx.embeddable"
+
+        friendPackages {
+            add "org.tweetwallfx.embeddable"
+        }
+    }
+
+    task('assemble', dependsOn: 'copyToLib')
 }
 
 description = 'TweetWallFX'
