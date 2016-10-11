@@ -21,6 +21,8 @@ include ':devoxx'
 project(":devoxx").name = "TweetWallFX-Devoxx"
 include ':devoxx-2015'
 project(":devoxx-2015").name = "TweetWallFX-Devoxx-2015"
+include ':devoxx-2016'
+project(":devoxx-2016").name = "TweetWallFX-Devoxx-2016"
 include ':netbeans'
 project(":netbeans").name = "TweetWallFX-NetBeans"
 include ':javaone'
