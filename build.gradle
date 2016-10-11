@@ -137,6 +137,25 @@ project(":TweetWallFX-Devoxx-2015"){
     }
 }
 
+project(":TweetWallFX-Devoxx-2016"){
+    apply plugin: "application"
+    mainClassName = "org.tweetwallfx.generic.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+    }
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Generic2D')
+        compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+}
+
 project(":TweetWallFX-NetBeans") {
     apply plugin: "application"
     mainClassName = "org.tweetwallfx.generic.Main"
