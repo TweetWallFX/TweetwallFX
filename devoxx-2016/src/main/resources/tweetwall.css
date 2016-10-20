@@ -23,17 +23,17 @@
  */
 
 @font-face {
-    font-family: 'Roboto';
-    src: url('Roboto-Regular.ttf');
+    font-family: 'BebasNeue';
+    src: url('BebasNeue.otf');
 }
 
 @font-face {
-    font-family: 'Roboto Bold';
-    src: url('Roboto-Bold.ttf');
+    font-family: 'BebasNeue Bold';
+    src: url('BebasNeue-Bold.otf');
 }
 
 .root {
-    -fx-font-family: 'Roboto'; 
+    -fx-font-family: 'BebasNeue'; 
 }
 
 .statusline {
@@ -52,6 +52,7 @@
 }
 
 .wordle .logo {
+    visibility: hidden;
     -fx-scale-x: 0.7;
     -fx-scale-y: 0.7;
     -fx-translate-x: -50;
@@ -60,9 +61,9 @@
 
 .wordle .tag {
     /*-fx-font-family: "Calibri";*/
-    -fx-fill: #f5af33 !important;
-    -fx-stroke: black;
-    -fx-stroke-width: 0.5;    
+    -fx-fill: black !important;
+/*    -fx-stroke: black;
+    -fx-stroke-width: 0.5;    */
     /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
     /*-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
 }
