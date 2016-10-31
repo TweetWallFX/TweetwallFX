@@ -32,6 +32,7 @@ import javafx.css.CssMetaData;
 import javafx.css.ParsedValue;
 import javafx.css.SimpleStyleableBooleanProperty;
 import javafx.css.SimpleStyleableIntegerProperty;
+import javafx.css.SimpleStyleableObjectProperty;
 import javafx.css.SimpleStyleableStringProperty;
 import javafx.css.StyleConverter;
 import javafx.css.Styleable;
@@ -60,6 +61,7 @@ public class Wordle extends Control {
     private SimpleStyleableStringProperty backgroundGraphic;
     private SimpleStyleableBooleanProperty favIconsVisible;
     private SimpleStyleableIntegerProperty displayedNumberOfTagsProperty;
+    private SimpleStyleableObjectProperty<Font> fontProperty;
 
     private String userAgentStylesheet = null;
 
@@ -155,6 +157,22 @@ public class Wordle extends Control {
         }
         return displayedNumberOfTagsProperty;
     }
+    
+    public Font getFont() {
+        return fontProperty.get();
+    }
+
+    public void setFont(Font value) {
+        fontProperty.set(value);
+    }
+
+    public SimpleStyleableObjectProperty<Font> fontProperty() {
+        if (fontProperty == null) {
+            fontProperty = new SimpleStyleableObjectProperty<>(StyleableProperties.FONT, Wordle.this, "-fx-font", Font.getDefault());
+        }
+        return fontProperty;
+    }    
+    
 
     @Override
     public String getUserAgentStylesheet() {
@@ -229,6 +247,20 @@ public class Wordle extends Control {
                 return control.displayedNumberOfTagsProperty();
             }
         };
+        
+        private static final CssMetaData<Wordle, Font> FONT
+                = new CssMetaData<Wordle, Font>("-fx-font", StyleConverter.getFontConverter()) {
+
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.fontProperty == null || !control.fontProperty.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Font> getStyleableProperty(Wordle control) {
+                return control.fontProperty();
+            }
+        };        
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
@@ -239,7 +271,8 @@ public class Wordle extends Control {
                     LOGO_GRAPHIC,
                     BACKGROUND_GRAPHIC,
                     FAVICONS_VISIBLE,
-                    DISPLAYED_TAGS_NUMBER
+                    DISPLAYED_TAGS_NUMBER,
+                    FONT
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }
