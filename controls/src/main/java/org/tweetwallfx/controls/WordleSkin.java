@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2016 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,25 +25,19 @@ package org.tweetwallfx.controls;
 
 import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -51,7 +45,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -59,9 +52,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -71,15 +62,9 @@ import org.tweetwallfx.tweet.api.Tweet;
  */
 public class WordleSkin extends SkinBase<Wordle> {
 
-    private final Random rand = new Random();
-    private static final int dDeg = 10;
-    private static final double dRadius = 5.0;
-
     private final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
-    private final List<TweetWordNode> tweetWordList = new ArrayList<>();
-    private double max;
-    private double min;
+    private final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
     private final Pane pane;
     private final Pane stackPane;
     private List<Word> limitedWords;
@@ -91,11 +76,13 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     private ImageView logo;
     private ImageView backgroundImage;
+    private Font font;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
     private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
-
+    
+    private WordleLayout lastValidWordleLayout;
     
     public WordleSkin(Wordle wordle) {
         super(wordle);
@@ -172,6 +159,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
         favIconsVisible = wordle.favIconsVisibleProperty().get();
         displayCloudTags = wordle.displayedNumberOfTagsProperty().get();
+        font = wordle.fontProperty().get();
     }
 
     private void updateLogo(final String newLogo) {
@@ -217,30 +205,10 @@ public class WordleSkin extends SkinBase<Wordle> {
             backgroundImage.setCache(true);
             backgroundImage.setSmooth(true);
             
-//            SepiaTone sepiaTone = new SepiaTone();
-// 
-//            sepiaTone.setLevel(0.9);
-//            
-//            backgroundImage.setEffect(sepiaTone);
-
             stackPane.getChildren().add(0, backgroundImage);
         }
     }
 
-    private Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
-        double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
-        double rightMargin = upperLeft.getX() + maxWidth;
-        if (x + targetBounds.getWidth() > rightMargin) {
-            return new Point2D(lineOffset.getX() + (x - upperLeft.getX()), lineOffset.getY() + targetBounds.getHeight());
-        }
-        return lineOffset;
-    }
-
-    private Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, Point2D lineOffset) {
-        double y = upperLeft.getY() + targetBounds.getMinY() + lineOffset.getY();
-        double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
-        return new Point2D(x, y);
-    }
 
     Point2D tweetLineOffset = new Point2D(0, 0);
 
@@ -254,7 +222,7 @@ public class WordleSkin extends SkinBase<Wordle> {
 
         double width = layoutBounds.getWidth() * (2 / 3d);
 
-        List<TweetWord> tweetLayout = recalcTweetLayout(tweetInfo);
+        TweetLayout tweetLayout = TweetLayout.createTweetLayout(new TweetLayout.Configuration(tweetInfo, font, TWEET_FONT_SIZE));       
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
         List<Transition> moveTransitions = new ArrayList<>();
@@ -264,25 +232,27 @@ public class WordleSkin extends SkinBase<Wordle> {
         tweetLineOffset = new Point2D(0, 0);
 
         Duration defaultDuration = Duration.seconds(1.5);
+
+        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(font, TWEET_FONT_SIZE));
         
-        tweetLayout.stream().forEach(tweetWord -> {
+        tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
             Word word = new Word(tweetWord.text.trim(), -2);
             if (word2TextMap.containsKey(word)) {
                 Text textNode = word2TextMap.remove(word);
-                tweetWordList.add(new TweetWordNode(tweetWord, textNode));
+                tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
                 FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
                 ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(getFontSize(-1));
+                ft.setToSize(TWEET_FONT_SIZE);
                 moveTransitions.add(ft);
 
-                Bounds bounds = tweetLayout.stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
+                Bounds bounds = tweetLayout.getWordLayoutInfo().stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
 
                 LocationTransition lt = new LocationTransition(defaultDuration, textNode);
                 lt.setFromX(textNode.getLayoutX());
                 lt.setFromY(textNode.getLayoutY());
-                tweetLineOffset = tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
-                Point2D twPoint = layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
+                tweetLineOffset = tweetLayout.tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
+                Point2D twPoint = tweetLayout.layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
                 lt.setToX(twPoint.getX());
                 lt.setToY(twPoint.getY());
                 if (twPoint.getY() > lowerLeft.getY()) {
@@ -290,15 +260,15 @@ public class WordleSkin extends SkinBase<Wordle> {
                 }
                 moveTransitions.add(lt);                
             } else {
-                Text textNode = createTextNode(word);
+                Text textNode = wordNodeFactory.createTextNode(word.getText());
 
-                fontSizeAdaption(textNode, -1);
-                tweetWordList.add(new TweetWordNode(tweetWord, textNode));
+                wordNodeFactory.fontSizeAdaption(textNode, TWEET_FONT_SIZE);
+                tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
                 Bounds bounds = tweetWord.bounds;
 
-                tweetLineOffset = tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
-                Point2D twPoint = layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
+                tweetLineOffset = tweetLayout.tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
+                Point2D twPoint = tweetLayout.layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
 
                 textNode.setLayoutX(twPoint.getX());
                 textNode.setLayoutY(twPoint.getY());
@@ -448,10 +418,12 @@ public class WordleSkin extends SkinBase<Wordle> {
         limitedWords = sortedWords.stream().limit(displayCloudTags).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
 
-        max = limitedWords.get(0).getWeight();
-        min = limitedWords.stream().filter(w -> w.getWeight() > 0).min(Comparator.naturalOrder()).get().getWeight();
-
-        Map<Word, Bounds> boundsMap = recalcTagLayout(limitedWords);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, font, MINIMUM_FONT_SIZE, MAX_FONT_SIZE, pane.getLayoutBounds());
+        if (null != logo) {
+            configuration.setBlockedAreaBounds(logo.getBoundsInParent());
+        }
+        
+        WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
         Duration defaultDuration = Duration.seconds(1.5);
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
@@ -460,10 +432,10 @@ public class WordleSkin extends SkinBase<Wordle> {
         
         Bounds layoutBounds = pane.getLayoutBounds();
 
-        boundsMap.entrySet().stream().forEach(entry -> {
+        cloudWordleLayout.getWordLayoutInfo().entrySet().stream().forEach(entry -> {
             Word word = entry.getKey();
             Bounds bounds = entry.getValue();
-            Optional<TweetWordNode> optionalTweetWord = tweetWordList.stream().filter(tweetWord -> tweetWord.tweetWord.text.trim().equals(word.getText())).findFirst();
+            Optional<TweetLayout.TweetWordNode> optionalTweetWord = tweetWordList.stream().filter(tweetWord -> tweetWord.tweetWord.text.trim().equals(word.getText())).findFirst();
             if (optionalTweetWord.isPresent()) {
                 boolean removed = tweetWordList.remove(optionalTweetWord.get());
                 Text textNode = optionalTweetWord.get().textNode;
@@ -479,11 +451,11 @@ public class WordleSkin extends SkinBase<Wordle> {
 
                 FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
                 ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(getFontSize(word.getWeight()));
+                ft.setToSize(cloudWordleLayout.getFontSizeForWeight(word.getWeight()));
                 moveTransitions.add(ft);
 
             } else {
-                Text textNode = createTextNode(word);
+                Text textNode = cloudWordleLayout.createTextNode(word);
 
                 word2TextMap.put(word, textNode);
                 textNode.setLayoutX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
@@ -535,6 +507,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         SequentialTransition morph = new SequentialTransition(fadeOuts, moves, fadeIns);
 
         morph.play();
+        lastValidWordleLayout = cloudWordleLayout;
     }
 
     private void updateCloud() {
@@ -544,16 +517,19 @@ public class WordleSkin extends SkinBase<Wordle> {
             return;
         }
 
+        Bounds layoutBounds = pane.getLayoutBounds();
+        
         limitedWords = sortedWords.stream().limit(displayCloudTags).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
 
-        max = limitedWords.get(0).getWeight();
-        min = limitedWords.stream().filter(w -> w.getWeight() > 0).min(Comparator.naturalOrder()).get().getWeight();
-
-        Map<Word, Bounds> boundsMap = recalcTagLayout(limitedWords);
-        Bounds layoutBounds = pane.getLayoutBounds();
-
-        List<Word> unusedWords = word2TextMap.keySet().stream().filter(word -> !boundsMap.containsKey(word)).collect(Collectors.toList());
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, font, MINIMUM_FONT_SIZE, MAX_FONT_SIZE, pane.getLayoutBounds());
+        if (null != logo) {
+            configuration.setBlockedAreaBounds(logo.getBoundsInParent());
+        }
+        
+        WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
+        
+        List<Word> unusedWords = word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());
         
         Duration defaultDuration = Duration.seconds(1.5);
 
@@ -578,13 +554,13 @@ public class WordleSkin extends SkinBase<Wordle> {
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         morph.getChildren().add(fadeOuts);
 
-        List<Word> existingWords = boundsMap.keySet().stream().filter(word -> word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> word2TextMap.containsKey(word)).collect(Collectors.toList());
 
         existingWords.forEach(word -> {
 
             Text textNode = word2TextMap.get(word);
-            fontSizeAdaption(textNode, word.getWeight());
-            Bounds bounds = boundsMap.get(word);
+            cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
+            Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
 
             LocationTransition lt = new LocationTransition(defaultDuration, textNode);
             lt.setFromX(textNode.getLayoutX());
@@ -598,14 +574,14 @@ public class WordleSkin extends SkinBase<Wordle> {
         moves.getChildren().addAll(moveTransitions);
         morph.getChildren().add(moves);
 
-        List<Word> newWords = boundsMap.keySet().stream().filter(word -> !word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !word2TextMap.containsKey(word)).collect(Collectors.toList());
 
         List<Text> newTextNodes = new ArrayList<>();
         newWords.forEach(word -> {
-            Text textNode = createTextNode(word);
+            Text textNode = cloudWordleLayout.createTextNode(word);
             word2TextMap.put(word, textNode);
 
-            Bounds bounds = boundsMap.get(word);
+            Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
             textNode.setLayoutX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
             textNode.setLayoutY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
             textNode.setOpacity(0);
@@ -620,304 +596,10 @@ public class WordleSkin extends SkinBase<Wordle> {
         fadeIns.getChildren().addAll(fadeInTransitions);
         morph.getChildren().add(fadeIns);
         morph.play();
+        lastValidWordleLayout = cloudWordleLayout;
     }
-
-    private final Font defaultFont = Font.font("Calibri", FontWeight.BOLD, MINIMUM_FONT_SIZE);
-
-    private double getFontSize(double weight) {
-        // maxFont = 48
-        // minFont = 18
-
-        double size;
-        if (weight == -1) {
-            size = TWEET_FONT_SIZE;
-        } else if (weight == -2) {
-            size = MINIMUM_FONT_SIZE - 10;
-        } else {
-            // linear
-            //y = a+bx
-//        double size = defaultFont.getSize() + ((48-defaultFont.getSize())/(max-min)) * word.weight;
-            // logarithmic
-            // y = a * Math.ln(x) + b
-            double a = (defaultFont.getSize() - MAX_FONT_SIZE) / (Math.log(min / max));
-            double b = defaultFont.getSize() - a * Math.log(min);
-            size = a * Math.log(weight) + b;
-        }
-        return size;
-    }
-
-    private void fontSizeAdaption(Text text, double weight) {
-        text.setFont(Font.font(defaultFont.getFamily(), getFontSize(weight)));
-    }
-
-    private Text createTextNode(Word word) {
-        Text textNode = new Text(word.getText());
-        textNode.getStyleClass().setAll("tag");
-        textNode.setStyle("-fx-padding: 5px");
-        fontSizeAdaption(textNode, word.getWeight());
-        return textNode;
-    }
-
-    private final Pattern pattern = Pattern.compile("\\s+");
-
-    private List<TweetWord> recalcTweetLayout(Tweet info) {
-        TextFlow flow = new TextFlow();
-        flow.setMaxWidth(300);
-        pattern.splitAsStream(info.getText())
-                .forEach(w -> {
-                    Text textWord = new Text(w.concat(" "));
-                    textWord.getStyleClass().setAll("tag");
-//                    String color = "#292F33";
-//                    textWord.setStyle("-fx-fill: " + color + ";");
-                    textWord.setFont(Font.font(defaultFont.getFamily(), TWEET_FONT_SIZE));
-                    flow.getChildren().add(textWord);
-                });
-        flow.requestLayout();
-        return flow.getChildren().stream().map(node -> new TweetWord(node.getBoundsInParent(), ((Text) node).getText())).collect(Collectors.toList());
-    }
+    
     private static final int TWEET_FONT_SIZE = 54;
     private static final int MINIMUM_FONT_SIZE = 36;
     private static final int MAX_FONT_SIZE = 72;
-
-    private Map<Word, Bounds> recalcTagLayout(List<Word> words) {
-        boolean doFinish = false;
-        Bounds layoutBounds = pane.getLayoutBounds();
-        Bounds logoLayout = logo.getBoundsInParent();
-        Bounds logoBounds = new BoundingBox(logoLayout.getMinX() - layoutBounds.getWidth() / 2d,
-                logoLayout.getMinY() - layoutBounds.getHeight() / 2d,
-                logoLayout.getWidth(),
-                logoLayout.getHeight());
-
-        List<Bounds> boundsList = new ArrayList<>();
-        Text firstNode = createTextNode(words.get(0));
-        double firstWidth = firstNode.getLayoutBounds().getWidth();
-        double firstHeight = firstNode.getLayoutBounds().getHeight();
-
-        boundsList.add(new BoundingBox(-firstWidth / 2d,
-                -firstHeight / 2d, firstWidth, firstHeight));
-
-        for (int i = 1; i < words.size(); ++i) {
-            Word word = words.get(i);
-            Text textNode = createTextNode(word);
-            double width = textNode.getLayoutBounds().getWidth();
-            double height = textNode.getLayoutBounds().getHeight();
-
-            Point2D center = new Point2D(0, 0);
-            double totalWeight = 0.0;
-            for (int prev = 0; prev < i; ++prev) {
-                Bounds prevBounds = boundsList.get(prev);
-                double weight = words.get(prev).getWeight();
-                center = center.add((prevBounds.getWidth() / 2d) * weight, (prevBounds.getHeight() / 2d) * weight);
-                totalWeight += weight;
-            }
-            center = center.multiply(1d / totalWeight);
-            boolean done = false;
-            double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
-            while (!done) {
-                if (radius > Math.max(layoutBounds.getHeight(), layoutBounds.getWidth())) {
-                    doFinish = true;
-                }
-                int startDeg = rand.nextInt(360);
-                double prev_x = -1;
-                double prev_y = -1;
-                for (int deg = startDeg; deg < startDeg + 360; deg += dDeg) {
-                    double rad = ((double) deg / Math.PI) * 180.0;
-                    center = center.add(radius * Math.cos(rad), radius * Math.sin(rad));
-                    if (prev_x == center.getX() && prev_y == center.getY()) {
-                        continue;
-                    }
-                    prev_x = center.getX();
-                    prev_y = center.getY();
-                    Bounds mayBe = new BoundingBox(center.getX() - width / 2d,
-                            center.getY() - height / 2d, width, height);
-                    boolean useable = true;
-                    //check if bounds are full on screen:
-                    if (layoutBounds.getWidth() > 0 && layoutBounds.getHeight() > 0 && (mayBe.getMinX() + layoutBounds.getWidth() / 2d < 0
-                            || mayBe.getMinY() + layoutBounds.getHeight() / 2d < 0
-                            || mayBe.getMaxX() + layoutBounds.getWidth() / 2d > layoutBounds.getMaxX()
-                            || mayBe.getMaxY() + layoutBounds.getHeight() / 2d > layoutBounds.getMaxY())) {
-                        useable = false;
-                    }
-                    if (useable) {
-                        useable = (null != logo && !mayBe.intersects(logoBounds));
-                    }
-                    if (useable) {
-                        for (int prev = 0; prev < i; ++prev) {
-                            if (mayBe.intersects(boundsList.get(prev))) {
-                                useable = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (useable || doFinish) {
-                        done = true;
-                        boundsList.add(new BoundingBox(center.getX() - width / 2d,
-                                center.getY() - height / 2d, width, height));
-                        break;
-                    }
-                }
-                radius += WordleSkin.dRadius;
-            }
-        }
-
-        Map<Word, Bounds> boundsMap = new HashMap<>();
-
-        for (int k = 0; k < words.size(); k++) {
-            boundsMap.put(words.get(k), boundsList.get(k));
-        }
-        return boundsMap;
-    }
-
-    private static class LocationTransition extends Transition {
-
-        private final Node node;
-        private double startX;
-        private double startY;
-        private double targetY;
-        private double targetX;
-
-        public LocationTransition(Duration duration, Node node) {
-            setCycleDuration(duration);
-            this.node = node;
-        }
-
-        public void setFromX(double startX) {
-            this.startX = startX;
-        }
-
-        public void setFromY(double startY) {
-            this.startY = startY;
-        }
-
-        public void setToX(double targetX) {
-            this.targetX = targetX;
-        }
-
-        public void setToY(double targetY) {
-            this.targetY = targetY;
-        }
-
-        @Override
-        protected void interpolate(double frac) {
-            if (!Double.isNaN(startX)) {
-                node.setLayoutX(startX + frac * (targetX - startX));
-            }
-            if (!Double.isNaN(startY)) {
-                node.setLayoutY(startY + frac * (targetY - startY));
-            }
-        }
-
-    }
-
-    private static class FontSizeTransition extends Transition {
-
-        private final Text node;
-        private double startSize;
-        private double toSize;
-
-        public FontSizeTransition(Duration duration, Text node) {
-            setCycleDuration(duration);
-            this.node = node;
-        }
-
-        public void setFromSize(double startSize) {
-            this.startSize = startSize;
-        }
-
-        public void setToSize(double toSize) {
-            this.toSize = toSize;
-        }
-
-        @Override
-        protected void interpolate(double frac) {
-            if (!Double.isNaN(startSize)) {
-                node.setFont(Font.font(node.getFont().getFamily(), startSize + frac * (toSize - startSize)));
-            }
-        }
-
-    }
-
-    private static class TweetWord {
-
-        Bounds bounds;
-        String text;
-
-        public TweetWord(Bounds bounds, String text) {
-            this.bounds = bounds;
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return "TweetWord{" + "text=" + text + ", bounds=" + bounds + '}';
-        }
-
-    }
-
-    private static class TweetWordNode {
-
-        private TweetWord tweetWord;
-        private Text textNode;
-
-        public TweetWordNode(TweetWord tweetWord, Text textNode) {
-            this.tweetWord = tweetWord;
-            this.textNode = textNode;
-        }
-
-    }
-
-    private static class ImageCache {
-    
-        private final int maxSize;
-        private final Map<String, Reference<Image>> cache = new HashMap<>();
-        private final LinkedList<String> lru = new LinkedList<>();
-        private final ImageCreator creator;
-
-        public ImageCache(final ImageCreator creator) {
-            this.creator = creator;
-            maxSize = 10;
-        }
-        
-        public Image get(final String url) {
-            Image image;
-            Reference<Image> imageRef = cache.get(url);
-            if (null == imageRef || (null == (image = imageRef.get()))) {
-                image = creator.create(url);
-                cache.put(url, new SoftReference<>(image));
-                lru.addFirst(url);
-            } else {
-                if (!url.equals(lru.peekFirst())) {
-                    lru.remove(url);
-                    lru.addFirst(url);
-                }
-            }
-
-            if (lru.size() > maxSize) {
-                String oldest = lru.removeLast();
-                cache.remove(oldest);
-            }
-            
-            return image;
-        }
-
-        public static interface ImageCreator {
-            Image create(String url);
-        }
-        
-        public static class DefaultImageCreator implements ImageCreator {
-
-            @Override
-            public Image create(final String url) {
-                return new Image(url);
-            }
-        }
-        public static class ProfileImageCreator implements ImageCreator {
-
-            @Override
-            public Image create(final String url) {
-                return new Image(url, 64, 64, true, false);
-            }
-        }
-    }
-    
 }

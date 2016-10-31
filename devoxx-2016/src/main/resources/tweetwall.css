@@ -33,7 +33,7 @@
 }
 
 .root {
-    -fx-font-family: 'BebasNeue'; 
+    /*-fx-font-family: 'BebasNeue';*/ 
 }
 
 .statusline {
@@ -46,6 +46,7 @@
     -fx-graphic: url(Devoxx-Logo.png);
     -fx-background-graphic: url(DevoxxBelgium2016v3.jpg);
     -fx-display-tag-num: 25;
+    -fx-font: 12pt "BebasNeue";
 }
 .wordle .bg-image {
     -fx-opacity: 0.3;
