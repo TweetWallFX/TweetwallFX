@@ -75,9 +75,13 @@ public final class TweetSetData {
         return searchText;
     }
 
-    public Tweet getNextOrRandomTweet(final int waitSeconds, final int random) throws InterruptedException {
-        Tweet tweet = transferTweets.poll(5, TimeUnit.SECONDS);
-
+    public Tweet getNextOrRandomTweet(final int waitSeconds, final int random) {
+        Tweet tweet = null;
+        try {
+            tweet = transferTweets.poll(waitSeconds, TimeUnit.SECONDS); 
+        } catch (InterruptedException ie) {
+            // do not mind the interupption - just go for fallback retrieval
+        }
         if (tweet == null) {
             tweet = tweeter.search(new TweetQuery()
                     .query(searchText)
