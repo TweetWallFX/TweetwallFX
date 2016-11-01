@@ -65,15 +65,15 @@ public final class WordleLayout {
         return wordLayoutMap;
     }
 
-    double getFontSizeForWeight(double weight) {
+    public double getFontSizeForWeight(double weight) {
         return wordNodeFactory.getFontSize(weight, configuration.minWeight, configuration.maxWeight);
     }
     
-    void fontSizeAdaption(Text text, double weight) {
+    public void fontSizeAdaption(Text text, double weight) {
         wordNodeFactory.fontSizeAdaption(text, wordNodeFactory.getFontSize(weight, configuration.minWeight, configuration.maxWeight));
     }    
     
-    Text createTextNode(Word word) {
+    public Text createTextNode(Word word) {
         Text textNode = wordNodeFactory.createTextNode(word.getText());                
         fontSizeAdaption(textNode, word.getWeight());        
         return textNode;
