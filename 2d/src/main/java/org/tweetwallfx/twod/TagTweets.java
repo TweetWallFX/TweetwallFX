@@ -62,7 +62,7 @@ import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 /**
- * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
+ * TweetWallFX - Devoxx 2014,15,16 {@literal @}johanvos {@literal @}SvenNB
  * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
  *
  * Tasks to perform a search on Twitter for some hashtag, create an HBox with
@@ -70,8 +70,10 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
  * segmented torus Tasks and blockingQueues take care of this complex process
  *
  * @author José Pereda
+ * @author Sven Reimers
  */
 public class TagTweets {
+
     private static final String STARTUP = "org.tweetwallfx.startup";
     Logger startupLogger = Logger.getLogger(STARTUP);
 
@@ -102,7 +104,7 @@ public class TagTweets {
 
         System.out.println("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
         startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
-        
+
         tweetSetData.buildTree(100);
         startupLogger.trace("** create wordle");
         createWordle();
@@ -169,18 +171,18 @@ public class TagTweets {
                 return s;
             }
         }
-        
+
         private Set<Word> addTweetToCloud(Tweet tweet) {
 //        System.out.println("Add tweet to cloud");
             String text = tweet.getTextWithout(UrlTweetEntry.class)
                     .getTextWithout(UserMentionTweetEntry.class)
                     .get();
             Set<Word> tweetWords = pattern.splitAsStream(text)
-                    .map(l -> trimTail(l))                          //no bad word tails
-                    .filter(l -> l.length() > 2)                    //longer than 2 characters
-                    .filter(l -> !urlPattern.matcher(l).matches())  //no url
-                    .filter(l -> !StopList.contains(l))             //not in stoplist
-                    .map(l -> new Word(l, -2))                      //convert to Word
+                    .map(l -> trimTail(l)) //no bad word tails
+                    .filter(l -> l.length() > 2) //longer than 2 characters
+                    .filter(l -> !urlPattern.matcher(l).matches()) //no url
+                    .filter(l -> !StopList.contains(l)) //not in stoplist
+                    .map(l -> new Word(l, -2)) //convert to Word
                     .collect(Collectors.toSet());                   //collect
             List<Word> words = new ArrayList<>(wordle.wordsProperty().get());
             tweetWords.removeAll(words);
@@ -297,11 +299,12 @@ public class TagTweets {
             wordle.prefWidthProperty().bind(hWordle.widthProperty());
             wordle.prefHeightProperty().bind(hWordle.heightProperty());
         }
-        Platform.runLater(()
-                -> wordle.setWords(tweetSetData.getTree().entrySet().stream()
-                        .sorted(TweetSetData.COMPARATOR.reversed())
-                        .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList()))
-        );
+        Platform.runLater(() -> {
+            wordle.setWords(tweetSetData.getTree().entrySet().stream()
+                    .sorted(TweetSetData.COMPARATOR.reversed())
+                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList()));
+            wordle.setTweet(tweetSetData.getNextOrRandomTweet(0, 3));
+        });
     }
 
 }
