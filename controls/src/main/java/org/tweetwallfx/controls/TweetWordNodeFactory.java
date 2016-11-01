@@ -24,6 +24,7 @@
 package org.tweetwallfx.controls;
 
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -40,7 +41,11 @@ public class TweetWordNodeFactory extends AbstractWordNodeFactory {
 
     static TweetWordNodeFactory createFactory(Configuration configuration) {
         return new TweetWordNodeFactory(configuration);
-    }    
+    }
+
+    public void fontSizeAdaption(Text textNode) {
+        fontSizeAdaption(textNode, configuration.tweetFontSize);
+    }
 
     static class Configuration extends AbstractWordNodeFactory.Configuration{
 
