@@ -82,8 +82,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
     private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
     
-    private WordleLayout lastValidWordleLayout;
-    
     public WordleSkin(Wordle wordle) {
         super(wordle);
         //create panes
@@ -507,7 +505,6 @@ public class WordleSkin extends SkinBase<Wordle> {
         SequentialTransition morph = new SequentialTransition(fadeOuts, moves, fadeIns);
 
         morph.play();
-        lastValidWordleLayout = cloudWordleLayout;
     }
 
     private void updateCloud() {
@@ -596,7 +593,6 @@ public class WordleSkin extends SkinBase<Wordle> {
         fadeIns.getChildren().addAll(fadeInTransitions);
         morph.getChildren().add(fadeIns);
         morph.play();
-        lastValidWordleLayout = cloudWordleLayout;
     }
     
     private static final int TWEET_FONT_SIZE = 54;
