@@ -57,7 +57,7 @@ public class TweetLayout {
         return tweetWords;
     }
 
-    Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
+    public Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         double rightMargin = upperLeft.getX() + maxWidth;
         if (x + targetBounds.getWidth() > rightMargin) {
@@ -66,7 +66,7 @@ public class TweetLayout {
         return lineOffset;
     }
 
-    Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, Point2D lineOffset) {
+    public Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, Point2D lineOffset) {
         double y = upperLeft.getY() + targetBounds.getMinY() + lineOffset.getY();
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         return new Point2D(x, y);
@@ -110,10 +110,10 @@ public class TweetLayout {
         
     }
     
-    static class TweetWord {
+    public static class TweetWord {
 
-        Bounds bounds;
-        String text;
+        public final Bounds bounds;
+        public final String text;
 
         public TweetWord(Bounds bounds, String text) {
             this.bounds = bounds;
@@ -127,10 +127,10 @@ public class TweetLayout {
 
     }
 
-    static class TweetWordNode {
+    public static class TweetWordNode {
 
-        final TweetWord tweetWord;
-        final Text textNode;
+        public final TweetWord tweetWord;
+        public final Text textNode;
 
         public TweetWordNode(TweetWord tweetWord, Text textNode) {
             this.tweetWord = tweetWord;

@@ -39,7 +39,7 @@ public class TweetWordNodeFactory extends AbstractWordNodeFactory {
         this.configuration = configuration;
     }
 
-    static TweetWordNodeFactory createFactory(Configuration configuration) {
+    public static TweetWordNodeFactory createFactory(Configuration configuration) {
         return new TweetWordNodeFactory(configuration);
     }
 
@@ -47,11 +47,11 @@ public class TweetWordNodeFactory extends AbstractWordNodeFactory {
         fontSizeAdaption(textNode, configuration.tweetFontSize);
     }
 
-    static class Configuration extends AbstractWordNodeFactory.Configuration{
+    public static class Configuration extends AbstractWordNodeFactory.Configuration{
 
         private final double tweetFontSize;
 
-        Configuration(Font font, double tweetFontSize) {
+        public Configuration(Font font, double tweetFontSize) {
             super(font);
             this.tweetFontSize = tweetFontSize;
         }
