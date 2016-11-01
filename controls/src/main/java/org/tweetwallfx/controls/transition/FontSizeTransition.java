@@ -20,52 +20,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */package org.tweetwallfx.controls;
+ */
+package org.tweetwallfx.controls.transition;
 
 import javafx.animation.Transition;
-import javafx.scene.Node;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
  *
  * @author sven
  */
-class LocationTransition extends Transition {
+public final class FontSizeTransition extends Transition {
     
-    private final Node node;
-    private double startX;
-    private double startY;
-    private double targetY;
-    private double targetX;
+    private final Text node;
+    private double startSize;
+    private double toSize;
 
-    public LocationTransition(Duration duration, Node node) {
+    public FontSizeTransition(Duration duration, Text node) {
         setCycleDuration(duration);
         this.node = node;
     }
 
-    public void setFromX(double startX) {
-        this.startX = startX;
+    public void setFromSize(double startSize) {
+        this.startSize = startSize;
     }
 
-    public void setFromY(double startY) {
-        this.startY = startY;
-    }
-
-    public void setToX(double targetX) {
-        this.targetX = targetX;
-    }
-
-    public void setToY(double targetY) {
-        this.targetY = targetY;
+    public void setToSize(double toSize) {
+        this.toSize = toSize;
     }
 
     @Override
     protected void interpolate(double frac) {
-        if (!Double.isNaN(startX)) {
-            node.setLayoutX(startX + frac * (targetX - startX));
-        }
-        if (!Double.isNaN(startY)) {
-            node.setLayoutY(startY + frac * (targetY - startY));
+        if (!Double.isNaN(startSize)) {
+            node.setFont(Font.font(node.getFont().getFamily(), startSize + frac * (toSize - startSize)));
         }
     }
     

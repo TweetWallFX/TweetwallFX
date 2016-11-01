@@ -38,15 +38,15 @@ public class AbstractWordNodeFactory {
         this.configuration = configuration;
     }
 
-    static AbstractWordNodeFactory createFactory(Configuration configuration) {
+    public static AbstractWordNodeFactory createFactory(Configuration configuration) {
         return new AbstractWordNodeFactory(configuration);
     }    
     
-    void fontSizeAdaption(Text text, double fontSize) {
+    public void fontSizeAdaption(Text text, double fontSize) {
         text.setFont(Font.font(text.getFont().getFamily(), fontSize));
     }   
     
-    Text createTextNode(String word) {
+    public Text createTextNode(String word) {
         Text textNode = new Text(word);
         textNode.getStyleClass().setAll("tag");
         textNode.setStyle("-fx-padding: 10px");

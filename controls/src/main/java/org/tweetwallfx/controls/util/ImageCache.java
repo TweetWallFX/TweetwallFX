@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls;
+package org.tweetwallfx.controls.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -34,7 +34,7 @@ import javafx.scene.image.Image;
  *
  * @author sven
  */
-class ImageCache {
+public class ImageCache {
     
     private final int maxSize;
     private final Map<String, Reference<Image>> cache = new HashMap<>();
