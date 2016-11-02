@@ -160,7 +160,7 @@ public class Wordle extends Control {
         }
         return displayedNumberOfTagsProperty;
     }
-    
+
     public Font getFont() {
         return fontProperty.get();
     }
@@ -174,8 +174,8 @@ public class Wordle extends Control {
             fontProperty = new SimpleStyleableObjectProperty<>(StyleableProperties.FONT, Wordle.this, "-fx-font", Font.getDefault());
         }
         return fontProperty;
-    }    
-    
+    }
+
     public Integer getFontSizeMin() {
         return fontSizeMinProperty.get();
     }
@@ -190,7 +190,7 @@ public class Wordle extends Control {
         }
         return fontSizeMinProperty;
     }
-    
+
     public Integer getFontSizeMax() {
         return fontSizeMaxProperty.get();
     }
@@ -205,7 +205,7 @@ public class Wordle extends Control {
         }
         return fontSizeMaxProperty;
     }
-    
+
     public Integer getTweetFontSize() {
         return tweetFontSizeProperty.get();
     }
@@ -275,15 +275,7 @@ public class Wordle extends Control {
         };
 
         private static final CssMetaData<Wordle, Number> DISPLAYED_TAGS_NUMBER
-                = new CssMetaData<Wordle, Number>("-fx-display-tag-num",
-                        new StyleConverter<String, Number>() {
-                    @Override
-                    public Integer convert(ParsedValue<String, Number> value, Font not_used) {
-                        String str = value.getValue();
-                        System.out.println("Initial value for display tags num: " + str);
-                        return Integer.valueOf(str);
-                    }
-                }) {
+                = new CssMetaData<Wordle, Number>("-fx-display-tag-num", StyleConverter.getSizeConverter()) {
 
             @Override
             public boolean isSettable(Wordle control) {
@@ -295,7 +287,7 @@ public class Wordle extends Control {
                 return control.displayedNumberOfTagsProperty();
             }
         };
-        
+
         private static final CssMetaData<Wordle, Font> FONT
                 = new CssMetaData<Wordle, Font>("-fx-font", StyleConverter.getFontConverter()) {
 
@@ -308,7 +300,7 @@ public class Wordle extends Control {
             public StyleableProperty<Font> getStyleableProperty(Wordle control) {
                 return control.fontProperty();
             }
-        };        
+        };
 
         private static final CssMetaData<Wordle, Number> FONT_SIZE_MIN
                 = new CssMetaData<Wordle, Number>("-fx-font-size-min", StyleConverter.getSizeConverter()) {
@@ -322,7 +314,7 @@ public class Wordle extends Control {
             public StyleableProperty<Number> getStyleableProperty(Wordle control) {
                 return control.fontSizeMinProperty();
             }
-        };        
+        };
 
         private static final CssMetaData<Wordle, Number> FONT_SIZE_MAX
                 = new CssMetaData<Wordle, Number>("-fx-font-size-max", StyleConverter.getSizeConverter()) {
@@ -336,8 +328,8 @@ public class Wordle extends Control {
             public StyleableProperty<Number> getStyleableProperty(Wordle control) {
                 return control.fontSizeMaxProperty();
             }
-        };        
-        
+        };
+
         private static final CssMetaData<Wordle, Number> TWEET_FONT_SIZE
                 = new CssMetaData<Wordle, Number>("-fx-tweet-font-size", StyleConverter.getSizeConverter()) {
 
@@ -350,7 +342,7 @@ public class Wordle extends Control {
             public StyleableProperty<Number> getStyleableProperty(Wordle control) {
                 return control.tweetFontSizeProperty();
             }
-        };        
+        };
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
