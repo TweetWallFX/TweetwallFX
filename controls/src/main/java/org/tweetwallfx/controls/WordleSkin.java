@@ -52,10 +52,6 @@ import org.tweetwallfx.controls.steps.UpdateCloudStep;
  */
 public class WordleSkin extends SkinBase<Wordle> {
         
-    public static final int TWEET_FONT_SIZE = 54;
-    public static final int MINIMUM_FONT_SIZE = 36;
-    public static final int MAX_FONT_SIZE = 72;
-    
     public final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
     public  final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
@@ -69,6 +65,9 @@ public class WordleSkin extends SkinBase<Wordle> {
     private ImageView logo;
     private ImageView backgroundImage;
     private Font font;
+    private int fontSizeMin;
+    private int fontSizeMax;
+    private int tweetFontSize;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
@@ -121,6 +120,18 @@ public class WordleSkin extends SkinBase<Wordle> {
         return font;
     }
     
+    public int getFontSizeMin() {
+        return fontSizeMin;
+    }
+    
+    public int getFontSizeMax() {
+        return fontSizeMax;
+    }
+    
+    public int getTweetFontSize() {
+        return tweetFontSize;
+    }
+    
     public WordleSkin(Wordle wordle) {
         super(wordle);
         //create panes
@@ -148,6 +159,9 @@ public class WordleSkin extends SkinBase<Wordle> {
         favIconsVisible = wordle.favIconsVisibleProperty().get();
         displayCloudTags = wordle.displayedNumberOfTagsProperty().get();
         font = wordle.fontProperty().get();
+        fontSizeMin = wordle.fontSizeMinProperty().get();
+        fontSizeMax = wordle.fontSizeMaxProperty().get();
+        tweetFontSize = wordle.tweetFontSizeProperty().get();
         prepareStepMachine();
     }
 

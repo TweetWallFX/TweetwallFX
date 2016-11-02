@@ -80,7 +80,7 @@ public class TweetToCloudStep extends AbstractStep {
  
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), WordleSkin.MINIMUM_FONT_SIZE, WordleSkin.MAX_FONT_SIZE,layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(),layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
