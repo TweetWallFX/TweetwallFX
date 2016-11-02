@@ -243,7 +243,7 @@ project(":TweetWallFX-Embeddable") {
         }
     }
 
-    task('assemble', dependsOn: 'copyToLib')
+    tasks.assemble.dependsOn tasks.copyToLib
 }
 
 description = 'TweetWallFX'
