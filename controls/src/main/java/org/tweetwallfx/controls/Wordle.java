@@ -62,6 +62,9 @@ public class Wordle extends Control {
     private SimpleStyleableBooleanProperty favIconsVisible;
     private SimpleStyleableIntegerProperty displayedNumberOfTagsProperty;
     private SimpleStyleableObjectProperty<Font> fontProperty;
+    private SimpleStyleableIntegerProperty fontSizeMinProperty;
+    private SimpleStyleableIntegerProperty fontSizeMaxProperty;
+    private SimpleStyleableIntegerProperty tweetFontSizeProperty;
 
     private String userAgentStylesheet = null;
 
@@ -157,7 +160,7 @@ public class Wordle extends Control {
         }
         return displayedNumberOfTagsProperty;
     }
-    
+
     public Font getFont() {
         return fontProperty.get();
     }
@@ -171,8 +174,52 @@ public class Wordle extends Control {
             fontProperty = new SimpleStyleableObjectProperty<>(StyleableProperties.FONT, Wordle.this, "-fx-font", Font.getDefault());
         }
         return fontProperty;
-    }    
-    
+    }
+
+    public Integer getFontSizeMin() {
+        return fontSizeMinProperty.get();
+    }
+
+    public void setFontSizeMin(Integer value) {
+        fontSizeMinProperty.set(value);
+    }
+
+    public SimpleStyleableIntegerProperty fontSizeMinProperty() {
+        if (fontSizeMinProperty == null) {
+            fontSizeMinProperty = new SimpleStyleableIntegerProperty(StyleableProperties.FONT_SIZE_MIN, Wordle.this, "-fx-font-size-min", 36);
+        }
+        return fontSizeMinProperty;
+    }
+
+    public Integer getFontSizeMax() {
+        return fontSizeMaxProperty.get();
+    }
+
+    public void setFontSizeMax(Integer value) {
+        fontSizeMaxProperty.set(value);
+    }
+
+    public SimpleStyleableIntegerProperty fontSizeMaxProperty() {
+        if (fontSizeMaxProperty == null) {
+            fontSizeMaxProperty = new SimpleStyleableIntegerProperty(StyleableProperties.FONT_SIZE_MAX, Wordle.this, "-fx-font-size-max", 72);
+        }
+        return fontSizeMaxProperty;
+    }
+
+    public Integer getTweetFontSize() {
+        return tweetFontSizeProperty.get();
+    }
+
+    public void setTweetFontSize(Integer value) {
+        tweetFontSizeProperty.set(value);
+    }
+
+    public SimpleStyleableIntegerProperty tweetFontSizeProperty() {
+        if (tweetFontSizeProperty == null) {
+            tweetFontSizeProperty = new SimpleStyleableIntegerProperty(StyleableProperties.TWEET_FONT_SIZE, Wordle.this, "-fx-tweet-font-size", 54);
+        }
+        return tweetFontSizeProperty;
+    }
 
     @Override
     public String getUserAgentStylesheet() {
@@ -228,15 +275,7 @@ public class Wordle extends Control {
         };
 
         private static final CssMetaData<Wordle, Number> DISPLAYED_TAGS_NUMBER
-                = new CssMetaData<Wordle, Number>("-fx-display-tag-num",
-                        new StyleConverter<String, Number>() {
-                    @Override
-                    public Integer convert(ParsedValue<String, Number> value, Font not_used) {
-                        String str = value.getValue();
-                        System.out.println("Initial value for display tags num: " + str);
-                        return Integer.valueOf(str);
-                    }
-                }) {
+                = new CssMetaData<Wordle, Number>("-fx-display-tag-num", StyleConverter.getSizeConverter()) {
 
             @Override
             public boolean isSettable(Wordle control) {
@@ -248,7 +287,7 @@ public class Wordle extends Control {
                 return control.displayedNumberOfTagsProperty();
             }
         };
-        
+
         private static final CssMetaData<Wordle, Font> FONT
                 = new CssMetaData<Wordle, Font>("-fx-font", StyleConverter.getFontConverter()) {
 
@@ -261,7 +300,49 @@ public class Wordle extends Control {
             public StyleableProperty<Font> getStyleableProperty(Wordle control) {
                 return control.fontProperty();
             }
-        };        
+        };
+
+        private static final CssMetaData<Wordle, Number> FONT_SIZE_MIN
+                = new CssMetaData<Wordle, Number>("-fx-font-size-min", StyleConverter.getSizeConverter()) {
+
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.fontSizeMinProperty == null || !control.fontSizeMinProperty.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Number> getStyleableProperty(Wordle control) {
+                return control.fontSizeMinProperty();
+            }
+        };
+
+        private static final CssMetaData<Wordle, Number> FONT_SIZE_MAX
+                = new CssMetaData<Wordle, Number>("-fx-font-size-max", StyleConverter.getSizeConverter()) {
+
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.fontSizeMaxProperty == null || !control.fontSizeMaxProperty.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Number> getStyleableProperty(Wordle control) {
+                return control.fontSizeMaxProperty();
+            }
+        };
+
+        private static final CssMetaData<Wordle, Number> TWEET_FONT_SIZE
+                = new CssMetaData<Wordle, Number>("-fx-tweet-font-size", StyleConverter.getSizeConverter()) {
+
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.tweetFontSizeProperty == null || !control.tweetFontSizeProperty.isBound();
+            }
+
+            @Override
+            public StyleableProperty<Number> getStyleableProperty(Wordle control) {
+                return control.tweetFontSizeProperty();
+            }
+        };
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
 
@@ -273,7 +354,10 @@ public class Wordle extends Control {
                     BACKGROUND_GRAPHIC,
                     FAVICONS_VISIBLE,
                     DISPLAYED_TAGS_NUMBER,
-                    FONT
+                    FONT,
+                    FONT_SIZE_MIN,
+                    FONT_SIZE_MAX,
+                    TWEET_FONT_SIZE
             );
             STYLEABLES = Collections.unmodifiableList(styleables);
         }

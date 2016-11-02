@@ -85,7 +85,7 @@ public class CloudToTweetStep extends AbstractStep {
 
         double width = layoutBounds.getWidth() * (2 / 3d);
 
-        TweetLayout tweetLayout = TweetLayout.createTweetLayout(new TweetLayout.Configuration(tweetInfo, wordleSkin.getFont(), WordleSkin.TWEET_FONT_SIZE));       
+        TweetLayout tweetLayout = TweetLayout.createTweetLayout(new TweetLayout.Configuration(tweetInfo, wordleSkin.getFont(), wordleSkin.getTweetFontSize()));       
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
         List<Transition> moveTransitions = new ArrayList<>();
@@ -96,7 +96,7 @@ public class CloudToTweetStep extends AbstractStep {
 
         Duration defaultDuration = Duration.seconds(1.5);
 
-        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(wordleSkin.getFont(), WordleSkin.TWEET_FONT_SIZE));
+        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
         
         tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
             Word word = new Word(tweetWord.text.trim(), -2);
@@ -106,7 +106,7 @@ public class CloudToTweetStep extends AbstractStep {
 
                 FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
                 ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(WordleSkin.TWEET_FONT_SIZE);
+                ft.setToSize(wordleSkin.getTweetFontSize());
                 moveTransitions.add(ft);
 
                 Bounds bounds = tweetLayout.getWordLayoutInfo().stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
@@ -125,7 +125,7 @@ public class CloudToTweetStep extends AbstractStep {
             } else {
                 Text textNode = wordNodeFactory.createTextNode(word.getText());
 
-                wordNodeFactory.fontSizeAdaption(textNode, WordleSkin.TWEET_FONT_SIZE);
+                wordNodeFactory.fontSizeAdaption(textNode, wordleSkin.getTweetFontSize());
                 wordleSkin.tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
                 Bounds bounds = tweetWord.bounds;
