@@ -47,6 +47,10 @@
     -fx-background-graphic: url(DevoxxBelgium2016v3.jpg);
     -fx-display-tag-num: 25;
     -fx-font: 12pt "BebasNeue";
+    -fx-font-size-min: 36;
+    -fx-font-size-max: 72;
+    -fx-tweet-font-size: 54;
+    
 }
 .wordle .bg-image {
     -fx-opacity: 0.3;
