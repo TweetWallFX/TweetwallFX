@@ -26,7 +26,6 @@ package org.tweetwallfx.controls.steps;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -36,7 +35,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
@@ -50,7 +48,7 @@ import org.tweetwallfx.controls.transition.LocationTransition;
 public class UpdateCloudStep extends AbstractStep {
 
     @Override
-    public int preferredStepDuration(MachineContext context) {
+    public long preferredStepDuration(MachineContext context) {
         return 5000;
     }
 

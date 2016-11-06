@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -41,9 +40,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.stepengine.StepIterator;
+import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
 import org.tweetwallfx.controls.steps.CloudToTweetStep;
+import org.tweetwallfx.controls.steps.NextTweetStep;
+import org.tweetwallfx.controls.steps.PauseStep;
 import org.tweetwallfx.controls.steps.TweetToCloudStep;
 import org.tweetwallfx.controls.steps.UpdateCloudStep;
 
@@ -52,6 +56,8 @@ import org.tweetwallfx.controls.steps.UpdateCloudStep;
  */
 public class WordleSkin extends SkinBase<Wordle> {
         
+    private static final Logger log = LogManager.getLogger(WordleSkin.class);
+    
     public final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
     public  final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
@@ -145,6 +151,14 @@ public class WordleSkin extends SkinBase<Wordle> {
         //assign style
         stackPane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
         
+        pane.heightProperty().addListener((observable) -> {
+            updateLogoPosition();
+        });
+
+        pane.widthProperty().addListener((observable) -> {
+            updateLogoPosition();
+        });
+        
         getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
             updateLogo(newValue);
         });
@@ -170,11 +184,18 @@ public class WordleSkin extends SkinBase<Wordle> {
             pane.getChildren().remove(logo);
             logo = null;
         }   
-        System.out.println("Logo: " + newLogo);
+        log.trace("Logo: " + newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             logo = new ImageView(newLogo);
             logo.getStyleClass().add("logo");            
             pane.getChildren().add(logo);
+            updateLogoPosition();
+        }
+    }
+    
+    private void updateLogoPosition() {
+        log.trace("Updating logo position");
+        if (null != logo) {
             logo.setLayoutX(0);
             logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
         }
@@ -220,7 +241,11 @@ public class WordleSkin extends SkinBase<Wordle> {
     
     public void prepareStepMachine() {
         StepIterator steps = new StepIterator(Arrays.asList(new UpdateCloudStep(),
+                new NextTweetStep(),
+                new AddTweetToCloudStep(),
+                new UpdateCloudStep(),
                 new CloudToTweetStep(),
+                new PauseStep(),
                 new TweetToCloudStep()
         ));
         

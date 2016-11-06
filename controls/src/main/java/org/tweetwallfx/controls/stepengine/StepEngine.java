@@ -28,25 +28,26 @@ import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Jörg Michelberger
  */
 public final class StepEngine {
-    private static final Logger LOG = Logger.getLogger(StepEngine.class.getName());
+
+    private static final Logger LOG = LogManager.getLogger(StepEngine.class.getName());
     private volatile boolean terminated = false;
-    
+
     private final Lock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
 
     private final StepIterator stateIterator;
 
     private final MachineContext context = new MachineContext();
-    
+
     public StepEngine(StepIterator stateIterator) {
         this.stateIterator = stateIterator;
         //initialize every step with context
@@ -56,8 +57,9 @@ public final class StepEngine {
     public MachineContext getContext() {
         return context;
     }
-    
-    public class MachineContext {
+
+    public final class MachineContext {
+
         private final Map<String, Object> properties = new HashMap<>();
 
         public Object get(String key) {
@@ -67,9 +69,8 @@ public final class StepEngine {
         public Object put(String key, Object value) {
             return properties.put(key, value);
         }
-        
+
         public void proceed() {
-            LOG.log(Level.INFO, "Enter proceed()");
             StepEngine.this.proceed();
         }
     }
@@ -77,7 +78,7 @@ public final class StepEngine {
     public void go() {
         process();
     }
-    
+
     void proceed() {
         lock.lock();
         try {
@@ -86,13 +87,13 @@ public final class StepEngine {
             lock.unlock();
         }
     }
-    
+
     void process() {
-        while(!terminated) {
-            LOG.log(Level.INFO, "process()");
+        while (!terminated) {
+            LOG.info("process to next step ");
 
             long start = System.currentTimeMillis();
-            
+
             Step step = stateIterator.next();
             while (step.shouldSkip(context)) {
                 LOG.info("Skip step: " + step.getName());
@@ -100,25 +101,29 @@ public final class StepEngine {
             }
             final Step stepToExecute = step;
             long duration = step.preferredStepDuration(context);
-            LOG.log(Level.INFO, "call "+stepToExecute.getName()+"doStep()");
+            LOG.info("call " + stepToExecute.getName() + "doStep()");
             lock.lock();
             try {
-            Platform.runLater(() -> stepToExecute.doStep(context));
-            long stop = System.currentTimeMillis();
-            long doStateDuration = stop - start;
-            long delay = duration - doStateDuration;
-            if (delay > 0) {
-                try {
-                LOG.log(Level.INFO, "sleep("+delay+")");
-                    Thread.sleep(delay);
-                } catch (InterruptedException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
+                if (stepToExecute.requiresPlatformThread()) {
+                    Platform.runLater(() -> stepToExecute.doStep(context));                    
+                } else {
+                    stepToExecute.doStep(context);
                 }
-            }
-                LOG.log(Level.INFO, "await step finish!");
+                long stop = System.currentTimeMillis();
+                long doStateDuration = stop - start;
+                long delay = duration - doStateDuration;
+                if (delay > 0) {
+                    try {
+                        LOG.info("sleep(" + delay + ")");
+                        Thread.sleep(delay);
+                    } catch (InterruptedException ex) {
+                        LOG.error("Sleeping for " + delay + " interrupted!", ex);
+                    }
+                }
+                LOG.info("wait for the step to finish!");
                 condition.await();
             } catch (InterruptedException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOG.error("Waiting interrupted!", ex);
             } finally {
                 lock.unlock();
             }

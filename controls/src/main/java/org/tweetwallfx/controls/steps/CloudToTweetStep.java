@@ -49,6 +49,7 @@ import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
@@ -65,7 +66,7 @@ public class CloudToTweetStep extends AbstractStep {
     private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
     
     @Override
-    public int preferredStepDuration(MachineContext context) {
+    public long preferredStepDuration(MachineContext context) {
         return 5000;
     }
 
@@ -79,7 +80,7 @@ public class CloudToTweetStep extends AbstractStep {
         
         startupLogger.trace("cloudToTweet()");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        Tweet tweetInfo = wordleSkin.getSkinnable().tweetInfoProperty().get();
+        Tweet tweetInfo = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
 
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - wordleSkin.getLogo().getImage().getHeight()) / 4d);
 

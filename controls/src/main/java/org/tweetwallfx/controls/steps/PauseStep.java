@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2016 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,40 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.controls.steps;
 
-package org.tweetwallfx.controls.stepengine;
+import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  *
- * @author Jörg Michelberger
+ * @author Sven
  */
-public abstract class AbstractStep implements Step {
+public class PauseStep extends AbstractStep {
 
-    @Override
-    public void initStep(StepEngine.MachineContext context) {
+    private final long pause;
+
+    public PauseStep() {
+        this(5000);
     }
-
-    @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
-        return false;
+    
+    public PauseStep(long pause) {
+        this.pause = pause;
     }
     
     @Override
-    public void prepareStep(StepEngine.MachineContext context) {
+    public long preferredStepDuration(MachineContext context) {
+        return this.pause;
     }
 
     @Override
-    public void leaveStep(StepEngine.MachineContext context) {
+    public void doStep(MachineContext context) {
+        context.proceed();
     }
-
-    @Override
-    public String getName() {
-        return getClass().getName();
-    }
-
-    @Override
-    public boolean requiresPlatformThread() {
-        return true;
-    }
-    
 }

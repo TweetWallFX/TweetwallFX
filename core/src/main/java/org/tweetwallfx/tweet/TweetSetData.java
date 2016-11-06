@@ -30,11 +30,12 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.concurrent.Task;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetQuery;
@@ -48,8 +49,9 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
  */
 public final class TweetSetData {
 
+    private static final Logger log = LogManager.getLogger(TweetSetData.class);
+    
     public static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
-    private static final Pattern pattern = Pattern.compile("\\s+");
     private final Tweeter tweeter;
     private final String searchText;
     private final BlockingQueue<Tweet> transferTweets;
@@ -75,25 +77,6 @@ public final class TweetSetData {
         return searchText;
     }
 
-    public Tweet getNextOrRandomTweet(final int waitSeconds, final int random) {
-        Tweet tweet = null;
-        try {
-            tweet = transferTweets.poll(waitSeconds, TimeUnit.SECONDS); 
-        } catch (InterruptedException ie) {
-            // do not mind the interupption - just go for fallback retrieval
-        }
-        if (tweet == null) {
-            tweet = tweeter.search(new TweetQuery()
-                    .query(searchText)
-                    .count(random))
-                    .skip((long) (Math.random() * random))
-                    .findFirst()
-                    .orElse(null);
-        }
-
-        return tweet;
-    }
-
     public BlockingQueue<Tweet> getTransferTweets() {
         return transferTweets;
     }
@@ -115,11 +98,11 @@ public final class TweetSetData {
                         .replaceAll("['\"()]", " "));
 
         tree = stringStream
-                .flatMap(c -> pattern.splitAsStream(c))
+                .flatMap(StopList.WORD_SPLIT::splitAsStream)
                 .filter(l -> l.length() > 2)
                 .filter(l -> !l.startsWith("@"))
-                .map(l -> l.toLowerCase())
-                .filter(l -> !StopList.contains(l))
+                .map(String::toLowerCase)
+                .filter(StopList::notIn)
                 .collect(Collectors.groupingBy(String::toLowerCase, TreeMap::new, Collectors.counting()));
     }
 
@@ -130,10 +113,10 @@ public final class TweetSetData {
                 .replaceAll("[^\\dA-Za-z ]", " ");
         // add words to tree and update weights
 
-        pattern.splitAsStream(status)
+        StopList.WORD_SPLIT.splitAsStream(status)
                 .map(String::toLowerCase)
                 .filter((w) -> w.length() > 2)
-                .filter((java.lang.String w) -> !StopList.contains(w))
+                .filter(StopList::notIn)
                 .forEach((java.lang.String w) -> tree.put(w, (tree.containsKey(w)
                                         ? tree.get(w)
                                         : 0) + 1l));
@@ -156,7 +139,7 @@ public final class TweetSetData {
                     tweetSetData.updateTree(tweet);
                     tweetSetData.getTransferTweets().put(tweet);
                 } catch (InterruptedException ex) {
-                    System.out.println("Error: " + ex);
+                    log.error("Error: " + ex);
                 }
             });
             stream.filter(new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(tweetSetData.getSearchText()).toArray(n -> new String[n])));

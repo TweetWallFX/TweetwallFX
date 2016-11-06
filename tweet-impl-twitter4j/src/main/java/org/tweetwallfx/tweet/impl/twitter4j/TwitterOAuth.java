@@ -26,6 +26,8 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -56,6 +58,8 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 final class TwitterOAuth {
 
+    private static final Logger log = LogManager.getLogger(TwitterOAuth.class);
+    
     private static Configuration configuration = null;
     private static final AtomicBoolean INITIATED = new AtomicBoolean(false);
     private static final ReadOnlyObjectWrapper<Exception> exception = new ReadOnlyObjectWrapper<>(null);
@@ -94,12 +98,12 @@ final class TwitterOAuth {
             Twitter twitter = new TwitterFactory(conf).getInstance();
             try {
                 User user = twitter.verifyCredentials();
-                System.out.println("User " + user.getName() + " validated");
+                log.info("User " + user.getName() + " validated");
             } catch (TwitterException ex) {
                 exception.set(ex);
                 //  statusCode=400, message=Bad Authentication data -> wrong token
                 //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
-                System.out.println("Error credentials: " + ex.getStatusCode() + " " + ex.getErrorMessage());
+                log.error("Error credentials: " + ex.getStatusCode() + " " + ex.getErrorMessage());
                 conf = null;
             }
         } else {

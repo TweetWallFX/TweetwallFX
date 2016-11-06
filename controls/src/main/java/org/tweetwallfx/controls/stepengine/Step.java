@@ -33,6 +33,7 @@ public interface Step {
     void prepareStep(StepEngine.MachineContext context);
     void doStep(StepEngine.MachineContext context);
     void leaveStep(StepEngine.MachineContext context);
-    int preferredStepDuration(StepEngine.MachineContext context);
+    long preferredStepDuration(StepEngine.MachineContext context);
     String getName();
+    boolean requiresPlatformThread();
 }
