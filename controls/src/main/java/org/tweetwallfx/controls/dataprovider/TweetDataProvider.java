@@ -25,6 +25,10 @@ package org.tweetwallfx.controls.dataprovider;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -36,22 +40,26 @@ import org.tweetwallfx.tweet.api.Tweeter;
  */
 public class TweetDataProvider implements DataProvider {
     
+    private static final Logger log = LogManager.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 20; 
 
     private final Tweeter tweeter;
     
-    private Tweet tweet;
-    private Tweet nextTweet;
+    private volatile Tweet tweet;
+    private volatile Tweet nextTweet;
     private final TweetStream tweetStream;
     private final String searchText;
     private final Deque<Long> history = new ArrayDeque<>();
+    private List<Tweet> lastTweetCollection;
     
     public TweetDataProvider(Tweeter tweeter, final String searchText) {
         this.tweeter = tweeter;
         this.searchText = searchText;
         this.tweetStream = this.tweeter.createTweetStream();
         tweetStream.onTweet(tweet -> {
+            log.info("new Tweet received");
             this.nextTweet = tweet;
+            this.lastTweetCollection = null;
         });
     }
     
@@ -59,11 +67,18 @@ public class TweetDataProvider implements DataProvider {
         return this.tweet;
     }
 
+    private List<Tweet> getLatestHistory() {
+        return tweeter.search(new TweetQuery()
+                        .query(searchText)
+                        .count(HISTORY_SIZE)).collect(Collectors.toList());        
+    }
+    
     public Tweet nextTweet() {
         if (null == nextTweet) {
-            nextTweet = tweeter.search(new TweetQuery()
-                    .query(searchText)
-                    .count(HISTORY_SIZE))
+            if (null == lastTweetCollection) {
+                lastTweetCollection = getLatestHistory();
+            }
+            nextTweet = lastTweetCollection.stream()
                     .filter(tweet -> !history.contains(tweet.getId()))
                     .skip((long) (Math.random() * (HISTORY_SIZE - history.size())))
                     .findFirst()

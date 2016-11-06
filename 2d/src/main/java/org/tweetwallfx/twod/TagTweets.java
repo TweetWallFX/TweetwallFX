@@ -47,6 +47,7 @@ import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.tweet.ThreadingHelper;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -205,6 +206,7 @@ public class TagTweets {
             wordle.prefWidthProperty().bind(hWordle.widthProperty());
             wordle.prefHeightProperty().bind(hWordle.heightProperty());
             wordle.addDataProvider(new TweetDataProvider(tweetSetData.getTweeter(), tweetSetData.getSearchText()));
+            wordle.addDataProvider(new TagCloudDataProvider());
         }
         Platform.runLater(() -> {
             wordle.setWords(tweetSetData.getTree().entrySet().stream()

@@ -242,8 +242,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     public void prepareStepMachine() {
         StepIterator steps = new StepIterator(Arrays.asList(new UpdateCloudStep(),
                 new NextTweetStep(),
-                new AddTweetToCloudStep(),
-                new UpdateCloudStep(),
+//                new AddTweetToCloudStep(),
+//                new UpdateCloudStep(),
                 new CloudToTweetStep(),
                 new PauseStep(),
                 new TweetToCloudStep()

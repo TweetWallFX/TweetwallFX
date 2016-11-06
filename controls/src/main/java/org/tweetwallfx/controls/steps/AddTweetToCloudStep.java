@@ -28,8 +28,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
@@ -44,6 +47,8 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
  */
 public class AddTweetToCloudStep extends AbstractStep {
 
+    private static final Logger log = LogManager.getLogger(AddTweetToCloudStep.class);
+    
     @Override
     public long preferredStepDuration(MachineContext context) {
         return 0;
@@ -60,13 +65,16 @@ public class AddTweetToCloudStep extends AbstractStep {
                 .map(StopList::trimTail) //no bad word tails
                 .filter(l -> l.length() > 2) //longer than 2 characters
                 .filter(StopList.IS_NOT_URL) //no url
-                .filter(StopList::notIn) //not in stoplist
-                .map(l -> new Word(l, -2)) //convert to Word
+//                .filter(StopList::notIn) //not in stoplist
+                .map(l -> new Word(l, 0.1)) //convert to Word
                 .collect(Collectors.toSet());                   //collect
         List<Word> words = new ArrayList<>(skin.getSkinnable().wordsProperty().get());
         tweetWords.removeAll(words);
-        words.addAll(tweetWords);
-        Platform.runLater(() -> skin.getSkinnable().wordsProperty().set(words));
+        
+        log.info("Adding words to cloud dataset for rendering: " + tweetWords); 
+
+        skin.getSkinnable().getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
+        
         context.proceed();
     }
 }

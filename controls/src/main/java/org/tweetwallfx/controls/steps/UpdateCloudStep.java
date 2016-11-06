@@ -34,9 +34,12 @@ import javafx.animation.Transition;
 import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
@@ -46,6 +49,8 @@ import org.tweetwallfx.controls.transition.LocationTransition;
  * @author Jörg Michelberger
  */
 public class UpdateCloudStep extends AbstractStep {
+    
+    private static final Logger log = LogManager.getLogger(UpdateCloudStep.class);            
 
     @Override
     public long preferredStepDuration(MachineContext context) {
@@ -65,6 +70,13 @@ public class UpdateCloudStep extends AbstractStep {
 
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
         List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
+        List<Word> additionalTagCloudWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
+        
+        double minWeight = limitedWords.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
+        
+        if (null != additionalTagCloudWords) {
+            additionalTagCloudWords.stream().map(word -> new Word(word.getText(), minWeight)).forEach(word -> limitedWords.add(word));
+        }
         limitedWords.sort(Comparator.reverseOrder());
 
         WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(), layoutBounds);
@@ -83,6 +95,8 @@ public class UpdateCloudStep extends AbstractStep {
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
         
+        log.info("Unused words in cloud: " + unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));        
+        
         unusedWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.remove(word);
 
@@ -100,6 +114,7 @@ public class UpdateCloudStep extends AbstractStep {
 
         List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
 
+        log.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
 
             Text textNode = wordleSkin.word2TextMap.get(word);
@@ -121,6 +136,7 @@ public class UpdateCloudStep extends AbstractStep {
         List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
 
         List<Text> newTextNodes = new ArrayList<>();
+        log.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         newWords.forEach(word -> {
             Text textNode = cloudWordleLayout.createTextNode(word);
             wordleSkin.word2TextMap.put(word, textNode);

@@ -35,12 +35,16 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author sven
  */
 public final class WordleLayout {
+    
+    private static final Logger log = LogManager.getLogger(WordleLayout.class);
     
     private static final double dRadius = 5.0;    
     private static final int dDeg = 10;
@@ -50,6 +54,7 @@ public final class WordleLayout {
     private Map<Word, Bounds> wordLayoutMap;
     private final Configuration configuration;
     private final CloudWordNodeFactory wordNodeFactory;
+    private WordleLayout initialLayoutSolution;
     
     private WordleLayout(Configuration configuration) {
         this.configuration = configuration;
@@ -57,8 +62,19 @@ public final class WordleLayout {
         this.wordLayoutMap = calcTagLayout();                
     }
     
+    private WordleLayout(Configuration configuration, WordleLayout initialLayoutSolution) {
+        this.configuration = configuration;
+        this.wordNodeFactory = CloudWordNodeFactory.createFactory(new CloudWordNodeFactory.Configuration(configuration.font, configuration.minFontSize, configuration.maxFontSize));
+        this.initialLayoutSolution = initialLayoutSolution;
+        this.wordLayoutMap = calcTagLayout();                
+    }
+    
     public static WordleLayout createWordleLayout(Configuration configuration) {
         return new WordleLayout(configuration);        
+    }
+
+    public static WordleLayout createWordleLayout(Configuration configuration, WordleLayout initialLayoutSolution) {
+        return new WordleLayout(configuration, initialLayoutSolution);        
     }
     
     public Map<Word, Bounds> getWordLayoutInfo() {
@@ -80,17 +96,31 @@ public final class WordleLayout {
     }    
     
     private Map<Word, Bounds> calcTagLayout(){
+        List<Bounds> boundsList = new ArrayList<>(configuration.words.size());
+        for (Word word : configuration.words) {
+            if (null != initialLayoutSolution) {
+                Bounds bounds = initialLayoutSolution.getWordLayoutInfo().get(word);
+                boundsList.add(bounds);
+            } else {
+                boundsList.add(null);
+            }
+        }
+        
         boolean doFinish = false;
 
-        List<Bounds> boundsList = new ArrayList<>();
         Text firstNode = createTextNode(configuration.words.get(0));
         double firstWidth = firstNode.getLayoutBounds().getWidth();
         double firstHeight = firstNode.getLayoutBounds().getHeight();
 
-        boundsList.add(new BoundingBox(-firstWidth / 2d,
-                -firstHeight / 2d, firstWidth, firstHeight));
-
+        if (null == boundsList.get(0)) {
+            boundsList.set(0, new BoundingBox(-firstWidth / 2d,
+                    -firstHeight / 2d, firstWidth, firstHeight));
+        }        
+        
         for (int i = 1; i < configuration.words.size(); ++i) {
+            if (null != boundsList.get(i)) {
+                continue;
+            }
             Word word = configuration.words.get(i);
             Text textNode = createTextNode(word);
             double width = textNode.getLayoutBounds().getWidth();
@@ -136,16 +166,18 @@ public final class WordleLayout {
                         useable = !Arrays.stream(configuration.blockedAreaBounds).filter(bb -> mayBe.intersects(bb)).findAny().isPresent();
                     }
                     if (useable) {
-                        for (int prev = 0; prev < i; ++prev) {
-                            if (mayBe.intersects(boundsList.get(prev))) {
-                                useable = false;
-                                break;
+                        for (int prev = 0; prev < boundsList.size(); ++prev) {
+                            if (null != boundsList.get(prev)) {
+                                if (mayBe.intersects(boundsList.get(prev))) {
+                                    useable = false;
+                                    break;
+                                }
                             }
                         }
                     }
                     if (useable || doFinish) {
                         done = true;
-                        boundsList.add(new BoundingBox(center.getX() - width / 2d,
+                        boundsList.set(i, new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));
                         break;
                     }
@@ -181,6 +213,8 @@ public final class WordleLayout {
             this.layoutBounds = layoutBounds;
             this.minWeight = words.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
             this.maxWeight = words.stream().map(Word::getWeight).max(Comparator.naturalOrder()).get();
+            log.info("MaxWeight: " + maxWeight);
+            log.info("MiWeight: " + minWeight);
         }
         
         public void setBlockedAreaBounds(Bounds ... blockedAreaBounds) {
