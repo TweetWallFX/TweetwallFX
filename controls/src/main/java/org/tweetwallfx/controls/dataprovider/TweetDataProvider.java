@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -42,6 +44,7 @@ public class TweetDataProvider implements DataProvider {
     private Tweet nextTweet;
     private final TweetStream tweetStream;
     private final String searchText;
+    private final Deque<Long> history = new ArrayDeque<>();
     
     public TweetDataProvider(Tweeter tweeter, final String searchText) {
         this.tweeter = tweeter;
@@ -61,13 +64,20 @@ public class TweetDataProvider implements DataProvider {
             nextTweet = tweeter.search(new TweetQuery()
                     .query(searchText)
                     .count(HISTORY_SIZE))
-                    .skip((long) (Math.random() * HISTORY_SIZE))
+                    .filter(tweet -> !history.contains(tweet.getId()))
+                    .skip((long) (Math.random() * (HISTORY_SIZE - history.size())))
                     .findFirst()
                     .orElse(null);
         } 
         if (null != nextTweet) {
             tweet = nextTweet;
             nextTweet = null;
+        }
+        if (tweet != null) {
+            history.addLast(tweet.getId());
+            if (history.size() > HISTORY_SIZE -1 ) {
+                history.removeFirst();
+            }
         }
         return tweet;
     }
