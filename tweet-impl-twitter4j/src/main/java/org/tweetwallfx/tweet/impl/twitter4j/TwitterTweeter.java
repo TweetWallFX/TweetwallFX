@@ -159,9 +159,6 @@ public class TwitterTweeter extends Tweeter {
 
         @Override
         public boolean hasNext() {
-            if (numberOfPages == 0) {
-                return false;
-            }
             if (null == statuses) {
                 // no more twitter status messages
                 return false;
@@ -169,9 +166,13 @@ public class TwitterTweeter extends Tweeter {
                 // twitter status messages available
                 return true;
             } else {
+                if (numberOfPages == 0) {
+                    return false;
+                } else {
                 // query next twitter status messages page
-                queryNext(queryResult.nextQuery());
-                return null != statuses && statuses.hasNext();
+                    queryNext(queryResult.nextQuery());
+                    return null != statuses && statuses.hasNext();
+                }
             }
         }
 
