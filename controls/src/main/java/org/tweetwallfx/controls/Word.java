@@ -75,9 +75,6 @@ public class Word implements Comparable<Word> {
             return false;
         }
         final Word other = (Word) obj;
-
-        System.out.println("This:   " + text + "\n" +
-                            "Other: " + other.text);
         
         return this.text.equalsIgnoreCase(other.text);
     }
