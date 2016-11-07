@@ -23,7 +23,9 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -44,6 +46,8 @@ public class TwitterTweeter extends Tweeter {
     
     private static final Logger LOGGER = Logger.getLogger(TwitterTweeter.class);
     
+    private List<TwitterTweetStream> streamCache = new ArrayList<>();
+    
     public TwitterTweeter() {
         TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
         TwitterOAuth.getConfiguration();
@@ -51,7 +55,9 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public TweetStream createTweetStream(TweetFilterQuery tweetFilterQuery) {
-        return new TwitterTweetStream(tweetFilterQuery);
+        TwitterTweetStream twitterTweetStream = new TwitterTweetStream(tweetFilterQuery);
+        streamCache.add(twitterTweetStream);
+        return twitterTweetStream;
     }
 
     @Override
@@ -185,4 +191,10 @@ public class TwitterTweeter extends Tweeter {
             }
         }
     }
+
+    @Override
+    public void shutdown() {
+        streamCache.forEach(TwitterTweetStream::shutdown);
+    }    
+    
 }

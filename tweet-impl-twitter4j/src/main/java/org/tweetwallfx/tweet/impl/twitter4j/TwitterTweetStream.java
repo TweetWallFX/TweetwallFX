@@ -82,4 +82,8 @@ final class TwitterTweetStream implements TweetStream {
                 .count(tweetFilterQuery.getCount())
                 .track(tweetFilterQuery.getTrack());
     }
+    
+    void shutdown() {
+        twitterStream.shutdown();
+    }
 }

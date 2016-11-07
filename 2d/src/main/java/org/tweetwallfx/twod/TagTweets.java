@@ -94,6 +94,7 @@ public class TagTweets {
     }
 
     public void stop() {
+        tweetSetData.getTweeter().shutdown();
         showTweetsExecutor.shutdown();
         try {
             showTweetsExecutor.awaitTermination(5, TimeUnit.SECONDS);

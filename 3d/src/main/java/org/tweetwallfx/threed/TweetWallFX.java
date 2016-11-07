@@ -206,7 +206,7 @@ public class TweetWallFX extends Application {
 
         service.setOnSucceeded(e -> {
             if (!hashtag.isEmpty() && tweeter != null) {
-                log.info("starting search for " + hashtag);
+//                log.info("starting search for " + hashtag);
                 tweetsTask = new TweetsToTori(tweeter, hashtag, twToriGroup);
                 tweetsTask.start();
             }
