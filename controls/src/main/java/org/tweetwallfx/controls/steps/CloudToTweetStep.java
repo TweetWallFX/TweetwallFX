@@ -40,6 +40,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -196,7 +197,19 @@ public class CloudToTweetStep extends AbstractStep {
 
         Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " - " + wordleSkin.getDf().format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
-        infoBox.getChildren().addAll(hImage, name, handle);
+        VBox detailBox = new VBox();
+        HBox firstLineBox = new HBox();
+        firstLineBox.getChildren().add(name);
+        HBox secondLineBox = new HBox();
+        secondLineBox.getChildren().add(handle);
+        detailBox.getChildren().addAll(firstLineBox, secondLineBox);
+        if (tweetInfo.getUser().isVerified()) {
+            FontAwesomeIcon verifiedIcon = new FontAwesomeIcon();
+            verifiedIcon.getStyleClass().addAll("verifiedAccount");
+            firstLineBox.getChildren().add(verifiedIcon);
+            HBox.setMargin(verifiedIcon, new Insets(9,10,0,5));
+        } 
+        infoBox.getChildren().addAll(hImage, detailBox);
         if (wordleSkin.getFavIconsVisible()) {
             if (0 < tweetInfo.getRetweetCount()) {
                 FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
@@ -204,14 +217,16 @@ public class CloudToTweetStep extends AbstractStep {
 
                 Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
                 reTwCount.getStyleClass().setAll("handle");
-                infoBox.getChildren().addAll(faiReTwCount, reTwCount);
+                secondLineBox.getChildren().addAll(faiReTwCount, reTwCount);
+                HBox.setMargin(faiReTwCount, new Insets(5,10,0,5));
             }
             if (0 < tweetInfo.getFavoriteCount()) {
                 FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
                 faiFavCount.getStyleClass().setAll("favoriteCount");
                 Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
                 favCount.getStyleClass().setAll("handle");
-                infoBox.getChildren().addAll(faiFavCount, favCount);
+                secondLineBox.getChildren().addAll(faiFavCount, favCount);
+                HBox.setMargin(faiFavCount, new Insets(5,10,0,5));
             }
         }
 
