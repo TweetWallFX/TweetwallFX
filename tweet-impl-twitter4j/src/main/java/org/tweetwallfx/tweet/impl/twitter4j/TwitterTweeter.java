@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.TweetQuery;
@@ -40,17 +41,17 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 public class TwitterTweeter extends Tweeter {
-
+    
     private static final Logger LOGGER = Logger.getLogger(TwitterTweeter.class);
-
+    
     public TwitterTweeter() {
         TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
         TwitterOAuth.getConfiguration();
     }
 
     @Override
-    public TweetStream createTweetStream() {
-        return new TwitterTweetStream();
+    public TweetStream createTweetStream(TweetFilterQuery tweetFilterQuery) {
+        return new TwitterTweetStream(tweetFilterQuery);
     }
 
     @Override
@@ -71,9 +72,9 @@ public class TwitterTweeter extends Tweeter {
     }
 
     @Override
-    public Stream<Tweet> searchPaged(final TweetQuery tweetQuery) {
+    public Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages) {
         final Query query = getQuery(tweetQuery);
-        final Iterable<Tweet> iterable = () -> new PagedIterator(this, query);
+        final Iterable<Tweet> iterable = () -> new PagedIterator(this, query, numberOfPages);
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
@@ -125,13 +126,16 @@ public class TwitterTweeter extends Tweeter {
         private QueryResult queryResult;
         private Iterator<Status> statuses;
         private static final Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+        private int numberOfPages;
 
-        public PagedIterator(final TwitterTweeter tweeter, final Query query) {
+        public PagedIterator(final TwitterTweeter tweeter, final Query query, int numberOfPages) {
             this.tweeter = tweeter;
+            this.numberOfPages = --numberOfPages;
             queryNext(query);
         }
 
         private void queryNext(final Query query) {
+            numberOfPages--;
             if (null == query) {
                 statuses = null;
             } else {
@@ -140,6 +144,8 @@ public class TwitterTweeter extends Tweeter {
                 try {
                     startupLogger.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
+                    LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit() 
+                            + " resetting in " + queryResult.getRateLimitStatus().getSecondsUntilReset() + "s");
                     statuses = queryResult.getTweets().iterator();
                 } catch (TwitterException ex) {
                     startupLogger.trace("Querying next page failed: " + query, ex);
@@ -153,6 +159,9 @@ public class TwitterTweeter extends Tweeter {
 
         @Override
         public boolean hasNext() {
+            if (numberOfPages == 0) {
+                return false;
+            }
             if (null == statuses) {
                 // no more twitter status messages
                 return false;

@@ -31,6 +31,8 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.vdurmont.emoji.EmojiParser;
+
 /**
  *
  * @author MICHELB
@@ -94,6 +96,10 @@ public final class StopList {
         } else {
             return s;
         }
+    }
+    
+    public static String removeEmojis(final String s) {
+        return EmojiParser.removeAllEmojis(s);
     }
     
 }

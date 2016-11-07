@@ -76,6 +76,10 @@ public final class TweetSetData {
     public String getSearchText() {
         return searchText;
     }
+    
+    public TweetStream getTweetStream() {
+        return tweetsCreationTask.stream;
+    }
 
     public BlockingQueue<Tweet> getTransferTweets() {
         return transferTweets;
@@ -91,7 +95,7 @@ public final class TweetSetData {
 
     public void buildTree(final int numberOfTweets) {
         final Stream<String> stringStream = tweeter
-                .search(new TweetQuery().query(searchText).count(100))
+                .searchPaged(new TweetQuery().query(searchText).count(100),10)
                 .map(t -> t.getText()
                         .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                         .replaceAll("http[s]?:.*((\\s+)|($))", " ")
@@ -102,6 +106,7 @@ public final class TweetSetData {
                 .filter(l -> l.length() > 2)
                 .filter(l -> !l.startsWith("@"))
                 .map(String::toLowerCase)
+                .map(StopList::removeEmojis)
                 .filter(StopList::notIn)
                 .collect(Collectors.groupingBy(String::toLowerCase, TreeMap::new, Collectors.counting()));
     }
@@ -111,9 +116,11 @@ public final class TweetSetData {
                 .getTextWithout(UserMentionTweetEntry.class)
                 .get()
                 .replaceAll("[^\\dA-Za-z ]", " ");
+        
+        final String noEmojiStatus = StopList.removeEmojis(status);
         // add words to tree and update weights
 
-        StopList.WORD_SPLIT.splitAsStream(status)
+        StopList.WORD_SPLIT.splitAsStream(noEmojiStatus)
                 .map(String::toLowerCase)
                 .filter((w) -> w.length() > 2)
                 .filter(StopList::notIn)
@@ -125,25 +132,22 @@ public final class TweetSetData {
     private static final class TweetsCreationTask extends Task<Void> {
 
         private final TweetSetData tweetSetData;
+        private final TweetStream stream;
 
         public TweetsCreationTask(final TweetSetData tweetSetData) {
             this.tweetSetData = tweetSetData;
+            TweetFilterQuery query = new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(tweetSetData.getSearchText()).toArray(n -> new String[n]));
+            
+            stream = tweetSetData.getTweeter().createTweetStream(query);
         }
 
         @Override
         protected Void call() throws Exception {
-            final TweetStream stream = tweetSetData.getTweeter().createTweetStream();
-
+            
             stream.onTweet(tweet -> {
-                try {
-                    tweetSetData.updateTree(tweet);
-                    tweetSetData.getTransferTweets().put(tweet);
-                } catch (InterruptedException ex) {
-                    log.error("Error: " + ex);
-                }
-            });
-            stream.filter(new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(tweetSetData.getSearchText()).toArray(n -> new String[n])));
-
+                tweetSetData.updateTree(tweet);
+            });            
+            
             return null;
         }
     }

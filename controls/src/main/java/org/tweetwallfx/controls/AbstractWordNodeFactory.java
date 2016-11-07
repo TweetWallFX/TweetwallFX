@@ -54,7 +54,7 @@ public class AbstractWordNodeFactory {
         textNode.applyCss();
         textNode.setFont(configuration.font);
         textNode.setCache(true);
-        textNode.setCacheHint(CacheHint.SPEED);
+//        textNode.setCacheHint(CacheHint.SPEED);
         return textNode;
     }      
 

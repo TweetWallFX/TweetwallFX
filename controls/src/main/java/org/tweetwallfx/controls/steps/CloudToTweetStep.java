@@ -102,7 +102,6 @@ public class CloudToTweetStep extends AbstractStep {
         tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
             Word word = new Word(tweetWord.text.trim(), -2);
             if (wordleSkin.word2TextMap.containsKey(word)) {
-                System.out.println("Reusing" +  word);
                 Text textNode = wordleSkin.word2TextMap.remove(word);
                 wordleSkin.tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
@@ -125,7 +124,6 @@ public class CloudToTweetStep extends AbstractStep {
                 }
                 moveTransitions.add(lt);                
             } else {
-                System.out.println("Create new" +  word);
                 Text textNode = wordNodeFactory.createTextNode(word.getText());
 
                 wordNodeFactory.fontSizeAdaption(textNode, wordleSkin.getTweetFontSize());

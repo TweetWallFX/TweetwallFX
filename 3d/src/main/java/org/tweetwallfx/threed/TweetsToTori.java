@@ -136,7 +136,7 @@ public class TweetsToTori {
         @Override
         protected Void call() throws Exception {
             if (tweeter != null) {
-                stream = tweeter.createTweetStream();
+                stream = tweeter.createTweetStream(new TweetFilterQuery().track(new String[]{searchText}));
                 stream.onTweet(tweet -> {
                     try {
                         System.out.println("Tw: " + tweet.getText());
@@ -145,7 +145,6 @@ public class TweetsToTori {
                         System.out.println("Error: " + ex);
                     }
                 });
-                stream.filter(new TweetFilterQuery().track(new String[]{searchText}));
             }
 
             return null;

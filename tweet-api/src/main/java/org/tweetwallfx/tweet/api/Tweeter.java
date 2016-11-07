@@ -54,11 +54,11 @@ public abstract class Tweeter {
         }
     }
 
-    public abstract TweetStream createTweetStream();
+    public abstract TweetStream createTweetStream(TweetFilterQuery filterQuery);
 
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 
-    public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery);
+    public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages);
 
     public ReadOnlyObjectProperty<Exception> latestException() {
         return latestException.getReadOnlyProperty();
@@ -70,5 +70,9 @@ public abstract class Tweeter {
 
     protected final void setLatestException(Exception newValue) {
         latestException.set(newValue);
+    }
+
+    public void createTweetStream() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

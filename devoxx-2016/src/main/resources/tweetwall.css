@@ -32,6 +32,11 @@
     src: url('BebasNeue-Bold.otf');
 }
 
+@font-face {
+    font-family: 'Noto Emoji';
+    src: url('NotoEmoji-Regular.ttf');
+}
+
 .root {
     /*-fx-font-family: 'BebasNeue';*/ 
 }

@@ -47,15 +47,13 @@ public class TweetDataProvider implements DataProvider {
     
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
-    private final TweetStream tweetStream;
     private final String searchText;
     private final Deque<Long> history = new ArrayDeque<>();
-    private List<Tweet> lastTweetCollection;
+    private volatile List<Tweet> lastTweetCollection;
     
-    public TweetDataProvider(Tweeter tweeter, final String searchText) {
+    public TweetDataProvider(Tweeter tweeter, TweetStream tweetStream, final String searchText) {
         this.tweeter = tweeter;
         this.searchText = searchText;
-        this.tweetStream = this.tweeter.createTweetStream();
         tweetStream.onTweet(tweet -> {
             log.info("new Tweet received");
             this.nextTweet = tweet;
@@ -68,6 +66,7 @@ public class TweetDataProvider implements DataProvider {
     }
 
     private List<Tweet> getLatestHistory() {
+        log.info("Reinit the history");
         return tweeter.search(new TweetQuery()
                         .query(searchText)
                         .count(HISTORY_SIZE)).collect(Collectors.toList());        
