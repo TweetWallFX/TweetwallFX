@@ -46,6 +46,7 @@ import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.stepengine.StepIterator;
 import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
 import org.tweetwallfx.controls.steps.CloudToTweetStep;
+import org.tweetwallfx.controls.steps.ImageMosaicStep;
 import org.tweetwallfx.controls.steps.NextTweetStep;
 import org.tweetwallfx.controls.steps.PauseStep;
 import org.tweetwallfx.controls.steps.TweetToCloudStep;
@@ -240,13 +241,14 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
     
     public void prepareStepMachine() {
-        StepIterator steps = new StepIterator(Arrays.asList(new UpdateCloudStep(),
-                new NextTweetStep(),
-//                new AddTweetToCloudStep(),
-//                new UpdateCloudStep(),
-                new CloudToTweetStep(),
-                new PauseStep(),
-                new TweetToCloudStep()
+        StepIterator steps = new StepIterator(Arrays.asList(//new UpdateCloudStep(),
+//                new NextTweetStep(),
+////                new AddTweetToCloudStep(),
+////                new UpdateCloudStep(),
+//                new CloudToTweetStep(),
+//                new PauseStep(),
+//                new TweetToCloudStep()
+                new ImageMosaicStep()
         ));
         
         StepEngine s = new StepEngine(steps);

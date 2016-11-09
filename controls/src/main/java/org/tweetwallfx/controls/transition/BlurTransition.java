@@ -20,15 +20,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-package org.tweetwallfx.controls.dataprovider;
+ */package org.tweetwallfx.controls.transition;
+
+import javafx.animation.Transition;
+import javafx.scene.Node;
+import javafx.scene.effect.GaussianBlur;
+import javafx.util.Duration;
 
 /**
  *
  * @author sven
  */
-public interface DataProvider {
+public final class BlurTransition extends Transition {
     
-    public String getName();
+    private double startRadius;
+    private double targetRadius;
+    private final GaussianBlur blur;
+
+    public BlurTransition(Duration duration, GaussianBlur blur) {
+        setCycleDuration(duration);
+        this.blur = blur;
+    }
+
+    public void setFromRadius(double startRadius) {
+        this.startRadius = startRadius;
+    }
+
+    public void setToRadius(double targetRadius) {
+        this.targetRadius = targetRadius;
+    }
+
+    @Override
+    protected void interpolate(double frac) {
+        if (!Double.isNaN(startRadius)) {
+            blur.setRadius(startRadius + frac * (targetRadius - startRadius));
+        }
+    }
     
 }

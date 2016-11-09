@@ -39,6 +39,7 @@ import javafx.scene.layout.HBox;
 import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
+import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.tweet.ThreadingHelper;
@@ -67,6 +68,7 @@ public class TagTweets {
     private final BorderPane root;
     private final HBox hBottom = new HBox();
     private final HBox hWordle = new HBox();
+    private ImageMosaicDataProvider imageMosaicDataProvider;
 
     public TagTweets(final TweetSetData tweetSetData, final BorderPane root) {
         this.tweetSetData = tweetSetData;
@@ -84,7 +86,9 @@ public class TagTweets {
 
         startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
 
-        tweetSetData.buildTree(100);
+        imageMosaicDataProvider = new ImageMosaicDataProvider(tweetSetData.getTweetStream());
+        
+        tweetSetData.buildTree(100, tweet -> imageMosaicDataProvider.processTweet(tweet));
         startupLogger.trace("** create wordle");
         createWordle();
         startupLogger.trace("** create wordle done");
@@ -104,29 +108,22 @@ public class TagTweets {
 
     private class ShowTweetsTask extends Task<Void> {
 
-        private final BlockingQueue<Parent> parents = new ArrayBlockingQueue<>(5);
         private final ExecutorService tweetsCreationExecutor = ThreadingHelper.createSingleThreadExecutor("CreateTweets");
-//        private final ExecutorService tweetsUpdateExecutor = ThreadingHelper.createSingleThreadExecutor("UpdateTweets");
         private final Task<Void> tweetsCreationTask;
-//        private final Task<Void> tweetsUpdateTask;
 
         ShowTweetsTask() {
             tweetsCreationTask = tweetSetData.getCreationTask();
-//            tweetsUpdateTask = new TweetsUpdateTask(tweetSetData, wordle);
 
             setOnCancelled(e -> {
                 tweetsCreationTask.cancel();
-//                tweetsUpdateTask.cancel();
             });
         }
 
         @Override
         protected Void call() throws Exception {
             tweetsCreationExecutor.execute(tweetsCreationTask);
-//            tweetsUpdateExecutor.execute(tweetsUpdateTask);
 
             tweetsCreationExecutor.shutdown();
-//            tweetsUpdateExecutor.shutdown();
             
             return null;
         }
@@ -140,6 +137,7 @@ public class TagTweets {
             wordle.prefHeightProperty().bind(hWordle.heightProperty());
             wordle.addDataProvider(new TweetDataProvider(tweetSetData.getTweeter(), tweetSetData.getTweetStream(), tweetSetData.getSearchText()));
             wordle.addDataProvider(new TagCloudDataProvider());
+            wordle.addDataProvider(imageMosaicDataProvider);
         }
         Platform.runLater(() -> {
             wordle.setWords(tweetSetData.getTree().entrySet().stream()
