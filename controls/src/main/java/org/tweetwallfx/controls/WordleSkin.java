@@ -15,7 +15,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -45,7 +45,10 @@ import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.stepengine.StepIterator;
 import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
+import org.tweetwallfx.controls.steps.CloudFadeOutStep;
+import org.tweetwallfx.controls.steps.CloudToCloudStep;
 import org.tweetwallfx.controls.steps.CloudToTweetStep;
+import org.tweetwallfx.controls.steps.FadeInCloudStep;
 import org.tweetwallfx.controls.steps.ImageMosaicStep;
 import org.tweetwallfx.controls.steps.NextTweetStep;
 import org.tweetwallfx.controls.steps.PauseStep;
@@ -241,13 +244,15 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
     
     public void prepareStepMachine() {
-        StepIterator steps = new StepIterator(Arrays.asList(//new UpdateCloudStep(),
-//                new NextTweetStep(),
-////                new AddTweetToCloudStep(),
-////                new UpdateCloudStep(),
-//                new CloudToTweetStep(),
-//                new PauseStep(),
-//                new TweetToCloudStep()
+        StepIterator steps = new StepIterator(Arrays.asList(//UpdateCloudStep(),
+                new FadeInCloudStep(),
+                new NextTweetStep(),
+                new AddTweetToCloudStep(),
+                new CloudToCloudStep(),
+                new CloudToTweetStep(),
+                new PauseStep(),
+                new TweetToCloudStep(),
+                new CloudFadeOutStep(),
                 new ImageMosaicStep()
         ));
         

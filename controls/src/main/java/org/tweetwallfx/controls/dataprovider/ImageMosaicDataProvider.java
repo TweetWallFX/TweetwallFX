@@ -122,7 +122,7 @@ public class ImageMosaicDataProvider implements DataProvider {
 
         task.setOnSucceeded((event) -> {
             task.getValue().ifPresent(images::add);
-            if (200 < images.size()) {
+            if (40 < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 ImageStore removeLast = images.remove(images.size()-1);
                 removeLast.file.delete();
