@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -38,7 +37,6 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -56,8 +54,8 @@ import org.tweetwallfx.controls.transition.SizeTransition;
  */
 public class ImageMosaicStep extends AbstractStep {
 
-    private ImageView[][] rects = new ImageView[6][5];
-    private Bounds[][] bounds = new Bounds[6][5];
+    private final ImageView[][] rects = new ImageView[6][5];
+    private final Bounds[][] bounds = new Bounds[6][5];
 
     private Pane pane;
 

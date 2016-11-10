@@ -28,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -114,14 +116,14 @@ public class ImageMosaicDataProvider implements DataProvider {
                     log.info("directory for dumping files created!");
                 }
                 downloadContent(new URL(url), file);
-                return Optional.of(new ImageStore(tweet, new Image(file.toPath().toUri().toURL().toExternalForm()), file, date, mediaId));
+                return Optional.of(new ImageStore(tweet, new Image(file.toPath().toUri().toURL().toExternalForm()), file, date.toInstant(), mediaId));
             }
         };
 
         task.setOnSucceeded((event) -> {
             task.getValue().ifPresent(images::add);
             if (200 < images.size()) {
-                images.sort(Comparator.comparing(ImageStore::getDate));
+                images.sort(Comparator.comparing(ImageStore::getInstant));
                 ImageStore removeLast = images.remove(images.size()-1);
                 removeLast.file.delete();
             }
@@ -160,20 +162,20 @@ public class ImageMosaicDataProvider implements DataProvider {
     public static class ImageStore {
         private final Tweet tweet;
         private final Image image;
-        private final Date date;
+        private final Instant instant;
         private final File file;
         private final long mediaId;
 
-        public ImageStore(Tweet tweet, Image image, File file, Date date, long mediaId) {
+        public ImageStore(Tweet tweet, Image image, File file, Instant instant, long mediaId) {
             this.tweet = tweet;
             this.image = image;
             this.file = file;
-            this.date = date;            
+            this.instant = instant;            
             this.mediaId = mediaId;
         }
         
-        public Date getDate() {
-            return date;
+        public Instant getInstant() {
+            return instant;
         }
 
         public Tweet getTweet() {
@@ -193,7 +195,7 @@ public class ImageMosaicDataProvider implements DataProvider {
             int hash = 5;
             hash = 97 * hash + Objects.hashCode(this.tweet);
             hash = 97 * hash + Objects.hashCode(this.image);
-            hash = 97 * hash + Objects.hashCode(this.date);
+            hash = 97 * hash + Objects.hashCode(this.instant);
             hash = 97 * hash + Objects.hashCode(this.file);
             hash = 97 * hash + (int) (this.mediaId ^ (this.mediaId >>> 32));
             return hash;
@@ -220,7 +222,7 @@ public class ImageMosaicDataProvider implements DataProvider {
             if (!Objects.equals(this.image, other.image)) {
                 return false;
             }
-            if (!Objects.equals(this.date, other.date)) {
+            if (!Objects.equals(this.instant, other.instant)) {
                 return false;
             }
             if (!Objects.equals(this.file, other.file)) {
