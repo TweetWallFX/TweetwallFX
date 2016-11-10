@@ -27,10 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +37,6 @@ import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -125,7 +121,7 @@ public final class TweetSetData {
     }
 
     public void buildTree(final int numberOfTweets, Consumer<Tweet> tweetConsumer) {
-        List<Tweet> tweets = tweeter.searchPaged(new TweetQuery().query(searchText).count(100), 5)
+        List<Tweet> tweets = tweeter.searchPaged(new TweetQuery().query(searchText).count(100), 20)
                 .collect(Collectors.toList());
         tweets.stream().forEach(tweet -> tweetConsumer.accept(tweet));
 

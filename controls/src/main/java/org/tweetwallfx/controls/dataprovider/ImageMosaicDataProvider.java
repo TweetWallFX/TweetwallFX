@@ -28,13 +28,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -92,31 +92,34 @@ public class ImageMosaicDataProvider implements DataProvider {
                         default:
                             throw new RuntimeException("Illegal value");
                     }
-                    addImage(me.getId() + me.getMediaUrl().substring(me.getMediaUrl().lastIndexOf(".")), url, tweet.getCreatedAt());
+                    addImage(tweet, me.getId(), me.getId() + me.getMediaUrl().substring(me.getMediaUrl().lastIndexOf(".")), url, tweet.getCreatedAt());
                 });
     }
 
-    public List<Image> getImages() {
-        return Collections.unmodifiableList(images.stream().map(x -> x.image).collect(Collectors.toList()));
+    public List<ImageStore> getImages() {
+        return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    public void addImage(String fileName, String url, Date date) {
+    private void addImage(Tweet tweet, long mediaId, String fileName, String url, Date date) {
 
-        Task<ImageStore> task = new Task<ImageStore>() {
+        Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
-            protected ImageStore call() throws Exception {
+            protected Optional<ImageStore> call() throws Exception {
                 File file = new File("dump/" + fileName);
+                if (file.exists()) {
+                    return Optional.empty();
+                }
                 boolean mkdirs = file.getParentFile().mkdirs();
                 if (mkdirs) {
                     log.info("directory for dumping files created!");
                 }
                 downloadContent(new URL(url), file);
-                return new ImageStore(new Image(file.toPath().toUri().toURL().toExternalForm()), file, date);
+                return Optional.of(new ImageStore(tweet, new Image(file.toPath().toUri().toURL().toExternalForm()), file, date, mediaId));
             }
         };
 
         task.setOnSucceeded((event) -> {
-            images.add(task.getValue());
+            task.getValue().ifPresent(images::add);
             if (200 < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getDate));
                 ImageStore removeLast = images.remove(images.size()-1);
@@ -143,6 +146,7 @@ public class ImageMosaicDataProvider implements DataProvider {
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
+            
         } catch (IOException exception) {
 
         }
@@ -153,27 +157,45 @@ public class ImageMosaicDataProvider implements DataProvider {
         return "MosaicDataProvider";
     }
     
-    private static class ImageStore {
+    public static class ImageStore {
+        private final Tweet tweet;
         private final Image image;
         private final Date date;
         private final File file;
+        private final long mediaId;
 
-        public ImageStore(Image image, File file, Date date) {
+        public ImageStore(Tweet tweet, Image image, File file, Date date, long mediaId) {
+            this.tweet = tweet;
             this.image = image;
             this.file = file;
             this.date = date;            
+            this.mediaId = mediaId;
         }
         
-        private Date getDate() {
+        public Date getDate() {
             return date;
+        }
+
+        public Tweet getTweet() {
+            return tweet;
+        }
+
+        public Image getImage() {
+            return image;
+        }
+        
+        public long getMediaId() {
+            return mediaId;
         }
 
         @Override
         public int hashCode() {
-            int hash = 7;
-            hash = 11 * hash + Objects.hashCode(this.image);
-            hash = 11 * hash + Objects.hashCode(this.date);
-            hash = 11 * hash + Objects.hashCode(this.file);
+            int hash = 5;
+            hash = 97 * hash + Objects.hashCode(this.tweet);
+            hash = 97 * hash + Objects.hashCode(this.image);
+            hash = 97 * hash + Objects.hashCode(this.date);
+            hash = 97 * hash + Objects.hashCode(this.file);
+            hash = 97 * hash + (int) (this.mediaId ^ (this.mediaId >>> 32));
             return hash;
         }
 
@@ -189,6 +211,12 @@ public class ImageMosaicDataProvider implements DataProvider {
                 return false;
             }
             final ImageStore other = (ImageStore) obj;
+            if (this.mediaId != other.mediaId) {
+                return false;
+            }
+            if (!Objects.equals(this.tweet, other.tweet)) {
+                return false;
+            }
             if (!Objects.equals(this.image, other.image)) {
                 return false;
             }
@@ -201,9 +229,6 @@ public class ImageMosaicDataProvider implements DataProvider {
             return true;
         }
 
-
-
-        
     }
 
 }

@@ -25,11 +25,10 @@ package org.tweetwallfx.controls.steps;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
+import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -38,18 +37,16 @@ import javafx.event.ActionEvent;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
+import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
-import org.tweetwallfx.controls.transition.BlurTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 
@@ -86,7 +83,7 @@ public class ImageMosaicStep extends AbstractStep {
 
     @Override
     public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 0;
+        return 1000;
     }
 
     private void executeAnimations(StepEngine.MachineContext context) {
@@ -127,7 +124,7 @@ public class ImageMosaicStep extends AbstractStep {
         });
     }
 
-    private Transition createMosaicTransition(List<Image> images) {        
+    private Transition createMosaicTransition(List<ImageStore> imageStores) {        
         SequentialTransition fadeIn = new SequentialTransition();
 
         List<FadeTransition> allFadeIns = new ArrayList<>();
@@ -136,18 +133,17 @@ public class ImageMosaicStep extends AbstractStep {
 
         double width = pane.getWidth() / 6.0 - 10;
         double height = pane.getHeight() / 5.0 - 8;
-        List<Image> distillingList = new LinkedList<>(images);
+        List<ImageStore> distillingList = new LinkedList<>(imageStores);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 int index = random.nextInt(distillingList.size());
-                ImageView imageView = new ImageView(distillingList.remove(index));
+                ImageStore selectedImage = distillingList.remove(index);                
+                ImageView imageView = new ImageView(selectedImage.getImage());
                 imageView.setCache(true);
                 imageView.setCacheHint(CacheHint.SPEED);
                 imageView.setFitWidth(width);
                 imageView.setFitHeight(height);
                 imageView.setEffect(new GaussianBlur(0));
-                imageView.setCache(true);
-                imageView.setCacheHint(CacheHint.SPEED);
                 rects[i][j] = imageView;
                 bounds[i][j] = new BoundingBox(i * (width + 10) + 5, j * (height + 8) + 4, width, height);
                 rects[i][j].setOpacity(0);
@@ -180,7 +176,7 @@ public class ImageMosaicStep extends AbstractStep {
                     continue;
                 }
                 FadeTransition ft = new FadeTransition(Duration.seconds(1), rects[i][j]);
-                ft.setToValue(0.5);
+                ft.setToValue(0.3);
                 firstParallelTransition.getChildren().add(ft);
             }
         }
@@ -195,9 +191,9 @@ public class ImageMosaicStep extends AbstractStep {
                     blur = new GaussianBlur(0);
                     rects[i][j].setEffect(blur);
                 }
-                BlurTransition blurTransition = new BlurTransition(Duration.seconds(0.5), blur);
-                blurTransition.setToRadius(10);
-                secondParallelTransition.getChildren().addAll(blurTransition);
+//                BlurTransition blurTransition = new BlurTransition(Duration.seconds(0.5), blur);
+//                blurTransition.setToRadius(10);
+//                secondParallelTransition.getChildren().addAll(blurTransition);
             }
         }
 
@@ -229,11 +225,11 @@ public class ImageMosaicStep extends AbstractStep {
         seqT.getChildren().addAll(firstParallelTransition, secondParallelTransition);
 
         firstParallelTransition.setOnFinished((event) -> {
-            DropShadow ds = new DropShadow();
-            ds.setOffsetY(10.0);
-            ds.setOffsetX(10.0);
-            ds.setColor(Color.GRAY);
-            randomView.setEffect(ds);
+//            DropShadow ds = new DropShadow();
+//            ds.setOffsetY(10.0);
+//            ds.setOffsetX(10.0);
+//            ds.setColor(Color.GRAY);
+//            randomView.setEffect(ds);
         });
 
         return new ImageWallAnimationTransition(seqT, column, row);
@@ -251,20 +247,23 @@ public class ImageMosaicStep extends AbstractStep {
                     continue;
                 }
                 FadeTransition ft = new FadeTransition(Duration.seconds(1), rects[i][j]);
-                ft.setFromValue(0.5);
+                ft.setFromValue(0.3);
                 ft.setToValue(1.0);
                 firstParallelTransition.getChildren().add(ft);
             }
         }
+        String s;
+        
+        
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 if ((i == column) && (j == row)) {
                     continue;
                 }
 
-                BlurTransition blurTransition = new BlurTransition(Duration.seconds(0.5), (GaussianBlur) rects[i][j].getEffect());
-                blurTransition.setToRadius(0);
-                secondParallelTransition.getChildren().addAll(blurTransition);
+//                BlurTransition blurTransition = new BlurTransition(Duration.seconds(0.5), (GaussianBlur) rects[i][j].getEffect());
+//                blurTransition.setToRadius(0);
+//                secondParallelTransition.getChildren().addAll(blurTransition);
             }
         }
 
