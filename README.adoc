@@ -3,7 +3,6 @@
 :github-branch: master
 
 image:https://img.shields.io/badge/license-MIT-blue.svg["MIT License", link="https://github.com/{project-full-path}/blob/{github-branch}/LICENSE"]
-image:https://img.shields.io/github/release/{project-full-path}.svg["Release", link="https://github.com/{project-full-path}"]
 image:https://img.shields.io/travis/{project-full-path}/{github-branch}.svg["Build Status", link="https://travis-ci.org/{project-full-path}"]
 
 ## Getting OAuth keys
@@ -15,10 +14,10 @@ website of your company. After doing so generate a new access token under `Keys 
 
 . Step 2
 Update the `config.properties` file with your OAuth values as follows:
-
++
 [code,plain]
 ----
-weetwall.twitter.query=#myevent OR #someothertag
+tweetwall.twitter.query=#myevent OR #someothertag
 tweetwall.title=The JavaFX Tweetwall for my Event
 tweetwall.stylesheet=tweetwall.css
 tweetwall.twitter.oauth.consumerKey=v8SvGzboGrvU148cKs8PghI1v <1>
@@ -30,3 +29,4 @@ tweetwall.twitter.oauth.accessTokenSecret=2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG
 <2> The Consumer Secret (API Secret)
 <3> The Access Token
 <4> The Access Token Secret
+
