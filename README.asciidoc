@@ -1,3 +1,0 @@
-[float]
-TweetWallFX image:https://travis-ci.org/TweetWallFX/TweetwallFX.svg?branch=master["Build Status", link="https://travis-ci.org/TweetWallFX/TweetwallFX"]
-==================================================================================================================================================

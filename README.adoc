@@ -1,0 +1,32 @@
+= JavaFX based TweetWall
+:project-full-path: TweetWallFX/TweetwallFX
+:github-branch: master
+
+image:https://img.shields.io/badge/license-MIT-blue.svg["MIT License", link="https://github.com/{project-full-path}/blob/{github-branch}/LICENSE"]
+image:https://img.shields.io/github/release/{project-full-path}.svg["Release", link="https://github.com/{project-full-path}"]
+image:https://img.shields.io/travis/{project-full-path}/{github-branch}.svg["Build Status", link="https://travis-ci.org/{project-full-path}"]
+
+## Getting OAuth keys
+
+. Step 1
+Create a new Application for TweetWall within https://apps.twitter.com[Twitter Apps site] signing in 
+with the twitter account that will be used to run the TweetWallFX. You have to enter at least the
+website of your company. After doing so generate a new access token under `Keys and Access Tokens`.
+
+. Step 2
+Update the `config.properties` file with your OAuth values as follows:
+
+[code,plain]
+----
+weetwall.twitter.query=#myevent OR #someothertag
+tweetwall.title=The JavaFX Tweetwall for my Event
+tweetwall.stylesheet=tweetwall.css
+tweetwall.twitter.oauth.consumerKey=v8SvGzboGrvU148cKs8PghI1v <1>
+tweetwall.twitter.oauth.consumerSecret=12w6vg612hgvoGk0iysMlLvKfh0ouMcVg00RWG8rV6jccZ8RUg <2>
+tweetwall.twitter.oauth.accessToken=12cF34j9-cF3cGz819x4j2iQ6Vgh4wqmLqksxHzRFt78D3WKiB <3>
+tweetwall.twitter.oauth.accessTokenSecret=2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG7Bz92x4 <4>
+----
+<1> The Consumer Key (API Key)
+<2> The Consumer Secret (API Secret)
+<3> The Access Token
+<4> The Access Token Secret
