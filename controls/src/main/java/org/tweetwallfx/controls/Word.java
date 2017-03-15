@@ -63,7 +63,7 @@ public class Word implements Comparable<Word> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.text);
+        return Objects.hashCode(this.text.toLowerCase());
     }
 
     @Override
@@ -75,10 +75,8 @@ public class Word implements Comparable<Word> {
             return false;
         }
         final Word other = (Word) obj;
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
+        
+        return this.text.equalsIgnoreCase(other.text);
     }
 
 }

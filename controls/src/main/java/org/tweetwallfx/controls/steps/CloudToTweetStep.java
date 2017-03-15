@@ -40,6 +40,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -49,6 +50,7 @@ import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
@@ -65,7 +67,7 @@ public class CloudToTweetStep extends AbstractStep {
     private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
     
     @Override
-    public int preferredStepDuration(MachineContext context) {
+    public long preferredStepDuration(MachineContext context) {
         return 5000;
     }
 
@@ -79,7 +81,7 @@ public class CloudToTweetStep extends AbstractStep {
         
         startupLogger.trace("cloudToTweet()");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        Tweet tweetInfo = wordleSkin.getSkinnable().tweetInfoProperty().get();
+        Tweet tweetInfo = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
 
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - wordleSkin.getLogo().getImage().getHeight()) / 4d);
 
@@ -195,7 +197,19 @@ public class CloudToTweetStep extends AbstractStep {
 
         Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " - " + wordleSkin.getDf().format(tweetInfo.getCreatedAt()));
         handle.getStyleClass().setAll("handle");
-        infoBox.getChildren().addAll(hImage, name, handle);
+        VBox detailBox = new VBox();
+        HBox firstLineBox = new HBox();
+        firstLineBox.getChildren().add(name);
+        HBox secondLineBox = new HBox();
+        secondLineBox.getChildren().add(handle);
+        detailBox.getChildren().addAll(firstLineBox, secondLineBox);
+        if (tweetInfo.getUser().isVerified()) {
+            FontAwesomeIcon verifiedIcon = new FontAwesomeIcon();
+            verifiedIcon.getStyleClass().addAll("verifiedAccount");
+            firstLineBox.getChildren().add(verifiedIcon);
+            HBox.setMargin(verifiedIcon, new Insets(9,10,0,5));
+        } 
+        infoBox.getChildren().addAll(hImage, detailBox);
         if (wordleSkin.getFavIconsVisible()) {
             if (0 < tweetInfo.getRetweetCount()) {
                 FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
@@ -203,14 +217,16 @@ public class CloudToTweetStep extends AbstractStep {
 
                 Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
                 reTwCount.getStyleClass().setAll("handle");
-                infoBox.getChildren().addAll(faiReTwCount, reTwCount);
+                secondLineBox.getChildren().addAll(faiReTwCount, reTwCount);
+                HBox.setMargin(faiReTwCount, new Insets(5,10,0,5));
             }
             if (0 < tweetInfo.getFavoriteCount()) {
                 FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
                 faiFavCount.getStyleClass().setAll("favoriteCount");
                 Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
                 favCount.getStyleClass().setAll("handle");
-                infoBox.getChildren().addAll(faiFavCount, favCount);
+                secondLineBox.getChildren().addAll(faiFavCount, favCount);
+                HBox.setMargin(faiFavCount, new Insets(5,10,0,5));
             }
         }
 

@@ -23,7 +23,11 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -35,27 +39,38 @@ import twitter4j.TwitterStreamFactory;
 
 final class TwitterTweetStream implements TweetStream {
 
-    private Consumer<Tweet> tweetConsumer = null;
+    private static final Logger log = LogManager.getLogger(TwitterTweetStream.class);
+    
+    private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
 
+    private final TweetFilterQuery filterQuery;
+    private TwitterStream twitterStream;
+
+    public TwitterTweetStream(TweetFilterQuery filterQuery) {
+        this.filterQuery = filterQuery;
+        activateStream();
+    }
+    
     @Override
     public void onTweet(final Consumer<Tweet> tweetConsumer) {
         synchronized (this) {
-            this.tweetConsumer = tweetConsumer;
+            log.info("Adding tweetConsumer: " + tweetConsumer);
+            this.tweetConsumerList.add(tweetConsumer);
+            log.info("List of tweetConsumers is now: " + tweetConsumerList);
         }
     }
 
-    @Override
-    public void filter(final TweetFilterQuery filterQuery) {
-        final TwitterStream twitterStream = new TwitterStreamFactory(TwitterOAuth.getConfiguration()).getInstance();
+    private void activateStream() {
+        twitterStream = new TwitterStreamFactory(TwitterOAuth.getConfiguration()).getInstance();
 
         twitterStream.addListener(new StatusAdapter() {
 
             @Override
             public void onStatus(Status status) {
                 synchronized (TwitterTweetStream.this) {
-                    if (null != tweetConsumer) {
-                        tweetConsumer.accept(new TwitterTweet(status));
-                    }
+                    log.info("redispatching new received tweet to " + tweetConsumerList);
+                    TwitterTweet twitterTweet = new TwitterTweet(status);
+                    tweetConsumerList.stream().forEach(consumer -> consumer.accept(twitterTweet));
                 }
             }
         });
@@ -66,5 +81,9 @@ final class TwitterTweetStream implements TweetStream {
         return new FilterQuery()
                 .count(tweetFilterQuery.getCount())
                 .track(tweetFilterQuery.getTrack());
+    }
+    
+    void shutdown() {
+        twitterStream.shutdown();
     }
 }

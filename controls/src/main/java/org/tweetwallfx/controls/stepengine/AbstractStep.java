@@ -52,5 +52,9 @@ public abstract class AbstractStep implements Step {
         return getClass().getName();
     }
 
+    @Override
+    public boolean requiresPlatformThread() {
+        return true;
+    }
     
 }

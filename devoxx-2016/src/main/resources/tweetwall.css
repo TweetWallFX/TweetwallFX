@@ -32,6 +32,11 @@
     src: url('BebasNeue-Bold.otf');
 }
 
+@font-face {
+    font-family: 'Noto Emoji';
+    src: url('NotoEmoji-Regular.ttf');
+}
+
 .root {
     /*-fx-font-family: 'BebasNeue';*/ 
 }
@@ -42,27 +47,31 @@
 }
 
 .wordle {
-    -fx-background-color: white;
-    -fx-graphic: url(Devoxx-Logo.png);
-    -fx-background-graphic: url(DevoxxBelgium2016v3.jpg);
+    -fx-background-color: black;
+    -fx-graphic: url(Devoxx-Logo-white.png);
+    -fx-background-graphic: url(Devoxx2016CinemaBackdropRightNoText.png);
     -fx-display-tag-num: 25;
     -fx-font: 12pt "BebasNeue";
+    -fx-font-size-min: 36;
+    -fx-font-size-max: 72;
+    -fx-tweet-font-size: 54;
+    
 }
 .wordle .bg-image {
-    -fx-opacity: 0.3;
+    -fx-opacity: 0.4;
 }
 
 .wordle .logo {
-    visibility: hidden;
-    -fx-scale-x: 0.7;
-    -fx-scale-y: 0.7;
-    -fx-translate-x: -50;
-    -fx-translate-y: -100%;
+    /*visibility: hidden;*/
+/*    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;*/
+    -fx-translate-x: +50;
+    -fx-translate-y: -50;
 }
 
 .wordle .tag {
     /*-fx-font-family: "Calibri";*/
-    -fx-fill: black !important;
+    -fx-fill: white !important;
 /*    -fx-stroke: black;
     -fx-stroke-width: 0.5;    */
     /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
@@ -71,11 +80,11 @@
 
 .wordle .name {
     -fx-font-size: 36px; 
-    -fx-text-fill: black; 
+    -fx-text-fill: white; 
     -fx-font-weight: bold;    
 }
 
 .wordle .handle {
     -fx-font-size: 28px;
-    -fx-text-fill: black;   
+    -fx-text-fill: white;   
 }

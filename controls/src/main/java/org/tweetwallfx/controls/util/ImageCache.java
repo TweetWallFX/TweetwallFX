@@ -41,9 +41,13 @@ public class ImageCache {
     private final LinkedList<String> lru = new LinkedList<>();
     private final ImageCreator creator;
 
-    public ImageCache(final ImageCreator creator) {
+    public ImageCache(final ImageCreator creator, int maxSize) {
         this.creator = creator;
-        maxSize = 10;
+        this.maxSize = maxSize;
+    }
+    
+    public ImageCache(final ImageCreator creator) {
+        this(creator, 10);
     }
 
     public Image get(final String url) {

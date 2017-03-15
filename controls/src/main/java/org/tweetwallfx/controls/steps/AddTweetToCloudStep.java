@@ -23,8 +23,23 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javafx.application.Platform;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
+import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.tweet.StopList;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 /**
  *
@@ -32,14 +47,33 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class AddTweetToCloudStep extends AbstractStep {
 
+    private static final Logger log = LogManager.getLogger(AddTweetToCloudStep.class);
+    
     @Override
-    public int preferredStepDuration(MachineContext context) {
-        return 3000;
+    public long preferredStepDuration(MachineContext context) {
+        return 0;
     }
 
     @Override
     public void doStep(MachineContext context) {
-        //wordle.setTweet(tweet))...
+        WordleSkin skin = (WordleSkin) context.get("WordleSkin");
+        Tweet tweetInfo = skin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
+        String text = tweetInfo.getTextWithout(UrlTweetEntry.class)
+                .getTextWithout(UserMentionTweetEntry.class)
+                .get();
+        Set<Word> tweetWords = StopList.WORD_SPLIT.splitAsStream(text)
+                .map(StopList::trimTail) //no bad word tails
+                .filter(l -> l.length() > 2) //longer than 2 characters
+                .filter(StopList.IS_NOT_URL) //no url
+//                .filter(StopList::notIn) //not in stoplist
+                .map(l -> new Word(l, 0.1)) //convert to Word
+                .collect(Collectors.toSet());                   //collect
+        List<Word> words = new ArrayList<>(skin.getSkinnable().wordsProperty().get());
+        tweetWords.removeAll(words);
+        
+        log.info("Adding words to cloud dataset for rendering: " + tweetWords); 
+
+        skin.getSkinnable().getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         
         context.proceed();
     }
