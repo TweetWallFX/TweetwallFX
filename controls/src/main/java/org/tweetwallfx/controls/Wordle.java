@@ -58,6 +58,7 @@ public class Wordle extends Control {
 
     ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
     private SimpleStyleableStringProperty logo;
+    private SimpleStyleableStringProperty secondLogo;
     private SimpleStyleableStringProperty backgroundGraphic;
     private SimpleStyleableBooleanProperty favIconsVisible;
     private SimpleStyleableIntegerProperty displayedNumberOfTagsProperty;
@@ -111,14 +112,29 @@ public class Wordle extends Control {
     public void setLogo(String value) {
         logo.set(value);
     }
-
+    
     public SimpleStyleableStringProperty logoProperty() {
         if (logo == null) {
             logo = new SimpleStyleableStringProperty(StyleableProperties.LOGO_GRAPHIC, Wordle.this, "logo", null);
         }
         return logo;
     }
+    
+    public String getSecondLogo() {
+        return secondLogo.get();
+    }
 
+    public void setSecondLogo(String value) {
+        secondLogo.set(value);
+    }
+
+    public SimpleStyleableStringProperty secondLogoProperty() {
+        if (secondLogo == null) {
+            secondLogo = new SimpleStyleableStringProperty(StyleableProperties.SECOND_LOGO_GRAPHIC, Wordle.this, "secondlogo", null);
+        }
+        return secondLogo;
+    }
+    
     public String getBackgroundGraphic() {
         return backgroundGraphic.get();
     }
@@ -248,6 +264,20 @@ public class Wordle extends Control {
             }
         };
 
+        private static final CssMetaData< Wordle, String> SECOND_LOGO_GRAPHIC
+                = new CssMetaData<Wordle, String>("-fx-second-graphic",
+                        StyleConverter.getUrlConverter(), null) {
+            @Override
+            public boolean isSettable(Wordle control) {
+                return control.secondLogo == null || !control.secondLogo.isBound();
+            }
+
+            @Override
+            public StyleableProperty<String> getStyleableProperty(Wordle control) {
+                return control.secondLogoProperty();
+            }
+        };
+        
         private static final CssMetaData< Wordle, String> BACKGROUND_GRAPHIC
                 = new CssMetaData<Wordle, String>("-fx-background-graphic",
                         StyleConverter.getUrlConverter(), null) {
@@ -354,6 +384,7 @@ public class Wordle extends Control {
                     = new ArrayList<>(Control.getClassCssMetaData());
             Collections.addAll(styleables,
                     LOGO_GRAPHIC,
+                    SECOND_LOGO_GRAPHIC,
                     BACKGROUND_GRAPHIC,
                     FAVICONS_VISIBLE,
                     DISPLAYED_TAGS_NUMBER,
