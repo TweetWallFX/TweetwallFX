@@ -73,6 +73,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     private int displayCloudTags = 25;
 
     private ImageView logo;
+    private ImageView secondLogo;
     private ImageView backgroundImage;
     private Font font;
     private int fontSizeMin;
@@ -82,6 +83,9 @@ public class WordleSkin extends SkinBase<Wordle> {
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
     private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
+    public ImageView getSecondLogo(){
+        return secondLogo;
+    }
     public ImageView getLogo() {
         return logo;
     }
@@ -166,13 +170,26 @@ public class WordleSkin extends SkinBase<Wordle> {
         getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
             updateLogo(newValue);
         });
+        
+        pane.heightProperty().addListener((observable) -> {
+            updateSecondLogoPosition();
+        });
 
+        pane.widthProperty().addListener((observable) -> {
+            updateSecondLogoPosition();
+        });
+        
+        getSkinnable().secondLogoProperty().addListener((obs, oldValue, newValue) -> {
+            updateSecondLogo(newValue);
+        });
+        
         getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue) -> {
             updateBackgroundGraphic(newValue);
         });
 
         updateBackgroundGraphic(getSkinnable().backgroundGraphicProperty().getValue());
         updateLogo(getSkinnable().logoProperty().getValue());
+        updateSecondLogo(getSkinnable().secondLogoProperty().getValue());
 
         favIconsVisible = wordle.favIconsVisibleProperty().get();
         displayCloudTags = wordle.displayedNumberOfTagsProperty().get();
@@ -202,6 +219,28 @@ public class WordleSkin extends SkinBase<Wordle> {
         if (null != logo) {
             logo.setLayoutX(0);
             logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
+        }
+    }
+    
+    private void updateSecondLogo(final String newLogo) {
+        if (null != secondLogo) {
+            pane.getChildren().remove(secondLogo);
+            secondLogo = null;
+        }   
+        log.trace("SecondLogo: " + newLogo);
+        if (null != newLogo && !newLogo.isEmpty()) {
+            secondLogo = new ImageView(newLogo);
+            secondLogo.getStyleClass().add("secondlogo");            
+            pane.getChildren().add(secondLogo);
+            updateSecondLogoPosition();
+        }
+    }
+    
+    private void updateSecondLogoPosition() {
+        log.trace("Updating secondLogo position");
+        if (null != secondLogo) {
+            secondLogo.setLayoutX(pane.getWidth() - (secondLogo.getImage().getWidth()*0.8));
+            secondLogo.setLayoutY(pane.getHeight() - (secondLogo.getImage().getHeight()*0.8));
         }
     }
 
