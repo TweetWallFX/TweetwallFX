@@ -96,7 +96,8 @@ project(":TweetWallFX-3D"){
 
 project(":TweetWallFX-Controls"){
     dependencies {
-        compile project(':TweetWallFX-Core')
+         compile group: "org.ehcache", name: "ehcache", version: "3.3.0"
+         compile project(':TweetWallFX-Core')
     }
 }
 
