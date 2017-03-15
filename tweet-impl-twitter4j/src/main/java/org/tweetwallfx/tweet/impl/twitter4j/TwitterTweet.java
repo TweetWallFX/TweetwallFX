@@ -53,6 +53,7 @@ final class TwitterTweet implements Tweet {
     private final SymbolTweetEntry[] symbolTweetEntries;
     private final UrlTweetEntry[] urlTweetTweetEntries;
     private final UserMentionTweetEntry[] userMentionTweetEntries;
+    private final TwitterTweet retweetedTweet;
 
     public TwitterTweet(final Status status) {
         this.status = status;
@@ -107,6 +108,10 @@ final class TwitterTweet implements Tweet {
                     .map(ume -> new TwitterUserMentionTweetEntry(ume))
                     .toArray(c -> new UserMentionTweetEntry[c]);
         }
+        
+        retweetedTweet = isRetweet()
+                ? new TwitterTweet(status.getRetweetedStatus())
+                : null;
     }
 
     @Override
@@ -147,6 +152,11 @@ final class TwitterTweet implements Tweet {
     @Override
     public int getRetweetCount() {
         return status.getRetweetCount();
+    }
+
+    @Override
+    public Tweet getRetweetedTweet() {
+        return retweetedTweet;
     }
 
     @Override
