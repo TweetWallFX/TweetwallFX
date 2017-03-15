@@ -83,6 +83,9 @@ public class UpdateCloudStep extends AbstractStep {
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
+        if (null != wordleSkin.getSecondLogo()) {
+            configuration.setBlockedAreaBounds(wordleSkin.getSecondLogo().getBoundsInParent());
+        }
         
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
         List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());

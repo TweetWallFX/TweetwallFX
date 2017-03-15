@@ -82,6 +82,9 @@ public class TweetToCloudStep extends AbstractStep {
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
+        if (null != wordleSkin.getSecondLogo()) {
+            configuration.setBlockedAreaBounds(wordleSkin.getSecondLogo().getBoundsInParent());
+        }
         
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
         Duration defaultDuration = Duration.seconds(1.5);
