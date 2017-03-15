@@ -54,6 +54,8 @@ public interface Tweet extends BasicEntry {
 
     int getRetweetCount();
 
+    Tweet getRetweetedTweet();
+
     String getText();
 
     User getUser();
@@ -124,7 +126,6 @@ public interface Tweet extends BasicEntry {
      * long[]       getContributors();
      * GeoLocation  getGeoLocation();
      * Place        getPlace();
-     * Tweet        getRetweetedStatus();
      * Scopes       getScopes();
      * String       getSource();
      * String[]     getWithheldInCountries();
