@@ -82,12 +82,21 @@ final class TwitterOAuth {
     }
 
     private static Configuration createConfiguration() {
+        org.tweetwallfx.config.Configuration tweetWallFxConfig = org.tweetwallfx.config.Configuration.getInstance();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(false);
-        builder.setOAuthConsumerKey(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerKey"));
-        builder.setOAuthConsumerSecret(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerSecret"));
-        builder.setOAuthAccessToken(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessToken"));
-        builder.setOAuthAccessTokenSecret(org.tweetwallfx.config.Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessTokenSecret"));
+        builder.setOAuthConsumerKey(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.consumerKey"));
+        builder.setOAuthConsumerSecret(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.consumerSecret"));
+        builder.setOAuthAccessToken(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.accessToken"));
+        builder.setOAuthAccessTokenSecret(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.accessTokenSecret"));
+        // optional proxy settings
+        String httpProxyHost = tweetWallFxConfig.getConfig("tweetwall.proxy.host", "");
+        if (!httpProxyHost.isEmpty()) {
+            builder.setHttpProxyHost(httpProxyHost);
+            builder.setHttpProxyPort(Integer.parseInt(tweetWallFxConfig.getConfig("tweetwall.proxy.port")));
+            builder.setHttpProxyUser(tweetWallFxConfig.getConfig("tweetwall.proxy.user", ""));
+            builder.setHttpProxyPassword(tweetWallFxConfig.getConfig("tweetwall.proxy.password", ""));
+        }
         Configuration conf = builder.build();
 
         // check Configuration
@@ -103,7 +112,8 @@ final class TwitterOAuth {
                 exception.set(ex);
                 //  statusCode=400, message=Bad Authentication data -> wrong token
                 //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
-                log.error("Error credentials: " + ex.getStatusCode() + " " + ex.getErrorMessage());
+                int statusCode = ex.getStatusCode();
+                log.error("Error statusCode=" + statusCode + " " + (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
                 conf = null;
             }
         } else {
