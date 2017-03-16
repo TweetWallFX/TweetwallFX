@@ -3,7 +3,6 @@ package org.tweetwallfx.controls.dataprovider;
 import java.net.URL;
 import java.util.EnumSet;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -16,40 +15,42 @@ import org.ehcache.event.EventOrdering;
 import org.ehcache.event.EventType;
 import org.ehcache.xml.XmlConfiguration;
 
-public final class TweetCache {
-    private static final Logger log = LogManager.getLogger(TweetCache.class);
+public enum MediaCache {
+    INSTANCE;
 
+    private final Logger log;
     private final CacheManager cacheManager;
     private final Cache<Long, CachedMedia> imageCache;
 
-    public static TweetCache getInstance() {
-        return new TweetCache();
-    }
-
-    TweetCache() {
-        URL myUrl = getClass().getResource("TweetCache.xml");
+    private MediaCache() {
+        URL myUrl = getClass().getResource("MediaCache.xml");
         XmlConfiguration xmlConfig = new XmlConfiguration(myUrl);
+        log = LogManager.getLogger(MediaCache.class);
         cacheManager = CacheManagerBuilder.newCacheManager(xmlConfig);
+        Runtime.getRuntime().addShutdownHook(new Thread(cacheManager::close, "cache-shutdown"));
         cacheManager.init();
         // init caches
-        imageCache = cacheManager.getCache("imageCache", Long.class, CachedMedia.class);
+        imageCache = cacheManager.getCache("mediaCache", Long.class, CachedMedia.class);
         CacheEventListener<? super Object, ? super Object> logCacheEvent = event -> {
-            log.info("Media " + event.getType());
+            log.info("Media id: " + event.getKey() + " - " + event.getType());
         };
         imageCache.getRuntimeConfiguration().registerCacheEventListener(logCacheEvent,
                 EventOrdering.UNORDERED, EventFiring.ASYNCHRONOUS, EnumSet.allOf(EventType.class));
     }
 
-
-    boolean hasCachedMedia(long mediaId) {
-        return imageCache.containsKey(Long.valueOf(mediaId));
+    public boolean hasCachedMedia(long mediaId) {
+        if (imageCache.containsKey(Long.valueOf(mediaId))) {
+            log.info("Media id: " + mediaId + " - exists in cache");
+            return true;
+        }
+        return false;
     }
 
-    Optional<CachedMedia> getCachedMedia(long mediaId) {
+    public Optional<CachedMedia> getCachedMedia(long mediaId) {
         return Optional.ofNullable(imageCache.get(Long.valueOf(mediaId)));
     }
 
-    void putCachedMedia(long mediaId, CachedMedia image) {
+    public void putCachedMedia(long mediaId, CachedMedia image) {
         imageCache.put(Long.valueOf(mediaId), image);
     }
 }

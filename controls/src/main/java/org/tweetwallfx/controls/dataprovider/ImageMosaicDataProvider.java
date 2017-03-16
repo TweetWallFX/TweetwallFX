@@ -50,7 +50,7 @@ public class ImageMosaicDataProvider implements DataProvider {
 
     private static final Logger log = LogManager.getLogger(ImageMosaicDataProvider.class);
 
-    private final TweetCache tweetCache;
+    private final MediaCache cache;
 
     private Executor imageLoader = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r);
@@ -62,7 +62,7 @@ public class ImageMosaicDataProvider implements DataProvider {
     private List<ImageStore> images = new CopyOnWriteArrayList<>();
 
     public ImageMosaicDataProvider(TweetStream tweetStream) {
-        tweetCache = TweetCache.getInstance();
+        cache = MediaCache.INSTANCE;
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
@@ -102,12 +102,12 @@ public class ImageMosaicDataProvider implements DataProvider {
         Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
             protected Optional<ImageStore> call() throws Exception {
-                if (tweetCache.hasCachedMedia(mediaId)) {
+                if (cache.hasCachedMedia(mediaId)) {
                     return Optional.empty();
                 }
                 try (InputStream in = new URL(url).openStream()) {
                     CachedMedia image = new CachedMedia(in);
-                    tweetCache.putCachedMedia(mediaId, image);
+                    cache.putCachedMedia(mediaId, image);
                     return Optional.of(new ImageStore(tweet, new Image(image.getInputStream()),
                             date.toInstant(), mediaId));
                 }
