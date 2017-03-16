@@ -26,6 +26,7 @@ package org.tweetwallfx.controls.steps;
 //import org.tweetwallfx.controls.Wordle;
 import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.FadeTransition;
@@ -39,6 +40,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -81,13 +83,18 @@ public class CloudToTweetStep extends AbstractStep {
         
         startupLogger.trace("cloudToTweet()");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        Tweet tweetInfo = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
+        Tweet displayTweet = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
 
+        Tweet originalTweet = displayTweet;
+        while (originalTweet.isRetweet()) {
+            originalTweet = originalTweet.getRetweetedTweet();
+        }
+        
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - wordleSkin.getLogo().getImage().getHeight()) / 4d);
 
         double width = layoutBounds.getWidth() * (2 / 3d);
 
-        TweetLayout tweetLayout = TweetLayout.createTweetLayout(new TweetLayout.Configuration(tweetInfo, wordleSkin.getFont(), wordleSkin.getTweetFontSize()));       
+        TweetLayout tweetLayout = TweetLayout.createTweetLayout(new TweetLayout.Configuration(originalTweet, wordleSkin.getFont(), wordleSkin.getTweetFontSize()));       
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
         List<Transition> moveTransitions = new ArrayList<>();
@@ -161,7 +168,7 @@ public class CloudToTweetStep extends AbstractStep {
         wordleSkin.word2TextMap.clear();
 
         // layout image and meta data first
-        HBox infoBox = new HBox(20);
+        GridPane infoBox = new GridPane();
         infoBox.setStyle("-fx-padding: 20px;");
         infoBox.setPrefHeight(80);
         infoBox.setMaxHeight(80);
@@ -171,61 +178,68 @@ public class CloudToTweetStep extends AbstractStep {
         HBox hImage = new HBox();
         hImage.setPadding(new Insets(10));
 
-        Image profileImage = wordleSkin.getProfileImageCache().get(tweetInfo.getUser().getProfileImageUrl());
-//        Image profileImage = new Image(tweetInfo.getUser().getProfileImageUrl(), 64, 64, true, false);
+        
+        Image profileImage = wordleSkin.getProfileImageCache().get(originalTweet.getUser().getProfileImageUrl());
         ImageView imageView = new ImageView(profileImage);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
         clip.setArcHeight(10);
         imageView.setClip(clip);
         hImage.getChildren().add(imageView);
+        
+        Label name = new Label(originalTweet.getUser().getName());
+        name.getStyleClass().setAll("name");
 
-        if (tweetInfo.isRetweet()) {
+        Label handle = new Label("@" + originalTweet.getUser().getScreenName() + " - " + wordleSkin.getDf().format(originalTweet.getCreatedAt()));
+        handle.getStyleClass().setAll("handle");
+        HBox firstLineBox = new HBox();
+        HBox secondLineBox = new HBox();
+        secondLineBox.getChildren().add(name);
+        HBox thirdLineBox = new HBox();
+        thirdLineBox.getChildren().add(handle);
+        if (originalTweet.getUser().isVerified()) {
+            FontAwesomeIcon verifiedIcon = new FontAwesomeIcon();
+            verifiedIcon.getStyleClass().addAll("verifiedAccount");
+            secondLineBox.getChildren().add(verifiedIcon);
+            HBox.setMargin(verifiedIcon, new Insets(9,10,0,5));
+        } 
+        if (displayTweet.isRetweet()) {
             FontAwesomeIcon retweetIconBack = new FontAwesomeIcon();
             retweetIconBack.getStyleClass().addAll("retweetBack");
             FontAwesomeIcon retweetIconFront = new FontAwesomeIcon();
             retweetIconFront.getStyleClass().addAll("retweetFront");
             
+            Label retweetName = new Label(displayTweet.getUser().getName());
+            retweetName.getStyleClass().setAll("retweetName");
+            
             GlyphsStack stackedIcon = GlyphsStack.create()
                     .add(retweetIconBack)
                     .add(retweetIconFront);
-            infoBox.getChildren().add(stackedIcon);
+            firstLineBox.getChildren().addAll(stackedIcon, retweetName);
+            HBox.setMargin(stackedIcon, new Insets(0,10,0,0));
         }
-//        HBox hName = new HBox(20);
-        Label name = new Label(tweetInfo.getUser().getName());
-        name.getStyleClass().setAll("name");
-
-        Label handle = new Label("@" + tweetInfo.getUser().getScreenName() + " - " + wordleSkin.getDf().format(tweetInfo.getCreatedAt()));
-        handle.getStyleClass().setAll("handle");
-        VBox detailBox = new VBox();
-        HBox firstLineBox = new HBox();
-        firstLineBox.getChildren().add(name);
-        HBox secondLineBox = new HBox();
-        secondLineBox.getChildren().add(handle);
-        detailBox.getChildren().addAll(firstLineBox, secondLineBox);
-        if (tweetInfo.getUser().isVerified()) {
-            FontAwesomeIcon verifiedIcon = new FontAwesomeIcon();
-            verifiedIcon.getStyleClass().addAll("verifiedAccount");
-            firstLineBox.getChildren().add(verifiedIcon);
-            HBox.setMargin(verifiedIcon, new Insets(9,10,0,5));
-        } 
-        infoBox.getChildren().addAll(hImage, detailBox);
+        infoBox.getChildren().addAll(hImage, firstLineBox, secondLineBox, thirdLineBox);
+        GridPane.setConstraints(hImage, 0, 1, 1, 2);
+        GridPane.setConstraints(firstLineBox, 1, 0);
+        GridPane.setConstraints(secondLineBox, 1, 1);
+        GridPane.setConstraints(thirdLineBox, 1, 2);
+        
         if (wordleSkin.getFavIconsVisible()) {
-            if (0 < tweetInfo.getRetweetCount()) {
+            if (0 < originalTweet.getRetweetCount()) {
                 FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
                 faiReTwCount.getStyleClass().setAll("retweetCount");
 
-                Label reTwCount = new Label(String.valueOf(tweetInfo.getRetweetCount()));
+                Label reTwCount = new Label(String.valueOf(originalTweet.getRetweetCount()));
                 reTwCount.getStyleClass().setAll("handle");
-                secondLineBox.getChildren().addAll(faiReTwCount, reTwCount);
+                thirdLineBox.getChildren().addAll(faiReTwCount, reTwCount);
                 HBox.setMargin(faiReTwCount, new Insets(5,10,0,5));
             }
-            if (0 < tweetInfo.getFavoriteCount()) {
+            if (0 < originalTweet.getFavoriteCount()) {
                 FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
                 faiFavCount.getStyleClass().setAll("favoriteCount");
-                Label favCount = new Label(String.valueOf(tweetInfo.getFavoriteCount()));
+                Label favCount = new Label(String.valueOf(originalTweet.getFavoriteCount()));
                 favCount.getStyleClass().setAll("handle");
-                secondLineBox.getChildren().addAll(faiFavCount, favCount);
+                thirdLineBox.getChildren().addAll(faiFavCount, favCount);
                 HBox.setMargin(faiFavCount, new Insets(5,10,0,5));
             }
         }
@@ -235,8 +249,8 @@ public class CloudToTweetStep extends AbstractStep {
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
 
-        if (tweetInfo.getMediaEntries().length > 0) {
-//            System.out.println("Media detected: " + tweetInfo.getText() + " " + Arrays.toString(tweetInfo.getMediaEntities()));
+        if (originalTweet.getMediaEntries().length > 0) {
+//            System.out.println("Media detected: " + tweetInFocus.getText() + " " + Arrays.toString(tweetInFocus.getMediaEntities()));
             HBox mediaBox = new HBox(10);
             mediaBox.setOpacity(0);
             mediaBox.setPadding(new Insets(10));
@@ -249,11 +263,11 @@ public class CloudToTweetStep extends AbstractStep {
             FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
             ft.setToValue(1);
             fadeInTransitions.add(ft);
-            hImage.setPadding(new Insets(10));
-            int imageCount = Math.min(3, tweetInfo.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            hImage.setPadding(new Insets(10, 10, 10, 10));
+            int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
             for (int i = 0; i < imageCount; i++) {
-                Image mediaImage = wordleSkin.getMediaImageCache().get(tweetInfo.getMediaEntries()[i].getMediaUrl());
-    //            Image mediaImage = new Image(tweetInfo.getMediaEntries()[0].getMediaUrl());
+                Image mediaImage = wordleSkin.getMediaImageCache().get(originalTweet.getMediaEntries()[i].getMediaUrl());
+    //            Image mediaImage = new Image(tweetInFocus.getMediaEntries()[0].getMediaUrl());
                 ImageView mediaView = new ImageView(mediaImage);
                 mediaView.setPreserveRatio(true);
                 mediaView.setCache(true);

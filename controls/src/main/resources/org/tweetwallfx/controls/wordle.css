@@ -38,6 +38,12 @@
     -fx-font-weight: bold;    
 }
 
+.wordle .retweetName {
+    -fx-font: 18px "Calibri"; 
+    -fx-text-fill: darkgray; 
+    -fx-font-weight: bold;    
+}
+
 .wordle .handle {
     -fx-font: 28px "Calibri";
     -fx-text-fill: #8899A6;   
@@ -63,7 +69,7 @@
 
 .retweetBack{
     -glyph-name: "SQUARE"; 
-    -glyph-size: 24px;    
+    -glyph-size: 22px;    
     -fx-fill: yellowgreen; 
 }
 .retweetFront{
