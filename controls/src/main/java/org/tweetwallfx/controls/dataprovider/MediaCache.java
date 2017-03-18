@@ -32,7 +32,7 @@ public enum MediaCache {
         // init caches
         imageCache = cacheManager.getCache("mediaCache", Long.class, CachedMedia.class);
         CacheEventListener<? super Object, ? super Object> logCacheEvent = event -> {
-            log.info("Media id: " + event.getKey() + " - " + event.getType());
+            log.debug("Media id: " + event.getKey() + " - " + event.getType());
         };
         imageCache.getRuntimeConfiguration().registerCacheEventListener(logCacheEvent,
                 EventOrdering.UNORDERED, EventFiring.ASYNCHRONOUS, EnumSet.allOf(EventType.class));
@@ -40,7 +40,7 @@ public enum MediaCache {
 
     public boolean hasCachedMedia(long mediaId) {
         if (imageCache.containsKey(Long.valueOf(mediaId))) {
-            log.info("Media id: " + mediaId + " - exists in cache");
+            log.debug("Media id: " + mediaId + " - exists in cache");
             return true;
         }
         return false;
