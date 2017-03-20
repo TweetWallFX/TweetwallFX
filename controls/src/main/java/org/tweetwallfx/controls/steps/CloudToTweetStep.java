@@ -26,7 +26,6 @@ package org.tweetwallfx.controls.steps;
 //import org.tweetwallfx.controls.Wordle;
 import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.FadeTransition;
@@ -42,15 +41,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
@@ -282,6 +280,29 @@ public class CloudToTweetStep extends AbstractStep {
             }
             wordleSkin.setMediaBox(mediaBox);
             // add fade in for image and meta data
+            wordleSkin.getPane().getChildren().add(mediaBox);
+        } else if (originalTweet.getUrlEntries().length > 0) {
+            startupLogger.trace("no picture but an URL");
+            HBox mediaBox = new HBox(10);
+            mediaBox.setOpacity(0);
+            mediaBox.setPadding(new Insets(10));
+            mediaBox.setAlignment(Pos.CENTER_RIGHT);
+            mediaBox.setLayoutX(wordleSkin.getLogo().getImage().getWidth() + 10);
+            mediaBox.setLayoutY(lowerLeft.getY() + 100);
+            // ensure media box fills the complete area, so that layouting from right to left works
+            mediaBox.setMinSize(layoutBounds.getWidth() - (wordleSkin.getLogo().getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - (lowerLeft.getY() + 100)));
+            mediaBox.setMaxSize(layoutBounds.getWidth() - (wordleSkin.getLogo().getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - (lowerLeft.getY() + 100)));
+            FadeTransition ft = new FadeTransition(defaultDuration, mediaBox);
+            ft.setToValue(1);
+            fadeInTransitions.add(ft);
+            hImage.setPadding(new Insets(10, 10, 10, 10));
+            WebView urlView = new WebView();
+            urlView.getEngine().load(originalTweet.getUrlEntries()[0].getExpandedURL());
+            urlView.setCache(true);
+            urlView.setMaxSize(mediaBox.getMaxWidth() - 10, mediaBox.getMaxHeight() - 10);
+            urlView.setZoom(0.85d);
+            mediaBox.getChildren().add(urlView);
+            wordleSkin.setMediaBox(mediaBox);
             wordleSkin.getPane().getChildren().add(mediaBox);
         }
 
