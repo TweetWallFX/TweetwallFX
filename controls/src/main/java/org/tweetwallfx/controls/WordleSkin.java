@@ -69,7 +69,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     private final Pane pane;
     private final Pane stackPane;
     private Node infoBox;
-    private HBox mediaBox;
+    private Node mediaBox;
 
     private int displayCloudTags = 25;
 
@@ -107,11 +107,11 @@ public class WordleSkin extends SkinBase<Wordle> {
         return displayCloudTags;
     }
 
-    public HBox getMediaBox() {
+    public Node getMediaBox() {
         return mediaBox;
     }
 
-    public void setMediaBox(HBox mediaBox) {
+    public void setMediaBox(Node mediaBox) {
         this.mediaBox = mediaBox;
     }
 
