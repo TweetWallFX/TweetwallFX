@@ -49,7 +49,7 @@
 .wordle {
     -fx-background-color: linear-gradient(to bottom, darkslateblue, darkblue 75%);
     -fx-graphic: url(DEVOXX_WHITE_TRANSPARENT.png);
-    -fx-second-graphic: url(jug-bodensee-logo-A-gross.png);
+    -fx-second-graphic: url(jug-bodensee-logo-A-gross-white.png);
     /*-fx-background-graphic: url(Devoxx2016CinemaBackdropRightNoText.png);*/
     -fx-display-tag-num: 25;
     -fx-font: 12pt "BebasNeue";
