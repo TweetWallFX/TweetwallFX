@@ -32,6 +32,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -199,11 +200,27 @@ public class CloudToTweetStep extends AbstractStep {
             mediaBox.setOpacity(0);
             mediaBox.setPadding(new Insets(10));
             mediaBox.setAlignment(Pos.CENTER_RIGHT);
-            mediaBox.setLayoutX(wordleSkin.getLogo().getImage().getWidth() + 10);
-            mediaBox.setLayoutY(lowerLeft.getY());
+            mediaBox.layoutXProperty().bind(Bindings.add(
+                    10,
+                    wordleSkin.getLogo().getImage().widthProperty()));
+            mediaBox.layoutYProperty().bind(Bindings.add(
+                    wordleSkin.getInfoBox().heightProperty(),
+                    wordleSkin.getInfoBox().layoutYProperty()));
             // ensure media box fills the complete area, so that layouting from right to left works
-            mediaBox.setMinSize(layoutBounds.getWidth() - (wordleSkin.getLogo().getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - lowerLeft.getY()));
-            mediaBox.setMaxSize(layoutBounds.getWidth() - (wordleSkin.getLogo().getImage().getWidth() + 80), Math.max(50, layoutBounds.getHeight() - lowerLeft.getY()));
+            mediaBox.minWidthProperty().bind(Bindings.add(
+                    wordleSkin.getPane().widthProperty(),
+                    Bindings.negate(Bindings.add(
+                            80,
+                            wordleSkin.getLogo().getImage().widthProperty()
+                    ))));
+            mediaBox.minHeightProperty().bind(Bindings.max(
+                    50,
+                    Bindings.add(
+                            wordleSkin.getPane().heightProperty(),
+                            -1 * lowerLeft.getY())));
+            // MaxSize = MinSize
+            mediaBox.maxWidthProperty().bind(mediaBox.minWidthProperty());
+            mediaBox.maxHeightProperty().bind(mediaBox.minHeightProperty());
 
             int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
             for (int i = 0; i < imageCount; i++) {
@@ -311,13 +328,6 @@ public class CloudToTweetStep extends AbstractStep {
         GridPane.setConstraints(secondLineBox, 1, 1);
         GridPane.setConstraints(thirdLineBox, 1, 2);
         
-        // move lower left to just below the infoBox
-        lowerLeft = lowerLeft.add(0d, infoBox.getPrefHeight() + infoBox.getPadding().getTop() + infoBox.getPadding().getBottom());
-        
-        if (displayTweet.isRetweet()) {
-            lowerLeft = lowerLeft.add(0d, 25d);
-        }
-
         return infoBox;
     }
 
