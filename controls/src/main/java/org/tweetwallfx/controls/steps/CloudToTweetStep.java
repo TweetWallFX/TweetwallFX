@@ -193,7 +193,6 @@ public class CloudToTweetStep extends AbstractStep {
 
     private Pane createMediaBox(final WordleSkin wordleSkin, final Tweet displayTweet) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
-        Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
         if (originalTweet.getMediaEntries().length > 0) {
             HBox mediaBox = new HBox(10);
