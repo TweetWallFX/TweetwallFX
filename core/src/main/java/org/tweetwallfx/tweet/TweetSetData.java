@@ -23,11 +23,6 @@
  */
 package org.tweetwallfx.tweet;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -39,24 +34,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.concurrent.Task;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-/**
- * @author martin
- */
 public final class TweetSetData {
-
-    private static final Logger log = LogManager.getLogger(TweetSetData.class);
 
     public static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
     private final Tweeter tweeter;
@@ -100,41 +88,21 @@ public final class TweetSetData {
         return tweeter;
     }
 
-    private static void downloadContent(URL url, File file) {
-        boolean directoryCreated = file.getParentFile().mkdirs();
-        if (directoryCreated) {
-            log.info("directory created " + file.getPath());
-        }
-
-        try (InputStream inputStream = url.openStream();
-                FileOutputStream outputStream = new FileOutputStream(file)) {
-
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-        } catch (IOException exception) {
-
-        }
-    }
-
     public void buildTree(final int numberOfTweets, Consumer<Tweet> tweetConsumer) {
         List<Tweet> tweets = tweeter.searchPaged(new TweetQuery().query(searchText).count(100), 20)
                 .collect(Collectors.toList());
         tweets.stream().forEach(tweet -> tweetConsumer.accept(tweet));
 
-        final Stream<String> stringStream = tweets.stream()
-                .map(t -> t.getText()
+        tree = tweets.stream()
+                .map(t -> t
+                .getTextWithout(MediaTweetEntry.class)
+                .getTextWithout(UrlTweetEntry.class)
+                .getTextWithout(UserMentionTweetEntry.class)
+                .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
-                .replaceAll("http[s]?:.*((\\s+)|($))", " ")
-                .replaceAll("['\"()]", " "));
-
-        tree = stringStream
+                .replaceAll("['\"()]", " "))
                 .flatMap(StopList.WORD_SPLIT::splitAsStream)
                 .filter(l -> l.length() > 2)
-                .filter(l -> !l.startsWith("@"))
                 .map(String::toLowerCase)
                 .map(StopList::removeEmojis)
                 .filter(StopList::notIn)
@@ -148,15 +116,15 @@ public final class TweetSetData {
                 .replaceAll("[^\\dA-Za-z ]", " ");
 
         final String noEmojiStatus = StopList.removeEmojis(status);
-        // add words to tree and update weights
 
+        // add words to tree and update weights
         StopList.WORD_SPLIT.splitAsStream(noEmojiStatus)
                 .map(String::toLowerCase)
-                .filter((w) -> w.length() > 2)
+                .filter(w -> w.length() > 2)
                 .filter(StopList::notIn)
-                .forEach((java.lang.String w) -> tree.put(w, (tree.containsKey(w)
+                .forEach(w -> tree.put(w, (tree.containsKey(w)
                 ? tree.get(w)
-                : 0) + 1l));
+                : 0) + 1L));
     }
 
     private static final class TweetsCreationTask extends Task<Void> {
@@ -173,11 +141,7 @@ public final class TweetSetData {
 
         @Override
         protected Void call() throws Exception {
-
-            stream.onTweet(tweet -> {
-                tweetSetData.updateTree(tweet);
-            });
-
+            stream.onTweet(tweet -> tweetSetData.updateTree(tweet));
             return null;
         }
     }
