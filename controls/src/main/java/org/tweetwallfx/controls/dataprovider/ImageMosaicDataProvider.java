@@ -134,23 +134,19 @@ public class ImageMosaicDataProvider implements DataProvider {
 
     private static void downloadContent(URL url, File file) {
         file.deleteOnExit();
-        boolean directoryCreated = file.getParentFile().mkdirs();
-        if (directoryCreated) {
+        if (file.getParentFile().mkdirs()) {
             log.info("directory created " + file.getPath());
         }
 
         try (InputStream inputStream = url.openStream();
                 FileOutputStream outputStream = new FileOutputStream(file)) {
-
             int read = 0;
             byte[] bytes = new byte[1024];
 
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-            
         } catch (IOException exception) {
-
         }
     }
 
