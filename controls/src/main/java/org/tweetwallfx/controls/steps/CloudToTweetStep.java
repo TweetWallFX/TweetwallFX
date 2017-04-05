@@ -200,7 +200,7 @@ public class CloudToTweetStep extends AbstractStep {
             mediaBox.setPadding(new Insets(10));
             mediaBox.setAlignment(Pos.CENTER_RIGHT);
             mediaBox.layoutXProperty().bind(Bindings.add(
-                    10,
+                    wordleSkin.getInfoBox().getPadding().getBottom() + wordleSkin.getInfoBox().getPadding().getTop(),
                     wordleSkin.getLogo().getImage().widthProperty()));
             mediaBox.layoutYProperty().bind(Bindings.add(
                     wordleSkin.getInfoBox().heightProperty(),
@@ -216,7 +216,7 @@ public class CloudToTweetStep extends AbstractStep {
                     50,
                     Bindings.add(
                             wordleSkin.getPane().heightProperty(),
-                            -1 * lowerLeft.getY())));
+                            Bindings.negate(mediaBox.layoutYProperty()))));
             // MaxSize = MinSize
             mediaBox.maxWidthProperty().bind(mediaBox.minWidthProperty());
             mediaBox.maxHeightProperty().bind(mediaBox.minHeightProperty());
@@ -228,8 +228,15 @@ public class CloudToTweetStep extends AbstractStep {
                 mediaView.setPreserveRatio(true);
                 mediaView.setCache(true);
                 mediaView.setSmooth(true);
-                mediaView.setFitWidth((mediaBox.getMaxWidth() - 10) / imageCount);
-                mediaView.setFitHeight(mediaBox.getMaxHeight() - 10);
+                mediaView.fitWidthProperty().bind(Bindings.divide(
+                        Bindings.add(
+                                mediaBox.maxWidthProperty(),
+                                -10),
+                        imageCount
+                ));
+                mediaView.fitHeightProperty().bind(Bindings.add(
+                        mediaBox.maxHeightProperty(),
+                        -10));
                 mediaBox.getChildren().add(mediaView);
             }
 
@@ -326,7 +333,7 @@ public class CloudToTweetStep extends AbstractStep {
         GridPane.setConstraints(firstLineBox, 1, 0);
         GridPane.setConstraints(secondLineBox, 1, 1);
         GridPane.setConstraints(thirdLineBox, 1, 2);
-        
+
         return infoBox;
     }
 
