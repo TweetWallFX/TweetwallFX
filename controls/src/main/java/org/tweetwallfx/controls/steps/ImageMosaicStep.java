@@ -25,9 +25,11 @@ package org.tweetwallfx.controls.steps;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -48,17 +50,13 @@ import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 
-/**
- *
- * @author sven
- */
 public class ImageMosaicStep extends AbstractStep {
 
+    private static final Random RANDOM = new Random();
     private final ImageView[][] rects = new ImageView[6][5];
     private final Bounds[][] bounds = new Bounds[6][5];
-
+    private final Set<Integer> highlightedIndexes = new HashSet<>();
     private Pane pane;
-
     private int count = 0;
 
     @Override
@@ -76,7 +74,6 @@ public class ImageMosaicStep extends AbstractStep {
 
             createMosaicTransition.play();
         }
-
     }
 
     @Override
@@ -113,29 +110,26 @@ public class ImageMosaicStep extends AbstractStep {
                                 pane.getChildren().remove(rects[i][j]);
                             }
                         }
+                        highlightedIndexes.clear();
                         context.proceed();
                     });
                     cleanup.play();
                 }
-
             });
         });
     }
 
-    private Transition createMosaicTransition(List<ImageStore> imageStores) {        
+    private Transition createMosaicTransition(List<ImageStore> imageStores) {
         SequentialTransition fadeIn = new SequentialTransition();
-
         List<FadeTransition> allFadeIns = new ArrayList<>();
-
-        Random random = new Random();
 
         double width = pane.getWidth() / 6.0 - 10;
         double height = pane.getHeight() / 5.0 - 8;
         List<ImageStore> distillingList = new LinkedList<>(imageStores);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
-                int index = random.nextInt(distillingList.size());
-                ImageStore selectedImage = distillingList.remove(index);                
+                int index = RANDOM.nextInt(distillingList.size());
+                ImageStore selectedImage = distillingList.remove(index);
                 ImageView imageView = new ImageView(selectedImage.getImage());
                 imageView.setCache(true);
                 imageView.setCacheHint(CacheHint.SPEED);
@@ -159,9 +153,14 @@ public class ImageMosaicStep extends AbstractStep {
     }
 
     private ImageWallAnimationTransition createHighlightAndZoomTransition() {
-        Random random = new Random();
-        int column = random.nextInt(6);
-        int row = random.nextInt(5);
+        // select next random not but not previously shown image
+        int index;
+        do {
+            index = RANDOM.nextInt(30);
+        } while (!highlightedIndexes.add(index));
+
+        int column = index % 6;
+        int row = index / 6;
 
         ImageView randomView = rects[column][row];
         randomView.toFront();
@@ -250,20 +249,6 @@ public class ImageMosaicStep extends AbstractStep {
                 firstParallelTransition.getChildren().add(ft);
             }
         }
-        String s;
-        
-        
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 5; j++) {
-                if ((i == column) && (j == row)) {
-                    continue;
-                }
-
-//                BlurTransition blurTransition = new BlurTransition(Duration.seconds(0.5), (GaussianBlur) rects[i][j].getEffect());
-//                blurTransition.setToRadius(0);
-//                secondParallelTransition.getChildren().addAll(blurTransition);
-            }
-        }
 
         LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView);
         SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty());
@@ -306,7 +291,5 @@ public class ImageMosaicStep extends AbstractStep {
             this.column = column;
             this.row = row;
         }
-
     }
-
 }
