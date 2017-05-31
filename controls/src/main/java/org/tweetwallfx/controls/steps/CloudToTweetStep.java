@@ -23,11 +23,24 @@
  */
 package org.tweetwallfx.controls.steps;
 
-//import org.tweetwallfx.controls.Wordle;
-import de.jensd.fx.glyphs.GlyphsStack;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.tweetwallfx.controls.TweetLayout;
+import org.tweetwallfx.controls.TweetWordNodeFactory;
+import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
+import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.transition.FontSizeTransition;
+import org.tweetwallfx.controls.transition.LocationTransition;
+import org.tweetwallfx.tweet.api.Tweet;
+
+//import org.tweetwallfx.controls.Wordle;
+import de.jensd.fx.glyphs.GlyphsStack;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -47,17 +60,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.log4j.Logger;
-import org.tweetwallfx.controls.TweetLayout;
-import org.tweetwallfx.controls.TweetWordNodeFactory;
-import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.transition.FontSizeTransition;
-import org.tweetwallfx.controls.transition.LocationTransition;
-import org.tweetwallfx.tweet.api.Tweet;
 
 /**
  *
@@ -270,7 +272,7 @@ public class CloudToTweetStep extends AbstractStep {
         HBox thirdLineBox = new HBox(handle);
 
         if (originalTweet.getUser().isVerified()) {
-            FontAwesomeIcon verifiedIcon = new FontAwesomeIcon();
+            FontAwesomeIconView verifiedIcon = new FontAwesomeIconView();
             verifiedIcon.getStyleClass().addAll("verifiedAccount");
 
             secondLineBox.getChildren().add(verifiedIcon);
@@ -278,10 +280,10 @@ public class CloudToTweetStep extends AbstractStep {
         }
 
         if (displayTweet.isRetweet()) {
-            FontAwesomeIcon retweetIconBack = new FontAwesomeIcon();
+            FontAwesomeIconView retweetIconBack = new FontAwesomeIconView();
             retweetIconBack.getStyleClass().addAll("retweetBack");
 
-            FontAwesomeIcon retweetIconFront = new FontAwesomeIcon();
+            FontAwesomeIconView retweetIconFront = new FontAwesomeIconView();
             retweetIconFront.getStyleClass().addAll("retweetFront");
 
             Label retweetName = new Label(displayTweet.getUser().getName());
@@ -297,7 +299,7 @@ public class CloudToTweetStep extends AbstractStep {
 
         if (wordleSkin.getFavIconsVisible()) {
             if (0 < originalTweet.getRetweetCount()) {
-                FontAwesomeIcon faiReTwCount = new FontAwesomeIcon();
+                FontAwesomeIconView faiReTwCount = new FontAwesomeIconView();
                 faiReTwCount.getStyleClass().setAll("retweetCount");
 
                 Label reTwCount = new Label(String.valueOf(originalTweet.getRetweetCount()));
@@ -308,7 +310,7 @@ public class CloudToTweetStep extends AbstractStep {
             }
 
             if (0 < originalTweet.getFavoriteCount()) {
-                FontAwesomeIcon faiFavCount = new FontAwesomeIcon();
+                FontAwesomeIconView faiFavCount = new FontAwesomeIconView();
                 faiFavCount.getStyleClass().setAll("favoriteCount");
 
                 Label favCount = new Label(String.valueOf(originalTweet.getFavoriteCount()));
