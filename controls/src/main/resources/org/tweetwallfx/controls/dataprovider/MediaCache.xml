@@ -1,0 +1,15 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://www.ehcache.org/v3' xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+    xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.3.xsd http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.3.xsd">
+    <persistence directory="${user.home}/tweetwall-cache" />
+    <cache alias="mediaCache">
+        <key-type>java.lang.Long</key-type>
+        <value-type>org.tweetwallfx.controls.dataprovider.CachedMedia</value-type>
+        <expiry>
+            <ttl unit="days">30</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">100</heap>
+            <disk unit="GB" persistent="true">5</disk>
+        </resources>
+    </cache>
+</config>
