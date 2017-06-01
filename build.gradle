@@ -72,7 +72,7 @@ project(":TweetWallFX-Tweet-Impl-Twitter4J") {
 
 project(":TweetWallFX-Core"){
     dependencies {
-        compile group: "de.jensd", name: "fontawesomefx", version: "8.3"
+        compile group: "de.jensd", name: "fontawesomefx", version: "8.9"
         compile group: "log4j", name: "log4j", version: "1.2.17"
         compile group: "com.vdurmont", name: "emoji-java", version: "3.1.3"
         compile project(':TweetWallFX-Tweet-API')
@@ -96,7 +96,10 @@ project(":TweetWallFX-3D"){
 
 project(":TweetWallFX-Controls"){
     dependencies {
-        compile project(':TweetWallFX-Core')
+         compile group: "javax.cache", name: "cache-api", version: "1.0.0"
+         compile group: "org.ehcache", name: "ehcache", version: "3.3.0"
+         compile group: "org.slf4j", name: "slf4j-log4j12", version: "1.7.25"
+         compile project(':TweetWallFX-Core')
     }
 }
 
@@ -158,6 +161,25 @@ project(":TweetWallFX-Devoxx-2016"){
 }
 
 project(":TweetWallFX-Devoxx-2017-US") {
+    apply plugin: "application"
+    mainClassName = "org.tweetwallfx.generic.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+    }
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Generic2D')
+        compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+}
+
+project(":TweetWallFX-Devoxx-2017-FR") {
     apply plugin: "application"
     mainClassName = "org.tweetwallfx.generic.Main"
 
@@ -284,5 +306,6 @@ task createFolders(description: 'Creates the source folders if they do not exist
 task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
 task ('runDevoxx2015', dependsOn: ':TweetWallFX-Devoxx-2015:run')
 task ('runDevoxx2017US', dependsOn: ':TweetWallFX-Devoxx-2017-US:run')
+task ('runDevoxx2017FR', dependsOn: ':TweetWallFX-Devoxx-2017-FR:run')
 task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
 task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')

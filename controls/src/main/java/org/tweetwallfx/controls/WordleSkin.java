@@ -68,8 +68,8 @@ public class WordleSkin extends SkinBase<Wordle> {
     public  final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
     private final Pane pane;
     private final Pane stackPane;
-    private Node infoBox;
-    private HBox mediaBox;
+    private Pane infoBox;
+    private Pane mediaBox;
 
     private int displayCloudTags = 25;
 
@@ -107,19 +107,19 @@ public class WordleSkin extends SkinBase<Wordle> {
         return displayCloudTags;
     }
 
-    public HBox getMediaBox() {
+    public Pane getMediaBox() {
         return mediaBox;
     }
 
-    public void setMediaBox(HBox mediaBox) {
+    public void setMediaBox(Pane mediaBox) {
         this.mediaBox = mediaBox;
     }
 
-    public Node getInfoBox() {
+    public Pane getInfoBox() {
         return infoBox;
     }
 
-    public void setInfoBox(Node infoBox) {
+    public void setInfoBox(Pane infoBox) {
         this.infoBox = infoBox;
     }
 
