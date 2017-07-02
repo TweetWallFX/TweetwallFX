@@ -63,7 +63,7 @@ public class UpdateCloudStep extends AbstractStep {
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
 
-        List<Word> sortedWords = new ArrayList<>(wordleSkin.getSkinnable().wordsProperty().getValue());
+        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
         if (sortedWords.isEmpty()) {
             return;
         }
