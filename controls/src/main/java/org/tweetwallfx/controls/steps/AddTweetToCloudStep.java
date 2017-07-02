@@ -56,8 +56,8 @@ public class AddTweetToCloudStep extends AbstractStep {
 
     @Override
     public void doStep(MachineContext context) {
-        WordleSkin skin = (WordleSkin) context.get("WordleSkin");
-        Tweet tweetInfo = skin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        Tweet tweetInfo = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
         String text = tweetInfo.getTextWithout(UrlTweetEntry.class)
                 .getTextWithout(UserMentionTweetEntry.class)
                 .get();
@@ -68,12 +68,12 @@ public class AddTweetToCloudStep extends AbstractStep {
 //                .filter(StopList::notIn) //not in stoplist
                 .map(l -> new Word(l, 0.1)) //convert to Word
                 .collect(Collectors.toSet());                   //collect
-        List<Word> words = new ArrayList<>(skin.getSkinnable().wordsProperty().get());
+        List<Word> words = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
         tweetWords.removeAll(words);
         
         log.info("Adding words to cloud dataset for rendering: " + tweetWords); 
 
-        skin.getSkinnable().getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
+        wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         
         context.proceed();
     }

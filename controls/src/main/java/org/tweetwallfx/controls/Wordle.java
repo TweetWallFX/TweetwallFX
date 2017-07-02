@@ -49,14 +49,6 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
  */
 public class Wordle extends Control {
 
-    public enum LayoutMode {
-
-        WORDLE, TWEET
-    }
-
-    ObjectProperty<List<Word>> wordsProperty = new SimpleObjectProperty<>(new ArrayList<>());
-
-    ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
     private SimpleStyleableStringProperty logo;
     private SimpleStyleableStringProperty secondLogo;
     private SimpleStyleableStringProperty backgroundGraphic;
@@ -84,22 +76,6 @@ public class Wordle extends Control {
         return (T) dataProviderList.stream().filter(dp -> dp.getClass() == klazz).findFirst().orElse(null);
     }
     
-    public void setWords(List<Word> words) {
-        wordsProperty.set(words);
-    }
-
-    public ObjectProperty<List<Word>> wordsProperty() {
-        return wordsProperty;
-    }
-
-    public void setLayoutMode(LayoutMode layoutMode) {
-        layoutModeProperty.set(layoutMode);
-    }
-
-    public ObjectProperty<LayoutMode> layoutModeProperty() {
-        return layoutModeProperty;
-    }
-
     @Override
     protected Skin<?> createDefaultSkin() {
         return new WordleSkin(this);
