@@ -49,12 +49,6 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
  */
 public class Wordle extends Control {
 
-    public enum LayoutMode {
-
-        WORDLE, TWEET
-    }
-
-    ObjectProperty<LayoutMode> layoutModeProperty = new SimpleObjectProperty<>(LayoutMode.WORDLE);
     private SimpleStyleableStringProperty logo;
     private SimpleStyleableStringProperty secondLogo;
     private SimpleStyleableStringProperty backgroundGraphic;
