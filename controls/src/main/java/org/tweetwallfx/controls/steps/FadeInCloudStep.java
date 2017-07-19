@@ -27,25 +27,21 @@ package org.tweetwallfx.controls.steps;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.apache.log4j.Logger;
-import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.transition.FontSizeTransition;
-import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
  *
@@ -62,12 +58,12 @@ public class FadeInCloudStep extends AbstractStep {
     public void doStep(MachineContext context) {
 //        context.getWordle().setLayoutMode(Wordle.LayoutMode.TWEET);
         Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
-        startupLogger.trace("tweetToCloud()");
+        startupLogger.trace("fadeInCloudStep");
         
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
         
-        List<Word> sortedWords = new ArrayList<>(wordleSkin.getSkinnable().wordsProperty().getValue());
+        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
 
         if (sortedWords.isEmpty()) {
             return;

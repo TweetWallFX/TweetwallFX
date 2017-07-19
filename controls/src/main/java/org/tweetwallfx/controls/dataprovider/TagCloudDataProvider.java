@@ -23,8 +23,22 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.tweet.StopList;
+import org.tweetwallfx.tweet.TweetSetData;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 /**
  *
@@ -32,7 +46,20 @@ import org.tweetwallfx.controls.Word;
  */
 public class TagCloudDataProvider implements DataProvider{
 
+    private final static int NUM_MAX_WORDS = 40;
+    
     private List<Word> additionalTweetWords = null;
+    private Map<String, Long> tree = new TreeMap<>();
+
+    
+    public TagCloudDataProvider(TweetStream tweetStream) {
+        tweetStream.onTweet(tweet -> processTweet(tweet));
+    }
+
+    public void processTweet(Tweet tweet) {
+        updateTree(tweet);
+    }
+
     
     public void setAdditionalTweetWords(List<Word> newWordList) {
         this.additionalTweetWords = newWordList;
@@ -41,6 +68,29 @@ public class TagCloudDataProvider implements DataProvider{
     public List<Word> getAdditionalTweetWords() {
         return this.additionalTweetWords;
     }
+    
+    public List<Word> getWords() {
+        return tree.entrySet().stream()
+                    .sorted(TweetSetData.COMPARATOR.reversed())
+                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());        
+    }
+
+    private void updateTree(final Tweet tweet) {
+        StopList.WORD_SPLIT.splitAsStream(tweet.getTextWithout(UrlTweetEntry.class)
+                .getTextWithout(MediaTweetEntry.class)
+                .getTextWithout(UserMentionTweetEntry.class)
+                .get()
+                .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
+                .replaceAll("['\"()]", " "))
+                .filter(l -> l.length() > 2)
+                .map(String::toLowerCase)
+                .map(StopList::removeEmojis)
+                .filter(StopList::notIn)                
+                .forEach(w -> 
+                    tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L)
+                );
+    }
+    
     
     @Override
     public String getName() {

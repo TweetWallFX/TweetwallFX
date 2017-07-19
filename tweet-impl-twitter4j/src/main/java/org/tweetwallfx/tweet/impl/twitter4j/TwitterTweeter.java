@@ -150,9 +150,11 @@ public class TwitterTweeter extends Tweeter {
                 try {
                     startupLogger.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
-                    LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit() 
-                            + " resetting in " + queryResult.getRateLimitStatus().getSecondsUntilReset() + "s");
-                    statuses = queryResult.getTweets().iterator();
+                    if (null != queryResult) {
+                        LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit() 
+                                + " resetting in " + queryResult.getRateLimitStatus().getSecondsUntilReset() + "s");
+                        statuses = queryResult.getTweets().iterator();
+                    }
                 } catch (TwitterException ex) {
                     startupLogger.trace("Querying next page failed: " + query, ex);
                     tweeter.setLatestException(ex);

@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.twod;
 
+import java.util.List;
 import org.tweetwallfx.tweet.TweetSetData;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -43,6 +44,8 @@ import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.tweet.ThreadingHelper;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetQuery;
 
 /**
  * TweetWallFX - Devoxx 2014,15,16 {@literal @}johanvos {@literal @}SvenNB
@@ -69,6 +72,7 @@ public class TagTweets {
     private final HBox hBottom = new HBox();
     private final HBox hWordle = new HBox();
     private ImageMosaicDataProvider imageMosaicDataProvider;
+    private TagCloudDataProvider tagCloudDataProvider;
 
     public TagTweets(final TweetSetData tweetSetData, final BorderPane root) {
         this.tweetSetData = tweetSetData;
@@ -87,14 +91,21 @@ public class TagTweets {
         startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
 
         imageMosaicDataProvider = new ImageMosaicDataProvider(tweetSetData.getTweetStream());
+        tagCloudDataProvider = new TagCloudDataProvider(tweetSetData.getTweetStream());
         
-        tweetSetData.buildTree(100, tweet -> imageMosaicDataProvider.processTweet(tweet));
+        List<Tweet> tweets = tweetSetData.getTweeter().searchPaged(new TweetQuery().query(tweetSetData.getSearchText()).count(100), 20)
+                .collect(Collectors.toList());
+        
+        tweets.stream().forEach(tweet -> {
+            imageMosaicDataProvider.processTweet(tweet);
+            tagCloudDataProvider.processTweet(tweet);
+        });        
+        
         startupLogger.trace("** create wordle");
         createWordle();
         startupLogger.trace("** create wordle done");
 
         startupLogger.trace("** 2. Starting new Tweets search for " + tweetSetData.getSearchText());
-        showTweetsExecutor.execute(new ShowTweetsTask());
     }
 
     public void stop() {
@@ -106,29 +117,6 @@ public class TagTweets {
         }
     }
 
-    private class ShowTweetsTask extends Task<Void> {
-
-        private final ExecutorService tweetsCreationExecutor = ThreadingHelper.createSingleThreadExecutor("CreateTweets");
-        private final Task<Void> tweetsCreationTask;
-
-        ShowTweetsTask() {
-            tweetsCreationTask = tweetSetData.getCreationTask();
-
-            setOnCancelled(e -> {
-                tweetsCreationTask.cancel();
-            });
-        }
-
-        @Override
-        protected Void call() throws Exception {
-            tweetsCreationExecutor.execute(tweetsCreationTask);
-
-            tweetsCreationExecutor.shutdown();
-            
-            return null;
-        }
-    }
-
     private void createWordle() {
         if (null == wordle) {
             wordle = new Wordle();
@@ -136,15 +124,9 @@ public class TagTweets {
             wordle.prefWidthProperty().bind(hWordle.widthProperty());
             wordle.prefHeightProperty().bind(hWordle.heightProperty());
             wordle.addDataProvider(new TweetDataProvider(tweetSetData.getTweeter(), tweetSetData.getTweetStream(), tweetSetData.getSearchText()));
-            wordle.addDataProvider(new TagCloudDataProvider());
+            wordle.addDataProvider(tagCloudDataProvider);
             wordle.addDataProvider(imageMosaicDataProvider);
         }
-        Platform.runLater(() -> {
-            wordle.setWords(tweetSetData.getTree().entrySet().stream()
-                    .sorted(TweetSetData.COMPARATOR.reversed())
-                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList()));
-//            wordle.setTweet(tweetSetData.getNextOrRandomTweet(0, 3));
-        });
     }
 
 }
