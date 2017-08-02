@@ -31,7 +31,7 @@ subprojects {
         manifest.attributes provider: 'gradle'
     }
 
-    compileJava {
+    tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:all"
         options.compilerArgs << "-Werror"
     } 
@@ -45,6 +45,11 @@ subprojects {
             xml.enabled = false
             html.enabled = true
         }
+    }
+    
+    tasks.withType(JavaExec) {
+        jvmArgs "-XX:+IgnoreUnrecognizedVMOptions"
+        jvmArgs "--add-modules", "java.xml.bind"
     }
 }
 
