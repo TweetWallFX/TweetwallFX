@@ -41,8 +41,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.stepengine.StepIterator;
 import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
@@ -60,7 +60,7 @@ import org.tweetwallfx.controls.steps.UpdateCloudStep;
  * @author sven
  */
 public class WordleSkin extends SkinBase<Wordle> {
-        
+    private static final Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
     private static final Logger log = LogManager.getLogger(WordleSkin.class);
     
     public final Map<Word, Text> word2TextMap = new HashMap<>();
@@ -284,6 +284,7 @@ public class WordleSkin extends SkinBase<Wordle> {
         });
     
     public void prepareStepMachine() {
+        startupLogger.info("Prepare StepMachine");
         StepIterator steps = new StepIterator(Arrays.asList(//UpdateCloudStep(),
                 new FadeInCloudStep(),
                 new NextTweetStep(),
@@ -305,6 +306,7 @@ public class WordleSkin extends SkinBase<Wordle> {
                 s.go();
             }
         });
+        startupLogger.info("Prepare StepMachine done");        
     }
 
 }

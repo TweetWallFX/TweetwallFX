@@ -26,7 +26,6 @@ package org.tweetwallfx.controls.steps;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
@@ -78,8 +77,6 @@ public class CloudToTweetStep extends AbstractStep {
 
     @Override
     public void doStep(MachineContext context) {
-        Logger.getLogger("org.tweetwallfx.startup").trace("cloudToTweet()");
-
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
         Tweet displayTweet = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();

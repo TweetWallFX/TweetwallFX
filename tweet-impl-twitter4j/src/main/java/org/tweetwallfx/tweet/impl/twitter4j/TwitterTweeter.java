@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -44,7 +45,7 @@ import twitter4j.TwitterFactory;
 
 public class TwitterTweeter extends Tweeter {
     
-    private static final Logger LOGGER = Logger.getLogger(TwitterTweeter.class);
+    private static final Logger LOGGER = LogManager.getLogger(TwitterTweeter.class);
     
     private List<TwitterTweetStream> streamCache = new ArrayList<>();
     
@@ -131,7 +132,7 @@ public class TwitterTweeter extends Tweeter {
         private final TwitterTweeter tweeter;
         private QueryResult queryResult;
         private Iterator<Status> statuses;
-        private static final Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+        private static final Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
         private int numberOfPages;
 
         public PagedIterator(final TwitterTweeter tweeter, final Query query, int numberOfPages) {

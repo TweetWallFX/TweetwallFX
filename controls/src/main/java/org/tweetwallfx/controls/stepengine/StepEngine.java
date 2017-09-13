@@ -29,8 +29,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import javafx.application.Platform;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -96,12 +96,12 @@ public final class StepEngine {
 
             Step step = stateIterator.next();
             while (step.shouldSkip(context)) {
-                LOG.info("Skip step: " + step.getName());
+                LOG.info("Skip step: {}", step.getClass().getSimpleName());
                 step = stateIterator.next();
             }
             final Step stepToExecute = step;
             long duration = step.preferredStepDuration(context);
-            LOG.info("call " + stepToExecute.getName() + "doStep()");
+            LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
             lock.lock();
             try {
                 if (stepToExecute.requiresPlatformThread()) {
@@ -114,13 +114,13 @@ public final class StepEngine {
                 long delay = duration - doStateDuration;
                 if (delay > 0) {
                     try {
-                        LOG.info("sleep(" + delay + ")");
+                        LOG.info("sleep({}ms) for step {}", delay, step.getClass().getSimpleName());
                         Thread.sleep(delay);
                     } catch (InterruptedException ex) {
-                        LOG.error("Sleeping for " + delay + " interrupted!", ex);
+                        LOG.error("Sleeping for {} interrupted!", delay, ex);
                     }
                 }
-                LOG.info("wait for the step to finish!");
+                LOG.info("wait for step {} to finish!", step.getClass().getSimpleName());
                 condition.await();
             } catch (InterruptedException ex) {
                 LOG.error("Waiting interrupted!", ex);
