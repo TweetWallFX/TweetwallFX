@@ -37,8 +37,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
@@ -63,9 +61,6 @@ public class TweetToCloudStep extends AbstractStep {
     @Override
     public void doStep(MachineContext context) {
 //        context.getWordle().setLayoutMode(Wordle.LayoutMode.TWEET);
-        Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
-        startupLogger.trace("tweetToCloud()");
-        
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
         

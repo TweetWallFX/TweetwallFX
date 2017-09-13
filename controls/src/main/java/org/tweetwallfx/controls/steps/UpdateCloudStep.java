@@ -60,8 +60,6 @@ public class UpdateCloudStep extends AbstractStep {
     @Override
     public void doStep(MachineContext context) {
 //        pane.setStyle("-fx-border-width: 1px; -fx-border-color: red;");
-        Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
-        startupLogger.trace("UpdateCloudStep.doStep()");
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
 
