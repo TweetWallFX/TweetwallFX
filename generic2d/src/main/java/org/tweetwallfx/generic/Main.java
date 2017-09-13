@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.generic;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -32,8 +34,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.StringPropertyAppender;
@@ -47,14 +52,14 @@ import org.tweetwallfx.tweet.TweetSetData;
 public class Main extends Application {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
-    Logger startupLogger = Logger.getLogger(STARTUP);
+    Logger startupLogger = LogManager.getLogger(STARTUP);
     
     private static final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
     private static final String title = Configuration.getInstance().getConfig("tweetwall.title");
     private static final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
     private Tweeter tweeter;
     private TagTweets tweetsTask;
-
+  
     @Override
     public void start(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
@@ -65,13 +70,20 @@ public class Main extends Application {
         }        
         
         StopList.add(query);
-        startupLogger.addAppender(new StringPropertyAppender());
-        startupLogger.setLevel(Level.TRACE);
+        
+        StringPropertyAppender spa = new StringPropertyAppender();
+        
+        LoggerContext context = LoggerContext.getContext(false);
+        org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
+        spa.start();
+        LoggerConfig slc = config.getLoggerConfig(startupLogger.getName());
+        slc.setLevel(Level.TRACE);
+        slc.addAppender(spa, Level.TRACE, null);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
         statusLineText.getStyleClass().addAll("statusline");
-        statusLineText.textProperty().bind(((StringPropertyAppender)startupLogger.getAppender(StringPropertyAppender.class.getName())).stringProperty());
+        statusLineText.textProperty().bind(spa.stringProperty());
         statusLineHost.getChildren().add(statusLineText);
         
         final Service<Void> service = new Service<Void>() {

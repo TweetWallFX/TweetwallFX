@@ -26,77 +26,27 @@ package org.tweetwallfx.tweet;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.apache.log4j.Appender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.spi.ErrorHandler;
-import org.apache.log4j.spi.Filter;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  *
  * @author Jörg
  */
-public class StringPropertyAppender implements Appender {
+public class StringPropertyAppender extends AbstractAppender {
 
     private final StringProperty s = new SimpleStringProperty();
 
+    public StringPropertyAppender() {
+        super(StringPropertyAppender.class.getName(), null, null);
+    }
+            
     public StringProperty stringProperty() {
         return s;
     }
 
     @Override
-    public void addFilter(Filter newFilter) {
-    }
-
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
-
-    @Override
-    public void clearFilters() {
-    }
-
-    @Override
-    public void close() {
-    }
-
-    @Override
-    public void doAppend(LoggingEvent event) {
-        Platform.runLater(() -> s.setValue(String.valueOf(event.getMessage())));
-//        s.setValue(String.valueOf(event.getMessage()));
-//        System.out.println(event.getMessage());
-    }
-
-    @Override
-    public String getName() {
-        return StringPropertyAppender.class.getName();
-    }
-
-    @Override
-    public void setErrorHandler(ErrorHandler errorHandler) {
-    }
-
-    @Override
-    public ErrorHandler getErrorHandler() {
-        return null;
-    }
-
-    @Override
-    public void setLayout(Layout layout) {
-    }
-
-    @Override
-    public Layout getLayout() {
-        return null;
-    }
-
-    @Override
-    public void setName(String name) {
-    }
-
-    @Override
-    public boolean requiresLayout() {
-        return false;
+    public void append(LogEvent event) {
+        Platform.runLater(() -> s.setValue(String.valueOf(event.getMessage().getFormattedMessage())));
     }
 }

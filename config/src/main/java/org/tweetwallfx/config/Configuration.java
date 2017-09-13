@@ -14,23 +14,23 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public final class Configuration {
 
-    private static final Logger LOGGER = Logger.getLogger(Configuration.class);
+    private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
     private static final Configuration INSTANCE = new Configuration();
     private Properties props = new Properties();
 
     private Configuration() {
-        final File log4jFile = new File("log4j.xml");
-        
+        File log4jFile = new File("log4j2.xml");
         if (log4jFile.isFile()) {
-            DOMConfigurator.configure("log4j.xml");
+            LoggerContext context = (LoggerContext) LogManager.getContext(false);
+            context.setConfigLocation(log4jFile.toURI());
         } else {
-            LOGGER.info("log4j configuration file ('" + log4jFile.getAbsolutePath() + "') found.");
+            LOGGER.info("log4j configuration file ('" + log4jFile.getAbsolutePath() + "') not found.");
         }
 
         LOGGER.info("Searching for configuration files in path '/config.properties'");
