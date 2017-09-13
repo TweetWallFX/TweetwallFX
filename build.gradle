@@ -4,7 +4,7 @@ buildscript {
     }
     
     dependencies {
-        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.9.0"
+        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.17.0"
         gradleApi()
     }
 }
@@ -31,7 +31,7 @@ subprojects {
         manifest.attributes provider: 'gradle'
     }
 
-    compileJava {
+    tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:all"
         options.compilerArgs << "-Werror"
     } 
@@ -45,6 +45,11 @@ subprojects {
             xml.enabled = false
             html.enabled = true
         }
+    }
+    
+    tasks.withType(JavaExec) {
+        jvmArgs "-XX:+IgnoreUnrecognizedVMOptions"
+        jvmArgs "--add-modules", "java.xml.bind"
     }
 }
 
