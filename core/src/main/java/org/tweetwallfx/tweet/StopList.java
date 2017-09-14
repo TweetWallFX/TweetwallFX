@@ -32,28 +32,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vdurmont.emoji.EmojiParser;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * StopList consists of a list containing twitter related stop words,
+ * a list containing custom stop words and a stop list which is language
+ * dependant. The language dependent list is loaded from resource file.
+ * 
  * @author MICHELB
  */
 public final class StopList {
-
+    private static final Logger LOG = LogManager.getLogger(StopList.class);
     //TODO: Init from file.
     //TODO: Add I18N support
     private StopList() {
     }
 
-    private static final Set<String> stopList = new HashSet<>(
+    private static final Set<String> twitterList = new HashSet<>(
             Arrays.asList(
                     //twitter related
-                    "rt", "http", "https",
-                    //other
-                    "has", "have", "do", "for", "are", "the", "and", "about", "use", "using", "between", "like", "them", "away", "throw",
-                    "with", "here", "active", "see", "next", "will", "any", "off", "there", "while", "just", "all", "from", "got", "think", "nice",
-                    "ask", "can", "you", "week", "some", "not", "didn", "isn", "per", "how", "show", "out", "but", "last", "your", "one", "should",
-                    "now", "also", "done", "will", "become", "did", "what", "when", "let", "that", "this", "always", "where", "our", "his", "her", "of",
-                    "attached", "don"));
+                    "rt", "http", "https"));
+    private static final Set<String> customList = new HashSet<>();
+    private static final Set<String> stopList = readStopListResource("stoplist.list");
 
     private static final Pattern trimPattern = Pattern.compile("(\\S+?)[.,!?:;´`']+"); //cut of bad word tails.
     
@@ -62,21 +68,21 @@ public final class StopList {
     public static final Pattern WORD_SPLIT = Pattern.compile("\\s+");    
     
     /**
-     * Add a word to stop list.
+     * Add a word lowercase to stop list.
      *
      * @param stopword to add.
      */
     public static void add(String stopword) {
-        stopList.add(stopword);
+        customList.add(stopword.toLowerCase());
     }
 
     /**
-     * Add words to stop list.
+     * Add words lowercase to stop list.
      *
      * @param stopwords to add.
      */
     public static void add(String... stopwords) {
-        Collections.addAll(stopList, stopwords);
+        Arrays.stream(stopwords).map(String::toLowerCase).forEach(customList::add);
     }
 
     /**
@@ -86,7 +92,10 @@ public final class StopList {
      * @return true if contained.
      */
     public static boolean notIn(String word) {
-        return !stopList.contains(word.toLowerCase());
+        String lowerWord = word.toLowerCase();
+        return !twitterList.contains(lowerWord) && 
+               !stopList.contains(lowerWord) && 
+               !customList.contains(lowerWord);
     }
 
     public static String trimTail(final String s) {
@@ -102,4 +111,12 @@ public final class StopList {
         return EmojiParser.removeAllEmojis(s);
     }
     
+    private static Set<String> readStopListResource(String resourceName) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
+            return reader.lines().map(String::trim).filter((s) -> !s.isEmpty()).collect(Collectors.toSet());
+        } catch (IOException e) {
+            LOG.error("Unable to load stoplist resource: " + resourceName, e);
+        }
+        return Collections.emptySet();
+    }
 }
