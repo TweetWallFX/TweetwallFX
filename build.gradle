@@ -102,7 +102,7 @@ project(":TweetWallFX-Controls"){
     dependencies {
          compile group: "javax.cache", name: "cache-api", version: "1.0.0"
          compile group: "org.ehcache", name: "ehcache", version: "3.3.0"
-         compile group: "org.slf4j", name: "slf4j-log4j12", version: "1.7.25"
+         runtime group: "org.apache.logging.log4j", name: "log4j-slf4j-impl", version: "2.9.0"
          compile project(':TweetWallFX-Core')
     }
 }
