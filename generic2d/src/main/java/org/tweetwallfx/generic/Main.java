@@ -25,6 +25,8 @@ package org.tweetwallfx.generic;
 
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -68,8 +70,11 @@ public class Main extends Application {
         if (null != stylesheet) {
             scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(stylesheet).toExternalForm());
         }        
-        
-        StopList.add(query);
+        //extract Hashtags from complex query and add to StopList
+        final Matcher m = Pattern.compile("#[\\S]+").matcher(query);
+        while (m.find()) {
+            StopList.add(m.group(0));
+        }
         
         StringPropertyAppender spa = new StringPropertyAppender();
         
