@@ -1,10 +1,19 @@
 buildscript {
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         jcenter()
     }
     
     dependencies {
-        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.17.0"
+        classpath ("cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.17.0") {
+            // Workaround for bad transitive dependencies
+            exclude group:'org.slf4j', module:'slf4j-simple'
+            exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7 
+
+        }
+        classpath "gradle.plugin.com.github.spotbugs:gradlePlugin:1.4"
         gradleApi()
     }
 }
@@ -13,7 +22,7 @@ apply plugin: 'build-dashboard'
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'findbugs'
+    apply plugin: 'com.github.spotbugs'
     apply plugin: 'jacoco'
     apply plugin: 'eclipse'
     
@@ -36,12 +45,17 @@ subprojects {
         options.compilerArgs << "-Werror"
         options.compilerArgs << "-proc:none"
     }
-
-    findbugs {
-        ignoreFailures = false
-    }
     
-    tasks.withType(FindBugs) {
+    spotbugs {
+         ignoreFailures = false
+    }
+
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
+        
+        // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
+        def sourceSetName = (name - 'spotbugs').uncapitalize()
+        dependsOn( sourceSets[sourceSetName].classesTaskName)
+            
         reports {
             xml.enabled = false
             html.enabled = true
