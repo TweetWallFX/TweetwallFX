@@ -23,9 +23,6 @@
  */
 package org.tweetwallfx.tweet;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -33,31 +30,27 @@ import org.tweetwallfx.tweet.api.Tweeter;
 
 public final class TweetSetData {
 
-    public static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
-    private final Tweeter tweeter;
+    private TweetStream tweetStream;
+    private final TweetFilterQuery query;
     private final String searchText;
-    private final TweetStream tweetStream;
 
-    public TweetSetData(final Tweeter tweeter, final String searchText) {
-        this(tweeter, searchText, 5);
-    }
-
-    public TweetSetData(final Tweeter tweeter, final String searchText, final int transferSize) {
-        this.tweeter = Objects.requireNonNull(tweeter, "tweeter must not be null!");
+    public TweetSetData(final String searchText) {
         this.searchText = searchText;
-        TweetFilterQuery query = new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
-        tweetStream = tweeter.createTweetStream(query);
+        this.query = new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
     }
 
     public String getSearchText() {
         return searchText;
     }
 
-    public TweetStream getTweetStream() {
+    public synchronized TweetStream getTweetStream() {
+        if (null == tweetStream) {
+            tweetStream = getTweeter().createTweetStream(query);
+        }
         return tweetStream;
     }
 
     public Tweeter getTweeter() {
-        return tweeter;
+        return Tweeter.getInstance();
     }
 }

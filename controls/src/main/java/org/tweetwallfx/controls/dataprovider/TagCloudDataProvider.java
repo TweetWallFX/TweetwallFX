@@ -23,13 +23,13 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.tweet.StopList;
-import org.tweetwallfx.tweet.TweetSetData;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -39,6 +39,7 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 public class TagCloudDataProvider implements DataProvider{
 
     private final static int NUM_MAX_WORDS = 40;
+    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
     
     private List<Word> additionalTweetWords = null;
     private Map<String, Long> tree = new TreeMap<>();
@@ -63,7 +64,7 @@ public class TagCloudDataProvider implements DataProvider{
     
     public List<Word> getWords() {
         return tree.entrySet().stream()
-                    .sorted(TweetSetData.COMPARATOR.reversed())
+                    .sorted(COMPARATOR.reversed())
                     .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());        
     }
 

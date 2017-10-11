@@ -25,26 +25,17 @@ package org.tweetwallfx.twod;
 
 import java.util.List;
 import org.tweetwallfx.tweet.TweetSetData;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.Wordle;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.tweet.ThreadingHelper;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 
@@ -64,9 +55,6 @@ public class TagTweets {
     private static final String STARTUP = "org.tweetwallfx.startup";
     Logger startupLogger = LogManager.getLogger(STARTUP);
 
-    private final static int MIN_WEIGHT = 4;
-    private final static int NUM_MAX_WORDS = 40;
-    private final ExecutorService showTweetsExecutor = ThreadingHelper.createSingleThreadExecutor("ShowTweets");
     private Wordle wordle;
     private final TweetSetData tweetSetData;
     private final BorderPane root;
@@ -107,15 +95,6 @@ public class TagTweets {
         startupLogger.trace("** create wordle done");
 
         startupLogger.trace("** 2. Starting new Tweets search for " + tweetSetData.getSearchText());
-    }
-
-    public void stop() {
-        tweetSetData.getTweeter().shutdown();
-        showTweetsExecutor.shutdown();
-        try {
-            showTweetsExecutor.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-        }
     }
 
     private void createWordle() {

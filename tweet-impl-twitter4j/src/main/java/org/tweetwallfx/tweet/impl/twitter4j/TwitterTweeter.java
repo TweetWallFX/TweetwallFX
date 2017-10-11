@@ -47,11 +47,10 @@ public class TwitterTweeter extends Tweeter {
     
     private static final Logger LOGGER = LogManager.getLogger(TwitterTweeter.class);
     
-    private List<TwitterTweetStream> streamCache = new ArrayList<>();
+    private final List<TwitterTweetStream> streamCache = new ArrayList<>();
     
     public TwitterTweeter() {
         TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
-        TwitterOAuth.getConfiguration();
     }
 
     @Override
