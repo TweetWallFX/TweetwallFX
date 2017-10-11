@@ -36,6 +36,7 @@ import twitter4j.Status;
 import twitter4j.StatusAdapter;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.conf.Configuration;
 
 final class TwitterTweetStream implements TweetStream {
 
@@ -61,7 +62,9 @@ final class TwitterTweetStream implements TweetStream {
     }
 
     private void activateStream() {
-        twitterStream = new TwitterStreamFactory(TwitterOAuth.getConfiguration()).getInstance();
+        Configuration configuration = TwitterOAuth.getConfiguration();
+        if (null == configuration) return;
+        twitterStream = new TwitterStreamFactory(configuration).getInstance();
 
         twitterStream.addListener(new StatusAdapter() {
 

@@ -42,6 +42,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
 
 public class TwitterTweeter extends Tweeter {
     
@@ -145,7 +146,13 @@ public class TwitterTweeter extends Tweeter {
             if (null == query) {
                 statuses = null;
             } else {
-                final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
+                Configuration configuration = TwitterOAuth.getConfiguration();
+                if (null == configuration) {
+                    queryResult = null;
+                    statuses = null;
+                    return;
+                }
+                final Twitter twitter = new TwitterFactory(configuration).getInstance();
 
                 try {
                     startupLogger.trace("Querying next page: " + query);
