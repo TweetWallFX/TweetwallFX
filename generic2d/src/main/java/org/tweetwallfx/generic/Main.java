@@ -26,8 +26,6 @@ package org.tweetwallfx.generic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Application;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -44,7 +42,6 @@ import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.StringPropertyAppender;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import org.tweetwallfx.tweet.TweetSetData;
 
 /**
  * @author martin
@@ -90,7 +87,7 @@ public class Main extends Application {
         statusLineHost.getChildren().add(statusLineText);       
 
         if (!SEARCH_TEXT.isEmpty()) {
-            tweetsTask = new TagTweets(new TweetSetData(SEARCH_TEXT), borderPane);
+            tweetsTask = new TagTweets(SEARCH_TEXT, borderPane);
             tweetsTask.start();
         }
         

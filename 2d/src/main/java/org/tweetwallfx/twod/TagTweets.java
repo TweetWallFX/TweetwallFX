@@ -24,7 +24,7 @@
 package org.tweetwallfx.twod;
 
 import java.util.List;
-import org.tweetwallfx.tweet.TweetSetData;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,7 +37,10 @@ import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
  * TweetWallFX - Devoxx 2014,15,16 {@literal @}johanvos {@literal @}SvenNB
@@ -56,15 +59,15 @@ public class TagTweets {
     Logger startupLogger = LogManager.getLogger(STARTUP);
 
     private Wordle wordle;
-    private final TweetSetData tweetSetData;
+    private final String searchText;
     private final BorderPane root;
     private final HBox hBottom = new HBox();
     private final HBox hWordle = new HBox();
     private ImageMosaicDataProvider imageMosaicDataProvider;
     private TagCloudDataProvider tagCloudDataProvider;
 
-    public TagTweets(final TweetSetData tweetSetData, final BorderPane root) {
-        this.tweetSetData = tweetSetData;
+    public TagTweets(final String searchText, final BorderPane root) {
+        this.searchText = searchText;
         this.root = root;
     }
 
@@ -77,12 +80,16 @@ public class TagTweets {
 
         root.setCenter(hWordle);
 
-        startupLogger.trace("** 1. Creating Tag Cloud for " + tweetSetData.getSearchText());
+        startupLogger.trace("** 1. Creating Tag Cloud for " + searchText);
 
-        imageMosaicDataProvider = new ImageMosaicDataProvider(tweetSetData.getTweetStream());
-        tagCloudDataProvider = new TagCloudDataProvider(tweetSetData.getTweetStream());
+        TweetFilterQuery query = new TweetFilterQuery().track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
         
-        List<Tweet> tweets = tweetSetData.getTweeter().searchPaged(new TweetQuery().query(tweetSetData.getSearchText()).count(100), 20)
+        TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
+        
+        imageMosaicDataProvider = new ImageMosaicDataProvider(tweetStream);
+        tagCloudDataProvider = new TagCloudDataProvider(tweetStream);
+        
+        List<Tweet> tweets = Tweeter.getInstance().searchPaged(new TweetQuery().query(searchText).count(100), 20)
                 .collect(Collectors.toList());
         
         tweets.stream().forEach(tweet -> {
@@ -91,22 +98,19 @@ public class TagTweets {
         });        
         
         startupLogger.trace("** create wordle");
-        createWordle();
+
+        wordle = new Wordle();
+        hWordle.getChildren().setAll(wordle);
+        wordle.prefWidthProperty().bind(hWordle.widthProperty());
+        wordle.prefHeightProperty().bind(hWordle.heightProperty());
+        wordle.addDataProvider(new TweetDataProvider(Tweeter.getInstance(), tweetStream, searchText));
+        wordle.addDataProvider(tagCloudDataProvider);
+        wordle.addDataProvider(imageMosaicDataProvider);
+
+
         startupLogger.trace("** create wordle done");
 
-        startupLogger.trace("** 2. Starting new Tweets search for " + tweetSetData.getSearchText());
-    }
-
-    private void createWordle() {
-        if (null == wordle) {
-            wordle = new Wordle();
-            hWordle.getChildren().setAll(wordle);
-            wordle.prefWidthProperty().bind(hWordle.widthProperty());
-            wordle.prefHeightProperty().bind(hWordle.heightProperty());
-            wordle.addDataProvider(new TweetDataProvider(tweetSetData.getTweeter(), tweetSetData.getTweetStream(), tweetSetData.getSearchText()));
-            wordle.addDataProvider(tagCloudDataProvider);
-            wordle.addDataProvider(imageMosaicDataProvider);
-        }
+        startupLogger.trace("** 2. Starting new Tweets search for " + searchText);
     }
 
 }

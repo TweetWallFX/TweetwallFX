@@ -28,7 +28,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.twod.TagTweets;
-import org.tweetwallfx.tweet.TweetSetData;
 import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
@@ -51,7 +50,7 @@ public final class EmbeddedTweetwall extends Parent {
         final BorderPane borderPane = new BorderPane();
 
         if (!query.isEmpty()) {
-            tweetsTask = new TagTweets(new TweetSetData(query), borderPane);
+            tweetsTask = new TagTweets(query, borderPane);
             tweetsTask.start();
         }
 
