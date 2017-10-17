@@ -41,9 +41,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngineConfiguration;
 import org.tweetwallfx.controls.stepengine.StepIterator;
 import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
 import org.tweetwallfx.controls.steps.CloudFadeOutStep;
@@ -285,17 +289,10 @@ public class WordleSkin extends SkinBase<Wordle> {
     
     public void prepareStepMachine() {
         startupLogger.info("Prepare StepMachine");
-        StepIterator steps = new StepIterator(Arrays.asList(//UpdateCloudStep(),
-                new FadeInCloudStep(),
-                new NextTweetStep(),
-                new AddTweetToCloudStep(),
-                new CloudToCloudStep(),
-                new CloudToTweetStep(),
-                new PauseStep(),
-                new TweetToCloudStep(),
-                new CloudFadeOutStep(),
-                new ImageMosaicStep()
-        ));
+        StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(this.getClass().getResourceAsStream("/steps.json"), StepEngineConfiguration.class);
+        StepIterator.Builder builder = new StepIterator.Builder();
+        stepEngineConfig.steps.forEach(className -> builder.addStep(className));
+        StepIterator steps = builder.build();
         
         StepEngine s = new StepEngine(steps);
         s.getContext().put("WordleSkin", this);

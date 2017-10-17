@@ -24,8 +24,12 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -36,9 +40,35 @@ public class StepIterator {
     private int stateIndex = 0;
     private final List<Step> states = new ArrayList<>();
 
-    public StepIterator(List<Step> states) {
-        this.states.addAll(states);
+    public static class Builder {
+
+        private final List<Step> states = new ArrayList<>();
+        
+        public Builder addStep(String classname) {
+            try {
+                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).newInstance();
+                if (newInstance instanceof Step) {
+                    states.add((Step)newInstance);
+                }
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+                LogManager.getLogger(StepIterator.class).error("Failurer instatiating step for " + classname,ex);
+            } 
+            return this;
+        }
+        
+        public StepIterator build() {
+            return new StepIterator(states);
+        }
+        
     }
+    
+    public static StepIterator of(Step... steps) {
+        return new StepIterator(Arrays.asList(steps));
+    }
+    
+    private StepIterator(List<Step> states) {
+        this.states.addAll(states);
+    }    
     
     void applyWith(Consumer<Step> consumer) {
         states.forEach(consumer);
