@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.controls;
 
+import java.io.IOException;
+import java.io.InputStream;
 import org.tweetwallfx.controls.util.ImageCache;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
@@ -289,9 +292,13 @@ public class WordleSkin extends SkinBase<Wordle> {
     
     public void prepareStepMachine() {
         startupLogger.info("Prepare StepMachine");
-        StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(this.getClass().getResourceAsStream("/steps.json"), StepEngineConfiguration.class);
         StepIterator.Builder builder = new StepIterator.Builder();
-        stepEngineConfig.steps.forEach(className -> builder.addStep(className));
+        try(InputStream s =  this.getClass().getResourceAsStream("/steps.json")){
+            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
+            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
+        } catch (IOException ex) {
+            LogManager.getLogger(WordleSkin.class.getName()).error("IO Problem loading steps description file", ex);
+        }
         StepIterator steps = builder.build();
         
         StepEngine s = new StepEngine(steps);
