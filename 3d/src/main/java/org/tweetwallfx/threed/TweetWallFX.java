@@ -52,7 +52,6 @@ import org.fxyz.extras.Skybox;
 import org.fxyz.tests.SkyBoxTest;
 import org.tweetwallfx.threed.billboard.DevoxxBillboardLogo;
 import org.tweetwallfx.tweet.api.Tweeter;
-import org.tweetwallfx.twitter.CLogOut;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
