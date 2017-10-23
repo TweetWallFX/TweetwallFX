@@ -23,45 +23,25 @@
  */
 package org.tweetwallfx.controls;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.tweetwallfx.controls.util.ImageCache;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine;
-import org.tweetwallfx.controls.stepengine.StepEngineConfiguration;
 import org.tweetwallfx.controls.stepengine.StepIterator;
-import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
-import org.tweetwallfx.controls.steps.CloudFadeOutStep;
-import org.tweetwallfx.controls.steps.CloudToCloudStep;
-import org.tweetwallfx.controls.steps.CloudToTweetStep;
-import org.tweetwallfx.controls.steps.FadeInCloudStep;
-import org.tweetwallfx.controls.steps.ImageMosaicStep;
-import org.tweetwallfx.controls.steps.NextTweetStep;
-import org.tweetwallfx.controls.steps.PauseStep;
-import org.tweetwallfx.controls.steps.TweetToCloudStep;
-import org.tweetwallfx.controls.steps.UpdateCloudStep;
 
 /**
  * @author sven
@@ -292,14 +272,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     
     public void prepareStepMachine() {
         startupLogger.info("Prepare StepMachine");
-        StepIterator.Builder builder = new StepIterator.Builder();
-        try(InputStream s =  this.getClass().getResourceAsStream("/steps.json")){
-            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
-            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
-        } catch (IOException ex) {
-            LogManager.getLogger(WordleSkin.class.getName()).error("IO Problem loading steps description file", ex);
-        }
-        StepIterator steps = builder.build();
+        StepIterator steps = StepIterator.ofDefaultConfiguration();
         
         StepEngine s = new StepEngine(steps);
         s.getContext().put("WordleSkin", this);
