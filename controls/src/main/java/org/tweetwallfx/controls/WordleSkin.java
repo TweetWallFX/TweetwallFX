@@ -27,16 +27,13 @@ import org.tweetwallfx.controls.util.ImageCache;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javafx.scene.Node;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -45,16 +42,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.controls.stepengine.StepIterator;
-import org.tweetwallfx.controls.steps.AddTweetToCloudStep;
-import org.tweetwallfx.controls.steps.CloudFadeOutStep;
-import org.tweetwallfx.controls.steps.CloudToCloudStep;
-import org.tweetwallfx.controls.steps.CloudToTweetStep;
-import org.tweetwallfx.controls.steps.FadeInCloudStep;
-import org.tweetwallfx.controls.steps.ImageMosaicStep;
-import org.tweetwallfx.controls.steps.NextTweetStep;
-import org.tweetwallfx.controls.steps.PauseStep;
-import org.tweetwallfx.controls.steps.TweetToCloudStep;
-import org.tweetwallfx.controls.steps.UpdateCloudStep;
 
 /**
  * @author sven
@@ -285,17 +272,7 @@ public class WordleSkin extends SkinBase<Wordle> {
     
     public void prepareStepMachine() {
         startupLogger.info("Prepare StepMachine");
-        StepIterator steps = new StepIterator(Arrays.asList(//UpdateCloudStep(),
-                new FadeInCloudStep(),
-                new NextTweetStep(),
-                new AddTweetToCloudStep(),
-                new CloudToCloudStep(),
-                new CloudToTweetStep(),
-                new PauseStep(),
-                new TweetToCloudStep(),
-                new CloudFadeOutStep(),
-                new ImageMosaicStep()
-        ));
+        StepIterator steps = StepIterator.ofDefaultConfiguration();
         
         StepEngine s = new StepEngine(steps);
         s.getContext().put("WordleSkin", this);

@@ -23,22 +23,77 @@
  */
 package org.tweetwallfx.controls.stepengine;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.json.bind.JsonbBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.tweetwallfx.controls.WordleSkin;
 
 /**
- *
+ * 
  * @author Jörg Michelberger
  */
-public class StepIterator {
+public class StepIterator implements Iterator<Step>{
     private Step current = null;
     private int stateIndex = 0;
     private final List<Step> states = new ArrayList<>();
 
-    public StepIterator(List<Step> states) {
-        this.states.addAll(states);
+    @Override
+    public boolean hasNext() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    private static class Builder {
+
+        private final List<Step> states = new ArrayList<>();
+        
+        public Builder addStep(String classname) {
+            try {
+                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).newInstance();
+                if (newInstance instanceof Step) {
+                    states.add((Step)newInstance);
+                } else {
+                    LogManager.getLogger(StepIterator.class).error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
+                }
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+                LogManager.getLogger(StepIterator.class).error("Failure instatiating step for " + classname,ex);
+            } 
+            return this;
+        }
+        
+        public StepIterator build() {
+            return new StepIterator(states);
+        }
+        
+    }
+    
+    public static StepIterator ofDefaultConfiguration() {
+        StepIterator.Builder builder = new StepIterator.Builder();
+        try(InputStream s =  Thread.currentThread().getContextClassLoader().getResourceAsStream("/steps.json")){
+            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
+            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
+        } catch (IOException ex) {
+            LogManager.getLogger(WordleSkin.class.getName()).error("IO Problem loading steps description file", ex);
+        }
+        return builder.build();
+    }
+    
+    public static StepIterator of(Step... steps) {
+        return new StepIterator(Arrays.asList(steps));
+    }
+
+    public static StepIterator of(List<Step> steps) {
+        return new StepIterator(steps);
+    }
+    
+    private StepIterator(List<Step> states) {
+        this.states.addAll(states);
+    }    
     
     void applyWith(Consumer<Step> consumer) {
         states.forEach(consumer);
@@ -56,6 +111,7 @@ public class StepIterator {
         return states.get(getIndex);
     }
     
+    @Override
     public Step next() {
         if (stateIndex == states.size()) {
             //loop
