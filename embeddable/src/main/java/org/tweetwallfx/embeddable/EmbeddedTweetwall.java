@@ -26,19 +26,15 @@ package org.tweetwallfx.embeddable;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import org.tweetwallfx.tweet.StopList;
-import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import org.tweetwallfx.tweet.TweetSetData;
+import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
  * @author martin
  */
 public final class EmbeddedTweetwall extends Parent {
 
-    private Tweeter tweeter = null;
     private TagTweets tweetsTask = null;
     private final ReadOnlyStringWrapper stylesheetProperty = new ReadOnlyStringWrapper(null);
 
@@ -52,42 +48,17 @@ public final class EmbeddedTweetwall extends Parent {
     public void start(final String query) {
         StopList.add(query);
         final BorderPane borderPane = new BorderPane();
-        final Service<Void> service = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                Task<Void> task = new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        tweeter = Tweeter.getInstance();
-                        return null;
-                    }
-                };
-                return task;
-            }
-        };
 
-        service.setOnSucceeded(e -> {
-            if (!query.isEmpty() && tweeter != null) {
-                tweetsTask = new TagTweets(new TweetSetData(tweeter, query), borderPane);
-                tweetsTask.start();
-            }
-        });
-        service.setOnFailed(e -> {
-            System.err.println("FAILED!");
-        });
+        if (!query.isEmpty()) {
+            tweetsTask = new TagTweets(query, borderPane);
+            tweetsTask.start();
+        }
 
         getChildren().setAll(borderPane);
-        service.start();
     }
 
     public void stop() {
         System.out.println("closing...");
-
-        if (tweetsTask != null) {
-            tweetsTask.stop();
-            tweetsTask = null;
-        }
-
-        tweeter = null;
+        Tweeter.getInstance().shutdown();
     }
 }

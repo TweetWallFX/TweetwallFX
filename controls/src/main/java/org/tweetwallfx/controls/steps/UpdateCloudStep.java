@@ -34,8 +34,8 @@ import javafx.animation.Transition;
 import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
@@ -63,7 +63,7 @@ public class UpdateCloudStep extends AbstractStep {
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
 
-        List<Word> sortedWords = new ArrayList<>(wordleSkin.getSkinnable().wordsProperty().getValue());
+        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
         if (sortedWords.isEmpty()) {
             return;
         }

@@ -23,23 +23,25 @@
  */
 package org.tweetwallfx.generic;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.application.Application;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.StringPropertyAppender;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-import org.tweetwallfx.tweet.TweetSetData;
 
 /**
  * @author martin
@@ -47,63 +49,47 @@ import org.tweetwallfx.tweet.TweetSetData;
 public class Main extends Application {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
-    Logger startupLogger = Logger.getLogger(STARTUP);
+    Logger startupLogger = LogManager.getLogger(STARTUP);
     
-    private static final String query = Configuration.getInstance().getConfig("tweetwall.twitter.query");
-    private static final String title = Configuration.getInstance().getConfig("tweetwall.title");
-    private static final String stylesheet = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
-    private Tweeter tweeter;
+    private static final String SEARCH_TEXT = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+    private static final String TITLE = Configuration.getInstance().getConfig("tweetwall.title");
+    private static final String STYLESHEET = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
     private TagTweets tweetsTask;
-
+  
     @Override
     public void start(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 800, 600);
+        borderPane.getStyleClass().add("splash");
         
-        if (null != stylesheet) {
-            scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(stylesheet).toExternalForm());
+        if (null != STYLESHEET) {
+            scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(STYLESHEET).toExternalForm());
         }        
+        //extract Hashtags from complex query and add to StopList
+        final Matcher m = Pattern.compile("#[\\S]+").matcher(SEARCH_TEXT);
+        while (m.find()) {
+            StopList.add(m.group(0));
+        }
         
-        StopList.add(query);
-        startupLogger.addAppender(new StringPropertyAppender());
-        startupLogger.setLevel(Level.TRACE);
+        StringPropertyAppender spa = new StringPropertyAppender();
+        
+        LoggerContext context = LoggerContext.getContext(false);
+        org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
+        spa.start();
+        LoggerConfig slc = config.getLoggerConfig(startupLogger.getName());
+        slc.setLevel(Level.TRACE);
+        slc.addAppender(spa, Level.TRACE, null);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
         statusLineText.getStyleClass().addAll("statusline");
-        statusLineText.textProperty().bind(((StringPropertyAppender)startupLogger.getAppender(StringPropertyAppender.class.getName())).stringProperty());
-        statusLineHost.getChildren().add(statusLineText);
-        
-        final Service<Void> service = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                Task<Void> task = new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        startupLogger.trace("Create Tweeter ...");
-                        tweeter = Tweeter.getInstance();
-                        startupLogger.trace("Tweeter created!");
-                        return null;
-                    }
-                };
-                return task;
-            }
-        };
+        statusLineText.textProperty().bind(spa.stringProperty());
+        statusLineHost.getChildren().add(statusLineText);       
 
-        service.setOnSucceeded(e -> {
-            startupLogger.trace("Start Tweet task ...");
-            if (!query.isEmpty() && tweeter != null) {
-                tweetsTask = new TagTweets(new TweetSetData(tweeter, query), borderPane);
-                tweetsTask.start();
-            }
-        });
-        service.setOnFailed(e -> {
-            Throwable exception = e.getSource().getException();
-            System.err.println("FAILED! " + exception);
-            System.err.println("Cause!  " + (null != exception?exception.getCause():"Unknown!"));
-            Main.this.stop();
-            primaryStage.close();
-        });
+        if (!SEARCH_TEXT.isEmpty()) {
+            tweetsTask = new TagTweets(SEARCH_TEXT, borderPane);
+            tweetsTask.start();
+        }
         
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isMetaDown() && event.getCharacter().equals("d")) {
@@ -116,20 +102,17 @@ public class Main extends Application {
             }
         });
 
-        primaryStage.setTitle(title);
+        primaryStage.setTitle(TITLE);
         primaryStage.setScene(scene);
         
         primaryStage.show();
         primaryStage.setFullScreen(true);
-        service.start();
     }
 
     @Override
     public void stop() {
         System.out.println("closing...");
-        if (tweetsTask != null) {
-            tweetsTask.stop();
-        }
+        Tweeter.getInstance().shutdown();
     }
 
     /**

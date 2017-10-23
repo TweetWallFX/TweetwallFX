@@ -25,12 +25,22 @@ package org.tweetwallfx.twitter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.WriterAppender;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -88,10 +98,24 @@ public class CLogOut {
             }
         };
 
-        Logger root = Logger.getRootLogger();
-        WriterAppender writerAppender = new WriterAppender(new PatternLayout("%m%n"), stdStream);
-        root.addAppender(writerAppender);
-        writerAppender.setImmediateFlush(true);
+        
+        LoggerContext context = LoggerContext.getContext(false);
+        Configuration config = context.getConfiguration();
+        PatternLayout layout = PatternLayout.newBuilder().withConfiguration(config).withPattern("%m%n").build();
+        Appender appender = WriterAppender.newBuilder().setLayout(layout).setTarget(new OutputStreamWriter(stdStream, StandardCharsets.UTF_8)).build();
+        appender.start();
+        config.addAppender(appender);        
+        
+        updateLoggers(appender, config);        
+    }
+
+    private void updateLoggers(final Appender appender, final Configuration config) {
+        final Level level = null;
+        final Filter filter = null;
+        for (final LoggerConfig loggerConfig : config.getLoggers().values()) {
+            loggerConfig.addAppender(appender, level, filter);
+        }
+        config.getRootLogger().addAppender(appender, level, filter);
     }
 
     public static CLogOut getInstance() {

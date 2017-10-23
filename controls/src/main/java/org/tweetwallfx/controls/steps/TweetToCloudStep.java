@@ -37,11 +37,11 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.log4j.Logger;
 import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
@@ -61,13 +61,10 @@ public class TweetToCloudStep extends AbstractStep {
     @Override
     public void doStep(MachineContext context) {
 //        context.getWordle().setLayoutMode(Wordle.LayoutMode.TWEET);
-        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
-        startupLogger.trace("tweetToCloud()");
-        
         WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 //        Wordle wordle = (Wordle)context.get("Wordle");
         
-        List<Word> sortedWords = new ArrayList<>(wordleSkin.getSkinnable().wordsProperty().getValue());
+        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
 
         if (sortedWords.isEmpty()) {
             return;
