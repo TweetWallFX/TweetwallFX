@@ -45,7 +45,11 @@ public abstract class ObjectWithLinksBase {
     }
 
     public Stream<Link> getLinkStream() {
-        return links.stream();
+        if (null == links) {
+            return Stream.empty();
+        } else {
+            return links.stream();
+        }
     }
 
     public Stream<Link> getLinkStream(final Link.Type linkType) {

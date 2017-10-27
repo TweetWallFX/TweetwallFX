@@ -23,40 +23,22 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import java.util.List;
-import javax.ws.rs.core.GenericType;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+public class Tag {
 
-/**
- * Test impl of CFPClient working with DevoxxBE2017
- */
-public class CFPClientTestImpl implements CFPClient {
+    private String value;
 
-    private static final String BASE_URI = "https://cfp.devoxx.be/api/";
+    public String getValue() {
+        return value;
+    }
 
-    @Override
-    public Events getEvents() {
-        return RestCallHelper.getData(BASE_URI + "conferences/", Events.class);
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     @Override
-    public Event getEvent() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17", Event.class);
-    }
-
-    @Override
-    public List<Speaker> getSpeakers() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers", new GenericType<List<Speaker>>() {
-        });
-    }
-
-    @Override
-    public Speaker getSpeaker(final String speakerId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/" + speakerId, Speaker.class);
-    }
-
-    @Override
-    public Talk getTalk(String talkId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/talks/" + talkId, Talk.class);
+    public String toString() {
+        return "Tag{"
+                + "\n    value=" + value
+                + "\n} extends " + super.toString();
     }
 }

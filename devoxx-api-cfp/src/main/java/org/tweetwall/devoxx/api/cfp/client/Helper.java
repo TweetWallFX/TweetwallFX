@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
 final class Helper {
 
     static String convertCollectionForToString(final Collection<?> collection) {
+        if (null == collection) {
+            return null;
+        }
+
         return collection
                 .stream()
                 .map(Object::toString)

@@ -46,31 +46,31 @@ public interface CFPClient {
      * @return the Event
      */
     Event getEvent();
-//
-//    /**
-//     * All Speakers having one or more talks at the Event.
-//     *
-//     * @return all Speakers with talks at the event
-//     */
-//    List<SpeakerShortDescription> getSpeakers();
-//
-//    /**
-//     * The speaker with a specific {@code id}.
-//     *
-//     * @param speakerId the id of the Speaker
-//     *
-//     * @return the Speaker
-//     */
-//    Speaker getSpeaker(final String speakerId);
-//
-//    /**
-//     * The Talk identified by its unique {@code talkId}.
-//     *
-//     * @param talkId the unique ID of a talk
-//     *
-//     * @return the requested talk
-//     */
-//    CFPTalk getTalk(final String talkId);
+
+    /**
+     * All Speakers having one or more talks at the Event.
+     *
+     * @return all Speakers with talks at the event
+     */
+    List<Speaker> getSpeakers();
+
+    /**
+     * The speaker with a specific {@code id}.
+     *
+     * @param speakerId the id of the Speaker
+     *
+     * @return the Speaker
+     */
+    Speaker getSpeaker(final String speakerId);
+
+    /**
+     * The Talk identified by its unique {@code talkId}.
+     *
+     * @param talkId the unique ID of a talk
+     *
+     * @return the requested talk
+     */
+    Talk getTalk(final String talkId);
 
     /**
      * Stream of all available {@link CFPClient CFPClients}.

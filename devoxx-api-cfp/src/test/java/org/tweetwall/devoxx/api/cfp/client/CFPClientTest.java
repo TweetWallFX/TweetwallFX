@@ -23,8 +23,10 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.List;
+import java.util.Optional;
 import org.junit.After;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,27 +51,112 @@ public class CFPClientTest {
     public void clientImplIsFound() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
-        Assert.assertNotNull(client);
-        Assert.assertEquals(1, CFPClient.getClientStream().count());
+        assertNotNull(client);
+        assertEquals(1, CFPClient.getClientStream().count());
     }
 
     @Test
     public void eventsAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
-        Assert.assertNotNull(client);
+        assertNotNull(client);
 
         final Events events = client.getEvents();
         System.out.println("events: " + events);
+        assertNotNull(events);
     }
 
     @Test
     public void eventIsRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
-        Assert.assertNotNull(client);
+        assertNotNull(client);
 
         final Event event = client.getEvent();
         System.out.println("event: " + event);
+        assertNotNull(event);
+    }
+
+    @Test
+    public void speakersAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final List<Speaker> speakers = client.getSpeakers();
+        System.out.println("speakers: " + Helper.convertCollectionForToString(speakers));
+        assertNotNull(speakers);
+    }
+
+    @Test
+    public void speakerInformationIsCompletable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final List<Speaker> speakers = client.getSpeakers();
+        assertNotNull(speakers);
+
+        final Optional<Speaker> speakerOptional = speakers
+                .stream()
+                .filter(s -> "@mreinhold".equals(s.getTwitter()))
+                .findAny();
+        System.out.println("speakerOptional: " + speakerOptional);
+        assertTrue(speakerOptional.isPresent());
+        assertFalse(speakerOptional.get().hasCompleteInformation());
+
+        Speaker speaker = speakerOptional
+                .map(Speaker::reload)
+                .get();
+        System.out.println("speaker: " + speaker);
+        assertNotNull(speaker);
+    }
+
+    @Test
+    public void speakerIsRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Speaker speaker = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        System.out.println("speaker: " + speaker);
+        assertNotNull(speaker);
+        assertTrue(speaker.hasCompleteInformation());
+    }
+
+    @Test
+    public void talkInformationIsCompletable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Speaker speaker = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        System.out.println("speaker: " + speaker);
+        assertNotNull(speaker);
+        assertTrue(speaker.hasCompleteInformation());
+        assertNotNull(speaker.getAcceptedTalks());
+        assertFalse(speaker.getAcceptedTalks().isEmpty());
+        
+        final Talk incompleteTalk = speaker.getAcceptedTalks().get(0);
+        assertNotNull(incompleteTalk);
+        assertFalse(incompleteTalk.hasCompleteInformation());
+        System.out.println("incompleteTalk: " + incompleteTalk);
+        
+        final Talk completeTalk = incompleteTalk.reload();
+        assertNotNull(completeTalk);
+        assertTrue(completeTalk.hasCompleteInformation());
+        System.out.println("completeTalk: " + completeTalk);
+    }
+
+    @Test
+    public void talkIsRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Talk talk = client.getTalk("OZB-4067");
+        System.out.println("talk: " + talk);
+        assertNotNull(talk);
+        assertTrue(talk.hasCompleteInformation());
     }
 }
