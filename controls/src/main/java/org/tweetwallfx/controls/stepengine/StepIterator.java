@@ -74,7 +74,7 @@ public class StepIterator implements Iterator<Step>{
     
     public static StepIterator ofDefaultConfiguration() {
         StepIterator.Builder builder = new StepIterator.Builder();
-        try(InputStream s =  Thread.currentThread().getContextClassLoader().getResourceAsStream("/steps.json")){
+        try(InputStream s =  Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")){
             StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
             stepEngineConfig.steps.forEach(className -> builder.addStep(className));
         } catch (IOException ex) {
