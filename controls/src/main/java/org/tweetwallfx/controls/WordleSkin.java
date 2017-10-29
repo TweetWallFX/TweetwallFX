@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -252,10 +253,9 @@ public class WordleSkin extends SkinBase<Wordle> {
             };
 
             backgroundImage.getStyleClass().add("bg-image");
-            
+            backgroundImage.yProperty().bind(Bindings.divide(Bindings.subtract(stackPane.heightProperty(), backgroundImage.fitHeightProperty()),0.5));
             backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
             backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
-
             backgroundImage.setPreserveRatio(true);
             backgroundImage.setCache(true);
             backgroundImage.setSmooth(true);
