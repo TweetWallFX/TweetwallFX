@@ -85,6 +85,7 @@ final class TwitterOAuth {
         org.tweetwallfx.config.Configuration tweetWallFxConfig = org.tweetwallfx.config.Configuration.getInstance();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(false);
+        builder.setTweetModeExtended(Boolean.parseBoolean(tweetWallFxConfig.getConfig("tweetwall.twitter.tweetModeExtended", "false")));
         builder.setOAuthConsumerKey(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.consumerKey"));
         builder.setOAuthConsumerSecret(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.consumerSecret"));
         builder.setOAuthAccessToken(tweetWallFxConfig.getConfig("tweetwall.twitter.oauth.accessToken"));
