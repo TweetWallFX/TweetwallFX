@@ -74,7 +74,6 @@ public class TagTweets {
     public void start() {
         startupLogger.trace("TagTweets.start");
         hWordle.setAlignment(Pos.CENTER);
-        hWordle.setPadding(new Insets(20));
         hWordle.prefWidthProperty().bind(root.widthProperty());
         hWordle.prefHeightProperty().bind(root.heightProperty());
 
