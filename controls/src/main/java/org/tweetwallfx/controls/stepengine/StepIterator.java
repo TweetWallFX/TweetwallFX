@@ -25,6 +25,7 @@ package org.tweetwallfx.controls.stepengine;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -54,13 +55,13 @@ public class StepIterator implements Iterator<Step>{
         
         public Builder addStep(String classname) {
             try {
-                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).newInstance();
+                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
                 if (newInstance instanceof Step) {
                     states.add((Step)newInstance);
                 } else {
                     LogManager.getLogger(StepIterator.class).error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
                 }
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException ex) {
                 LogManager.getLogger(StepIterator.class).error("Failure instatiating step for " + classname,ex);
             } 
             return this;
