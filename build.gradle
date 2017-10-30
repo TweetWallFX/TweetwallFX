@@ -221,6 +221,25 @@ project(":TweetWallFX-Devoxx-2017-FR") {
     }
 }
 
+project(":TweetWallFX-Devoxx-2017-BE:Exhibition") {
+    apply plugin: "application"
+    mainClassName = "org.tweetwallfx.generic.Main"
+
+    tasks.withType(JavaExec) {
+        main mainClassName
+    }
+
+    task('debug', dependsOn: 'classes', type: JavaExec) {
+        classpath sourceSets.main.runtimeClasspath
+        debug = true
+    }
+
+    dependencies {
+        compile project(':TweetWallFX-Generic2D')
+        compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    }
+}
+
 project(":TweetWallFX-NetBeans") {
     apply plugin: "application"
     mainClassName = "org.tweetwallfx.generic.Main"
@@ -330,5 +349,6 @@ task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
 task ('runDevoxx2015', dependsOn: ':TweetWallFX-Devoxx-2015:run')
 task ('runDevoxx2017US', dependsOn: ':TweetWallFX-Devoxx-2017-US:run')
 task ('runDevoxx2017FR', dependsOn: ':TweetWallFX-Devoxx-2017-FR:run')
+task ('runDevoxx2017BE-Exhibition', dependsOn: ':TweetWallFX-Devoxx-2017-BE:Exhibition:run')
 task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
 task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')

@@ -1,0 +1,13 @@
+{
+    "steps": [
+        "org.tweetwallfx.controls.steps.FadeInCloudStep",
+        "org.tweetwallfx.controls.steps.NextTweetStep",
+        "org.tweetwallfx.controls.steps.AddTweetToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudToTweetStep",
+        "org.tweetwallfx.controls.steps.PauseStep",
+        "org.tweetwallfx.controls.steps.TweetToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudFadeOutStep",
+        "org.tweetwallfx.controls.steps.ImageMosaicStep"
+    ]
+}
