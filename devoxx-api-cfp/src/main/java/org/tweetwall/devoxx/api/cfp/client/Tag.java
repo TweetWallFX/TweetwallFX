@@ -38,7 +38,7 @@ public class Tag {
     @Override
     public String toString() {
         return "Tag{"
-                + "\n    value=" + value
+                + "\n    value=" + getValue()
                 + "\n} extends " + super.toString();
     }
 }

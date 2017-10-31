@@ -28,6 +28,10 @@ import java.util.stream.Collectors;
 
 final class Helper {
 
+    private Helper() {
+        // prevent instantiation
+    }
+
     static String convertCollectionForToString(final Collection<?> collection) {
         if (null == collection) {
             return null;

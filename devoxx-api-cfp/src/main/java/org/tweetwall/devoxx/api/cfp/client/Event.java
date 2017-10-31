@@ -110,12 +110,12 @@ public class Event extends ObjectWithLinksBase {
     @Override
     public String toString() {
         return "Event{"
-                + "\n    eventCode=" + eventCode
-                + "\n    label=" + label
-                + "\n    localisation=" + localisation
-                + "\n    locale=" + Helper.convertCollectionForToString(locale)
-                + "\n    days=" + Helper.convertCollectionForToString(days)
-                + "\n    proposalTypesId=" + Helper.convertCollectionForToString(proposalTypesId)
+                + "\n    eventCode=" + getEventCode()
+                + "\n    label=" + getLabel()
+                + "\n    localisation=" + getLocalisation()
+                + "\n    locale=" + Helper.convertCollectionForToString(getLocale())
+                + "\n    days=" + Helper.convertCollectionForToString(getDays())
+                + "\n    proposalTypesId=" + Helper.convertCollectionForToString(getProposalTypesId())
                 + "\n} extends " + super.toString();
     }
 }

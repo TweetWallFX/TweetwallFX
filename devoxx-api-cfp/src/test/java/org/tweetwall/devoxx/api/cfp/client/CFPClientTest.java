@@ -25,6 +25,8 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -122,6 +124,7 @@ public class CFPClientTest {
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
         assertTrue(speaker.hasCompleteInformation());
+        assertSame(speaker, speaker.reload());
     }
 
     @Test
@@ -147,6 +150,35 @@ public class CFPClientTest {
         assertTrue(completeTalk.hasCompleteInformation());
         System.out.println("completeTalk: " + completeTalk);
     }
+    
+    @Test
+    public void talkCanGetSpeakers() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Talk talk = client.getTalk("OZB-4067");
+        System.out.println("talk: " + talk);
+        assertNotNull(talk);
+        assertTrue(talk.hasCompleteInformation());
+        
+        final Set<Speaker> speakers = talk.getSpeakers().stream().map(SpeakerReference::getSpeaker).collect(Collectors.toSet());
+        assertSame(talk.getSpeakers().size(), speakers.size());
+
+        final Optional<Speaker> speakerOptional = speakers
+                .stream()
+                .filter(s -> "@mreinhold".equals(s.getTwitter()))
+                .findAny();
+        System.out.println("speakerOptional: " + speakerOptional);
+        assertTrue(speakerOptional.isPresent());
+        assertTrue(speakerOptional.get().hasCompleteInformation());
+
+        Speaker speaker = speakerOptional
+                .map(Speaker::reload)
+                .get();
+        System.out.println("speaker: " + speaker);
+        assertNotNull(speaker);
+    }
 
     @Test
     public void talkIsRetrievable() {
@@ -158,5 +190,6 @@ public class CFPClientTest {
         System.out.println("talk: " + talk);
         assertNotNull(talk);
         assertTrue(talk.hasCompleteInformation());
+        assertSame(talk, talk.reload());
     }
 }

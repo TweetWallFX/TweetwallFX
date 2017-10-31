@@ -23,10 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Objects;
 import java.util.stream.Stream;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
  * The "Link" profile object is a Devoxx BE object that defines a relationship
@@ -79,24 +77,12 @@ public class Link {
         return Type.getType(this);
     }
 
-    public Response call() {
-        return RestCallHelper.getReponse(href);
-    }
-
-    public <T> T call(final Class<T> typeClass) {
-        return RestCallHelper.getData(href, typeClass);
-    }
-
-    public <T> T call(final GenericType<T> genericType) {
-        return RestCallHelper.getData(href, genericType);
-    }
-
     @Override
     public String toString() {
         return "Link{"
-                + "\n    href=" + href
-                + "\n    rel=" + rel
-                + "\n    title=" + title
+                + "\n    href=" + getHref()
+                + "\n    rel=" + getRel()
+                + "\n    title=" + getTitle()
                 + "\n    type=" + getType()
                 + "\n} extends " + super.toString();
     }
@@ -120,9 +106,7 @@ public class Link {
         }
 
         public static Type getType(final Link link) {
-            if (null == link) {
-                throw new IllegalArgumentException("parameter link must not be null!");
-            }
+            Objects.requireNonNull(link, "parameter link must not be null!");
 
             return Stream.of(values())
                     .filter(cfplt -> link.getRel().endsWith(cfplt.apiProfile))

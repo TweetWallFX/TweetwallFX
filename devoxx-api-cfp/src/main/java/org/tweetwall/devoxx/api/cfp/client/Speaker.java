@@ -24,6 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
+import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
  * POJO for a Speaker with the following fields:
@@ -189,33 +190,33 @@ public class Speaker extends ObjectWithLinksBase {
     public void setAcceptedTalks(final List<Talk> acceptedTalks) {
         this.acceptedTalks = acceptedTalks;
     }
-    
+
     public boolean hasCompleteInformation() {
         return !getLinkStream(Link.Type.SPEAKER).findAny().isPresent();
     }
-    
+
     public Speaker reload() {
         if (hasCompleteInformation()) {
             return this;
         } else {
-            return getLinkStream(Link.Type.SPEAKER).findAny().get().call(Speaker.class);
+            return RestCallHelper.getData(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref(), Speaker.class);
         }
     }
 
     @Override
     public String toString() {
         return "Speaker{"
-                + "\n    uuid=" + uuid
-                + "\n    bio=" + bio
-                + "\n    bioAsHtml=" + bioAsHtml
-                + "\n    firstName=" + firstName
-                + "\n    lastName=" + lastName
-                + "\n    avatarURL=" + avatarURL
-                + "\n    company=" + company
-                + "\n    blog=" + blog
-                + "\n    twitter=" + twitter
-                + "\n    lang=" + lang
-                + "\n    acceptedTalks=" + Helper.convertCollectionForToString(acceptedTalks)
+                + "\n    uuid=" + getUuid()
+                + "\n    bio=" + getBio()
+                + "\n    bioAsHtml=" + getBioAsHtml()
+                + "\n    firstName=" + getFirstName()
+                + "\n    lastName=" + getLastName()
+                + "\n    avatarURL=" + getAvatarURL()
+                + "\n    company=" + getCompany()
+                + "\n    blog=" + getBlog()
+                + "\n    twitter=" + getTwitter()
+                + "\n    lang=" + getLang()
+                + "\n    acceptedTalks=" + Helper.convertCollectionForToString(getAcceptedTalks())
                 + "\n    (( hasCompleteInformation=" + hasCompleteInformation() + " ))"
                 + "\n} extends " + super.toString();
     }

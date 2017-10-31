@@ -53,13 +53,13 @@ public abstract class ObjectWithLinksBase {
     }
 
     public Stream<Link> getLinkStream(final Link.Type linkType) {
-        return getLinkStream().filter(link -> link.getType() == linkType);
+        return getLinkStream().filter(link -> link.getType().equals(linkType));
     }
 
     @Override
     public String toString() {
         return "ObjectWithLinksBase{"
-                + "\n    links=" + Helper.convertCollectionForToString(links)
+                + "\n    links=" + Helper.convertCollectionForToString(getLinks())
                 + "\n} extends " + super.toString();
     }
 }

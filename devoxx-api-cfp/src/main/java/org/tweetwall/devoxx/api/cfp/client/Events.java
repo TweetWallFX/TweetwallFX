@@ -23,7 +23,9 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
  * A listing of events handled by the REST API.
@@ -45,13 +47,14 @@ public class Events extends ObjectWithLinksBase {
 
     public Stream<Event> getEvents() {
         return getLinkStream(Link.Type.CONFERENCE)
-                .map(link -> link.call(Event.class));
+                .map(link -> RestCallHelper.getData(link.getHref(), Event.class));
     }
 
     @Override
     public String toString() {
         return "Events{"
-                + "\n    content=" + content
+                + "\n    content=" + getContent()
+                + "\n    events=" + Helper.convertCollectionForToString(getEvents().collect(Collectors.toList()))
                 + "\n} extends " + super.toString();
     }
 }

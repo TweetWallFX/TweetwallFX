@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import java.util.List;
+import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
  * Describes a talk.
@@ -164,32 +165,32 @@ public class Talk extends ObjectWithLinksBase {
     public void setSpeakers(final List<SpeakerReference> speakers) {
         this.speakers = speakers;
     }
-    
+
     public boolean hasCompleteInformation() {
         return !getLinkStream(Link.Type.TALK).findAny().isPresent();
     }
-    
+
     public Talk reload() {
         if (hasCompleteInformation()) {
             return this;
         } else {
-            return getLinkStream(Link.Type.TALK).findAny().get().call(Talk.class);
+            return RestCallHelper.getData(getLinkStream(Link.Type.TALK).findAny().get().getHref(), Talk.class);
         }
     }
 
     @Override
     public String toString() {
         return "Talk{"
-                + "\n    id=" + id
-                + "\n    title=" + title
-                + "\n    audienceLevel=" + audienceLevel
-                + "\n    talkType=" + talkType
-                + "\n    summary=" + summary
-                + "\n    summaryAsHtml=" + summaryAsHtml
-                + "\n    lang=" + lang
-                + "\n    track=" + track
-                + "\n    tags=" + Helper.convertCollectionForToString(tags)
-                + "\n    speakers=" + Helper.convertCollectionForToString(speakers)
+                + "\n    id=" + getId()
+                + "\n    title=" + getTitle()
+                + "\n    audienceLevel=" + getAudienceLevel()
+                + "\n    talkType=" + getTalkType()
+                + "\n    summary=" + getSummary()
+                + "\n    summaryAsHtml=" + getSummaryAsHtml()
+                + "\n    lang=" + getLang()
+                + "\n    track=" + getTrack()
+                + "\n    tags=" + Helper.convertCollectionForToString(getTags())
+                + "\n    speakers=" + Helper.convertCollectionForToString(getSpeakers())
                 + "\n    (( hasCompleteInformation=" + hasCompleteInformation() + " ))"
                 + "\n} extends " + super.toString();
     }
