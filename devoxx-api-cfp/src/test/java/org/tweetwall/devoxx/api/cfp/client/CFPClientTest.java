@@ -102,6 +102,42 @@ public class CFPClientTest {
     }
 
     @Test
+    public void schedulesAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Schedules schedules = client.getSchedules();
+        System.out.println("schedules: " + schedules);
+        assertNotNull(schedules);
+        assertTrue(schedules.getSchedules().count() > 0);
+    }
+
+    @Test
+    public void scheduleIsRetrievableForADay() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Schedule schedule = client.getSchedule("monday");
+        System.out.println("schedule: " + schedule);
+        assertNotNull(schedule);
+        assertFalse(schedule.getSlots().isEmpty());
+    }
+
+    @Test
+    public void scheduleIsRetrievableForADayAndRoom() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Schedule schedule = client.getSchedule("monday", "room8");
+        System.out.println("schedule: " + schedule);
+        assertNotNull(schedule);
+        assertFalse(schedule.getSlots().isEmpty());
+    }
+
+    @Test
     public void speakersAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);

@@ -62,6 +62,33 @@ public interface CFPClient {
     Rooms getRooms();
 
     /**
+     * See the Schedule for the requested {@code day}.
+     *
+     * @param day the day of the week
+     *
+     * @return the schedule for the day
+     */
+    Schedule getSchedule(final String day);
+
+    /**
+     * See the Schedule for the requested {@code day} and {@code room}.
+     *
+     * @param day the day of the week
+     *
+     * @param room the name of room
+     *
+     * @return the schedule for the day
+     */
+    Schedule getSchedule(final String day, final String room);
+
+    /**
+     * See the list of Schedules.
+     *
+     * @return the list of all schedules
+     */
+    Schedules getSchedules();
+
+    /**
      * All Speakers having one or more talks at the Event.
      *
      * @return all Speakers with talks at the event

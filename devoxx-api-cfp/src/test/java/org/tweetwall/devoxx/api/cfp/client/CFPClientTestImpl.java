@@ -55,6 +55,21 @@ public class CFPClientTestImpl implements CFPClient {
     }
 
     @Override
+    public Schedule getSchedule(final String day) {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/schedules/" + day, Schedule.class);
+    }
+
+    @Override
+    public Schedule getSchedule(final String day, final String room) {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/rooms/" + room + "/" + day, Schedule.class);
+    }
+
+    @Override
+    public Schedules getSchedules() {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/schedules/", Schedules.class);
+    }
+
+    @Override
     public List<Speaker> getSpeakers() {
         return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/", new GenericType<List<Speaker>>() {
         });

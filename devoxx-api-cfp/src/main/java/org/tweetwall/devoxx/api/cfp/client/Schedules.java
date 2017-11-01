@@ -23,39 +23,23 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
- * A listing of events handled by the REST API.
+ * See the list of Schedules.
  */
-public class Events extends ObjectWithLinksBase {
+public class Schedules extends ObjectWithLinksBase {
 
-    /**
-     * Description of content.
-     */
-    private String content;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(final String content) {
-        this.content = content;
-    }
-
-    public Stream<Event> getEvents() {
-        return getLinkStream(Link.Type.CONFERENCE)
+    public Stream<Schedule> getSchedules() {
+        return getLinkStream(Link.Type.SCHEDULE)
                 .map(Link::getHref)
-                .map(href -> RestCallHelper.getData(href, Event.class));
+                .map(href -> RestCallHelper.getData(href, Schedule.class));
     }
 
     @Override
     public String toString() {
-        return "Events{"
-                + "\n    content=" + getContent()
-                + "\n    events=" + Helper.convertCollectionForToString(getEvents().collect(Collectors.toList()))
+        return "Schedules{"
                 + "\n} extends " + super.toString();
     }
 }

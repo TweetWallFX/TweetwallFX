@@ -23,39 +23,55 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
-
 /**
- * A listing of events handled by the REST API.
+ * A break slot in the schedule.
  */
-public class Events extends ObjectWithLinksBase {
+public class Break {
 
-    /**
-     * Description of content.
-     */
-    private String content;
+    private String id;
+    private String nameEN;
+    private String nameFR;
+    private Room room;
 
-    public String getContent() {
-        return content;
+    public String getId() {
+        return id;
     }
 
-    public void setContent(final String content) {
-        this.content = content;
+    public void setId(final String id) {
+        this.id = id;
     }
 
-    public Stream<Event> getEvents() {
-        return getLinkStream(Link.Type.CONFERENCE)
-                .map(Link::getHref)
-                .map(href -> RestCallHelper.getData(href, Event.class));
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(final String nameEN) {
+        this.nameEN = nameEN;
+    }
+
+    public String getNameFR() {
+        return nameFR;
+    }
+
+    public void setNameFR(final String nameFR) {
+        this.nameFR = nameFR;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(final Room room) {
+        this.room = room;
     }
 
     @Override
     public String toString() {
-        return "Events{"
-                + "\n    content=" + getContent()
-                + "\n    events=" + Helper.convertCollectionForToString(getEvents().collect(Collectors.toList()))
+        return "Break{"
+                + "\n    id=" + getId()
+                + "\n    nameEN=" + getNameEN()
+                + "\n    nameFR=" + getNameFR()
+                + "\n    room=" + getRoom()
                 + "\n} extends " + super.toString();
     }
 }

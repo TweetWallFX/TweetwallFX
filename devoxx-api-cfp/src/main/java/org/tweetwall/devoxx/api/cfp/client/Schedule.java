@@ -23,39 +23,28 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import java.util.List;
 
 /**
- * A listing of events handled by the REST API.
+ * A Schedule is a list of time slots for a specific day. Each slot is either a
+ * {@link ScheduleSlotBreak break slot} or a {@link Talk talk slot}.
  */
-public class Events extends ObjectWithLinksBase {
+public class Schedule {
 
-    /**
-     * Description of content.
-     */
-    private String content;
+    private List<ScheduleSlot> slots;
 
-    public String getContent() {
-        return content;
+    public List<ScheduleSlot> getSlots() {
+        return slots;
     }
 
-    public void setContent(final String content) {
-        this.content = content;
-    }
-
-    public Stream<Event> getEvents() {
-        return getLinkStream(Link.Type.CONFERENCE)
-                .map(Link::getHref)
-                .map(href -> RestCallHelper.getData(href, Event.class));
+    public void setSlots(final List<ScheduleSlot> slots) {
+        this.slots = slots;
     }
 
     @Override
     public String toString() {
-        return "Events{"
-                + "\n    content=" + getContent()
-                + "\n    events=" + Helper.convertCollectionForToString(getEvents().collect(Collectors.toList()))
+        return "Schedule{"
+                + "\n    slots=" + Helper.convertCollectionForToString(getSlots())
                 + "\n} extends " + super.toString();
     }
 }
