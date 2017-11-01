@@ -25,10 +25,12 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.junit.After;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
@@ -58,6 +60,15 @@ public class TwitterTweeterTest {
         return tweeter;
     }
 
+    private static void skipIfOauthisNotConfigured() {
+        Assume.assumeNotNull(
+                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerKey", null),
+                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerSecret", null),
+                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessToken", null),
+                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessTokenSecret", null)
+        );
+    }
+
     @Test
     public void gettingInstanceFromTweeter() {
         assertNotNull(getTweeter());
@@ -66,6 +77,7 @@ public class TwitterTweeterTest {
     private void testTextFiltering(final long id, final Class<? extends TweetEntry> tweetEntryClass, final String filteredString) {
         final Tweeter tweeter = getTweeter();
         assertNotNull(tweeter);
+        skipIfOauthisNotConfigured();
 
         final Tweet tweet = tweeter.getTweet(id);
         System.out.println("tweet: " + tweet);
