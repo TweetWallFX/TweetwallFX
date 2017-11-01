@@ -23,7 +23,6 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import java.util.List;
 import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
@@ -70,10 +69,14 @@ public class Talk extends ObjectWithLinksBase {
     private String lang;
 
     /**
+     * ID of the track
+     */
+    private String trackId;
+
+    /**
      * The track label (translated to French or English, depending on your
      * "Accept-language" Header)
      */
-    @JsonAlias({"track", "trackId"})
     private String track;
 
     /**
@@ -142,6 +145,14 @@ public class Talk extends ObjectWithLinksBase {
         this.lang = lang;
     }
 
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(final String trackId) {
+        this.trackId = trackId;
+    }
+
     public String getTrack() {
         return track;
     }
@@ -188,6 +199,7 @@ public class Talk extends ObjectWithLinksBase {
                 + "\n    summary=" + getSummary()
                 + "\n    summaryAsHtml=" + getSummaryAsHtml()
                 + "\n    lang=" + getLang()
+                + "\n    trackId=" + getTrackId()
                 + "\n    track=" + getTrack()
                 + "\n    tags=" + Helper.convertCollectionForToString(getTags())
                 + "\n    speakers=" + Helper.convertCollectionForToString(getSpeakers())
