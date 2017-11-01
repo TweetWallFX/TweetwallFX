@@ -175,6 +175,11 @@ final class TwitterTweet implements Tweet {
     }
 
     @Override
+    public boolean isTruncated() {
+        return status.isTruncated();
+    }
+
+    @Override
     public HashtagTweetEntry[] getHashtagEntries() {
         return hashtagTweetEntries;
     }
