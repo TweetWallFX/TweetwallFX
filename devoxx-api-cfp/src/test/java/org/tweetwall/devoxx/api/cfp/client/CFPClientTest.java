@@ -89,7 +89,7 @@ public class CFPClientTest {
         System.out.println("rooms: " + rooms);
         assertNotNull(rooms);
     }
-    
+
     @Test
     public void speakersAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
@@ -150,18 +150,18 @@ public class CFPClientTest {
         assertTrue(speaker.hasCompleteInformation());
         assertNotNull(speaker.getAcceptedTalks());
         assertFalse(speaker.getAcceptedTalks().isEmpty());
-        
+
         final Talk incompleteTalk = speaker.getAcceptedTalks().get(0);
         assertNotNull(incompleteTalk);
         assertFalse(incompleteTalk.hasCompleteInformation());
         System.out.println("incompleteTalk: " + incompleteTalk);
-        
+
         final Talk completeTalk = incompleteTalk.reload();
         assertNotNull(completeTalk);
         assertTrue(completeTalk.hasCompleteInformation());
         System.out.println("completeTalk: " + completeTalk);
     }
-    
+
     @Test
     public void talkCanGetSpeakers() {
         final CFPClient client = CFPClient.getClient();
@@ -172,7 +172,7 @@ public class CFPClientTest {
         System.out.println("talk: " + talk);
         assertNotNull(talk);
         assertTrue(talk.hasCompleteInformation());
-        
+
         final Set<Speaker> speakers = talk.getSpeakers().stream().map(SpeakerReference::getSpeaker).collect(Collectors.toSet());
         assertSame(talk.getSpeakers().size(), speakers.size());
 
@@ -202,5 +202,16 @@ public class CFPClientTest {
         assertNotNull(talk);
         assertTrue(talk.hasCompleteInformation());
         assertSame(talk, talk.reload());
+    }
+
+    @Test
+    public void tracksAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Tracks tracks = client.getTracks();
+        System.out.println("tracks: " + tracks);
+        assertNotNull(tracks);
     }
 }

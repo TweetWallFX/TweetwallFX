@@ -80,6 +80,13 @@ public interface CFPClient {
     Talk getTalk(final String talkId);
 
     /**
+     * Show the list of tracks.
+     *
+     * @return the list of all tracks
+     */
+    Tracks getTracks();
+
+    /**
      * Stream of all available {@link CFPClient CFPClients}.
      *
      * @return Stream containing all available CFPClients

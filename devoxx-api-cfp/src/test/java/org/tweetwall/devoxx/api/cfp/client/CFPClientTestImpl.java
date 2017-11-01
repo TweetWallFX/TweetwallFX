@@ -51,7 +51,7 @@ public class CFPClientTestImpl implements CFPClient {
 
     @Override
     public List<Speaker> getSpeakers() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers", new GenericType<List<Speaker>>() {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/", new GenericType<List<Speaker>>() {
         });
     }
 
@@ -61,7 +61,12 @@ public class CFPClientTestImpl implements CFPClient {
     }
 
     @Override
-    public Talk getTalk(String talkId) {
+    public Talk getTalk(final String talkId) {
         return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/talks/" + talkId, Talk.class);
+    }
+
+    @Override
+    public Tracks getTracks() {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/tracks", Tracks.class);
     }
 }
