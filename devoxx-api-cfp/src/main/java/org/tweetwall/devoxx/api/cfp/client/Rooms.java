@@ -24,44 +24,43 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
-import javax.ws.rs.core.GenericType;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
 
 /**
- * Test impl of CFPClient working with DevoxxBE2017
+ * Show the list of rooms.
  */
-public class CFPClientTestImpl implements CFPClient {
+public class Rooms {
 
-    private static final String BASE_URI = "https://cfp.devoxx.be/api/";
+    /**
+     * Description of content.
+     */
+    private String content;
 
-    @Override
-    public Events getEvents() {
-        return RestCallHelper.getData(BASE_URI + "conferences/", Events.class);
+    /**
+     * All rooms.
+     */
+    private List<Room> rooms;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(final String content) {
+        this.content = content;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(final List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Override
-    public Event getEvent() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17", Event.class);
-    }
-
-    @Override
-    public Rooms getRooms() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/rooms/", Rooms.class);
-    }
-
-    @Override
-    public List<Speaker> getSpeakers() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers", new GenericType<List<Speaker>>() {
-        });
-    }
-
-    @Override
-    public Speaker getSpeaker(final String speakerId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/" + speakerId, Speaker.class);
-    }
-
-    @Override
-    public Talk getTalk(String talkId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/talks/" + talkId, Talk.class);
+    public String toString() {
+        return "Rooms{"
+                + "\n    content=" + getContent()
+                + "\n    rooms=" + Helper.convertCollectionForToString(getRooms())
+                + "\n} extends " + super.toString();
     }
 }

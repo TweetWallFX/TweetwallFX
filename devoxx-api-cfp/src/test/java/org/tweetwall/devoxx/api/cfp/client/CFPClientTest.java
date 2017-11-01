@@ -80,6 +80,17 @@ public class CFPClientTest {
     }
 
     @Test
+    public void roomsAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final Rooms rooms = client.getRooms();
+        System.out.println("rooms: " + rooms);
+        assertNotNull(rooms);
+    }
+    
+    @Test
     public void speakersAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);

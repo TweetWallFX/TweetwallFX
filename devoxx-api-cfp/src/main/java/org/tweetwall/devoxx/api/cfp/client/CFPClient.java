@@ -48,6 +48,13 @@ public interface CFPClient {
     Event getEvent();
 
     /**
+     * Show the list of rooms.
+     *
+     * @return the list of all rooms
+     */
+    Rooms getRooms();
+
+    /**
      * All Speakers having one or more talks at the Event.
      *
      * @return all Speakers with talks at the event
