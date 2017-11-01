@@ -285,6 +285,17 @@ project(":TweetWallFX-Generic2D") {
     }
 }
 
+project(':TweetWallFX-Devoxx-API-CFP') {
+    dependencies {
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.+'
+        compile group: 'javax', name: 'javaee-api', version: '8.0'
+        
+        def jerseyVersion = '2.25'
+        runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: jerseyVersion
+        runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: jerseyVersion
+    }
+}
+
 project(":TweetWallFX-EmbeddableTest") {
     apply plugin: 'application'
     mainClassName = "Main"
