@@ -332,8 +332,13 @@ project(":TweetWallFX-Embeddable") {
 
 description = 'TweetWallFX'
 
-task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+task createFolders(description: 'Creates the folders for the projects and sourceSets should they not exist.') doLast {
     rootProject.allprojects.each {p ->
+        if (!p.getProjectDir().isDirectory()) {
+            println "Creating project folder: ${p.getProjectDir()}"
+            p.getProjectDir().mkdirs()
+        }
+        
         if (p.hasProperty('sourceSets')) {
             p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
                 if (!srcDir.isDirectory()) {
