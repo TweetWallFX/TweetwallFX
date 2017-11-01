@@ -46,7 +46,7 @@ public abstract class Tweeter {
 
     private static void createInstance() {
         final Iterator<Tweeter> itTweeter = ServiceLoader.load(Tweeter.class).iterator();
-        
+
         if (itTweeter.hasNext()) {
             INSTANCE = itTweeter.next();
         } else {
@@ -55,6 +55,8 @@ public abstract class Tweeter {
     }
 
     public abstract TweetStream createTweetStream(TweetFilterQuery filterQuery);
+
+    public abstract Tweet getTweet(final long tweetId);
 
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 

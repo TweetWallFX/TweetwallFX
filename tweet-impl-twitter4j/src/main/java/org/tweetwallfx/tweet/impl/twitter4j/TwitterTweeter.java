@@ -45,11 +45,11 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 
 public class TwitterTweeter extends Tweeter {
-    
+
     private static final Logger LOGGER = LogManager.getLogger(TwitterTweeter.class);
-    
+
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
-    
+
     public TwitterTweeter() {
         TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
     }
@@ -59,6 +59,18 @@ public class TwitterTweeter extends Tweeter {
         TwitterTweetStream twitterTweetStream = new TwitterTweetStream(tweetFilterQuery);
         streamCache.add(twitterTweetStream);
         return twitterTweetStream;
+    }
+
+    @Override
+    public Tweet getTweet(long tweetId) {
+        final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
+
+        try {
+            return new TwitterTweet(twitter.showStatus(tweetId));
+        } catch (TwitterException ex) {
+            setLatestException(ex);
+            throw new IllegalArgumentException("Error getting Status for " + tweetId, ex);
+        }
     }
 
     @Override
@@ -158,7 +170,7 @@ public class TwitterTweeter extends Tweeter {
                     startupLogger.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
                     if (null != queryResult) {
-                        LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit() 
+                        LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit()
                                 + " resetting in " + queryResult.getRateLimitStatus().getSecondsUntilReset() + "s");
                         statuses = queryResult.getTweets().iterator();
                     }
@@ -184,7 +196,7 @@ public class TwitterTweeter extends Tweeter {
                 if (numberOfPages == 0) {
                     return false;
                 } else {
-                // query next twitter status messages page
+                    // query next twitter status messages page
                     queryNext(queryResult.nextQuery());
                     return null != statuses && statuses.hasNext();
                 }
@@ -204,6 +216,5 @@ public class TwitterTweeter extends Tweeter {
     @Override
     public void shutdown() {
         streamCache.forEach(TwitterTweetStream::shutdown);
-    }    
-    
+    }
 }
