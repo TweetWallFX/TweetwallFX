@@ -221,6 +221,15 @@ project(":TweetWallFX-Devoxx-2017-FR") {
     }
 }
 
+project(":TweetWallFX-Devoxx-2017-BE:CFP-Implementation-2017-BE") {
+    dependencies {
+        compile project(':TweetWallFX-Devoxx-API-CFP')
+        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.9.0'
+        
+        runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.0'
+    }
+}
+
 project(":TweetWallFX-Devoxx-2017-BE:Exhibition") {
     apply plugin: "application"
     mainClassName = "org.tweetwallfx.generic.Main"
