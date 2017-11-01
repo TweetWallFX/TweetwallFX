@@ -49,10 +49,8 @@ public final class EmbeddedTweetwall extends Parent {
         StopList.add(query);
         final BorderPane borderPane = new BorderPane();
 
-        if (!query.isEmpty()) {
-            tweetsTask = new TagTweets(query, borderPane);
-            tweetsTask.start();
-        }
+        tweetsTask = new TagTweets(borderPane);
+        tweetsTask.start();
 
         getChildren().setAll(borderPane);
     }

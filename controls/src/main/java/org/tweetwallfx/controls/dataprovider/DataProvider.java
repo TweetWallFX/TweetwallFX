@@ -23,11 +23,26 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetStream;
+
 /**
  *
  * @author sven
  */
 public interface DataProvider {
+    
+    public static interface Factory {
+        
+        public DataProvider create(TweetStream tweetStream);
+        
+    }
+    
+    public static interface HistoryAware {
+        
+        public void processTweet(Tweet tweet);
+        
+    }
     
     public String getName();
     
