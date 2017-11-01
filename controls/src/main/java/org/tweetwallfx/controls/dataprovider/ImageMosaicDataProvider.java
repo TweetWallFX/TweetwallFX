@@ -46,7 +46,7 @@ import javafx.scene.image.Image;
  *
  * @author sven
  */
-public class ImageMosaicDataProvider implements DataProvider {
+public class ImageMosaicDataProvider implements DataProvider, DataProvider.HistoryAware {
 
     private static final Logger log = LogManager.getLogger(ImageMosaicDataProvider.class);
 
@@ -61,11 +61,12 @@ public class ImageMosaicDataProvider implements DataProvider {
 
     private List<ImageStore> images = new CopyOnWriteArrayList<>();
 
-    public ImageMosaicDataProvider(TweetStream tweetStream) {
+    private ImageMosaicDataProvider(TweetStream tweetStream) {
         cache = MediaCache.INSTANCE;
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
+    @Override
     public void processTweet(Tweet tweet) {
         log.info("new Tweet received");
         if (null == tweet.getMediaEntries() || tweet.isRetweet()) {
@@ -129,6 +130,15 @@ public class ImageMosaicDataProvider implements DataProvider {
     public String getName() {
         return "MosaicDataProvider";
     }
+    
+    public static class Factory implements DataProvider.Factory {
+
+        @Override
+        public ImageMosaicDataProvider create(TweetStream tweetStream) {
+            return new ImageMosaicDataProvider(tweetStream);
+        }
+    
+    }       
 
     public static class ImageStore {
         private final Tweet tweet;

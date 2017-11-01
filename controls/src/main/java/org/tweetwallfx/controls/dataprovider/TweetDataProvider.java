@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -43,17 +44,13 @@ public class TweetDataProvider implements DataProvider {
     private static final Logger log = LogManager.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 20; 
 
-    private final Tweeter tweeter;
-    
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
-    private final String searchText;
+    private final String searchText = Configuration.getInstance().getConfig("tweetwall.twitter.query");
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
     
-    public TweetDataProvider(Tweeter tweeter, TweetStream tweetStream, final String searchText) {
-        this.tweeter = tweeter;
-        this.searchText = searchText;
+    private TweetDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
             log.info("new Tweet received");
             this.nextTweet = tweet;
@@ -67,7 +64,7 @@ public class TweetDataProvider implements DataProvider {
 
     private List<Tweet> getLatestHistory() {
         log.info("Reinit the history");
-        return tweeter.search(new TweetQuery()
+        return Tweeter.getInstance().search(new TweetQuery()
                         .query(searchText)
                         .count(HISTORY_SIZE)).collect(Collectors.toList());        
     }
@@ -101,4 +98,13 @@ public class TweetDataProvider implements DataProvider {
         return "Tweet";
     }
 
+    public static class Factory implements DataProvider.Factory {
+
+        @Override
+        public TweetDataProvider create(TweetStream tweetStream) {
+            return new TweetDataProvider(tweetStream);
+        }
+    
+    }
+    
 }

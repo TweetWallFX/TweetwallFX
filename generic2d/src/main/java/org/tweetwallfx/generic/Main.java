@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.generic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -38,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.StringPropertyAppender;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
@@ -51,7 +48,6 @@ public class Main extends Application {
     private static final String STARTUP = "org.tweetwallfx.startup";
     Logger startupLogger = LogManager.getLogger(STARTUP);
     
-    private static final String SEARCH_TEXT = Configuration.getInstance().getConfig("tweetwall.twitter.query");
     private static final String TITLE = Configuration.getInstance().getConfig("tweetwall.title");
     private static final String STYLESHEET = Configuration.getInstance().getConfig("tweetwall.stylesheet", null);
     private TagTweets tweetsTask;
@@ -65,11 +61,6 @@ public class Main extends Application {
         if (null != STYLESHEET) {
             scene.getStylesheets().add(ClassLoader.getSystemClassLoader().getResource(STYLESHEET).toExternalForm());
         }        
-        //extract Hashtags from complex query and add to StopList
-        final Matcher m = Pattern.compile("#[\\S]+").matcher(SEARCH_TEXT);
-        while (m.find()) {
-            StopList.add(m.group(0));
-        }
         
         StringPropertyAppender spa = new StringPropertyAppender();
         
@@ -86,10 +77,8 @@ public class Main extends Application {
         statusLineText.textProperty().bind(spa.stringProperty());
         statusLineHost.getChildren().add(statusLineText);       
 
-        if (!SEARCH_TEXT.isEmpty()) {
-            tweetsTask = new TagTweets(SEARCH_TEXT, borderPane);
-            tweetsTask.start();
-        }
+        tweetsTask = new TagTweets(borderPane);
+        tweetsTask.start();
         
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isMetaDown() && event.getCharacter().equals("d")) {

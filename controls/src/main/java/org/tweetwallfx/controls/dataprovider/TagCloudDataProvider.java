@@ -36,7 +36,7 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class TagCloudDataProvider implements DataProvider{
+public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryAware {
 
     private final static int NUM_MAX_WORDS = 40;
     private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
@@ -45,10 +45,11 @@ public class TagCloudDataProvider implements DataProvider{
     private Map<String, Long> tree = new TreeMap<>();
 
     
-    public TagCloudDataProvider(TweetStream tweetStream) {
+    private TagCloudDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
+    @Override
     public void processTweet(Tweet tweet) {
         updateTree(tweet);
     }
@@ -90,5 +91,14 @@ public class TagCloudDataProvider implements DataProvider{
     public String getName() {
         return "TagCloud";
     }
+    
+    public static class Factory implements DataProvider.Factory {
+
+        @Override
+        public TagCloudDataProvider create(TweetStream tweetStream) {
+            return new TagCloudDataProvider(tweetStream);
+        }
+    
+    }    
     
 }
