@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
+import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.SymbolTweetEntry;
@@ -62,6 +64,15 @@ public interface Tweet extends BasicEntry {
 
     boolean isRetweet();
 
+    public default EmojiTweetEntry[] getEmojiEntries() {
+        final int[] codePoints = getText().codePoints().toArray();
+
+        return IntStream.range(0, codePoints.length)
+                .filter(i -> codePoints[i] >= 0x1f000)
+                .mapToObj(i -> new EmojiTweetEntry(new String(codePoints, i, 1), i))
+                .toArray(i -> new EmojiTweetEntry[i]);
+    }
+
     public default TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
         return new TextExtractor(this).getTextWithout(entryToRemove);
     }
@@ -94,6 +105,10 @@ public interface Tweet extends BasicEntry {
                     sb.setCharAt(i, ' ');
                 }
             };
+
+            if (entriesToRemove.contains(EmojiTweetEntry.class)) {
+                Arrays.stream(tweet.getEmojiEntries()).forEach(consumer);
+            }
 
             if (entriesToRemove.contains(HashtagTweetEntry.class)) {
                 Arrays.stream(tweet.getHashtagEntries()).forEach(consumer);
