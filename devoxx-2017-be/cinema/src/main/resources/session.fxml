@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<AnchorPane prefHeight="131.0" prefWidth="309.0" style="-fx-background-color: devoxx_gradient; -fx-background-radius: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextFlow layoutY="86.0" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="301.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+         <children>
+            <Text id="title" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 12pt;" text="How the MyDevoxx Mobile app is created (in Java)." wrappingWidth="280.796875" />
+         </children>
+      </TextFlow>
+      <TextFlow maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="209.0" textAlignment="RIGHT" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
+         </children>
+      </TextFlow>
+      <Label id="room" layoutX="233.0" layoutY="2.0" style="-fx-font-weight: bold; -fx-font-size: 14pt;" text="Room 10" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <Label id="startTime" layoutX="5.0" layoutY="29.0" text="14:00" />
+   </children>
+   <effect>
+      <DropShadow color="#9a9494" offsetX="2.0" offsetY="2.0" />
+   </effect>
+</AnchorPane>
