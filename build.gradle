@@ -13,7 +13,7 @@ buildscript {
             exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7 
 
         }
-        classpath "gradle.plugin.com.github.spotbugs:gradlePlugin:1.4"
+        classpath "gradle.plugin.com.github.spotbugs:gradlePlugin:1.6.0"
         gradleApi()
     }
 }
