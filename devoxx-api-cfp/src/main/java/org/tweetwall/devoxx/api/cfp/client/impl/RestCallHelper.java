@@ -46,7 +46,7 @@ public class RestCallHelper {
         }
     }
 
-    public static Response getReponse(final String url) {
+    public static Response getResponse(final String url) {
         return getClient()
                 .target(getHttpsUrl(url))
                 .request(MediaType.APPLICATION_JSON)
@@ -54,10 +54,10 @@ public class RestCallHelper {
     }
 
     public static <T> T getData(final String url, final Class<T> typeClass) {
-        return getReponse(url).readEntity(typeClass);
+        return getResponse(url).readEntity(typeClass);
     }
 
     public static <T> T getData(final String url, final GenericType<T> genericType) {
-        return getReponse(url).readEntity(genericType);
+        return getResponse(url).readEntity(genericType);
     }
 }
