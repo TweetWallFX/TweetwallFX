@@ -23,8 +23,12 @@
  */
 package org.tweetwall.devoxx.api.cfp.client.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -47,15 +51,41 @@ public class RestCallHelper {
         }
     }
 
-    public static Response getResponse(final String url) {
-        return getClient()
-                .target(getHttpsUrl(url))
+    public static Response getResponse(final String url, final Map<String, Object> queryParameters) {
+        System.out.println("url: " + url);
+        WebTarget webTarget = getClient().target(getHttpsUrl(url));
+
+        if (null != queryParameters && !queryParameters.isEmpty()) {
+            queryParameters.forEach((key, value) -> {
+                if (value instanceof Object[]) {
+                    webTarget.queryParam(key, Object[].class.cast(value));
+                } else if (value instanceof Collection) {
+                    webTarget.queryParam(key, ((Collection<?>) value).toArray());
+                } else {
+                    webTarget.queryParam(key, value);
+                }
+            });
+        }
+
+        return webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .get();
     }
 
+    public static Response getResponse(final String url) {
+        return getResponse(url, Collections.emptyMap());
+    }
+
+    public static <T> T getData(final String url, final Class<T> typeClass, final Map<String, Object> queryParameters) {
+        return getResponse(url, queryParameters).readEntity(typeClass);
+    }
+
     public static <T> T getData(final String url, final Class<T> typeClass) {
         return getResponse(url).readEntity(typeClass);
+    }
+
+    public static <T> T getData(final String url, final GenericType<T> genericType, final Map<String, Object> queryParameters) {
+        return getResponse(url, queryParameters).readEntity(genericType);
     }
 
     public static <T> T getData(final String url, final GenericType<T> genericType) {

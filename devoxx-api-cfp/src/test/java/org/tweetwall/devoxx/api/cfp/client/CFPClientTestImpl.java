@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.GenericType;
 import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
@@ -88,5 +89,17 @@ public class CFPClientTestImpl implements CFPClient {
     @Override
     public Tracks getTracks() {
         return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/tracks", Tracks.class);
+    }
+
+    @Override
+    public VotingResults getVotingResultsOverall() {
+//        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks/", VotingResults.class);
+        return RestCallHelper.getData("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", VotingResults.class);
+    }
+
+    @Override
+    public VotingResults getVotingResultsDaily(String day) {
+//        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks", VotingResults.class, Collections.singletonMap("day", day));
+        return RestCallHelper.getData("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", VotingResults.class, Collections.singletonMap("day", day));
     }
 }

@@ -121,6 +121,22 @@ public interface CFPClient {
     Tracks getTracks();
 
     /**
+     * Shows the voting results for the requested {@code day}.
+     *
+     * @param day the day of the week
+     *
+     * @return the voting results of the day
+     */
+    VotingResults getVotingResultsDaily(final String day);
+
+    /**
+     * Shows the overall voting results of the event.
+     *
+     * @return the overall voting results
+     */
+    VotingResults getVotingResultsOverall();
+
+    /**
      * Stream of all available {@link CFPClient CFPClients}.
      *
      * @return Stream containing all available CFPClients

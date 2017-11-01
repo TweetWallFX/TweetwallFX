@@ -261,4 +261,26 @@ public class CFPClientTest {
         System.out.println("tracks: " + tracks);
         assertNotNull(tracks);
     }
+
+    @Test
+    public void votingResultsOverallAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final VotingResults votingResults = client.getVotingResultsOverall();
+        System.out.println("votingResults: " + votingResults);
+        assertNotNull(votingResults);
+    }
+
+    @Test
+    public void votingResultsDailyAreRetrievable() {
+        final CFPClient client = CFPClient.getClient();
+        System.out.println("client: " + client);
+        assertNotNull(client);
+
+        final VotingResults votingResults = client.getVotingResultsDaily("monday");
+        System.out.println("votingResults: " + votingResults);
+        assertNotNull(votingResults);
+    }
 }
