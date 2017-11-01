@@ -108,7 +108,7 @@ final class TwitterTweet implements Tweet {
                     .map(ume -> new TwitterUserMentionTweetEntry(ume))
                     .toArray(c -> new UserMentionTweetEntry[c]);
         }
-        
+
         retweetedTweet = isRetweet()
                 ? new TwitterTweet(status.getRetweetedStatus())
                 : null;
