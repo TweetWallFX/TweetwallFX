@@ -48,6 +48,13 @@ public interface CFPClient {
     Event getEvent();
 
     /**
+     * Show the list of proposal types.
+     *
+     * @return the list of all proposal types
+     */
+    ProposalTypes getProposalTypes();
+
+    /**
      * Show the list of rooms.
      *
      * @return the list of all rooms

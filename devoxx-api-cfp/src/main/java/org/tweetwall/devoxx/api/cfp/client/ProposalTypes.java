@@ -21,44 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.api.cfp.client.impl;
+package org.tweetwall.devoxx.api.cfp.client;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.List;
 
-public class RestCallHelper {
+/**
+ * Show the list of ProposalTypes.
+ */
+public class ProposalTypes {
 
-    private RestCallHelper() {
-        // prevent instantiation
+    /**
+     * Description of content.
+     */
+    private String content;
+
+    /**
+     * All rooms.
+     */
+    private List<ProposalType> proposalTypes;
+
+    public String getContent() {
+        return content;
     }
 
-    private static Client getClient() {
-        return ClientBuilder.newClient();
+    public void setContent(final String content) {
+        this.content = content;
     }
 
-    private static String getHttpsUrl(final String url) {
-        if (url.startsWith("http:")) {
-            return url.replaceAll("^http:", "https:");
-        } else {
-            return url;
-        }
+    public List<ProposalType> getProposalTypes() {
+        return proposalTypes;
     }
 
-    public static Response getResponse(final String url) {
-        return getClient()
-                .target(getHttpsUrl(url))
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+    public void setProposalTypes(final List<ProposalType> proposalTypes) {
+        this.proposalTypes = proposalTypes;
     }
 
-    public static <T> T getData(final String url, final Class<T> typeClass) {
-        return getResponse(url).readEntity(typeClass);
-    }
-
-    public static <T> T getData(final String url, final GenericType<T> genericType) {
-        return getResponse(url).readEntity(genericType);
+    @Override
+    public String toString() {
+        return "ProposalTypes{"
+                + "\n    content=" + getContent()
+                + "\n    proposalTypes=" + Helper.convertCollectionForToString(getProposalTypes())
+                + "\n} extends " + super.toString();
     }
 }

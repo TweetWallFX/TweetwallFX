@@ -21,44 +21,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.api.cfp.client.impl;
+package org.tweetwall.devoxx.api.cfp.client;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+/**
+ * A type of Proposal.
+ */
+public class ProposalType {
 
-public class RestCallHelper {
+    /**
+     * The ID of the ProposalType.
+     */
+    private String id;
 
-    private RestCallHelper() {
-        // prevent instantiation
+    /**
+     * The Description of the ProposalType.
+     */
+    private String description;
+
+    /**
+     * The label of the ProposalType.
+     */
+    private String label;
+
+    public String getId() {
+        return id;
     }
 
-    private static Client getClient() {
-        return ClientBuilder.newClient();
+    public void setId(final String id) {
+        this.id = id;
     }
 
-    private static String getHttpsUrl(final String url) {
-        if (url.startsWith("http:")) {
-            return url.replaceAll("^http:", "https:");
-        } else {
-            return url;
-        }
+    public String getDescription() {
+        return description;
     }
 
-    public static Response getResponse(final String url) {
-        return getClient()
-                .target(getHttpsUrl(url))
-                .request(MediaType.APPLICATION_JSON)
-                .get();
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
-    public static <T> T getData(final String url, final Class<T> typeClass) {
-        return getResponse(url).readEntity(typeClass);
+    public String getLabel() {
+        return label;
     }
 
-    public static <T> T getData(final String url, final GenericType<T> genericType) {
-        return getResponse(url).readEntity(genericType);
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return "ProposalTypes{"
+                + "\n    id=" + getId()
+                + "\n    description=" + getDescription()
+                + "\n    label=" + getLabel()
+                + "\n} extends " + super.toString();
     }
 }

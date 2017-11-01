@@ -45,6 +45,11 @@ public class CFPClientTestImpl implements CFPClient {
     }
 
     @Override
+    public ProposalTypes getProposalTypes() {
+        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/proposalTypes", ProposalTypes.class);
+    }
+
+    @Override
     public Rooms getRooms() {
         return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/rooms/", Rooms.class);
     }
