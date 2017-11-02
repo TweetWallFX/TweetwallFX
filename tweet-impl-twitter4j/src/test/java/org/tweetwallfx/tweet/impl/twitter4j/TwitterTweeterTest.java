@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import java.util.Arrays;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Assume;
@@ -117,5 +118,32 @@ public class TwitterTweeterTest {
                 925080175091552256L,
                 MediaTweetEntry.class,
                 "New @java_hipster stickers coming to a #Devoxx near you! Thanks to @oktadev for sponsoring.");
+    }
+
+    private void testEnhancedText(final long id, final String... shallNotContain) {
+        final Tweeter tweeter = getTweeter();
+        assertNotNull(tweeter);
+        skipIfOauthisNotConfigured();
+
+        final Tweet tweet = tweeter.getTweet(id);
+        System.out.println("tweet: " + tweet);
+        assertNotNull(tweet);
+
+        final String text = tweet.getText();
+        System.out.println("text: " + text);
+
+        String displayEnhancedText = tweet.getDisplayEnhancedText();
+        System.out.println("displayEnhancedText: " + displayEnhancedText);
+        Arrays.stream(shallNotContain).forEach(s -> System.out.println("shallNotContain: " + s));
+        Arrays.stream(shallNotContain).forEach(s -> assertFalse(displayEnhancedText.contains(s)));
+    }
+
+    @Test
+    public void tweetDisplayEnhancedText_vbrabant_925750697861279745() {
+        // https://twitter.com/vbrabant/status/925750697861279745
+        testEnhancedText(
+                925750697861279745L,
+                "@Stephan007");
+
     }
 }
