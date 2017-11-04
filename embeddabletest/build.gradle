@@ -1,0 +1,16 @@
+apply plugin: 'application'
+mainClassName = 'Main'
+
+tasks.withType(JavaExec) {
+    main mainClassName
+}
+
+task('debug', dependsOn: 'classes', type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    debug = true
+}
+
+dependencies {
+    compile project(':TweetWallFX-Embeddable')
+    runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+}

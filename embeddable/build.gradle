@@ -1,0 +1,22 @@
+apply plugin: 'cz.kubacki.nbm'
+
+dependencies {
+    compile project(':TweetWallFX-2D')
+    compile project(':TweetWallFX-Controls')
+    runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+}
+
+task copyToLib(type: Copy) {
+    into buildDir.path + '/lib'
+    from configurations.runtime
+}    
+
+nbm {
+    //        moduleName = 'org.tweetwallfx.embeddable'
+    
+    friendPackages {
+        add 'org.tweetwallfx.embeddable'
+    }
+}
+
+tasks.assemble.dependsOn tasks.copyToLib

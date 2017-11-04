@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':TweetWallFX-2D')
+    compile project(':TweetWallFX-Controls')
+}

@@ -1,0 +1,7 @@
+dependencies {
+    compile group: 'org.twitter4j', name: 'twitter4j-core', version: versionTwitter4j
+    compile group: 'org.twitter4j', name: 'twitter4j-stream', version: versionTwitter4j
+    compile project(':TweetWallFX-Tweet-API')
+    compile project(':TweetWallFX-Tweet-Impl-Twitter4J-OAuth')
+    compile project(':TweetWallFX-Configuration')
+}
