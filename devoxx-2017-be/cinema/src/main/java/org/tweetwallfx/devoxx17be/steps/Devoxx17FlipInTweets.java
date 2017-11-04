@@ -44,8 +44,8 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 
 /**
- *
- * @author sven
+ * Devox 2017 TweetStream Flip In Animation Step
+ * @author Sven Reimers
  */
 public class Devoxx17FlipInTweets extends AbstractStep {
 

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.animation.ParallelTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -40,12 +39,11 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
-import org.tweetwallfx.devoxx2017be.dataprovider.SessionData;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 
 /**
- *
- * @author sven
+ * Devox 2017 Show Top Rated Talks Today (Flip In) Animation Step
+ * @author Sven Reimers
  */
 public class Devoxx17ShowTopRatedToday extends AbstractStep {
 

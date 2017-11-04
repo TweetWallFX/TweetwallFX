@@ -27,12 +27,11 @@ import java.time.OffsetTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.ehcache.sizeof.filters.CombinationSizeOfFilter;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 
 /**
- *
- * @author sven
+ * Seesion Data Pojo Helper class
+ * @author Sven Reimers
  */
 public class SessionData {
 

@@ -42,8 +42,8 @@ import org.tweetwallfx.devoxx2017be.dataprovider.ScheduleDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.SessionData;
 
 /**
- *
- * @author sven
+ * Devox 2017 Show Schedule (Flip In) Animation Step
+ * @author Sven Reimers
  */
 public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
 

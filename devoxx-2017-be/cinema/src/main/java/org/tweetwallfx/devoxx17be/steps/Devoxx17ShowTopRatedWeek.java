@@ -42,8 +42,8 @@ import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 
 /**
- *
- * @author sven
+ * Devox 2017 Show Top Rated Talks Week (Flip In) Animation Step
+ * @author Sven Reimers
  */
 public class Devoxx17ShowTopRatedWeek extends AbstractStep {
 

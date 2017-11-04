@@ -23,11 +23,8 @@
  */
 package org.tweetwallfx.devoxx2017be.dataprovider;
 
-import java.time.LocalDateTime;
-import java.time.format.TextStyle;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
@@ -36,8 +33,8 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
- *
- * @author sven
+ * DataProvider Implementation for Top Talks Week
+ * @author Sven Reimers
  */
 public class TopTalksWeekDataProvider implements DataProvider {
 

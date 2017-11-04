@@ -30,8 +30,8 @@ import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 
 /**
- *
- * @author sven
+ * Devox 2017 Schedule Flip Out Animation Step
+ * @author Sven Reimers
  */
 public class Devoxx17FlipOutSchedule extends AbstractStep {
 

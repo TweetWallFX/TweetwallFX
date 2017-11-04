@@ -36,8 +36,8 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
- *
- * @author sven
+ * DataProvider Implementation for Top Talks Today
+ * @author Sven Reimers
  */
 public class TopTalksTodayDataProvider implements DataProvider {
 
