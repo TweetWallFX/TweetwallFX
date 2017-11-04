@@ -105,8 +105,8 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
     }    
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 1; // do not stop at this step;
+    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return java.time.Duration.ZERO; // do not stop at this step;
     }
 
     @Override

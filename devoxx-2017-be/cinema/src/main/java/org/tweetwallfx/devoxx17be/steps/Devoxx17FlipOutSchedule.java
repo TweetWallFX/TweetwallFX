@@ -50,8 +50,8 @@ public class Devoxx17FlipOutSchedule extends AbstractStep {
     }
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 1;
+    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return java.time.Duration.ZERO;
     }
 
 }

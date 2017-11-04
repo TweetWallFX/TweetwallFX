@@ -119,8 +119,8 @@ public class Devoxx17FlipInTweets extends AbstractStep {
     }
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 15000;
+    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return java.time.Duration.ofSeconds(15);
     }
     
 }
