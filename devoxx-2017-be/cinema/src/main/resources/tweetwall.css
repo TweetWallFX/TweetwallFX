@@ -1,0 +1,136 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2014-2017 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+@font-face {
+    font-family: 'BebasNeue';
+    src: url('BebasNeue.otf');
+}
+
+@font-face {
+    font-family: 'BebasNeue Bold';
+    src: url('BebasNeue-Bold.otf');
+}
+
+@font-face {
+    font-family: 'Noto Emoji';
+    src: url('NotoEmoji-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Twitter Color Emoji';
+    src: url('TwitterColorEmoji-SVGinOT.ttf');
+}
+
+.root {
+    -fx-font-family: 'System'; 
+    devoxx_gradient: linear-gradient(to bottom right, #f68b1f, derive(#f68b1f, -30%));
+}
+
+.text{
+    -fx-font-smoothing-type: gray;
+}
+
+.statusline {
+    /*-fx-font: 12px "Calibri";*/ 
+    -fx-text-fill: red !important;     
+}
+
+.wordle {
+    -fx-graphic: none;
+    -fx-background-color: black;
+    -fx-background-graphic: url(Devoxx2017CinemaBackdropDevoxxRightLargeBookv2.png);
+    /*-fx-second-graphic: url(jug-bodensee-logo-A-gross-white.png);*/
+    -fx-display-tag-num: 25;
+    /*-fx-font: 12pt "BebasNeue";*/
+    -fx-font-size-min: 36;
+    -fx-font-size-max: 72;
+    -fx-tweet-font-size: 54;
+    
+}
+.wordle .bg-image {
+    /*-fx-opacity: 0.4;*/
+}
+
+.wordle .secondlogo {
+    -fx-scale-x: 0.4;
+    -fx-scale-y: 0.4;
+    /*position: relative;*/
+    /*-fx-alignment: BOTTOM_RIGHT;*/
+    /*-fx-translate-x: +900;
+    -fx-translate-y: +100;*/
+}
+
+.wordle .logo {
+    /*visibility: hidden;*/
+/*    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;*/
+    /*-fx-translate-x: +50;*/
+    /*-fx-translate-y: -50;*/
+}
+
+.wordle .tag {
+    /*-fx-font-family: "Calibri";*/
+    -fx-fill: white !important;
+/*    -fx-stroke: black;
+    -fx-stroke-width: 0.5;    */
+    /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
+    /*-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );*/
+}
+
+.wordle .name {
+    -fx-font-size: 36px; 
+    -fx-text-fill: white; 
+    -fx-font-weight: bold;    
+}
+
+.wordle .handle {
+    -fx-font-size: 28px;
+    -fx-text-fill: white;   
+}
+
+.tweetUsername {
+    -fx-font: 1em 'Twitter Color Emoji';    
+    -fx-fill: derive(blanchedalmond, +5%);
+}
+
+.tweetText {
+    -fx-font: 1.2em 'Twitter Color Emoji';    
+/*    -fx-font-family: 'Twitter Color Emoji';
+    -fx-font-size: 48pt;    */
+    -fx-fill: derive(blanchedalmond, -5%);    
+}
+
+/*.tweetFlow {
+    -fx-font-family: 'Twitter Color Emoji';
+    -fx-font-size: 1.5em;    
+    -fx-fill: derive(blanchedalmond, -5%);        
+}*/
+
+.tweetDisplay {
+/*    -fx-border-color: black;
+    -fx-border-style: solid;
+    -fx-border-width: 0pt 0pt 1pt 0pt;
+    -fx-border-radius: 5pt;
+    -fx-border-insets: 5pt;*/
+}

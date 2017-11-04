@@ -1,0 +1,1566 @@
+{
+    "slots": [{
+            "roomId": "a_hall",
+            "notAllocated": false,
+            "fromTimeMillis": 1509951600000,
+            "break": {
+                "id": "reg",
+                "nameEN": "Registration",
+                "nameFR": "Accueil",
+                "room": {
+                    "id": "a_hall",
+                    "name": "Exhibition floor",
+                    "capacity": 1500,
+                    "setup": "special"
+                }
+            },
+            "roomSetup": "special",
+            "talk": null,
+            "fromTime": "08:00",
+            "toTimeMillis": 1509957000000,
+            "toTime": "09:30",
+            "roomCapacity": 1500,
+            "roomName": "Exhibition floor",
+            "slotId": "reg_monday_6_8h0_9h30",
+            "day": "monday"
+        }, {
+            "roomId": "room4",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.1",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "communication"
+                    }, {
+                        "value": "collaboration"
+                    }, {
+                        "value": "Community networking"
+                    }, {
+                        "value": "empathy"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Methodology &amp; Culture",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Communication is the one skill that will never be obsolete. Why, then, are so many of us intimidated by working on or beefing up our communication strategies? We can all be great communicators, we just need to learn to approach it from a place of empathy. This interactive workshop tackles your communications fears and weaknesses head on with a full day focused on both sides of the conversation spectrum: speaking and listening. The main goal of this workshop is to learn how to approach every interaction from a place of empathy.</p>\n<ol>\n<li>Understand the true purpose of listening</li>\n<li>Learn to shift listening into an action-based activity</li>\n<li>Identifying biases and learn how to combat them</li>\n<li>Learn how to fight fair and use those disagreements as gateways to collaboration</li>\n<li>Learn how to craft responses that best helps your listeners understand and embrace your message</li>\n</ol>\n",
+                "id": "WRS-4063",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/b2c7a7f830892be6f609604fb87becd74cf62cd5",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Sharon Steed"
+                        },
+                        "name": "Sharon Steed"
+                    }],
+                "title": "Empathetic communication at work",
+                "lang": "en",
+                "summary": "Communication is the one skill that will never be obsolete. Why, then, are so many of us intimidated by working on or beefing up our communication strategies? We can all be great communicators, we just need to learn to approach it from a place of empathy. This interactive workshop tackles your communications fears and weaknesses head on with a full day focused on both sides of the conversation spectrum: speaking and listening. The main goal of this workshop is to learn how to approach every interaction from a place of empathy. \r\n\r\n1. Understand the true purpose of listening\r\n2. Learn to shift listening into an action-based activity \r\n3. Identifying biases and learn how to combat them\r\n4. Learn how to fight fair and use those disagreements as gateways to collaboration\r\n5. Learn how to craft responses that best helps your listeners understand and embrace your message"
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 347,
+            "roomName": "Room 4",
+            "slotId": "uni_room4_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "room5",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.5",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "Kotlin"
+                    }, {
+                        "value": "Android"
+                    }, {
+                        "value": "Google"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Programming languages",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Let’s take you on a journey of Kotlin, the language created by Jetbrains for the JVM. Since the announcement that Google made in May we have seen an increase in interest in this language. In this talk we will try to cover as much as possible about the language in a deep dive. In the first part we will create a Rest API with Kotlin and show you the possibilities in using Kotlin as a server side language. In part 2 we will consume the Rest API with an Android app. In both parts we will use different features, so you get a good understanding of Kotlin.</p>\n",
+                "id": "MCN-7281",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/e91968c482b615232da5493936b01d45215c8c1b",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Guy Heylens"
+                        },
+                        "name": "Guy Heylens"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/b4b847566dd06007e0a8b83dbaf60e8ef653ea2c",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "David González"
+                        },
+                        "name": "David González"
+                    }],
+                "title": "Kotlin Deep Dive",
+                "lang": "en",
+                "summary": "Let’s take you on a journey of Kotlin, the language created by Jetbrains for the JVM. Since the announcement that Google made in May we have seen an increase in interest in this language. In this talk we will try to cover as much as possible about the language in a deep dive. In the first part we will create a Rest API with Kotlin and show you the possibilities in using Kotlin as a server side language. In part 2 we will consume the Rest API with an Android app. In both parts we will use different features, so you get a good understanding of Kotlin."
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 641,
+            "roomName": "Room 5",
+            "slotId": "uni_room5_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "room6",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.6",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "TensorFlow"
+                    }, {
+                        "value": "Cloud Machine Learning"
+                    }, {
+                        "value": "Neural Networks"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Big Data &amp; Machine Learning",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>The hottest topic in computer science today is machine learning and deep neural networks. Many problems deemed &quot;impossible&quot; only 5 years ago have now been solved by deep learning: playing GO, recognizing what is in an image, translating languages, ...</p>\n<p>Software engineers are eager to adopt these new technologies as soon as they come out of research labs and the goal of this session is to equip you to do so. Last year at Devoxx, we covered the basic principles behind neural networks. This year, we will focus on neural network architectures, dive into the most recent advances in the field and give you tips, engineering best practices and pointers to apply these techniques in your projects. No PhD required.</p>\n<p>This university session will cover the newest deep learning developments in image recognition, natural language processing and reinforcement learning. Watching last year&#x27;s recording beforehand (https://youtu.be/vq2nnJ4g6N0) is a good idea but all the necessary concepts will be reexplained.</p>\n",
+                "id": "ZZD-8893",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/3b4de9092cd9236a4953c5e8bffed0c5de2f7537",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Martin Görner"
+                        },
+                        "name": "Martin Görner"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/7c126901b393c4bfa1cd2c27b1a75689a40a0e8a",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Nithum Thain"
+                        },
+                        "name": "Nithum Thain"
+                    }],
+                "title": "Tensorflow and modern deep learning architectures, without a PhD",
+                "lang": "en",
+                "summary": "The hottest topic in computer science today is machine learning and deep neural networks. Many problems deemed \"impossible\" only 5 years ago have now been solved by deep learning: playing GO, recognizing what is in an image, translating languages, ...\r\n\r\nSoftware engineers are eager to adopt these new technologies as soon as they come out of research labs and the goal of this session is to equip you to do so. Last year at Devoxx, we covered the basic principles behind neural networks. This year, we will focus on neural network architectures, dive into the most recent advances in the field and give you tips, engineering best practices and pointers to apply these techniques in your projects. No PhD required.\r\n\r\nThis university session will cover the newest deep learning developments in image recognition, natural language processing and reinforcement learning. Watching last year's recording beforehand (https://youtu.be/vq2nnJ4g6N0) is a good idea but all the necessary concepts will be reexplained."
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 372,
+            "roomName": "Room 6",
+            "slotId": "uni_room6_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "room8",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "MicroServices"
+                    }, {
+                        "value": "testing"
+                    }, {
+                        "value": "Continuous Delivery"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>With traditional software unit tests, there&#x27;s never a guarantee that an application will actually function correctly in the production environment. And when you add microservices, remote resources that are accessible over a network, into the mix, testing is more tricky. To make things even harder, microservices typically need to collaborate with additional network-based microservices, making testing even more challenging.</p>\n<p>In this session you&#x27;ll learn test strategies that solve the most common issues you are likely to encounter when writing tests for microservices architecture. Also you&#x27;ll learn how tools such as Arquillian, JUnit, Docker or techniques suck as service virtualization or consumer-driven testing can help you on this task.</p>\n",
+                "id": "RZM-3323",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/cc3a8573c1f955659203ddc442a9cc2a38bcedd4",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Alex Soto"
+                        },
+                        "name": "Alex Soto"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/53e4d39f5b5e09e9e3fdfa13351b042563024bfd",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Andy Gumbrecht"
+                        },
+                        "name": "Andy Gumbrecht"
+                    }],
+                "title": "Testing Java Microservices",
+                "lang": "en",
+                "summary": "With traditional software unit tests, there's never a guarantee that an application will actually function correctly in the production environment. And when you add microservices, remote resources that are accessible over a network, into the mix, testing is more tricky. To make things even harder, microservices typically need to collaborate with additional network-based microservices, making testing even more challenging.\r\n\r\nIn this session you'll learn test strategies that solve the most common issues you are likely to encounter when writing tests for microservices architecture. Also you'll learn how tools such as Arquillian, JUnit, Docker or techniques suck as service virtualization or consumer-driven testing can help you on this task.\r\n"
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 696,
+            "roomName": "Room 8",
+            "slotId": "uni_room8_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "room9",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.4",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "Spring Boot"
+                    }, {
+                        "value": "Kotlin"
+                    }, {
+                        "value": "Spring Framework 5"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Server Side Java",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Mark and Sébastien will lead a live coding deep dive to show you how to transform a Spring Boot 1 web application written in Java to a Spring Boot 2 application written in Kotlin. This deep dive session will introduce you to various Kotlin features (null safety, data classes, DSLs, extensions, etc.) and explain how you can leverage Spring Framework 5.0 and Spring Data Kay dedicated Kotlin support. Both Spring MVC and Spring WebFlux will be covered. No prior knowledge of Kotlin is required.</p>\n",
+                "id": "RYZ-3811",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/6c3bec61efb9c409682433ed577e127717efadc8",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Mark Heckler"
+                        },
+                        "name": "Mark Heckler"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/83958251b66f2ad1f09ec0353209f36d289df00f",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Sébastien Deleuze"
+                        },
+                        "name": "Sébastien Deleuze"
+                    }],
+                "title": "From Spring Boot 1 in Java to Spring Boot 2 in Kotlin",
+                "lang": "en",
+                "summary": "Mark and Sébastien will lead a live coding deep dive to show you how to transform a Spring Boot 1 web application written in Java to a Spring Boot 2 application written in Kotlin. This deep dive session will introduce you to various Kotlin features (null safety, data classes, DSLs, extensions, etc.) and explain how you can leverage Spring Framework 5.0 and Spring Data Kay dedicated Kotlin support. Both Spring MVC and Spring WebFlux will be covered. No prior knowledge of Kotlin is required."
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 393,
+            "roomName": "Room 9",
+            "slotId": "uni_room9_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof1",
+            "notAllocated": false,
+            "fromTimeMillis": 1509957000000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.10",
+                "talkType": "Hands-on Labs",
+                "tags": [{
+                        "value": "data streaming"
+                    }, {
+                        "value": "Reactive Programming"
+                    }, {
+                        "value": "Containers"
+                    }, {
+                        "value": "Vert.x"
+                    }, {
+                        "value": "Infinispan"
+                    }],
+                "track": "Architecture &amp; Security",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>Dealing with real-time, in-memory, streaming data is a unique challenge and with the advent of the smartphone and IoT (trillions of internet connected devices), we are witnessing an exponential growth in data at scale. Learning how to implement architectures that handle real-time streaming data, where data is flowing constantly, and combine it with analysis and instant search capabilities is key for developing robust and scalable services and applications.</p>\n<p>In this lab session, we will look at how to implement an architecture like this, using reactive open source frameworks. The streaming data architecture has the following tiers:</p>\n<ul>\n<li>Data collection tier</li>\n<li>Data transport tier</li>\n<li>Analysis tier</li>\n<li>In-Memory data store tier</li>\n<li>Data access tier</li>\n<li>Client tier</li>\n</ul>\n<p>An architecture based around the Swiss rail transport system will be use throughout the lab.</p>\n<p>Lab session technologies: Java (attendees must be comfortable with Java 8), Infinispan, Vert.x, OpenShift.</p>\n",
+                "id": "PUM-8097",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/b9c7ca1bd9680a2124cefaf32f21ba2f2232c202",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Galder Zamarreño"
+                        },
+                        "name": "Galder Zamarreño"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/93e016acf90b9a464acd35c794e17613707e0252",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Katia Aresti"
+                        },
+                        "name": "Katia Aresti"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/8ae5eaa1e9bcbe728ea621a80d69b2d69ce051d6",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Thomas Segismont"
+                        },
+                        "name": "Thomas Segismont"
+                    }],
+                "title": "Streaming Data Workshop",
+                "lang": "en",
+                "summary": "Dealing with real-time, in-memory, streaming data is a unique challenge and with the advent of the smartphone and IoT (trillions of internet connected devices), we are witnessing an exponential growth in data at scale. Learning how to implement architectures that handle real-time streaming data, where data is flowing constantly, and combine it with analysis and instant search capabilities is key for developing robust and scalable services and applications.\r\n \r\nIn this lab session, we will look at how to implement an architecture like this, using reactive open source frameworks. The streaming data architecture has the following tiers:\r\n\r\n* Data collection tier\r\n* Data transport tier\r\n* Analysis tier\r\n* In-Memory data store tier\r\n* Data access tier\r\n* Client tier\r\n \r\nAn architecture based around the Swiss rail transport system will be use throughout the lab. \r\n \r\nLab session technologies: Java (attendees must be comfortable with Java 8), Infinispan, Vert.x, OpenShift."
+            },
+            "fromTime": "09:30",
+            "toTimeMillis": 1509967800000,
+            "toTime": "12:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 1",
+            "slotId": "lab_bof1_monday_6_9h30_12h30",
+            "day": "monday"
+        }, {
+            "roomId": "a_hall",
+            "notAllocated": false,
+            "fromTimeMillis": 1509967800000,
+            "break": {
+                "id": "lunch",
+                "nameEN": "Lunch",
+                "nameFR": "Pause déjeuner",
+                "room": {
+                    "id": "a_hall",
+                    "name": "Exhibition floor",
+                    "capacity": 1500,
+                    "setup": "special"
+                }
+            },
+            "roomSetup": "special",
+            "talk": null,
+            "fromTime": "12:30",
+            "toTimeMillis": 1509971400000,
+            "toTime": "13:30",
+            "roomCapacity": 1500,
+            "roomName": "Exhibition floor",
+            "slotId": "lunch_monday_6_12h30_13h30",
+            "day": "monday"
+        }, {
+            "roomId": "room4",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.6",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "chat bots"
+                    }, {
+                        "value": "AI"
+                    }, {
+                        "value": "chat user interface"
+                    }, {
+                        "value": "conversations"
+                    }, {
+                        "value": "Voice Recognition"
+                    }],
+                "track": "Big Data &amp; Machine Learning",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>A unique Deep Dive covering the 4 Chatbots on the market\nEvery speaker has 30 min to present :\n- what is possible to do\n- how to extend the conversation framework\n- what are the limitations\n- what is expected in the future\nFollowing by 5 min Q&amp;A</p>\n",
+                "id": "ZML-0816",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/bf0443d3cc0f9ef6c7550d58fd0c88301906aff6",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Tara Walker"
+                        },
+                        "name": "Tara Walker"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/4292786bfc2f6304735ba46d0c2285c10219016f",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Eric Cattoir"
+                        },
+                        "name": "Eric Cattoir"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/435988122123af3eac633c104bf3374aa019bc28",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Guillaume Laforge"
+                        },
+                        "name": "Guillaume Laforge"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/271c26f1ff3f4c0ece4601d9a11f56034b3466e9",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Nick Trogh"
+                        },
+                        "name": "Nick Trogh"
+                    }],
+                "title": "Conversational Bots : Amazon Lex, IBM Watson, Microsoft Bot and Google Assistant",
+                "lang": "en",
+                "summary": "A unique Deep Dive covering the 4 Chatbots on the market\r\nEvery speaker has 30 min to present :\r\n- what is possible to do\r\n- how to extend the conversation framework\r\n- what are the limitations\r\n- what is expected in the future\r\nFollowing by 5 min Q&A"
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 347,
+            "roomName": "Room 4",
+            "slotId": "uni_room4_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "room5",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "Stream API"
+                    }, {
+                        "value": "Java 1.8"
+                    }, {
+                        "value": "Java Streams API"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>The Collector API has been added to the JDK 8, and was left in the shadow of the Stream API. It is quite logical, since a collector is made to consume the elements of a stream: no Stream, no Collector. We have a set of ready to use, very powerful collectors in the Collectors class: toList and groupingBy, to name a few. Those two facts hide the collector model to process data, and how powerful and efficient is this API.</p>\n<p>This in depth talk is all about collectors: those available, because we need to know them, those that we can create, those we had no idea they could be created, and the others, as there is in fact no limit to what can be done with this API. The concept of downstream collector will be used to show how we can write entire data processing pipelines using collectors only, and pass them as parameters to other pipelines.</p>\n<p>We will be careful about keeping a high level of readability in our code, and also talk about performances.</p>\n<p>This talks is composed of slides and live coding on simple and complex examples.</p>\n",
+                "id": "KSB-3519",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/35a6797008ce8295fcc76c03dcf0a58a07ab3070",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "José Paumard"
+                        },
+                        "name": "José Paumard"
+                    }],
+                "title": "Collectors in the wild!",
+                "lang": "en",
+                "summary": "The Collector API has been added to the JDK 8, and was left in the shadow of the Stream API. It is quite logical, since a collector is made to consume the elements of a stream: no Stream, no Collector. We have a set of ready to use, very powerful collectors in the Collectors class: toList and groupingBy, to name a few. Those two facts hide the collector model to process data, and how powerful and efficient is this API. \r\n\r\nThis in depth talk is all about collectors: those available, because we need to know them, those that we can create, those we had no idea they could be created, and the others, as there is in fact no limit to what can be done with this API. The concept of downstream collector will be used to show how we can write entire data processing pipelines using collectors only, and pass them as parameters to other pipelines. \r\n\r\nWe will be careful about keeping a high level of readability in our code, and also talk about performances. \r\n\r\nThis talks is composed of slides and live coding on simple and complex examples. "
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 641,
+            "roomName": "Room 5",
+            "slotId": "uni_room5_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "room6",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.6",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "Neural Networks"
+                    }, {
+                        "value": "Machine learning beginners"
+                    }, {
+                        "value": "Machine learning"
+                    }, {
+                        "value": "Artificial Intelligence"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Big Data &amp; Machine Learning",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>You pick up the keyboard, and select &#x27;tanh&#x27;. &#x27;Play&#x27;. The epochs rack up...\nSomething doesn&#x27;t feel right, things aren&#x27;t converging, your HP is decreasing. But you&#x27;ve seen people do this before... The FAQ is useless, and the documentation is like boss level 99. You know it&#x27;s possible - but What The Fowler is &#x27;tanh&#x27; anyway? And How The Fortran does this work?</p>\n<p>Neural Networks are hard. But don&#x27;t worry, there is a walkthrough for this, and it has pictures.</p>\n",
+                "id": "RFO-3176",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/4b4bbe7aeaf8829de3ba97d111556f187859713d",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Katharine Beaumont"
+                        },
+                        "name": "Katharine Beaumont"
+                    }],
+                "title": "Neural Networks: Walkthrough",
+                "lang": "en",
+                "summary": "You pick up the keyboard, and select 'tanh'. 'Play'. The epochs rack up...\r\nSomething doesn't feel right, things aren't converging, your HP is decreasing. But you've seen people do this before... The FAQ is useless, and the documentation is like boss level 99. You know it's possible - but What The Fowler is 'tanh' anyway? And How The Fortran does this work?\r\n\r\nNeural Networks are hard. But don't worry, there is a walkthrough for this, and it has pictures."
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 372,
+            "roomName": "Room 6",
+            "slotId": "uni_room6_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "room8",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.10",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "MicroServices"
+                    }, {
+                        "value": "domain model"
+                    }, {
+                        "value": "CQRS"
+                    }, {
+                        "value": "Event Sourcing"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Architecture &amp; Security",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>Aren&#x27;t you tired of hearing that Domain-Driven Design and Bounded Contexts are the &quot;solution&quot; for proper slicing your legacy monolithic application? But yet nobody shows you how! Well, not anymore.</p>\n<p>We&#x27;ll take 20+ years of experience on this field and pack everything on this intensive deep dive session. We&#x27;ll perform a live coding session starting with a legacy monolith with an anemic domain model. Then we&#x27;ll constant refactor &amp; restructure the code to show how can we properly encapsulate data and behavior on Bounded Contexts. After that we&#x27;ll slice &amp; dice code and data and consider some evolutionary steps for your integration. We got it covered: baby steps, CQRS, Event Sourcing, and more! Everything done from a practical and hands-on approach until you (maybe) can reach the eden of distributed Domain Events within your application.</p>\n",
+                "id": "DII-1775",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/31f90ab8242bbf0356032cd4691e921961ba28ef",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Edson Yanaga"
+                        },
+                        "name": "Edson Yanaga"
+                    }],
+                "title": "Slice & Dice your Monolith with Domain-Driven Design ",
+                "lang": "en",
+                "summary": "Aren't you tired of hearing that Domain-Driven Design and Bounded Contexts are the \"solution\" for proper slicing your legacy monolithic application? But yet nobody shows you how! Well, not anymore.\r\n\r\nWe'll take 20+ years of experience on this field and pack everything on this intensive deep dive session. We'll perform a live coding session starting with a legacy monolith with an anemic domain model. Then we'll constant refactor & restructure the code to show how can we properly encapsulate data and behavior on Bounded Contexts. After that we'll slice & dice code and data and consider some evolutionary steps for your integration. We got it covered: baby steps, CQRS, Event Sourcing, and more! Everything done from a practical and hands-on approach until you (maybe) can reach the eden of distributed Domain Events within your application."
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 696,
+            "roomName": "Room 8",
+            "slotId": "uni_room8_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "room9",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.4",
+                "talkType": "Deep Dive",
+                "tags": [{
+                        "value": "Spring Boot"
+                    }, {
+                        "value": "Angular"
+                    }, {
+                        "value": "MicroServices"
+                    }, {
+                        "value": "Cloud Native Applications"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Server Side Java",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>10,000 microservices are generated each month using JHipster!</p>\n<p>During this in-depth session by the two JHipster lead developers, we’ll detail:</p>\n<ul>\n<li>How to develop and deploy microservices easily</li>\n<li>Scalability and failover of microservices</li>\n<li>The JHipster Registry for scaling, configuring and monitoring microservices</li>\n<li>Common architecture patterns and pitfalls</li>\n</ul>\n",
+                "id": "FHE-0567",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/c4b8eb452f4af02ea3fe7a1b5bd30b2d3e6d3a42",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Julien Dubois"
+                        },
+                        "name": "Julien Dubois"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/ef5a62ed7ee45955da311d090d58e4a422de23f0",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Deepu K Sasidharan"
+                        },
+                        "name": "Deepu K Sasidharan"
+                    }],
+                "title": "Easy microservices with JHipster",
+                "lang": "en",
+                "summary": "10,000 microservices are generated each month using JHipster!\r\n \r\nDuring this in-depth session by the two JHipster lead developers, we’ll detail:\r\n \r\n- How to develop and deploy microservices easily\r\n- Scalability and failover of microservices\r\n- The JHipster Registry for scaling, configuring and monitoring microservices\r\n- Common architecture patterns and pitfalls\r\n"
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 393,
+            "roomName": "Room 9",
+            "slotId": "uni_room9_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof1",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.10",
+                "talkType": "Hands-on Labs",
+                "tags": [{
+                        "value": "Blockchain"
+                    }, {
+                        "value": "Live Coding & Demos"
+                    }, {
+                        "value": "Docker Cloud - Kubernetes"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Architecture &amp; Security",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>During this hands-on we will build our own practical blockchain using the open-source, freely available Hyperledger Fabric. At the start of the presentation I will shortly introduce The Hyperledger project founded by the Linux Foundation and choice of Hyperledger Fabric in relation to other (private) blockchains. The hands-on lab will go through the pre-requirements, how to run a blockchain, generating artifacts, starting and stopping the netword and writing your first blockchain application. At the end of this Hands-on you will have setup your own working blockchain and understand the concepts behind it.</p>\n",
+                "id": "RVU-5636",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/5bb5ad7b9948c41e5757bd88d788a4cc4449454c",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Robert van Molken"
+                        },
+                        "name": "Robert van Molken"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/b3608d4a3e252942816e8c79e78f54febeb79c62",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Michael van Gastel"
+                        },
+                        "name": "Michael van Gastel"
+                    }],
+                "title": "Building a practical Blockchain with Hyperledger Fabric",
+                "lang": "en",
+                "summary": "During this hands-on we will build our own practical blockchain using the open-source, freely available Hyperledger Fabric. At the start of the presentation I will shortly introduce The Hyperledger project founded by the Linux Foundation and choice of Hyperledger Fabric in relation to other (private) blockchains. The hands-on lab will go through the pre-requirements, how to run a blockchain, generating artifacts, starting and stopping the netword and writing your first blockchain application. At the end of this Hands-on you will have setup your own working blockchain and understand the concepts behind it.  "
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 1",
+            "slotId": "lab_bof1_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof2",
+            "notAllocated": false,
+            "fromTimeMillis": 1509971400000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.10",
+                "talkType": "Hands-on Labs",
+                "tags": [{
+                        "value": "architecture"
+                    }, {
+                        "value": "MicroServices"
+                    }, {
+                        "value": "Event Sourcing"
+                    }, {
+                        "value": "domain model"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Architecture &amp; Security",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>During this hands-on workshop you&#x27;ll learn about Domain Driven Design, CQRS, Event Sourcing and Microservices. You&#x27;ll learn all of this during an active workshop standing up and contributing with a marker and post-it&#x27;s in your hand. We&#x27;ll be extracting events from a hypothetically business case. The workshop will cover some theory but 80% of our time will be spent hands-on in small groups of 4-6 people. After this workshop you&#x27;ll have learned how to pick and choose the boundaries of your isolated Microservices as Bounded Context&#x27;s, how to thread events as first-class citizens and how to present them to the users.</p>\n",
+                "id": "EVE-8066",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/c56afc4198b392bca8bf99f1734c041814a6cff2",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Stijn Vanpoucke"
+                        },
+                        "name": "Stijn Vanpoucke"
+                    }],
+                "title": "Event storming a DDD/MicroService landscape using post-it's and markers",
+                "lang": "en",
+                "summary": "During this hands-on workshop you'll learn about Domain Driven Design, CQRS, Event Sourcing and Microservices. You'll learn all of this during an active workshop standing up and contributing with a marker and post-it's in your hand. We'll be extracting events from a hypothetically business case. The workshop will cover some theory but 80% of our time will be spent hands-on in small groups of 4-6 people. After this workshop you'll have learned how to pick and choose the boundaries of your isolated Microservices as Bounded Context's, how to thread events as first-class citizens and how to present them to the users."
+            },
+            "fromTime": "13:30",
+            "toTimeMillis": 1509982200000,
+            "toTime": "16:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 2",
+            "slotId": "lab_bof2_monday_6_13h30_16h30",
+            "day": "monday"
+        }, {
+            "roomId": "a_hall",
+            "notAllocated": false,
+            "fromTimeMillis": 1509982200000,
+            "break": {
+                "id": "coffee",
+                "nameEN": "Coffee Break",
+                "nameFR": "Pause café",
+                "room": {
+                    "id": "a_hall",
+                    "name": "Exhibition floor",
+                    "capacity": 1500,
+                    "setup": "special"
+                }
+            },
+            "roomSetup": "special",
+            "talk": null,
+            "fromTime": "16:30",
+            "toTimeMillis": 1509983100000,
+            "toTime": "16:45",
+            "roomCapacity": 1500,
+            "roomName": "Exhibition floor",
+            "slotId": "coffee_monday_6_16h30_16h45",
+            "day": "monday"
+        }, {
+            "roomId": "room4",
+            "notAllocated": false,
+            "fromTimeMillis": 1509983100000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "visualization tools"
+                    }, {
+                        "value": "Java"
+                    }, {
+                        "value": "bytecode"
+                    }, {
+                        "value": "UML"
+                    }, {
+                        "value": "class diagram"
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Dealing with existing big Java codebase is typically not a pleasure. First of all we need to understand it - starting from the structure of classes and relations between them. But how to quickly understand a software composed from thousands or tens of thousands of classes? The best way is to visualize them on automatically generated, complete and readable class diagrams. It that a reasonable wish?</p>\n<p><a href=\"http://class-visualizer.net/\">Class Visualizer</a> is created to fulfil exactly that wish. It is a free, instant class diagram generator from the Java bytecode prepared to handle correctly even huge codebases. It exists for 6 years and is downloaded over 1,500 times per month.</p>\n<p>During this session we will discover how Class Visualizer can support us during our daily development work. We will visualize a sample project based on Spring 5 and, as a second example, the Java standard library (over 16,384 classes). Based on these examples we will examine usability, reliability and performance of the tool. Of course, there will be also time for questions.</p>\n",
+                "id": "PLW-0836",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/482c50b4bf5196325787471aef734486c147e67e",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Jonatan Kazmierczak"
+                        },
+                        "name": "Jonatan Kazmierczak"
+                    }],
+                "title": "From Java bytecode to instant class diagrams with Class Visualizer",
+                "lang": "en",
+                "summary": "Dealing with existing big Java codebase is typically not a pleasure. First of all we need to understand it - starting from the structure of classes and relations between them. But how to quickly understand a software composed from thousands or tens of thousands of classes? The best way is to visualize them on automatically generated, complete and readable class diagrams. It that a reasonable wish?\r\n\r\n[Class Visualizer](http://class-visualizer.net/) is created to fulfil exactly that wish. It is a free, instant class diagram generator from the Java bytecode prepared to handle correctly even huge codebases. It exists for 6 years and is downloaded over 1,500 times per month.\r\n\r\nDuring this session we will discover how Class Visualizer can support us during our daily development work. We will visualize a sample project based on Spring 5 and, as a second example, the Java standard library (over 16,384 classes). Based on these examples we will examine usability, reliability and performance of the tool. Of course, there will be also time for questions."
+            },
+            "fromTime": "16:45",
+            "toTimeMillis": 1509984900000,
+            "toTime": "17:15",
+            "roomCapacity": 347,
+            "roomName": "Room 4",
+            "slotId": "tia_room4_monday_6_16h45_17h15",
+            "day": "monday"
+        }, {
+            "roomId": "room5",
+            "notAllocated": false,
+            "fromTimeMillis": 1509983100000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.4",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "BDD"
+                    }, {
+                        "value": "Continuous Integration"
+                    }, {
+                        "value": "Testing support lib"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Server Side Java",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>The concept of behavior driven development (BDD) is quite simple. Business analysts and domain experts describe how the application should behave using Gherkin (given-when-then) feature stories. Developers glue those specifications to automated tests.\nCan we use this approach when testing the integration of services, too? The talk gives answers with a combination of the frameworks Cucumber and Citrus. After a short introduction to both frameworks we discuss the concepts and see some code examples that demonstrate how the behavior driven approach fits to testing the messaging integration with Http REST, JMS and mail communication.\nAt the end we will have an automated integration test with BDD and almost no glue code to write manually.</p>\n",
+                "id": "HCR-4774",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/30c6d4365affc33941c45ef6345ff7952e317ce6",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Christoph Deppisch"
+                        },
+                        "name": "Christoph Deppisch"
+                    }],
+                "title": "Behavior driven integration with Cucumber and Citrus",
+                "lang": "en",
+                "summary": "The concept of behavior driven development (BDD) is quite simple. Business analysts and domain experts describe how the application should behave using Gherkin (given-when-then) feature stories. Developers glue those specifications to automated tests.\r\nCan we use this approach when testing the integration of services, too? The talk gives answers with a combination of the frameworks Cucumber and Citrus. After a short introduction to both frameworks we discuss the concepts and see some code examples that demonstrate how the behavior driven approach fits to testing the messaging integration with Http REST, JMS and mail communication.\r\nAt the end we will have an automated integration test with BDD and almost no glue code to write manually."
+            },
+            "fromTime": "16:45",
+            "toTimeMillis": 1509984900000,
+            "toTime": "17:15",
+            "roomCapacity": 641,
+            "roomName": "Room 5",
+            "slotId": "tia_room5_monday_6_16h45_17h15",
+            "day": "monday"
+        }, {
+            "roomId": "room6",
+            "notAllocated": false,
+            "fromTimeMillis": 1509983100000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.6",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "SQL"
+                    }, {
+                        "value": "BigQuery"
+                    }, {
+                        "value": "Open data"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Big Data &amp; Machine Learning",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Big data is powerful. It helps you make informed decisions about your business, but putting it to use can be time consuming. There&#x27;s nothing worse than taking the time to build out a dashboard only to realize that it isn&#x27;t useful.</p>\n<p>In this session Jen Tong, a Developer Advocate on Google Cloud Platform, will show you how cloud computing makes it easier to explore big data. She&#x27;ll use Google BigQuery to poke around some really big data sets including the GDELT news database, Wikipedia logs, and weather data going back to 1929.</p>\n<p>You&#x27;ll leave knowing how to use the cloud to effectively explore all that valuable data you&#x27;ve been logging.</p>\n",
+                "id": "ADR-0517",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/984529ea8e9f731bfae31db41faf04ab5f635b7a",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Jen Tong"
+                        },
+                        "name": "Jen Tong"
+                    }],
+                "title": "Exploring open data with BigQuery",
+                "lang": "en",
+                "summary": "Big data is powerful. It helps you make informed decisions about your business, but putting it to use can be time consuming. There's nothing worse than taking the time to build out a dashboard only to realize that it isn't useful.\r\n\r\nIn this session Jen Tong, a Developer Advocate on Google Cloud Platform, will show you how cloud computing makes it easier to explore big data. She'll use Google BigQuery to poke around some really big data sets including the GDELT news database, Wikipedia logs, and weather data going back to 1929. \r\n\r\nYou'll leave knowing how to use the cloud to effectively explore all that valuable data you've been logging."
+            },
+            "fromTime": "16:45",
+            "toTimeMillis": 1509984900000,
+            "toTime": "17:15",
+            "roomCapacity": 372,
+            "roomName": "Room 6",
+            "slotId": "tia_room6_monday_6_16h45_17h15",
+            "day": "monday"
+        }, {
+            "roomId": "room8",
+            "notAllocated": false,
+            "fromTimeMillis": 1509983100000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Java9"
+                    }, {
+                        "value": "JShell"
+                    }, {
+                        "value": "REPL"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Oh Java, my old, lousy and boilerpalted friend. For ages, trying any thing new (which luckily wasn&#x27;t that frequent afterall) was to start new project, followed by a <code>Sandbox</code> class and a <code>public static void main</code> method. Alternatively, a simple JUnit test was a nice entrypoint as well - if we were lucky enough to have some dependency management sorted out.</p>\n<p>Hopefully things changed. With the Java9 a REPL has been added to the JDK. Everybody can just run an up-to-date Java shell and try out new syntax, new APIs, new libraries.</p>\n<p>In this talk I&#x27;ll walk through how you can use REPL to explore new API and language elements in isolation, try out new libraries, build complete apps with an immediate feedback.</p>\n",
+                "id": "IHU-6624",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/698de7b880160572b00467a41063af3dde63b2d3",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Jakub Marchwicki"
+                        },
+                        "name": "Jakub Marchwicki"
+                    }],
+                "title": "Java9 and REPL. Forget debugging, welcome joy and productivity.",
+                "lang": "en",
+                "summary": "Oh Java, my old, lousy and boilerpalted friend. For ages, trying any thing new (which luckily wasn't that frequent afterall) was to start new project, followed by a `Sandbox` class and a `public static void main` method. Alternatively, a simple JUnit test was a nice entrypoint as well - if we were lucky enough to have some dependency management sorted out. \r\n\r\nHopefully things changed. With the Java9 a REPL has been added to the JDK. Everybody can just run an up-to-date Java shell and try out new syntax, new APIs, new libraries. \r\n\r\nIn this talk I'll walk through how you can use REPL to explore new API and language elements in isolation, try out new libraries, build complete apps with an immediate feedback. "
+            },
+            "fromTime": "16:45",
+            "toTimeMillis": 1509984900000,
+            "toTime": "17:15",
+            "roomCapacity": 696,
+            "roomName": "Room 8",
+            "slotId": "tia_room8_monday_6_16h45_17h15",
+            "day": "monday"
+        }, {
+            "roomId": "room9",
+            "notAllocated": false,
+            "fromTimeMillis": 1509983100000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.9",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Java"
+                    }, {
+                        "value": "IoT"
+                    }, {
+                        "value": "Robots"
+                    }, {
+                        "value": "Autonomous Robotic Vehicle"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Mobile &amp; IoT",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>Robo4J is an upcoming open source framework for quickly building robots using popular, often inexpensive, hardware and the Java SE platform. A good example is Coff-E, an autonomous, partly 3D printed, robot using a Raspberry Pi for brains and commonly available off-the-shelf components for actuators and sensors.</p>\n<p>This talk will show how to painlessly build an autonomous robotic vehicle using the nascent Robo4J framework. After the talk, you should have a good sense of how to quickly configure and run a hardware system of your own.</p>\n<p>The following will be discussed:\n* An overview of the Robo4J framework.\n* An overview of the Robo4J tools.\n* Useful source code examples.</p>\n",
+                "id": "AFC-0753",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/1c40094bdb26ff16b39c04634190d39c922b52af",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Marcus Hirt"
+                        },
+                        "name": "Marcus Hirt"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/24c06de77d6d2941272d284929eec1758436006b",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Miro Wengner"
+                        },
+                        "name": "Miro Wengner"
+                    }],
+                "title": "Much Robots. Very Java. So IoT.",
+                "lang": "en",
+                "summary": "Robo4J is an upcoming open source framework for quickly building robots using popular, often inexpensive, hardware and the Java SE platform. A good example is Coff-E, an autonomous, partly 3D printed, robot using a Raspberry Pi for brains and commonly available off-the-shelf components for actuators and sensors.\r\n\r\nThis talk will show how to painlessly build an autonomous robotic vehicle using the nascent Robo4J framework. After the talk, you should have a good sense of how to quickly configure and run a hardware system of your own.\r\n\r\nThe following will be discussed:\r\n* An overview of the Robo4J framework.\r\n* An overview of the Robo4J tools.\r\n* Useful source code examples."
+            },
+            "fromTime": "16:45",
+            "toTimeMillis": 1509984900000,
+            "toTime": "17:15",
+            "roomCapacity": 393,
+            "roomName": "Room 9",
+            "slotId": "tia_room9_monday_6_16h45_17h15",
+            "day": "monday"
+        }, {
+            "roomId": "room4",
+            "notAllocated": false,
+            "fromTimeMillis": 1509985500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.6",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Minecraft"
+                    }, {
+                        "value": "AI"
+                    }, {
+                        "value": "Machine learning"
+                    }, {
+                        "value": "game"
+                    }, {
+                        "value": "Java"
+                    }],
+                "track": "Big Data &amp; Machine Learning",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>Project Malmo from Microsoft is a platform to use Minecraft as a AI testing ground. It&#x27;s not about playing the game, it&#x27;s about using Minecraft as an experimental platform for AI.</p>\n<p>In my talk I&#x27;ll show how to solve individual problems with reinforcement learning, Minecraft, and project Malmo.</p>\n",
+                "id": "ULZ-4025",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/d1a9eebcc55ffdf506c2b2de963fdaeb977a5625",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Lars Gregori"
+                        },
+                        "name": "Lars Gregori"
+                    }],
+                "title": "AI and Minecraft",
+                "lang": "en",
+                "summary": "Project Malmo from Microsoft is a platform to use Minecraft as a AI testing ground. It's not about playing the game, it's about using Minecraft as an experimental platform for AI.\r\n\r\nIn my talk I'll show how to solve individual problems with reinforcement learning, Minecraft, and project Malmo."
+            },
+            "fromTime": "17:25",
+            "toTimeMillis": 1509987300000,
+            "toTime": "17:55",
+            "roomCapacity": 347,
+            "roomName": "Room 4",
+            "slotId": "tia_room4_monday_6_17h25_17h55",
+            "day": "monday"
+        }, {
+            "roomId": "room5",
+            "notAllocated": false,
+            "fromTimeMillis": 1509985500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.4",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "javaagent"
+                    }, {
+                        "value": "devops"
+                    }, {
+                        "value": "prometheus"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Server Side Java",
+                "audienceLevel": "l2",
+                "summaryAsHtml": "<p>The Prometheus monitoring tool follows a white-box monitoring approach: Applications actively provide metrics about their internal state to the Prometheus server. In order to instrument an application with Prometheus metrics, you have to add a metrics library and call that library in the application&#x27;s source code. However, DevOps teams do not always have the option to modify the source code of the applications they are running.</p>\n<p>This talk shows how to instrument Java Web Applications with Prometheus metrics without modifying the application&#x27;s source code. The implementation uses a variety of lesser-known but useful JVM features and libraries: Java agents, Bytecode manipulation with Byte Buddy, custom class loaders, reflection without loading class dependencies, thread locals, weak references, Docker for running application servers in integration tests. Browsing through the demo code we will learn some interesting facts about module systems in application servers and class loaders in general.</p>\n",
+                "id": "CRJ-2930",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/bc76e6a7e689aef6550eb4b01e651ae0b4fa3f30",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Fabian Stäber"
+                        },
+                        "name": "Fabian Stäber"
+                    }],
+                "title": "Prometheus Monitoring for Java Web Applications w/o Modifying Source Code",
+                "lang": "en",
+                "summary": "The Prometheus monitoring tool follows a white-box monitoring approach: Applications actively provide metrics about their internal state to the Prometheus server. In order to instrument an application with Prometheus metrics, you have to add a metrics library and call that library in the application's source code. However, DevOps teams do not always have the option to modify the source code of the applications they are running.\r\n\r\nThis talk shows how to instrument Java Web Applications with Prometheus metrics without modifying the application's source code. The implementation uses a variety of lesser-known but useful JVM features and libraries: Java agents, Bytecode manipulation with Byte Buddy, custom class loaders, reflection without loading class dependencies, thread locals, weak references, Docker for running application servers in integration tests. Browsing through the demo code we will learn some interesting facts about module systems in application servers and class loaders in general."
+            },
+            "fromTime": "17:25",
+            "toTimeMillis": 1509987300000,
+            "toTime": "17:55",
+            "roomCapacity": 641,
+            "roomName": "Room 5",
+            "slotId": "tia_room5_monday_6_17h25_17h55",
+            "day": "monday"
+        }, {
+            "roomId": "room6",
+            "notAllocated": false,
+            "fromTimeMillis": 1509985500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "equality tests"
+                    }, {
+                        "value": "Unit Testing"
+                    }, {
+                        "value": "open source project"
+                    }, {
+                        "value": "Java"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Did you know your equals method can contain bugs, even if you have it generated by your IDE?</p>\n<p>I will show you how to recognise these potential bugs, and why you should care about them. You will see how to craft an ironclad equals method. Also, you will see how to test your equals method and gain 100% coverage with a single line of test code, using EqualsVerifier. Because testing equals shouldn&#x27;t have to take pages of code.</p>\n",
+                "id": "RVY-8972",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/df3772fe2be583cf3d0bd59fe1e6385a0a5ca753",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Jan Ouwens"
+                        },
+                        "name": "Jan Ouwens"
+                    }],
+                "title": "Not all equals methods are created equal",
+                "lang": "en",
+                "summary": "Did you know your equals method can contain bugs, even if you have it generated by your IDE?\r\n\r\nI will show you how to recognise these potential bugs, and why you should care about them. You will see how to craft an ironclad equals method. Also, you will see how to test your equals method and gain 100% coverage with a single line of test code, using EqualsVerifier. Because testing equals shouldn't have to take pages of code."
+            },
+            "fromTime": "17:25",
+            "toTimeMillis": 1509987300000,
+            "toTime": "17:55",
+            "roomCapacity": 372,
+            "roomName": "Room 6",
+            "slotId": "tia_room6_monday_6_17h25_17h55",
+            "day": "monday"
+        }, {
+            "roomId": "room8",
+            "notAllocated": false,
+            "fromTimeMillis": 1509985500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.5",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Kotlin"
+                    }, {
+                        "value": "Android Studio"
+                    }, {
+                        "value": "Android"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Programming languages",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Kotlin looks great but do you feel like suddenly loosing all your coding skills and wisdom?\nLet&#x27;s visit the Gang of Four Design Patterns and implement them on Kotlin using IntelliJ&#x27;s native Kotlin support.</p>\n",
+                "id": "FUD-4487",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/42d1535a53f4d7bbeb0d4561d4d28f73a82aa0ec",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Murat Yener"
+                        },
+                        "name": "Murat Yener"
+                    }],
+                "title": "Design Patterns with Kotlin",
+                "lang": "en",
+                "summary": "Kotlin looks great but do you feel like suddenly loosing all your coding skills and wisdom? \r\nLet's visit the Gang of Four Design Patterns and implement them on Kotlin using IntelliJ's native Kotlin support."
+            },
+            "fromTime": "17:25",
+            "toTimeMillis": 1509987300000,
+            "toTime": "17:55",
+            "roomCapacity": 696,
+            "roomName": "Room 8",
+            "slotId": "tia_room8_monday_6_17h25_17h55",
+            "day": "monday"
+        }, {
+            "roomId": "room9",
+            "notAllocated": false,
+            "fromTimeMillis": 1509985500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.8",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "command line"
+                    }, {
+                        "value": "experiments"
+                    }, {
+                        "value": "creativity"
+                    }, {
+                        "value": "Python"
+                    }, {
+                        "value": "scala"
+                    }],
+                "track": "Mind the Geek",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Hamza, terminal enthusiast, has created some nifty open source apps that do quirky stuff: 3D labyrinths, Mandelbrot fractals, animations, but with a twist: they all run in text mode, in your terminal! In this talk, he’ll give you a quick tour of his cabinet of code curiosities, showing experiments and explaining techniques.</p>\n<p>Unveil the true power hidden in everyone’s most useful tool: the terminal-</p>\n",
+                "id": "GQJ-9928",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/d0aa4bdd1b60ea74351328bc9ea2793e1d9974f0",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Hamza Haiken"
+                        },
+                        "name": "Hamza Haiken"
+                    }],
+                "title": "Command Line Curiosities - Making the Terminal Sing",
+                "lang": "en",
+                "summary": "Hamza, terminal enthusiast, has created some nifty open source apps that do quirky stuff: 3D labyrinths, Mandelbrot fractals, animations, but with a twist: they all run in text mode, in your terminal! In this talk, he’ll give you a quick tour of his cabinet of code curiosities, showing experiments and explaining techniques.\r\n\r\nUnveil the true power hidden in everyone’s most useful tool: the terminal-"
+            },
+            "fromTime": "17:25",
+            "toTimeMillis": 1509987300000,
+            "toTime": "17:55",
+            "roomCapacity": 393,
+            "roomName": "Room 9",
+            "slotId": "tia_room9_monday_6_17h25_17h55",
+            "day": "monday"
+        }, {
+            "roomId": "a_hall",
+            "notAllocated": false,
+            "fromTimeMillis": 1509987300000,
+            "break": {
+                "id": "chgt",
+                "nameEN": "Break",
+                "nameFR": "Pause courte",
+                "room": {
+                    "id": "a_hall",
+                    "name": "Exhibition floor",
+                    "capacity": 1500,
+                    "setup": "special"
+                }
+            },
+            "roomSetup": "special",
+            "talk": null,
+            "fromTime": "17:55",
+            "toTimeMillis": 1509988500000,
+            "toTime": "18:15",
+            "roomCapacity": 1500,
+            "roomName": "Exhibition floor",
+            "slotId": "chgt_monday_6_17h55_18h15",
+            "day": "monday"
+        }, {
+            "roomId": "room4",
+            "notAllocated": false,
+            "fromTimeMillis": 1509988500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.3",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "relational database"
+                    }, {
+                        "value": "Cloud Native Applications"
+                    }, {
+                        "value": "Distributed Systems"
+                    }, {
+                        "value": "Cloud Spanner"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Cloud, Containers &amp; Infrastructure",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Live coding and demos! In this presentation you&#x27;ll learn how Spanner differs from traditional RDBMS, how those differences enable unique capabilities, and how those unique capabilities can enable advanced application behaviors. We&#x27;ll show how to setup you first instance and database and walk you through design decisions when coming up with your first schema and queries that are enabled to scale to terabytes of data. Come prepared to see some code, queries and query explains.</p>\n",
+                "id": "DGG-3509",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/7d474c0af9f878b5d4b420ecdcfcc057afaab2f1",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Robert Kubis"
+                        },
+                        "name": "Robert Kubis"
+                    }],
+                "title": "Google Cloud Spanner: Global consistency at scale",
+                "lang": "en",
+                "summary": "Live coding and demos! In this presentation you'll learn how Spanner differs from traditional RDBMS, how those differences enable unique capabilities, and how those unique capabilities can enable advanced application behaviors. We'll show how to setup you first instance and database and walk you through design decisions when coming up with your first schema and queries that are enabled to scale to terabytes of data. Come prepared to see some code, queries and query explains."
+            },
+            "fromTime": "18:15",
+            "toTimeMillis": 1509990300000,
+            "toTime": "18:45",
+            "roomCapacity": 347,
+            "roomName": "Room 4",
+            "slotId": "tia_room4_monday_6_18h15_18h45",
+            "day": "monday"
+        }, {
+            "roomId": "room5",
+            "notAllocated": false,
+            "fromTimeMillis": 1509988500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.3",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Cloud Ecosystems"
+                    }, {
+                        "value": "Google Cloud"
+                    }, {
+                        "value": "Cloud Foundry"
+                    }, {
+                        "value": "Cloud Native Java"
+                    }, {
+                        "value": "Big Data"
+                    }],
+                "track": "Cloud, Containers &amp; Infrastructure",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Sub-title:\nProcessing Petabytes of Data using Pivotal Cloud Foundry, Google Genomics and Google Cloud Platform</p>\n<p>Processing trillions of records is not any east feat. Doing so at a cloud scale is nearly impossible. Google has solved this problem with Google Genomics, a unique technology to query exabytes of data. Learn how microservices and service brokers deployed on Pivotal Cloud Foundry interact with data-at-scale using Google Genomics, all powered by Google Cloud Platform.</p>\n",
+                "id": "LWS-8338",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/bd926f9246b1e2e6b0e3d9c494c11544571f0784",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Mallika Iyer"
+                        },
+                        "name": "Mallika Iyer"
+                    }],
+                "title": "Reliability and Resilience in the Cloud - Experiments with Google Genomics and Cloud Foundry",
+                "lang": "en",
+                "summary": "Sub-title: \r\nProcessing Petabytes of Data using Pivotal Cloud Foundry, Google Genomics and Google Cloud Platform\r\n\r\nProcessing trillions of records is not any east feat. Doing so at a cloud scale is nearly impossible. Google has solved this problem with Google Genomics, a unique technology to query exabytes of data. Learn how microservices and service brokers deployed on Pivotal Cloud Foundry interact with data-at-scale using Google Genomics, all powered by Google Cloud Platform."
+            },
+            "fromTime": "18:15",
+            "toTimeMillis": 1509990300000,
+            "toTime": "18:45",
+            "roomCapacity": 641,
+            "roomName": "Room 5",
+            "slotId": "tia_room5_monday_6_18h15_18h45",
+            "day": "monday"
+        }, {
+            "roomId": "room6",
+            "notAllocated": false,
+            "fromTimeMillis": 1509988500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "Development Tools"
+                    }, {
+                        "value": "Java"
+                    }, {
+                        "value": "debugging"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Looking for a lightweight editor for developing and debugging your Java application?Visual Studio Code is an open source, extensible coding editor. There have been 577K installation for the VS Code Java plug-in by Red Hat since last year. In this session, we&#x27;d like to show you some new capabilities just being added to the plugin, including debugging and other cool features.</p>\n",
+                "id": "WHM-4433",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/615d3d12d3aab87edf1d87ca8c4b040233437c2c",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Martin Aeschlimann"
+                        },
+                        "name": "Martin Aeschlimann"
+                    }],
+                "title": "Developing Java applications using Visual Studio Code",
+                "lang": "en",
+                "summary": "Looking for a lightweight editor for developing and debugging your Java application?Visual Studio Code is an open source, extensible coding editor. There have been 577K installation for the VS Code Java plug-in by Red Hat since last year. In this session, we'd like to show you some new capabilities just being added to the plugin, including debugging and other cool features."
+            },
+            "fromTime": "18:15",
+            "toTimeMillis": 1509990300000,
+            "toTime": "18:45",
+            "roomCapacity": 372,
+            "roomName": "Room 6",
+            "slotId": "tia_room6_monday_6_18h15_18h45",
+            "day": "monday"
+        }, {
+            "roomId": "room8",
+            "notAllocated": false,
+            "fromTimeMillis": 1509988500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.1",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "documentation"
+                    }, {
+                        "value": "Development Tools"
+                    }, {
+                        "value": "Writing"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Methodology &amp; Culture",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Asciidoctor continues to take technical documentation by storm, especially in the Java sector. From software projects like Spring, JUnit, Hiberate, and Elastic, to specifications like CDI and Bean Validation, to tech publishers like InfoQ, O’Reilly, and independents, you don’t have to look far to find AsciiDoc powering documentation. These abundant and diverse use cases have helped push Asciidoctor to new limits. So what’s new and where’s it headed?</p>\n<p>I’ll start by covering the core mission of Asciidoctor and what changes we’re trying to push for in documentation. Then, I’ll survey recent improvements that have been introduced into the language and core processor. I’ll then present some of the extensions, integrations, and tools that have been developed around core. I’ll talk about how the processor fits with other components, such as static site generators, and what other software tools and processes are still needed. Finally, I’ll discuss where we’re headed with the AsciiDoc language and ecosystem.</p>\n<p>If you’re using the AsciiDoc writing format or are interested in learning more about it, this talk will give you lots of information to take back to your writing desk.</p>\n",
+                "id": "TWI-5560",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/43ce34bea56fe72ae8953bb9d0fb435d8c9d0640",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Dan Allen"
+                        },
+                        "name": "Dan Allen"
+                    }],
+                "title": "Asciidoctor: New, Noteworthy, and Beyond",
+                "lang": "en",
+                "summary": "Asciidoctor continues to take technical documentation by storm, especially in the Java sector. From software projects like Spring, JUnit, Hiberate, and Elastic, to specifications like CDI and Bean Validation, to tech publishers like InfoQ, O’Reilly, and independents, you don’t have to look far to find AsciiDoc powering documentation. These abundant and diverse use cases have helped push Asciidoctor to new limits. So what’s new and where’s it headed?\r\n\r\nI’ll start by covering the core mission of Asciidoctor and what changes we’re trying to push for in documentation. Then, I’ll survey recent improvements that have been introduced into the language and core processor. I’ll then present some of the extensions, integrations, and tools that have been developed around core. I’ll talk about how the processor fits with other components, such as static site generators, and what other software tools and processes are still needed. Finally, I’ll discuss where we’re headed with the AsciiDoc language and ecosystem.\r\n\r\nIf you’re using the AsciiDoc writing format or are interested in learning more about it, this talk will give you lots of information to take back to your writing desk."
+            },
+            "fromTime": "18:15",
+            "toTimeMillis": 1509990300000,
+            "toTime": "18:45",
+            "roomCapacity": 696,
+            "roomName": "Room 8",
+            "slotId": "tia_room8_monday_6_18h15_18h45",
+            "day": "monday"
+        }, {
+            "roomId": "room9",
+            "notAllocated": false,
+            "fromTimeMillis": 1509988500000,
+            "break": null,
+            "roomSetup": "theatre",
+            "talk": {
+                "trackId": "track.2",
+                "talkType": "Tools-in-Action",
+                "tags": [{
+                        "value": "mobile apps"
+                    }, {
+                        "value": "Performance tuning"
+                    }, {
+                        "value": "open source"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Java Language",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Over the past year Uber has created tooling to gather mobile performance data from the field. This includes timing various in-app transitions, gathering metrics like frame rate, CPU, and memory usage, as well as automatically tracing the execution time of function calls in production.</p>\n<p>We are now open-sourcing this set of tools as the PerfSDK. Come check out its capabilities and how you can use it in your own iOS and Android applications.</p>\n",
+                "id": "YDH-3862",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/34a95163401e146f09e457ce086cc8dab8537450",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Marcello Albano"
+                        },
+                        "name": "Marcello Albano"
+                    }],
+                "title": "Introducing the Mobile PerfSDK",
+                "lang": "en",
+                "summary": "Over the past year Uber has created tooling to gather mobile performance data from the field. This includes timing various in-app transitions, gathering metrics like frame rate, CPU, and memory usage, as well as automatically tracing the execution time of function calls in production.\r\n\r\nWe are now open-sourcing this set of tools as the PerfSDK. Come check out its capabilities and how you can use it in your own iOS and Android applications."
+            },
+            "fromTime": "18:15",
+            "toTimeMillis": 1509990300000,
+            "toTime": "18:45",
+            "roomCapacity": 393,
+            "roomName": "Room 9",
+            "slotId": "tia_room9_monday_6_18h15_18h45",
+            "day": "monday"
+        }, {
+            "roomId": "bof1",
+            "notAllocated": false,
+            "fromTimeMillis": 1509993000000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.1",
+                "talkType": "BOF (Bird of a Feather)",
+                "tags": [{
+                        "value": "DevOps"
+                    }, {
+                        "value": "Continuous Delivery"
+                    }, {
+                        "value": "Continuous Integration"
+                    }, {
+                        "value": "Agile"
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Methodology &amp; Culture",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>In this DevOps BOF we want to discuss the past, the present and the future of software development and delivery across functions, commonly known as DevOps. This is the platform to meet DevOps experts and the community in order to exchange experience and learn from others. Discussed topics are up to the group, but will surely again be a charming mixture of both concepts and tools.</p>\n",
+                "id": "WCZ-0812",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/ec702c20a7862950c6aadeafe8ae7d2bc973601b",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Michael Hüttermann"
+                        },
+                        "name": "Michael Hüttermann"
+                    }],
+                "title": "DevOps: State of the Union",
+                "lang": "en",
+                "summary": "In this DevOps BOF we want to discuss the past, the present and the future of software development and delivery across functions, commonly known as DevOps. This is the platform to meet DevOps experts and the community in order to exchange experience and learn from others. Discussed topics are up to the group, but will surely again be a charming mixture of both concepts and tools."
+            },
+            "fromTime": "19:30",
+            "toTimeMillis": 1509996600000,
+            "toTime": "20:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 1",
+            "slotId": "bof_bof1_monday_6_19h30_20h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof2",
+            "notAllocated": false,
+            "fromTimeMillis": 1509993000000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.9",
+                "talkType": "BOF (Bird of a Feather)",
+                "tags": [{
+                        "value": "Mobile"
+                    }, {
+                        "value": "architecture"
+                    }, {
+                        "value": "backend"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Mobile &amp; IoT",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>Real-time communication is fast becoming the most important aspect of an engaging, modern mobile application. At Uber, real-time is at the center of our user experience, from car moving on the map to live updating ETA. Join us for a trip through history of how technologies and architecture has been evolved at Uber in order to bring real-time data to the devices.</p>\n",
+                "id": "IUD-9636",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/23d3014989c161eab85abff299729b19ae4a33a3",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Minh Pham"
+                        },
+                        "name": "Minh Pham"
+                    }],
+                "title": "The evolution of Push at Uber",
+                "lang": "en",
+                "summary": "Real-time communication is fast becoming the most important aspect of an engaging, modern mobile application. At Uber, real-time is at the center of our user experience, from car moving on the map to live updating ETA. Join us for a trip through history of how technologies and architecture has been evolved at Uber in order to bring real-time data to the devices."
+            },
+            "fromTime": "19:30",
+            "toTimeMillis": 1509996600000,
+            "toTime": "20:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 2",
+            "slotId": "bof_bof2_monday_6_19h30_20h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof1",
+            "notAllocated": false,
+            "fromTimeMillis": 1509996600000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.4",
+                "talkType": "BOF (Bird of a Feather)",
+                "tags": [{
+                        "value": "Enterprise Java"
+                    }, {
+                        "value": "WildFly Swarm"
+                    }, {
+                        "value": "Cloud Native Java"
+                    }, {
+                        "value": "Open Source code"
+                    }, {
+                        "value": "Red Hat OpenShift"
+                    }],
+                "track": "Server Side Java",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>The reports of Java EE death are greatly exaggerated - come to the WildFly AppServer/Swarm community BOF to discuss over beer the present and future of Java EE on and off the cloud.</p>\n",
+                "id": "STN-3848",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/85eb850bb5c8fc040bbd1b2b8fb87a45b6edbcb8",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Dimitris Andreadis"
+                        },
+                        "name": "Dimitris Andreadis"
+                    }, {
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/31f90ab8242bbf0356032cd4691e921961ba28ef",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Edson Yanaga"
+                        },
+                        "name": "Edson Yanaga"
+                    }],
+                "title": "WildFly AppServer & WildFly Swarm Community BOF",
+                "lang": "en",
+                "summary": "The reports of Java EE death are greatly exaggerated - come to the WildFly AppServer/Swarm community BOF to discuss over beer the present and future of Java EE on and off the cloud."
+            },
+            "fromTime": "20:30",
+            "toTimeMillis": 1510000200000,
+            "toTime": "21:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 1",
+            "slotId": "bof_bof1_monday_6_20h30_21h30",
+            "day": "monday"
+        }, {
+            "roomId": "bof2",
+            "notAllocated": false,
+            "fromTimeMillis": 1509996600000,
+            "break": null,
+            "roomSetup": "classroom",
+            "talk": {
+                "trackId": "track.5",
+                "talkType": "BOF (Bird of a Feather)",
+                "tags": [{
+                        "value": "code quality"
+                    }, {
+                        "value": "microservices architectures"
+                    }, {
+                        "value": "metrics"
+                    }, {
+                        "value": ""
+                    }, {
+                        "value": ""
+                    }],
+                "track": "Programming languages",
+                "audienceLevel": "l1",
+                "summaryAsHtml": "<p>There are useful tools out there or analyzing our code. And as a developer I have been using them regularly to be able to improve my code. But are these tools still valid in a microservices environment?\nIs duplication of code between microservices a bad thing? Or should we avoid sharing code between microservices? What metrics can we best use for analyzing microservices?</p>\n",
+                "id": "PUX-9562",
+                "speakers": [{
+                        "link": {
+                            "href": "http://cfp.devoxx.be/api/conferences/DVBE17/speakers/5b7818146d07c1223806713ba49af928f761376a",
+                            "rel": "http://cfp.devoxx.be/api/profile/speaker",
+                            "title": "Jeroen Resoort"
+                        },
+                        "name": "Jeroen Resoort"
+                    }],
+                "title": "Code quality metrics in a microservices environment",
+                "lang": "en",
+                "summary": "There are useful tools out there or analyzing our code. And as a developer I have been using them regularly to be able to improve my code. But are these tools still valid in a microservices environment?\r\nIs duplication of code between microservices a bad thing? Or should we avoid sharing code between microservices? What metrics can we best use for analyzing microservices?\r\n"
+            },
+            "fromTime": "20:30",
+            "toTimeMillis": 1510000200000,
+            "toTime": "21:30",
+            "roomCapacity": 70,
+            "roomName": "BOF 2",
+            "slotId": "bof_bof2_monday_6_20h30_21h30",
+            "day": "monday"
+        }]
+}
