@@ -71,8 +71,8 @@ public class CloudToTweetStep extends AbstractStep {
     private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    public java.time.Duration preferredStepDuration(MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
     }
 
     @Override

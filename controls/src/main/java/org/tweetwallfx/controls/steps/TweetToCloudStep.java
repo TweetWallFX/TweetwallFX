@@ -54,8 +54,8 @@ import org.tweetwallfx.controls.transition.LocationTransition;
 public class TweetToCloudStep extends AbstractStep {
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 10000;
+    public java.time.Duration preferredStepDuration(MachineContext context) {
+        return java.time.Duration.ofSeconds(10);
     }
 
     @Override

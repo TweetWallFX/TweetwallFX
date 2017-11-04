@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.time.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
@@ -35,8 +36,8 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 public class NextTweetStep extends AbstractStep {
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 0;
+    public Duration preferredStepDuration(MachineContext context) {
+        return Duration.ZERO;
     }
 
     @Override

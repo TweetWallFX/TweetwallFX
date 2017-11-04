@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.controls.stepengine;
 
+import java.time.Duration;
+
 /**
  *
  * @author Jörg Michelberger
@@ -33,7 +35,7 @@ public interface Step {
     void prepareStep(StepEngine.MachineContext context);
     void doStep(StepEngine.MachineContext context);
     void leaveStep(StepEngine.MachineContext context);
-    long preferredStepDuration(StepEngine.MachineContext context);
+    Duration preferredStepDuration(StepEngine.MachineContext context);
     String getName();
     boolean requiresPlatformThread();
 }

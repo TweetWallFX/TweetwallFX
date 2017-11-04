@@ -53,8 +53,8 @@ public class UpdateCloudStep extends AbstractStep {
     private static final Logger log = LogManager.getLogger(UpdateCloudStep.class);            
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    public java.time.Duration preferredStepDuration(MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
     }
 
     @Override

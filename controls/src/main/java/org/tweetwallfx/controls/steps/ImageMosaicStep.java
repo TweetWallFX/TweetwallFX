@@ -77,8 +77,8 @@ public class ImageMosaicStep extends AbstractStep {
     }
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 1000;
+    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return java.time.Duration.ofSeconds(1);
     }
 
     private void executeAnimations(StepEngine.MachineContext context) {

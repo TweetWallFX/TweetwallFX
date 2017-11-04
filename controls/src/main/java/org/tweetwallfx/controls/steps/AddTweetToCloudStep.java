@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,8 +46,8 @@ public class AddTweetToCloudStep extends AbstractStep {
     private static final Logger log = LogManager.getLogger(AddTweetToCloudStep.class);
     
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 0;
+    public Duration preferredStepDuration(MachineContext context) {
+        return Duration.ZERO;
     }
 
     @Override
