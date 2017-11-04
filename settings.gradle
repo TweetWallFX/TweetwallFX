@@ -38,8 +38,6 @@ include ':core'
 project(":core").name = "TweetWallFX-Core"
 include ':2d'
 project(":2d").name = "TweetWallFX-2D"
-include ':3d'
-project(":3d").name = "TweetWallFX-3D"
 
 include ':devoxx'
 project(":devoxx").name = "TweetWallFX-Devoxx"
@@ -67,7 +65,9 @@ include ':generic2d'
 project(":generic2d").name = "TweetWallFX-Generic2D"
 
 // disabled subproject for future reference
+//include ':3d'
+//project(':3d').name = 'TweetWallFX-3D'
 //include ':embeddable'
-//project(":embeddable").name = "TweetWallFX-Embeddable"
+//project(':embeddable').name = 'TweetWallFX-Embeddable'
 //include ':embeddabletest'
-//project(":embeddabletest").name = "TweetWallFX-EmbeddableTest"
+//project(':embeddabletest').name = 'TweetWallFX-EmbeddableTest'
