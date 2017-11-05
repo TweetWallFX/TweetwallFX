@@ -50,11 +50,11 @@ public class ScheduleDataProvider implements DataProvider {
     private void updateSchedule() {        
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
-        schedule = CFPClient.getClient().getSchedule(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName));
+        schedule = CFPClient.getClient().getSchedule(System.getProperty("org.tweetwallfx.devoxxbe17.day", actualDayName));
     }
 
     public List<SessionData> getFilteredSessionData() {        
-        String time = System.getProperty("org.tweetwalfx.devoxxbe17.time");
+        String time = System.getProperty("org.tweetwallfx.devoxxbe17.time");
         OffsetTime liveOffset = null != time ? OffsetTime.parse(time) : 
                 OffsetTime.now().minus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS);
         return  SessionData.from(schedule, liveOffset);
