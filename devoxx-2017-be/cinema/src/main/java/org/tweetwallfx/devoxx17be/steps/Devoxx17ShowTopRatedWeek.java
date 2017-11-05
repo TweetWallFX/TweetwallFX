@@ -124,8 +124,7 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
     @Override
     public boolean shouldSkip(StepEngine.MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        // if scheduleNode available do not execute Step.
-        return null != wordleSkin.getNode().lookup("#topRatedWeek");
+        return wordleSkin.getSkinnable().getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData().isEmpty();
     }
 
 }

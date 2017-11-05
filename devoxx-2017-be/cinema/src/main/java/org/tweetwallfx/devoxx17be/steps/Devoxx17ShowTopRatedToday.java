@@ -123,8 +123,7 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
     @Override
     public boolean shouldSkip(StepEngine.MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        // if scheduleNode available do not execute Step.
-        return null != wordleSkin.getNode().lookup("#topRatedToday");
+        return wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
     }
 
 }
