@@ -25,8 +25,9 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.GenericType;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
  * Test impl of CFPClient working with DevoxxBE2017
@@ -37,69 +38,69 @@ public class CFPClientTestImpl implements CFPClient {
 
     @Override
     public Events getEvents() {
-        return RestCallHelper.getData(BASE_URI + "conferences/", Events.class);
+        return readFrom(getResponse(BASE_URI + "conferences/"), Events.class);
     }
 
     @Override
     public Event getEvent() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17", Event.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17"), Event.class);
     }
 
     @Override
     public ProposalTypes getProposalTypes() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/proposalTypes", ProposalTypes.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/proposalTypes"), ProposalTypes.class);
     }
 
     @Override
     public Rooms getRooms() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/rooms/", Rooms.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/rooms/"), Rooms.class);
     }
 
     @Override
     public Schedule getSchedule(final String day) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/schedules/" + day, Schedule.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/schedules/" + day), Schedule.class);
     }
 
     @Override
     public Schedule getSchedule(final String day, final String room) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/rooms/" + room + "/" + day, Schedule.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/rooms/" + room + "/" + day), Schedule.class);
     }
 
     @Override
     public Schedules getSchedules() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/schedules/", Schedules.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/schedules/"), Schedules.class);
     }
 
     @Override
     public List<Speaker> getSpeakers() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/", new GenericType<List<Speaker>>() {
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/speakers/"), new GenericType<List<Speaker>>() {
         });
     }
 
     @Override
     public Speaker getSpeaker(final String speakerId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/speakers/" + speakerId, Speaker.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/speakers/" + speakerId), Speaker.class);
     }
 
     @Override
     public Talk getTalk(final String talkId) {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/talks/" + talkId, Talk.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/talks/" + talkId), Talk.class);
     }
 
     @Override
     public Tracks getTracks() {
-        return RestCallHelper.getData(BASE_URI + "conferences/DVBE17/tracks", Tracks.class);
+        return readFrom(getResponse(BASE_URI + "conferences/DVBE17/tracks"), Tracks.class);
     }
 
     @Override
-    public VotingResults getVotingResultsOverall() {
+    public Optional<VotingResults> getVotingResultsOverall() {
 //        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks/", VotingResults.class);
-        return RestCallHelper.getData("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", VotingResults.class);
+        return readOptionalFrom(getResponse("https://cfp.devoxx.co.uk/api/voting/v1/top/talks"), VotingResults.class);
     }
 
     @Override
-    public VotingResults getVotingResultsDaily(String day) {
+    public Optional<VotingResults> getVotingResultsDaily(final String day) {
 //        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks", VotingResults.class, Collections.singletonMap("day", day));
-        return RestCallHelper.getData("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", VotingResults.class, Collections.singletonMap("day", day));
+        return readOptionalFrom(getResponse("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", Collections.singletonMap("day", day)), VotingResults.class);
     }
 }

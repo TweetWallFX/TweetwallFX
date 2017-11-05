@@ -23,7 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 public class SpeakerReference {
 
@@ -47,7 +47,7 @@ public class SpeakerReference {
     }
 
     public Speaker getSpeaker() {
-        return RestCallHelper.getData(getLink().getHref(), Speaker.class);
+        return readFrom(getResponse(getLink().getHref()), Speaker.class);
     }
 
     @Override

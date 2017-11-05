@@ -25,23 +25,24 @@ package org.tweetwallfx.devoxx2017be.dataprovider;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
-import org.tweetwall.devoxx.api.cfp.client.VotingResults;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * DataProvider Implementation for Top Talks Today
+ *
  * @author Sven Reimers
  */
 public class TopTalksTodayDataProvider implements DataProvider {
 
-    private VotingResults votingResults;
+    private List<VotingResultTalk> votedTalks;
 
     private TopTalksTodayDataProvider() {
         updateVotigResults();
@@ -50,11 +51,15 @@ public class TopTalksTodayDataProvider implements DataProvider {
     private void updateVotigResults() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
-        votingResults = CFPClient.getClient().getVotingResultsDaily(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName));
+        votedTalks = CFPClient.getClient()
+                .getVotingResultsDaily(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName))
+                .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
+                .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
+                .orElse(Collections.emptyList());
     }
 
     public List<VotedTalk> getFilteredSessionData() {
-        return votingResults.getResult().getTalks().stream()
+        return votedTalks.stream()
                 .sorted(Comparator.comparing(VotingResultTalk::getRatingAverageScore).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
                 .map(talk -> 
@@ -78,7 +83,5 @@ public class TopTalksTodayDataProvider implements DataProvider {
         public DataProvider create(TweetStream tweetStream) {
             return new TopTalksTodayDataProvider();
         }
-
     }
-
 }

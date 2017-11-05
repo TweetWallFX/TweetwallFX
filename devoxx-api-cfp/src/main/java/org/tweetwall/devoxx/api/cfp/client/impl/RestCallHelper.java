@@ -26,6 +26,8 @@ package org.tweetwall.devoxx.api.cfp.client.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -76,19 +78,27 @@ public class RestCallHelper {
         return getResponse(url, Collections.emptyMap());
     }
 
-    public static <T> T getData(final String url, final Class<T> typeClass, final Map<String, Object> queryParameters) {
-        return getResponse(url, queryParameters).readEntity(typeClass);
+    public static <T> T readFrom(final Response response, final Class<T> typeClass) {
+        return Objects
+                .requireNonNull(response, "Parameter response must not be null!")
+                .readEntity(typeClass);
     }
 
-    public static <T> T getData(final String url, final Class<T> typeClass) {
-        return getResponse(url).readEntity(typeClass);
+    public static <T> T readFrom(final Response response, final GenericType<T> genericType) {
+        return Objects
+                .requireNonNull(response, "Parameter response must not be null!")
+                .readEntity(genericType);
     }
 
-    public static <T> T getData(final String url, final GenericType<T> genericType, final Map<String, Object> queryParameters) {
-        return getResponse(url, queryParameters).readEntity(genericType);
+    public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass) {
+        return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
+                .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
+                .map(r -> r.readEntity(typeClass));
     }
 
-    public static <T> T getData(final String url, final GenericType<T> genericType) {
-        return getResponse(url).readEntity(genericType);
+    public static <T> Optional<T> readOptionalFrom(final Response response, final GenericType<T> genericType) {
+        return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
+                .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
+                .map(r -> r.readEntity(genericType));
     }
 }

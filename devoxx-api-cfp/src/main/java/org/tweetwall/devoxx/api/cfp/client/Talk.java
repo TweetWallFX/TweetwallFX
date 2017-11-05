@@ -24,7 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
  * Describes a talk.
@@ -185,7 +185,7 @@ public class Talk extends ObjectWithLinksBase {
         if (hasCompleteInformation()) {
             return this;
         } else {
-            return RestCallHelper.getData(getLinkStream(Link.Type.TALK).findAny().get().getHref(), Talk.class);
+            return readFrom(getResponse(getLinkStream(Link.Type.TALK).findAny().get().getHref()), Talk.class);
         }
     }
 
