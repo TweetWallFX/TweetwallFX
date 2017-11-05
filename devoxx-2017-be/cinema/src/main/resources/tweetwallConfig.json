@@ -1,0 +1,12 @@
+{
+    "twitter" : {
+        "extendedMode" : true
+    },
+    "tweetwall" : {
+        "query" : "#devoxx",
+        "title" : "The JavaFX Tweetwall for Devoxx 2017!",
+        "stylesheetResources" : [
+            "tweetwall.css"
+        ]
+    }
+}

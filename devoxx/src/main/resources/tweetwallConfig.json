@@ -1,0 +1,9 @@
+{
+    "tweetwall" : {
+        "query" : "#devoxx",
+        "title" : "The JavaFX Tweetwall for Devoxx!",
+        "stylesheetResources" : [
+            "devoxx.css"
+        ]
+    }
+}
