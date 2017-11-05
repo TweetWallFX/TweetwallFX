@@ -41,7 +41,6 @@ import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TweetStreamDataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 
 /**
  * Devox 2017 TweetStream Flip In Animation Step
@@ -65,8 +64,10 @@ public class Devoxx17FlipInTweets extends AbstractStep {
             tweetList.setId("tweetList");            
             wordleSkin.getPane().getChildren().add(tweetList);
         }
-        tweetList.layoutXProperty().bind(Bindings.add(1330, Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.widthProperty())));
-        tweetList.layoutYProperty().bind(Bindings.add(330, Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.heightProperty())));
+        tweetList.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330.0/1920.0, wordleSkin.getSkinnable().widthProperty()),
+                Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.widthProperty())));
+        tweetList.layoutYProperty().bind(Bindings.add(Bindings.multiply(330.0/1280.0, wordleSkin.getSkinnable().heightProperty()),
+                Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.heightProperty())));        
         tweetList.setRotate(-18);
         List<FlipInXTransition> transitions = new ArrayList<>();
         List<Tweet> tweets = dataProvider.getTweets();
