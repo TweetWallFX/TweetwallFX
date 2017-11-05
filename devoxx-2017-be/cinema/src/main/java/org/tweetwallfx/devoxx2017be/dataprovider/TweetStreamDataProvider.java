@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
@@ -46,16 +47,16 @@ import org.tweetwallfx.tweet.api.Tweeter;
  */
 public class TweetStreamDataProvider implements DataProvider {
     
-    private static final Logger log = LogManager.getLogger(TweetStreamDataProvider.class);
+    private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
     private static final int HISTORY_SIZE = 5; 
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
-    private final String searchText = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
     
     private TweetStreamDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
-            log.info("new Tweet received");
-                addTweet(tweet);
+            LOGGER.info("new Tweet received");
+            addTweet(tweet);
         });
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
@@ -95,7 +96,7 @@ public class TweetStreamDataProvider implements DataProvider {
     }
 
     private List<Tweet> getLatestHistory() {
-        log.info("Reinit the history");
+        LOGGER.info("Reinit the history");
         return Tweeter.getInstance().search(new TweetQuery()
                         .query(searchText)
                         .count(HISTORY_SIZE)).collect(Collectors.toList());        
