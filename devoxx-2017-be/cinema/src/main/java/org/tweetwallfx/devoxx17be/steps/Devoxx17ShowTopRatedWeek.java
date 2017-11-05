@@ -31,15 +31,18 @@ import javafx.animation.ParallelTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
-import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
+import org.tweetwallfx.devoxx2017be.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
+import org.tweetwallfx.devoxx2017be.dataprovider.VotedTalk;
 
 /**
  * Devox 2017 Show Top Rated Talks Week (Flip In) Animation Step
@@ -61,19 +64,19 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
                 scheduleNode.setLayoutX(150);
                 scheduleNode.setLayoutY(200);
                 wordleSkin.getPane().getChildren().add(scheduleNode);
-                
+
                 GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
-                int col=0;
-                int row=0;
-                
-                Iterator<VotingResultTalk> iterator = dataProvider.getFilteredSessionData().iterator();
+                int col = 0;
+                int row = 0;
+
+                Iterator<VotedTalk> iterator = dataProvider.getFilteredSessionData().iterator();
                 while (iterator.hasNext()) {
                     Node node = createTalkNode(iterator.next());
                     grid.getChildren().add(node);
                     GridPane.setColumnIndex(node, col);
                     GridPane.setRowIndex(node, row);
                     row += 1;
-                }                
+                }
                 dataProvider.getFilteredSessionData();
 
             } catch (IOException ex) {
@@ -88,17 +91,25 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
 
     }
 
-    private Node createTalkNode(VotingResultTalk votingResultTalk) {
+    private Node createTalkNode(VotedTalk votingResultTalk) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/ratedTalk.fxml"));
             Text title = (Text) session.lookup("#title");
-            title.setText(votingResultTalk.getProposalTitle());
+            title.setText(votingResultTalk.proposalTitle);
             Text speakers = (Text) session.lookup("#speakers");
-            speakers.setText(votingResultTalk.getProposalsSpeakers());
+            speakers.setText(votingResultTalk.speakers);
             Label averageVoting = (Label) session.lookup("#averageVote");
-            averageVoting.setText(String.format("%.1f", votingResultTalk.getRatingAverageScore()));
+            averageVoting.setText(String.format("%.1f", votingResultTalk.ratingAverageScore));
             Label voteCount = (Label) session.lookup("#voteCount");
-            voteCount.setText(votingResultTalk.getRatingTotalVotes() + " Votes");
+            voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
+            ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
+            speakerImage.setImage(SpeakerImageProvider.getSpeakerImage(votingResultTalk.speakerAvatar));
+            Rectangle clip = new Rectangle(
+                    speakerImage.getFitWidth(), speakerImage.getFitHeight()
+            );
+            clip.setArcWidth(20);
+            clip.setArcHeight(20);
+            speakerImage.setClip(clip);
             return session;
         } catch (IOException ex) {
             LogManager.getLogger(Devoxx17ShowSchedule.class).error(ex);

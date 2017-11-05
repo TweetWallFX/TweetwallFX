@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
     The MIT License
@@ -24,13 +25,15 @@
     THE SOFTWARE.
  
 -->
+
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="131.0" prefWidth="309.0" style="-fx-background-color: devoxx_gradient; -fx-background-radius: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="131.0" prefWidth="587.0" style="-fx-background-color: devoxx_gradient; -fx-background-radius: 5;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextFlow layoutX="178.0" layoutY="86.0" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="38.0" prefWidth="417.0" textAlignment="RIGHT" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="178.0" AnchorPane.rightAnchor="5.0">
          <children>
@@ -42,8 +45,9 @@
             <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
          </children>
       </TextFlow>
-      <Label id="averageVote" layoutX="13.0" layoutY="6.0" style="-fx-font-weight: bold; -fx-font-size: 14pt; -fx-border-radius: 25; -fx-border-color: darkblue; -fx-padding: 10; -fx-border-width: 3;" text="5.0" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="6.0" />
+      <Label id="averageVote" layoutX="13.0" layoutY="6.0" style="-fx-font-weight: bold; -fx-font-size: 14pt; -fx-border-radius: 30; -fx-border-color: black; -fx-padding: 10; -fx-border-width: 3;" text="5.0" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="6.0" />
       <Label id="voteCount" layoutX="10.0" layoutY="60.0" text="1234 Votes" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="60.0" />
+      <ImageView id="speakerImage" fitHeight="64.0" fitWidth="64.0" layoutX="94.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
    </children>
    <effect>
       <DropShadow color="#9a9494" offsetX="2.0" offsetY="2.0" />
