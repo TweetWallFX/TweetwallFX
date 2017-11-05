@@ -40,26 +40,23 @@ import org.tweetwallfx.tweet.api.TweetStream;
  *
  * @author Sven Reimers
  */
-public class TopTalksTodayDataProvider implements DataProvider {
+public final class TopTalksTodayDataProvider implements DataProvider {
 
-    private List<VotingResultTalk> votedTalks;
+    List<VotedTalk> votedTalks = Collections.emptyList();
 
     private TopTalksTodayDataProvider() {
         updateVotigResults();
     }
 
-    private void updateVotigResults() {
+    public void updateVotigResults() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
-        votedTalks = CFPClient.getClient()
+        List<VotingResultTalk> votingResults = CFPClient.getClient()
                 .getVotingResultsDaily(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName))
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
-    }
-
-    public List<VotedTalk> getFilteredSessionData() {
-        return votedTalks.stream()
+        votedTalks = votingResults.stream()
                 .sorted(Comparator.comparing(VotingResultTalk::getRatingAverageScore).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
                 .map(talk -> 
@@ -70,6 +67,10 @@ public class TopTalksTodayDataProvider implements DataProvider {
                             talk.getProposalTitle())
                 )
                 .collect(Collectors.toList());
+    }
+
+    public List<VotedTalk> getFilteredSessionData() {
+        return votedTalks;
     }
 
     @Override
