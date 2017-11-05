@@ -21,30 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx2017be.dataprovider;
+package org.tweetwallfx.devoxx17be.steps;
 
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
+import java.time.Duration;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 
 /**
- * Simple Wrapper for accessing VotedTalk informations.
+ * Step to trigger the updating of the voting results
+ *
  * @author Sven Reimers
  */
-public class VotedTalk {
-    
-    public final String speakers;
-    public final  double ratingAverageScore; 
-    public final  int ratingTotalVotes;
-    public final  String proposalId;
-    public final  String proposalTitle;
-    public final String speakerAvatar;
+public class Devoxx2017UpdateVotingResults extends AbstractStep {
 
-    public VotedTalk(String speakers, double ratingAverageScore, int ratingTotalVotes, String proposalId, String proposalTitle) {
-        this.speakers = speakers;
-        this.ratingAverageScore = ratingAverageScore;
-        this.ratingTotalVotes = ratingTotalVotes;
-        this.proposalId = proposalId;
-        this.proposalTitle = proposalTitle;
-        this.speakerAvatar = CFPClient.getClient().getTalk(System.getProperty("org.tweetwallfx.devoxxbe17.proposal",proposalId )).getSpeakers().get(0).getSpeaker().getAvatarURL();
+    @Override
+    public void doStep(StepEngine.MachineContext context) {
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        final TopTalksTodayDataProvider topTalksToday = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
+        topTalksToday.updateVotigResults();
+        final TopTalksTodayDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
+        topTalksWeek.updateVotigResults();
     }
-    
+
+    @Override
+    public Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return Duration.ZERO;
+    }
+
+    @Override
+    public boolean requiresPlatformThread() {
+        return false;
+    }
 }

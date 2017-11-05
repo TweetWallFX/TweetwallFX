@@ -72,7 +72,7 @@ public class TweetStreamDataProvider implements DataProvider {
         try {
             if (tweet.isRetweet()) {
                 Tweet originalTweet = tweet.getRetweetedTweet();
-                if(!tweets.stream().filter(twt -> originalTweet.getId() == twt.getId()).findAny().isPresent()) {
+                if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
                     tweets.addFirst(originalTweet);
                 }
             } else {
