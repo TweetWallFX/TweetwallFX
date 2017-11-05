@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.stepengine;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Condition;
@@ -100,7 +101,7 @@ public final class StepEngine {
                 step = stateIterator.next();
             }
             final Step stepToExecute = step;
-            long duration = step.preferredStepDuration(context);
+            Duration duration = step.preferredStepDuration(context);
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
             lock.lock();
             try {
@@ -111,7 +112,7 @@ public final class StepEngine {
                 }
                 long stop = System.currentTimeMillis();
                 long doStateDuration = stop - start;
-                long delay = duration - doStateDuration;
+                long delay = duration.toMillis() - doStateDuration;
                 if (delay > 0) {
                     try {
                         LOG.info("sleep({}ms) for step {}", delay, step.getClass().getSimpleName());

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,8 +77,8 @@ public class ImageMosaicStep extends AbstractStep {
     }
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 1000;
+    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+        return java.time.Duration.ofSeconds(1);
     }
 
     private void executeAnimations(StepEngine.MachineContext context) {

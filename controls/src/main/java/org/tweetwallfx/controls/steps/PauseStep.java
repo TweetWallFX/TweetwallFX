@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.time.Duration;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
@@ -32,18 +33,22 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class PauseStep extends AbstractStep {
 
-    private final long pause;
+    private final Duration pause;
 
     public PauseStep() {
-        this(5000);
+        this(Duration.ofSeconds(5));
     }
     
     public PauseStep(long pause) {
+        this(Duration.ofMillis(pause));
+    }
+
+    public PauseStep(Duration pause) {
         this.pause = pause;
     }
     
     @Override
-    public long preferredStepDuration(MachineContext context) {
+    public Duration preferredStepDuration(MachineContext context) {
         return this.pause;
     }
 

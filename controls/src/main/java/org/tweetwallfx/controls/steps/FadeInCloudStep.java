@@ -49,8 +49,8 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 public class FadeInCloudStep extends AbstractStep {
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    public java.time.Duration preferredStepDuration(MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
     }
 
     @Override
