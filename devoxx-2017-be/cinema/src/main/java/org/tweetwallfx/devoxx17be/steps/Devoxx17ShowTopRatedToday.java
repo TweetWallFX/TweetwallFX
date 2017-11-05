@@ -77,7 +77,6 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
                     GridPane.setRowIndex(node, row);
                     row += 1;
                 }
-                dataProvider.getFilteredSessionData();
             } catch (IOException ex) {
                 LogManager.getLogger(Devoxx17ShowTopRatedToday.class.getName()).error(ex);
             }
