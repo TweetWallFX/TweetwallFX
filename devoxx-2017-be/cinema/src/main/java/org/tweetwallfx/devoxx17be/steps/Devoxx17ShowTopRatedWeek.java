@@ -77,8 +77,6 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
                     GridPane.setRowIndex(node, row);
                     row += 1;
                 }
-                dataProvider.getFilteredSessionData();
-
             } catch (IOException ex) {
                 LogManager.getLogger(Devoxx17ShowTopRatedWeek.class.getName()).error(ex);
             }
