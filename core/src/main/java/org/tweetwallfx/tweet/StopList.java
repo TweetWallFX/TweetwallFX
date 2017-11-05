@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
 
 /**
  * StopList consists of a list containing twitter related stop words,
@@ -54,7 +55,7 @@ public final class StopList {
     //TODO: Add I18N support
     {
         //extract Hashtags from complex query and add to StopList
-        String searchText = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+        String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
         final Matcher m = Pattern.compile("#[\\S]+").matcher(searchText);
         while (m.find()) {
             StopList.add(m.group(0));

@@ -1,0 +1,9 @@
+{
+    "tweetwall" : {
+        "query" : "#devoxx OR #devoxxus",
+        "title" : "The JavaFX Tweetwall for Devoxx US 2017!",
+        "stylesheetResources" : [
+            "tweetwall.css"
+        ]
+    }
+}

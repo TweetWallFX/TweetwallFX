@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.+'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versionJackson
     compile group: 'javax', name: 'javaee-api', version: '8.0'
         
     runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey

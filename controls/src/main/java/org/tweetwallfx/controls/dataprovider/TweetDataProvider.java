@@ -30,29 +30,26 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
-/**
- *
- * @author sven
- */
 public class TweetDataProvider implements DataProvider {
     
-    private static final Logger log = LogManager.getLogger(TweetDataProvider.class);
+    private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 20; 
 
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
-    private final String searchText = Configuration.getInstance().getConfig("tweetwall.twitter.query");
+    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
     
     private TweetDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
-            log.info("new Tweet received");
+            LOGGER.info("new Tweet received");
             this.nextTweet = tweet;
             this.lastTweetCollection = null;
         });
@@ -63,7 +60,7 @@ public class TweetDataProvider implements DataProvider {
     }
 
     private List<Tweet> getLatestHistory() {
-        log.info("Reinit the history");
+        LOGGER.info("Reinit the history");
         return Tweeter.getInstance().search(new TweetQuery()
                         .query(searchText)
                         .count(HISTORY_SIZE)).collect(Collectors.toList());        
@@ -104,7 +101,5 @@ public class TweetDataProvider implements DataProvider {
         public TweetDataProvider create(TweetStream tweetStream) {
             return new TweetDataProvider(tweetStream);
         }
-    
     }
-    
 }

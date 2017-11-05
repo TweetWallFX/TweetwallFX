@@ -21,10 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.config;
 
-dependencies {
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-    compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
-    
-    runtime group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
+/**
+ * Converts the data of one configuration key into a domain object.
+ */
+public interface ConfigurationConverter {
+
+    /**
+     * Returns the key of the configuration data map which converts the raw data
+     * under that key into the POJO whose type is declared by
+     * {@link #getDataClass()}.
+     *
+     * @return the configuration data key this converter handles
+     */
+    String getResponsibleKey();
+
+    /**
+     * Thy POJO class the raw data of the configuration data map is to be
+     * converted into.
+     *
+     * @return the POJO class
+     */
+    Class<?> getDataClass();
 }
