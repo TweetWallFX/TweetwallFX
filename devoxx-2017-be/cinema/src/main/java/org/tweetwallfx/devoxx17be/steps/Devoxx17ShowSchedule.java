@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.animation.ParallelTransition;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -58,8 +59,8 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
             try {
                 Node scheduleNode = FXMLLoader.<Node>load(this.getClass().getResource("/schedule.fxml"));
                 transitions.add(new FlipInXTransition(scheduleNode));
-                scheduleNode.setLayoutX(150);
-                scheduleNode.setLayoutY(200);
+                scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0/1920.0, wordleSkin.getSkinnable().widthProperty()));
+                scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0/1280.0, wordleSkin.getSkinnable().heightProperty()));
                 wordleSkin.getPane().getChildren().add(scheduleNode);
                 
                 GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
