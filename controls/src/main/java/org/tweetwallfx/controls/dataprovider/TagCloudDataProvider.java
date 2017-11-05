@@ -75,7 +75,7 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
                 .getTextWithout(UserMentionTweetEntry.class)
                 .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
-                .replaceAll("['\"()]", " "))
+                .replaceAll("['“”‘’\"()]", " "))
                 .filter(l -> l.length() > 2)
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)

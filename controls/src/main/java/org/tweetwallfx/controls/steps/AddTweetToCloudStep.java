@@ -57,7 +57,9 @@ public class AddTweetToCloudStep extends AbstractStep {
         String text = tweetInfo.getTextWithout(UrlTweetEntry.class)
                 .getTextWithout(MediaTweetEntry.class)
                 .getTextWithout(UserMentionTweetEntry.class)
-                .get();
+                .get()
+                .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
+                .replaceAll("['“”‘’\"()]", " ");
         Set<Word> tweetWords = StopList.WORD_SPLIT.splitAsStream(text)
                 .map(StopList::trimTail) //no bad word tails
                 .filter(l -> l.length() > 2) //longer than 2 characters
