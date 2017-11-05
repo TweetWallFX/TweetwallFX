@@ -92,7 +92,7 @@ public class Devoxx17FlipInTweets extends AbstractStep {
     }
 
     private HBox createSingleTweetDisplay(final Tweet displayTweet, WordleSkin wordleSkin, double maxWidth) {
-        String textWithoutMediaUrls = displayTweet.getTextWithout(MediaTweetEntry.class).get();
+        String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
         Text text = new Text(textWithoutMediaUrls);
         text.setCache(true);
         text.setCacheHint(CacheHint.SPEED);
