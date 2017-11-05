@@ -28,6 +28,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
+import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 
 /**
  * Devox 2017 Schedule Flip Out Animation Step
@@ -54,4 +55,10 @@ public class Devoxx17FlipOutSchedule extends AbstractStep {
         return java.time.Duration.ZERO;
     }
 
+    @Override
+    public boolean shouldSkip(StepEngine.MachineContext context) {
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        return wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
+    }
+    
 }
