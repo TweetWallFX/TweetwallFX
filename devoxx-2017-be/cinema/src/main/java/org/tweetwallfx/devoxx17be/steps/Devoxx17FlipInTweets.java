@@ -36,10 +36,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
+import org.tweetwallfx.devoxx2017be.dataprovider.TweetStreamDataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 
@@ -56,7 +56,7 @@ public class Devoxx17FlipInTweets extends AbstractStep {
         double[] maxWidth = new double[]{400, 400, 380, 320, 290, 270};
         
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final TweetDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class);
+        final TweetStreamDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(TweetStreamDataProvider.class);
 
         
         VBox tweetList = (VBox) wordleSkin.getNode().lookup("#tweetList");       
@@ -69,8 +69,9 @@ public class Devoxx17FlipInTweets extends AbstractStep {
         tweetList.layoutYProperty().bind(Bindings.add(330, Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.heightProperty())));
         tweetList.setRotate(-18);
         List<FlipInXTransition> transitions = new ArrayList<>();
+        List<Tweet> tweets = dataProvider.getTweets();
         for (int i = 0;i < 4; i++) {
-            HBox tweet = createSingleTweetDisplay(dataProvider.nextTweet(), wordleSkin, maxWidth[i]);
+            HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
             tweet.setMaxWidth(maxWidth[i] + 64 + 10);
             tweet.getStyleClass().add("tweetDisplay");            
             transitions.add(new FlipInXTransition(tweet));
