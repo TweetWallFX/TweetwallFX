@@ -37,7 +37,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -78,10 +80,9 @@ public final class Configuration {
 
     private static Map<String, Object> loadConfigurationData() {
         LOGGER.info("loading configurations data");
-        final Map<String, Object> result = new HashMap<>();
-
-        result.putAll(loadConfigurationDataFromClasspath());
-        result.putAll(loadConfigurationDataFromFilesystem());
+        final Map<String, Object> result = new HashMap<>(mergeMap(
+                loadConfigurationDataFromClasspath(),
+                loadConfigurationDataFromFilesystem()));
 
         final Map<String, List<ConfigurationConverter>> converters = StreamSupport
                 .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
@@ -108,7 +109,7 @@ public final class Configuration {
 
     private static Map<String, Object> loadConfigurationDataFromClasspath() {
         LOGGER.info("Searching for configuration files in path '/" + CONFIG_FILENAME + "'");
-        final Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         try {
             final Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources(CONFIG_FILENAME);
@@ -118,7 +119,7 @@ public final class Configuration {
                 LOGGER.info("Found config file: " + url);
 
                 try (final InputStream is = url.openStream()) {
-                    result.putAll(readConfiguration(is));
+                    result = mergeMap(result, readConfiguration(is));
                 }
             }
         } catch (final IOException ioe) {
@@ -268,5 +269,37 @@ public final class Configuration {
     @SuppressWarnings("unchecked")
     private static <T> T cast(final Object obj) {
         return (T) obj;
+    }
+
+    private static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
+        Objects.requireNonNull(next, "Parameter next must not be null!");
+
+        if (null == previous || previous.isEmpty()) {
+            return next;
+        }
+
+        return Stream.concat(previous.keySet().stream(), next.keySet().stream())
+                .sorted()
+                .distinct()
+                .collect(Collectors.toMap(Function.identity(), key -> mergeValue(previous.get(key), next.get(key))));
+    }
+
+    private static Object mergeValue(final Object previous, final Object next) {
+        if (null == previous) {
+            return next;
+        } else if (null == next) {
+            return previous;
+        }
+
+        final Class<?> pClass = previous.getClass();
+        final Class<?> nClass = next.getClass();
+
+        if (pClass.getName().startsWith("java.lang.") || nClass.getName().startsWith("java.lang.")) {
+            return next;
+        } else if (Map.class.isInstance(previous) && Map.class.isInstance(next)) {
+            return mergeMap(cast(previous), cast(next));
+        } else {
+            throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
+        }
     }
 }

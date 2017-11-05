@@ -131,7 +131,7 @@ public final class TwitterSettings {
         return getClass().getSimpleName() + "{"
                 + "\n    extendedConfig=" + getExtendedConfig()
                 + "\n    extendedMode=" + isExtendedMode()
-                + "\n    oauth=" + getOauth()
+                + "\n    oauth=" + String.valueOf(getOauth()).replaceAll("\n", "\n    ")
                 + "\n} extends " + super.toString();
     }
 
