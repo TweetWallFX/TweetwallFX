@@ -40,8 +40,9 @@ import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
- *
- * @author sven
+ * Provides an always current list of tweets based on the configured query.
+ * The history length is not yet configurable.
+ * @author Sven Reimers
  */
 public class TweetStreamDataProvider implements DataProvider {
     
