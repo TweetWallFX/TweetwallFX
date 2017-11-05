@@ -24,6 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -121,20 +122,22 @@ public interface CFPClient {
     Tracks getTracks();
 
     /**
-     * Shows the voting results for the requested {@code day}.
+     * Shows the voting results for the requested {@code day}. Should the query
+     * fail for whatever reason en empty Optional is returned.
      *
      * @param day the day of the week
      *
-     * @return the voting results of the day
+     * @return the voting results of the day as an Optional
      */
-    VotingResults getVotingResultsDaily(final String day);
+    Optional<VotingResults> getVotingResultsDaily(final String day);
 
     /**
-     * Shows the overall voting results of the event.
+     * Shows the overall voting results of the event. Should the query fail for
+     * whatever reason en empty Optional is returned.
      *
      * @return the overall voting results
      */
-    VotingResults getVotingResultsOverall();
+    Optional<VotingResults> getVotingResultsOverall();
 
     /**
      * Stream of all available {@link CFPClient CFPClients}.

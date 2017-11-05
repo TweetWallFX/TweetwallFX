@@ -48,7 +48,8 @@ public class Events extends ObjectWithLinksBase {
     public Stream<Event> getEvents() {
         return getLinkStream(Link.Type.CONFERENCE)
                 .map(Link::getHref)
-                .map(href -> RestCallHelper.getData(href, Event.class));
+                .map(RestCallHelper::getResponse)
+                .map(response -> RestCallHelper.readFrom(response, Event.class));
     }
 
     @Override

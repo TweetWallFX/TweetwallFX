@@ -34,7 +34,8 @@ public class Schedules extends ObjectWithLinksBase {
     public Stream<Schedule> getSchedules() {
         return getLinkStream(Link.Type.SCHEDULE)
                 .map(Link::getHref)
-                .map(href -> RestCallHelper.getData(href, Schedule.class));
+                .map(RestCallHelper::getResponse)
+                .map(response -> RestCallHelper.readFrom(response, Schedule.class));
     }
 
     @Override

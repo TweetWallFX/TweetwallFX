@@ -268,9 +268,10 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final VotingResults votingResults = client.getVotingResultsOverall();
+        final Optional<VotingResults> votingResults = client.getVotingResultsOverall();
         System.out.println("votingResults: " + votingResults);
         assertNotNull(votingResults);
+        assertTrue(votingResults.isPresent());
     }
 
     @Test
@@ -279,8 +280,9 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final VotingResults votingResults = client.getVotingResultsDaily("monday");
+        final Optional<VotingResults> votingResults = client.getVotingResultsDaily("monday");
         System.out.println("votingResults: " + votingResults);
         assertNotNull(votingResults);
+        assertTrue(votingResults.isPresent());
     }
 }

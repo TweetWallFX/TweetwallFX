@@ -24,7 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.List;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
  * POJO for a Speaker with the following fields:
@@ -199,7 +199,7 @@ public class Speaker extends ObjectWithLinksBase {
         if (hasCompleteInformation()) {
             return this;
         } else {
-            return RestCallHelper.getData(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref(), Speaker.class);
+            return readFrom(getResponse(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref()), Speaker.class);
         }
     }
 
