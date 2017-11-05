@@ -87,7 +87,10 @@ public interface Tweet extends BasicEntry {
                 .filter(ue -> ue.getExpandedURL().endsWith(Long.toString(getId())))
                 .findAny()
                 .ifPresent(textExtractor::getTextWithout);
-
+        
+        Arrays.stream(getMediaEntries())
+                .forEach(textExtractor::getTextWithout);
+        
         return textExtractor;
     }
 
