@@ -32,8 +32,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
-import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 
 public class TweetLayout {
 
@@ -75,7 +73,7 @@ public class TweetLayout {
     private List<TweetWord> recalcTweetLayout() {
         TextFlow flow = new TextFlow();
         flow.setMaxWidth(300);
-        pattern.splitAsStream(configuration.tweet.getTextWithout(MediaTweetEntry.class).getTextWithout(UrlTweetEntry.class).get())
+        pattern.splitAsStream(configuration.tweet.getDisplayEnhancedText())
                 .forEach(w -> {
                     Text textWord = wordNodeFactory.createTextNode(w.concat(" "));
                     fontSizeAdaption(textWord, configuration.tweetFontSize);
