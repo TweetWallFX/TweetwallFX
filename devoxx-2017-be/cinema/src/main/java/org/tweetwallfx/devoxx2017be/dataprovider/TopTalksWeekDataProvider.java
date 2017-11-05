@@ -41,17 +41,24 @@ public class TopTalksWeekDataProvider implements DataProvider {
     private VotingResults votingResults;
 
     private TopTalksWeekDataProvider() {
-        updateSchedule();
+        updateVotingResults();
     }
 
-    private void updateSchedule() {        
+    private void updateVotingResults() {        
         votingResults = CFPClient.getClient().getVotingResultsOverall();
     }
 
-    public List<VotingResultTalk> getFilteredSessionData() {        
+    public List<VotedTalk> getFilteredSessionData() {        
         return votingResults.getResult().getTalks().stream()
                 .sorted(Comparator.comparing(VotingResultTalk::getRatingAverageScore).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
+                .map(talk -> 
+                    new VotedTalk(talk.getProposalsSpeakers(),
+                            talk.getRatingAverageScore(),
+                            talk.getRatingTotalVotes(),
+                            talk.getProposalId(),
+                            talk.getProposalTitle())
+                )                
                 .collect(Collectors.toList());
     }
 

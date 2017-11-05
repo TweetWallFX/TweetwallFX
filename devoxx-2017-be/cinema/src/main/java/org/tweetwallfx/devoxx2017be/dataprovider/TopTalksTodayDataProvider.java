@@ -44,19 +44,26 @@ public class TopTalksTodayDataProvider implements DataProvider {
     private VotingResults votingResults;
 
     private TopTalksTodayDataProvider() {
-        updateSchedule();
+        updateVotigResults();
     }
 
-    private void updateSchedule() {        
+    private void updateVotigResults() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         votingResults = CFPClient.getClient().getVotingResultsDaily(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName));
     }
 
-    public List<VotingResultTalk> getFilteredSessionData() {        
+    public List<VotedTalk> getFilteredSessionData() {
         return votingResults.getResult().getTalks().stream()
                 .sorted(Comparator.comparing(VotingResultTalk::getRatingAverageScore).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
+                .map(talk -> 
+                    new VotedTalk(talk.getProposalsSpeakers(),
+                            talk.getRatingAverageScore(),
+                            talk.getRatingTotalVotes(),
+                            talk.getProposalId(),
+                            talk.getProposalTitle())
+                )
                 .collect(Collectors.toList());
     }
 
