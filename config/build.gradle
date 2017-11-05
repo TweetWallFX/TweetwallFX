@@ -26,5 +26,6 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
     compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
     
+    runtime group: 'org.eclipse', name: 'yasson', version: versionJasson
     runtime group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
 }
