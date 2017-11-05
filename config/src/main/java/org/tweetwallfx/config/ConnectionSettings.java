@@ -56,7 +56,7 @@ public final class ConnectionSettings {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{"
-                + "\n    proxy=" + getProxy()
+                + "\n    proxy=" + String.valueOf(getProxy()).replaceAll("\n", "\n    ")
                 + "\n} extends " + super.toString();
     }
 
