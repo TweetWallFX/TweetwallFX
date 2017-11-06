@@ -51,7 +51,7 @@ public final class TopTalksWeekDataProvider implements DataProvider {
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
-                .sorted(Comparator.comparing(VotingResultTalk::getRatingAverageScore).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
+                .sorted(Comparator.comparing(this::averageFormattedVote).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
                 .map(talk -> 
                     new VotedTalk(talk.getProposalsSpeakers(),
@@ -62,6 +62,10 @@ public final class TopTalksWeekDataProvider implements DataProvider {
                 )                
                 .collect(Collectors.toList());
     }
+    
+    private String averageFormattedVote(VotingResultTalk ratedTalk) {
+        return String.format("%.1f", ratedTalk.getRatingAverageScore());
+    }    
 
     public List<VotedTalk> getFilteredSessionData() {        
         return votedTalks;
