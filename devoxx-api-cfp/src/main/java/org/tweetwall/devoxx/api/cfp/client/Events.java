@@ -49,8 +49,7 @@ public class Events extends ObjectWithLinksBase {
     public Stream<Event> getEvents() {
         return getLinkStream(Link.Type.CONFERENCE)
                 .map(Link::getHref)
-                .map(urlString
-                        -> getOptionalResponse(urlString).flatMap(response -> readOptionalFrom(response, Event.class)))
+                .map(urlString -> readOptionalFrom(urlString, Event.class))
                 .filter(Optional::isPresent)
                 .map(Optional::get);
     }

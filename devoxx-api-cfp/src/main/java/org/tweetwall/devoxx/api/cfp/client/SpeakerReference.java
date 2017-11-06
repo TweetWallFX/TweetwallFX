@@ -48,8 +48,7 @@ public class SpeakerReference {
     }
 
     public Optional<Speaker> getSpeaker() {
-        return getOptionalResponse(getLink().getHref())
-                .flatMap(response -> readOptionalFrom(response, Speaker.class));
+        return readOptionalFrom(getLink().getHref(), Speaker.class);
     }
 
     @Override

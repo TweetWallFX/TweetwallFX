@@ -35,8 +35,7 @@ public class Schedules extends ObjectWithLinksBase {
     public Stream<Schedule> getSchedules() {
         return getLinkStream(Link.Type.SCHEDULE)
                 .map(Link::getHref)
-                .map(urlString
-                        -> getOptionalResponse(urlString).flatMap(response -> readOptionalFrom(response, Schedule.class)))
+                .map(urlString -> readOptionalFrom(urlString, Schedule.class))
                 .filter(Optional::isPresent)
                 .map(Optional::get);
     }

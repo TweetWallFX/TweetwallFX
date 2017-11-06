@@ -103,4 +103,22 @@ public class RestCallHelper {
                 .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
                 .map(r -> r.readEntity(genericType));
     }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Class<T> typeClass) {
+        return readOptionalFrom(url, null, typeClass);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final Class<T> typeClass) {
+        return getOptionalResponse(url, queryParameters)
+                .flatMap(response -> readOptionalFrom(response, typeClass));
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final GenericType<T> genericType) {
+        return readOptionalFrom(url, null, genericType);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType) {
+        return getOptionalResponse(url, queryParameters)
+                .flatMap(response -> readOptionalFrom(response, genericType));
+    }
 }

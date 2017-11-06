@@ -50,81 +50,67 @@ public class CFPClientDevoxx2017BE implements CFPClient {
 
     @Override
     public Optional<Events> getEvents() {
-        return getOptionalResponse(BASE_URI + "conferences/")
-                .flatMap(response -> readOptionalFrom(response, Events.class));
+        return readOptionalFrom(BASE_URI + "conferences/", Events.class);
     }
 
     @Override
     public Optional<Event> getEvent() {
-        return getOptionalResponse(CONFERENCE_BASE_URI)
-                .flatMap(response -> readOptionalFrom(response, Event.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI, Event.class);
     }
 
     @Override
     public Optional<ProposalTypes> getProposalTypes() {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/proposalTypes")
-                .flatMap(response -> readOptionalFrom(response, ProposalTypes.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/proposalTypes", ProposalTypes.class);
     }
 
     @Override
     public Optional<Rooms> getRooms() {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/rooms/")
-                .flatMap(response -> readOptionalFrom(response, Rooms.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/rooms/", Rooms.class);
     }
 
     @Override
     public Optional<Schedule> getSchedule(final String day) {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/schedules/" + day)
-                .flatMap(response -> readOptionalFrom(response, Schedule.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day, Schedule.class);
     }
 
     @Override
     public Optional<Schedule> getSchedule(final String day, final String room) {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/rooms/" + room + "/" + day)
-                .flatMap(response -> readOptionalFrom(response, Schedule.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/rooms/" + room + "/" + day, Schedule.class);
     }
 
     @Override
     public Optional<Schedules> getSchedules() {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/schedules/")
-                .flatMap(response -> readOptionalFrom(response, Schedules.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/", Schedules.class);
     }
 
     @Override
     public List<Speaker> getSpeakers() {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/speakers/")
-                .flatMap(response -> readOptionalFrom(response, new GenericType<List<Speaker>>() {
-        }))
-                .orElse(Collections.emptyList());
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/speakers/", new GenericType<List<Speaker>>() {
+        }).orElse(Collections.emptyList());
     }
 
     @Override
     public Optional<Speaker> getSpeaker(final String speakerId) {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/speakers/" + speakerId)
-                .flatMap(response -> readOptionalFrom(response, Speaker.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/speakers/" + speakerId, Speaker.class);
     }
 
     @Override
     public Optional<Talk> getTalk(final String talkId) {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/talks/" + talkId)
-                .flatMap(response -> readOptionalFrom(response, Talk.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/talks/" + talkId, Talk.class);
     }
 
     @Override
     public Optional<Tracks> getTracks() {
-        return getOptionalResponse(CONFERENCE_BASE_URI + "/tracks")
-                .flatMap(response -> readOptionalFrom(response, Tracks.class));
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/tracks", Tracks.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsOverall() {
-        return getOptionalResponse("https://cfp.devoxx.be/api/voting/v1/top/talks")
-                .flatMap(response -> readOptionalFrom(response, VotingResults.class));
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", VotingResults.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsDaily(final String day) {
-        return getOptionalResponse("https://cfp.devoxx.be/api/voting/v1/top/talks", Collections.singletonMap("day", day))
-                .flatMap(response -> readOptionalFrom(response, VotingResults.class));
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", Collections.singletonMap("day", day), VotingResults.class);
     }
 }

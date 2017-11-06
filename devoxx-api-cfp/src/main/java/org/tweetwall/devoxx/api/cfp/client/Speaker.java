@@ -203,8 +203,7 @@ public class Speaker extends ObjectWithLinksBase {
         if (hasCompleteInformation()) {
             return Optional.of(this);
         } else {
-            return getOptionalResponse(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref())
-                    .flatMap(response -> readOptionalFrom(response, Speaker.class));
+            return readOptionalFrom(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref(), Speaker.class);
         }
     }
 
