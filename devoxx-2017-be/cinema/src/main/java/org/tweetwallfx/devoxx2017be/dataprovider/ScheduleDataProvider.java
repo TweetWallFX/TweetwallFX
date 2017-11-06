@@ -25,6 +25,7 @@ package org.tweetwallfx.devoxx2017be.dataprovider;
 
 import java.time.LocalDateTime;
 import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -62,7 +63,7 @@ public class ScheduleDataProvider implements DataProvider {
     public List<SessionData> getFilteredSessionData() {
         String time = System.getProperty("org.tweetwallfx.devoxxbe17.time");
         OffsetTime liveOffset = null == time
-                ? OffsetTime.now().minus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS)
+                ? OffsetTime.now(ZoneOffset.UTC).plus(TimeZone.getDefault().getRawOffset(),ChronoUnit.MILLIS)
                 : OffsetTime.parse(time);
         return SessionData.from(scheduleSlots, liveOffset);
     }
