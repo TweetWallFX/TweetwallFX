@@ -42,7 +42,7 @@
       </TextFlow>
       <TextFlow maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="209.0" textAlignment="RIGHT" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
+            <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: blanchedalmond;" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
          </children>
       </TextFlow>
       <Label id="averageVote" layoutX="13.0" layoutY="6.0" style="-fx-font-weight: bold; -fx-font-size: 14pt; -fx-border-radius: 30; -fx-border-color: black; -fx-padding: 10; -fx-border-width: 3;" text="5.0" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="6.0" />
