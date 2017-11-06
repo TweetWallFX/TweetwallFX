@@ -25,7 +25,9 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
@@ -35,6 +37,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
@@ -58,18 +61,34 @@ public class Devoxx17FlipInTweets extends AbstractStep {
         final TweetStreamDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(TweetStreamDataProvider.class);
 
         
-        VBox tweetList = (VBox) wordleSkin.getNode().lookup("#tweetList");       
-        if (null == tweetList){
-            tweetList = new VBox();  
-            tweetList.setId("tweetList");            
-            wordleSkin.getPane().getChildren().add(tweetList);
-        }
+        VBox tweetList = getOrCreateTweetList(wordleSkin);
+
+        List<Transition> transitions = new ArrayList<>();
+        
+        dataProvider.getLatestImage().ifPresent(image -> {
+            ImageView view = new ImageView(image);
+            view.setPreserveRatio(true);
+            view.setFitHeight(140);
+            view.layoutXProperty().bind(Bindings.add(Bindings.multiply(1490/1920.0, wordleSkin.getSkinnable().widthProperty()),
+                    Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.widthProperty())));
+            view.layoutYProperty().bind(Bindings.add(Bindings.multiply(405/1280.0, wordleSkin.getSkinnable().heightProperty()),
+                    Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.heightProperty())));
+            view.setRotate(-18);
+            view.setId("tweetImage");
+            view.setOpacity(0);
+            wordleSkin.getPane().getChildren().add(view);
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), view);
+            fadeTransition.setFromValue(0);
+            fadeTransition.setToValue(1);
+            fadeTransition.setDelay(Duration.seconds(0.2));
+            transitions.add(fadeTransition);            
+        });
         tweetList.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330.0/1920.0, wordleSkin.getSkinnable().widthProperty()),
                 Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.widthProperty())));
         tweetList.layoutYProperty().bind(Bindings.add(Bindings.multiply(330.0/1280.0, wordleSkin.getSkinnable().heightProperty()),
                 Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.heightProperty())));        
         tweetList.setRotate(-18);
-        List<FlipInXTransition> transitions = new ArrayList<>();
+        
         List<Tweet> tweets = dataProvider.getTweets();
         for (int i = 0;i < Math.min(tweets.size(),4); i++) {
             HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
@@ -91,6 +110,16 @@ public class Devoxx17FlipInTweets extends AbstractStep {
 
         flipIns.play();                
         
+    }
+    
+    private VBox getOrCreateTweetList(WordleSkin wordleSkin) {
+        VBox vbox = (VBox) wordleSkin.getNode().lookup("#tweetList");       
+        if (null == vbox){
+            vbox = new VBox();  
+            vbox.setId("tweetList");            
+            wordleSkin.getPane().getChildren().add(vbox);
+        }
+        return vbox;
     }
 
     private HBox createSingleTweetDisplay(final Tweet displayTweet, WordleSkin wordleSkin, double maxWidth) {
