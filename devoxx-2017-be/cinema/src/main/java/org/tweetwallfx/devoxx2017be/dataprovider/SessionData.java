@@ -48,7 +48,7 @@ public class SessionData {
                 .filter(slot -> null != slot.getTalk())
                 .filter(slot -> slot.getTalk().getTalkType() != "BOF (Bird of a Feather)")
                 .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now))
-                .filter(slot -> OffsetTime.parse(slot.getFromTime() + "Z").isBefore(now.plusMinutes(60)))
+                .filter(slot -> !OffsetTime.parse(slot.getFromTime() + "Z").isBefore(now.plusMinutes(120)))
                 .collect(Collectors.groupingBy(slot -> slot.getRoomId()))
                 .entrySet().stream()
                 .map(entry -> entry.getValue().stream().findFirst())
