@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -63,7 +64,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Events events = client.getEvents();
+        final Optional<Events> eventsOptional = client.getEvents();
+        System.out.println("eventsOptional: " + eventsOptional);
+        assertTrue(eventsOptional.isPresent());
+
+        final Events events = eventsOptional
+                .get();
         System.out.println("events: " + events);
         assertNotNull(events);
     }
@@ -74,7 +80,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Event event = client.getEvent();
+        final Optional<Event> eventOptional = client.getEvent();
+        System.out.println("eventOptional: " + eventOptional);
+        assertTrue(eventOptional.isPresent());
+
+        final Event event = eventOptional
+                .get();
         System.out.println("event: " + event);
         assertNotNull(event);
     }
@@ -85,7 +96,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final ProposalTypes proposalTypes = client.getProposalTypes();
+        final Optional<ProposalTypes> proposalTypesOptional = client.getProposalTypes();
+        System.out.println("proposalTypesOptional: " + proposalTypesOptional);
+        assertTrue(proposalTypesOptional.isPresent());
+
+        final ProposalTypes proposalTypes = proposalTypesOptional
+                .get();
         System.out.println("proposalTypes: " + proposalTypes);
         assertNotNull(proposalTypes);
     }
@@ -96,7 +112,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Rooms rooms = client.getRooms();
+        final Optional<Rooms> roomsOptional = client.getRooms();
+        System.out.println("roomsOptional: " + roomsOptional);
+        assertTrue(roomsOptional.isPresent());
+
+        final Rooms rooms = roomsOptional
+                .get();
         System.out.println("rooms: " + rooms);
         assertNotNull(rooms);
     }
@@ -107,7 +128,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Schedules schedules = client.getSchedules();
+        final Optional<Schedules> schedulesOptional = client.getSchedules();
+        System.out.println("schedulesOptional: " + schedulesOptional);
+        assertTrue(schedulesOptional.isPresent());
+
+        final Schedules schedules = schedulesOptional
+                .get();
         System.out.println("schedules: " + schedules);
         assertNotNull(schedules);
         assertTrue(schedules.getSchedules().count() > 0);
@@ -119,7 +145,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Schedule schedule = client.getSchedule("monday");
+        final Optional<Schedule> scheduleOptional = client.getSchedule("monday");
+        System.out.println("scheduleOptional: " + scheduleOptional);
+        assertTrue(scheduleOptional.isPresent());
+
+        final Schedule schedule = scheduleOptional
+                .get();
         System.out.println("schedule: " + schedule);
         assertNotNull(schedule);
         assertFalse(schedule.getSlots().isEmpty());
@@ -131,7 +162,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Schedule schedule = client.getSchedule("monday", "room8");
+        final Optional<Schedule> scheduleOptional = client.getSchedule("monday", "room8");
+        System.out.println("scheduleOptional: " + scheduleOptional);
+        assertTrue(scheduleOptional.isPresent());
+
+        final Schedule schedule = scheduleOptional
+                .get();
         System.out.println("schedule: " + schedule);
         assertNotNull(schedule);
         assertFalse(schedule.getSlots().isEmpty());
@@ -144,7 +180,7 @@ public class CFPClientTest {
         assertNotNull(client);
 
         final List<Speaker> speakers = client.getSpeakers();
-        System.out.println("speakers: " + Helper.convertCollectionForToString(speakers));
+        System.out.println("speakers: " + convertCollectionForToString(speakers));
         assertNotNull(speakers);
     }
 
@@ -165,9 +201,13 @@ public class CFPClientTest {
         assertTrue(speakerOptional.isPresent());
         assertFalse(speakerOptional.get().hasCompleteInformation());
 
-        Speaker speaker = speakerOptional
-                .map(Speaker::reload)
-                .get();
+        final Optional<Speaker> speakerOptionalReload = speakerOptional
+                .flatMap(Speaker::reload);
+        System.out.println("speakerOptionalReload: " + speakerOptionalReload);
+        assertTrue(speakerOptionalReload.isPresent());
+        assertTrue(speakerOptionalReload.get().hasCompleteInformation());
+        
+        Speaker speaker = speakerOptionalReload.get();
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
     }
@@ -178,11 +218,16 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Speaker speaker = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        final Optional<Speaker> speakerOptional = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        System.out.println("speakerOptional: " + speakerOptional);
+        assertTrue(speakerOptional.isPresent());
+
+        final Speaker speaker = speakerOptional
+                .get();
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
         assertTrue(speaker.hasCompleteInformation());
-        assertSame(speaker, speaker.reload());
+        assertSame(speaker, speaker.reload().get());
     }
 
     @Test
@@ -191,7 +236,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Speaker speaker = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        final Optional<Speaker> speakerOptional = client.getSpeaker("8a7d68a8a2b09105c969cbae7b37019d4fa470a5");
+        System.out.println("speakerOptional: " + speakerOptional);
+        assertTrue(speakerOptional.isPresent());
+
+        final Speaker speaker = speakerOptional
+                .get();
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
         assertTrue(speaker.hasCompleteInformation());
@@ -203,7 +253,12 @@ public class CFPClientTest {
         assertFalse(incompleteTalk.hasCompleteInformation());
         System.out.println("incompleteTalk: " + incompleteTalk);
 
-        final Talk completeTalk = incompleteTalk.reload();
+        final Optional<Talk> incompleteTalkOptionalReload = incompleteTalk.reload();
+        System.out.println("incompleteTalkOptionalReload: " + incompleteTalkOptionalReload);
+        assertTrue(incompleteTalkOptionalReload.isPresent());
+        assertTrue(incompleteTalkOptionalReload.get().hasCompleteInformation());
+        
+        final Talk completeTalk = incompleteTalkOptionalReload.get();
         assertNotNull(completeTalk);
         assertTrue(completeTalk.hasCompleteInformation());
         System.out.println("completeTalk: " + completeTalk);
@@ -215,12 +270,23 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Talk talk = client.getTalk("OZB-4067");
+        final Optional<Talk> talkOptional = client.getTalk("OZB-4067");
+        System.out.println("talkOptional: " + talkOptional);
+        assertTrue(talkOptional.isPresent());
+
+        final Talk talk = talkOptional
+                .get();
         System.out.println("talk: " + talk);
         assertNotNull(talk);
         assertTrue(talk.hasCompleteInformation());
 
-        final Set<Speaker> speakers = talk.getSpeakers().stream().map(SpeakerReference::getSpeaker).collect(Collectors.toSet());
+        final Set<Speaker> speakers = talk
+                .getSpeakers()
+                .stream()
+                .map(SpeakerReference::getSpeaker)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
         assertSame(talk.getSpeakers().size(), speakers.size());
 
         final Optional<Speaker> speakerOptional = speakers
@@ -232,7 +298,6 @@ public class CFPClientTest {
         assertTrue(speakerOptional.get().hasCompleteInformation());
 
         Speaker speaker = speakerOptional
-                .map(Speaker::reload)
                 .get();
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
@@ -244,11 +309,16 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Talk talk = client.getTalk("OZB-4067");
+        final Optional<Talk> talkOptional = client.getTalk("OZB-4067");
+        System.out.println("talkOptional: " + talkOptional);
+        assertTrue(talkOptional.isPresent());
+
+        final Talk talk = talkOptional
+                .get();
         System.out.println("talk: " + talk);
         assertNotNull(talk);
         assertTrue(talk.hasCompleteInformation());
-        assertSame(talk, talk.reload());
+        assertSame(talk, talk.reload().get());
     }
 
     @Test
@@ -257,7 +327,12 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
 
-        final Tracks tracks = client.getTracks();
+        final Optional<Tracks> tracksOptional = client.getTracks();
+        System.out.println("tracksOptional: " + tracksOptional);
+        assertTrue(tracksOptional.isPresent());
+
+        final Tracks tracks = tracksOptional
+                .get();
         System.out.println("tracks: " + tracks);
         assertNotNull(tracks);
     }
@@ -284,5 +359,20 @@ public class CFPClientTest {
         System.out.println("votingResults: " + votingResults);
         assertNotNull(votingResults);
         assertTrue(votingResults.isPresent());
+    }
+
+    private static String convertCollectionForToString(final Collection<?> collection) {
+        if (null == collection) {
+            return null;
+        }
+
+        return collection
+                .stream()
+                .map(Object::toString)
+                .map(s -> s.replaceAll("\n", "\n        "))
+                .collect(Collectors.joining(
+                        ",\n        ",
+                        "[\n        ",
+                        "\n    ]"));
     }
 }

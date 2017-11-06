@@ -23,7 +23,9 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
@@ -184,7 +186,9 @@ public class Speaker extends ObjectWithLinksBase {
     }
 
     public List<Talk> getAcceptedTalks() {
-        return acceptedTalks;
+        return null == acceptedTalks
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(acceptedTalks);
     }
 
     public void setAcceptedTalks(final List<Talk> acceptedTalks) {
@@ -195,11 +199,12 @@ public class Speaker extends ObjectWithLinksBase {
         return !getLinkStream(Link.Type.SPEAKER).findAny().isPresent();
     }
 
-    public Speaker reload() {
+    public Optional<Speaker> reload() {
         if (hasCompleteInformation()) {
-            return this;
+            return Optional.of(this);
         } else {
-            return readFrom(getResponse(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref()), Speaker.class);
+            return getOptionalResponse(getLinkStream(Link.Type.SPEAKER).findAny().get().getHref())
+                    .flatMap(response -> readOptionalFrom(response, Speaker.class));
         }
     }
 

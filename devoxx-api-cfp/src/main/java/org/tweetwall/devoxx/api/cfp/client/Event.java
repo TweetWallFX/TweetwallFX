@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -84,7 +85,9 @@ public class Event extends ObjectWithLinksBase {
     }
 
     public List<String> getLocale() {
-        return locale;
+        return null == locale
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(locale);
     }
 
     public void setLocale(final List<String> locale) {
@@ -92,7 +95,9 @@ public class Event extends ObjectWithLinksBase {
     }
 
     public List<String> getDays() {
-        return days;
+        return null == days
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(days);
     }
 
     public void setDays(final List<String> days) {
@@ -100,7 +105,9 @@ public class Event extends ObjectWithLinksBase {
     }
 
     public List<String> getProposalTypesId() {
-        return proposalTypesId;
+        return null == proposalTypesId
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(proposalTypesId);
     }
 
     public void setProposalTypesId(final List<String> proposalTypesId) {

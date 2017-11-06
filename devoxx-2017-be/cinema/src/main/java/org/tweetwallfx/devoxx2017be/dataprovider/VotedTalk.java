@@ -24,18 +24,20 @@
 package org.tweetwallfx.devoxx2017be.dataprovider;
 
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
+import org.tweetwall.devoxx.api.cfp.client.Speaker;
 
 /**
  * Simple Wrapper for accessing VotedTalk informations.
+ *
  * @author Sven Reimers
  */
 public class VotedTalk {
-    
+
     public final String speakers;
-    public final  double ratingAverageScore; 
-    public final  int ratingTotalVotes;
-    public final  String proposalId;
-    public final  String proposalTitle;
+    public final double ratingAverageScore;
+    public final int ratingTotalVotes;
+    public final String proposalId;
+    public final String proposalTitle;
     public final String speakerAvatar;
 
     public VotedTalk(String speakers, double ratingAverageScore, int ratingTotalVotes, String proposalId, String proposalTitle) {
@@ -44,7 +46,10 @@ public class VotedTalk {
         this.ratingTotalVotes = ratingTotalVotes;
         this.proposalId = proposalId;
         this.proposalTitle = proposalTitle;
-        this.speakerAvatar = CFPClient.getClient().getTalk(System.getProperty("org.tweetwallfx.devoxxbe17.proposal",proposalId )).getSpeakers().get(0).getSpeaker().getAvatarURL();
+        this.speakerAvatar = CFPClient.getClient()
+                .getTalk(System.getProperty("org.tweetwallfx.devoxxbe17.proposal", proposalId))
+                .flatMap(talk -> talk.getSpeakers().get(0).getSpeaker())
+                .map(Speaker::getAvatarURL)
+                .orElse(null);
     }
-    
 }
