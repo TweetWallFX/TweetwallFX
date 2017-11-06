@@ -45,13 +45,13 @@ public class SessionData {
     final boolean isNotAllocated;
     public final String roomSetup;
 
-    public SessionData(String room, List<String> speakers, String title, String beginTime, boolean isNotAllocated, String roomSetup) {
-        this.room = room;
-        this.speakers = speakers;
-        this.title = title;
-        this.beginTime = beginTime;
-        this.isNotAllocated = isNotAllocated;
-        this.roomSetup = roomSetup;
+    private SessionData(final ScheduleSlot slot) {
+        this.room = slot.getRoomName();
+        this.speakers = slot.getTalk().getSpeakers().stream().map(ref -> ref.getName()).collect(Collectors.toList());
+        this.title = slot.getTalk().getTitle();
+        this.beginTime = slot.getFromTime();
+        this.isNotAllocated = slot.isNotAllocated();
+        this.roomSetup = slot.getRoomSetup();
     }
 
     /**
@@ -72,12 +72,7 @@ public class SessionData {
                 .entrySet().stream()
                 .map(entry -> entry.getValue().stream().findFirst())
                 .map(optional -> optional.orElse(null))
-                .map(slot -> new SessionData(slot.getRoomName(),
-                slot.getTalk().getSpeakers().stream().map(ref -> ref.getName()).collect(Collectors.toList()),
-                slot.getTalk().getTitle(),
-                slot.getFromTime(),
-                slot.isNotAllocated(),
-                slot.getRoomSetup()))
+                .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .collect(Collectors.toList());
         System.out.println("Possible Next Sessions (" + sessionData.size() + "):\n " + sessionData);
