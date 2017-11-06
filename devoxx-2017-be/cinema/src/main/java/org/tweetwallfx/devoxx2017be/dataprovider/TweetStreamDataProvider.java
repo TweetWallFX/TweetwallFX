@@ -48,7 +48,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
 public class TweetStreamDataProvider implements DataProvider {
     
     private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
-    private static final int HISTORY_SIZE = 5; 
+    private static final int HISTORY_SIZE = 25; 
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
@@ -78,7 +78,7 @@ public class TweetStreamDataProvider implements DataProvider {
             } else {
                 tweets.addFirst(tweet);
             }
-            if (tweets.size() > HISTORY_SIZE - 1) {
+            if (tweets.size() > 4) {
                 tweets.removeLast();
             }
         } finally {

@@ -71,7 +71,7 @@ public class Devoxx17FlipInTweets extends AbstractStep {
         tweetList.setRotate(-18);
         List<FlipInXTransition> transitions = new ArrayList<>();
         List<Tweet> tweets = dataProvider.getTweets();
-        for (int i = 0;i < 4; i++) {
+        for (int i = 0;i < Math.min(tweets.size(),4); i++) {
             HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
             tweet.setMaxWidth(maxWidth[i] + 64 + 10);
             tweet.getStyleClass().add("tweetDisplay");            
