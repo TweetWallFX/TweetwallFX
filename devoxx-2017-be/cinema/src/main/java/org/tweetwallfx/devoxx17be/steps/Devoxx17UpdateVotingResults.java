@@ -34,7 +34,7 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
  *
  * @author Sven Reimers
  */
-public class Devoxx2017UpdateVotingResults extends AbstractStep {
+public class Devoxx17UpdateVotingResults extends AbstractStep {
 
     @Override
     public void doStep(StepEngine.MachineContext context) {
@@ -43,6 +43,7 @@ public class Devoxx2017UpdateVotingResults extends AbstractStep {
         topTalksToday.updateVotigResults();
         final TopTalksTodayDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
         topTalksWeek.updateVotigResults();
+        context.proceed();
     }
 
     @Override
@@ -50,8 +51,8 @@ public class Devoxx2017UpdateVotingResults extends AbstractStep {
         return Duration.ZERO;
     }
 
-    @Override
-    public boolean requiresPlatformThread() {
-        return false;
-    }
+//    @Override
+//    public boolean requiresPlatformThread() {
+//        return false;
+//    }
 }
