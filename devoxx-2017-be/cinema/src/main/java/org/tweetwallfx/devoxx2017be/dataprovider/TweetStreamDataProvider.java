@@ -99,18 +99,20 @@ public class TweetStreamDataProvider implements DataProvider {
     private void addTweet(Tweet tweet) {
         tweetListLock.writeLock().lock();   
         try {
-            if (tweet.isRetweet()) {
-                Tweet originalTweet = tweet.getRetweetedTweet();
-                if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
-                    tweets.addFirst(originalTweet);
-                    updateImage(originalTweet);                    
+            if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
+                if (tweet.isRetweet()) {
+                    Tweet originalTweet = tweet.getRetweetedTweet();
+                    if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                        tweets.addFirst(originalTweet);
+                        updateImage(originalTweet);                    
+                    }
+                } else {
+                    tweets.addFirst(tweet);
+                    updateImage(tweet);
                 }
-            } else {
-                tweets.addFirst(tweet);
-                updateImage(tweet);
-            }
-            if (tweets.size() > 4) {
-                tweets.removeLast();
+                if (tweets.size() > 4) {
+                    tweets.removeLast();
+                }
             }
         } finally {
             tweetListLock.writeLock().unlock();
