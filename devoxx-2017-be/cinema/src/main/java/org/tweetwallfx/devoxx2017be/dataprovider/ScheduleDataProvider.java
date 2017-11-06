@@ -27,37 +27,44 @@ import java.time.LocalDateTime;
 import java.time.OffsetTime;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
+import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * DataProvider Implementation for Schedule Data
+ *
  * @author Sven Reimers
  */
 public class ScheduleDataProvider implements DataProvider {
 
-    private Schedule schedule;
+    private List<ScheduleSlot> scheduleSlots;
 
     private ScheduleDataProvider() {
         updateSchedule();
     }
 
-    private void updateSchedule() {        
+    private void updateSchedule() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
-        schedule = CFPClient.getClient().getSchedule(System.getProperty("org.tweetwallfx.devoxxbe17.day", actualDayName));
+        scheduleSlots = CFPClient.getClient()
+                .getSchedule(System.getProperty("org.tweetwallfx.devoxxbe17.day", actualDayName))
+                .map(Schedule::getSlots)
+                .orElse(Collections.emptyList());
     }
 
-    public List<SessionData> getFilteredSessionData() {        
+    public List<SessionData> getFilteredSessionData() {
         String time = System.getProperty("org.tweetwallfx.devoxxbe17.time");
-        OffsetTime liveOffset = null != time ? OffsetTime.parse(time) : 
-                OffsetTime.now().minus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS);
-        return  SessionData.from(schedule, liveOffset);
+        OffsetTime liveOffset = null == time
+                ? OffsetTime.now().minus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS)
+                : OffsetTime.parse(time);
+        return SessionData.from(scheduleSlots, liveOffset);
     }
 
     @Override
@@ -71,7 +78,5 @@ public class ScheduleDataProvider implements DataProvider {
         public DataProvider create(TweetStream tweetStream) {
             return new ScheduleDataProvider();
         }
-
     }
-
 }

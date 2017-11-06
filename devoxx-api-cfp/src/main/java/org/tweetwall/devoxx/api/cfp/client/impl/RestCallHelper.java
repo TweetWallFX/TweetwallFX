@@ -28,14 +28,19 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RestCallHelper {
+
+    private static final Logger LOGGER = LogManager.getLogger(RestCallHelper.class);
 
     private RestCallHelper() {
         // prevent instantiation
@@ -53,8 +58,8 @@ public class RestCallHelper {
         }
     }
 
-    public static Response getResponse(final String url, final Map<String, Object> queryParameters) {
-        System.out.println("url: " + url);
+    private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
+        LOGGER.info("Calling URL: " + url);
         WebTarget webTarget = getClient().target(getHttpsUrl(url));
 
         if (null != queryParameters && !queryParameters.isEmpty()) {
@@ -74,20 +79,17 @@ public class RestCallHelper {
                 .get();
     }
 
-    public static Response getResponse(final String url) {
-        return getResponse(url, Collections.emptyMap());
+    public static Optional<Response> getOptionalResponse(final String url, final Map<String, Object> queryParameters) {
+        try {
+            return Optional.of(getResponse(url, queryParameters));
+        } catch (final ProcessingException pe) {
+            LOGGER.error("Encountered ProcessingException while calling to '" + url + "'", pe);
+            return Optional.empty();
+        }
     }
 
-    public static <T> T readFrom(final Response response, final Class<T> typeClass) {
-        return Objects
-                .requireNonNull(response, "Parameter response must not be null!")
-                .readEntity(typeClass);
-    }
-
-    public static <T> T readFrom(final Response response, final GenericType<T> genericType) {
-        return Objects
-                .requireNonNull(response, "Parameter response must not be null!")
-                .readEntity(genericType);
+    public static Optional<Response> getOptionalResponse(final String url) {
+        return getOptionalResponse(url, Collections.emptyMap());
     }
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass) {
@@ -100,5 +102,23 @@ public class RestCallHelper {
         return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
                 .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
                 .map(r -> r.readEntity(genericType));
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Class<T> typeClass) {
+        return readOptionalFrom(url, null, typeClass);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final Class<T> typeClass) {
+        return getOptionalResponse(url, queryParameters)
+                .flatMap(response -> readOptionalFrom(response, typeClass));
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final GenericType<T> genericType) {
+        return readOptionalFrom(url, null, genericType);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType) {
+        return getOptionalResponse(url, queryParameters)
+                .flatMap(response -> readOptionalFrom(response, genericType));
     }
 }

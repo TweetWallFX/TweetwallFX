@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -37,7 +38,9 @@ public abstract class ObjectWithLinksBase {
     private List<Link> links;
 
     public List<Link> getLinks() {
-        return links;
+        return null == links
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(links);
     }
 
     public void setLinks(final List<Link> links) {

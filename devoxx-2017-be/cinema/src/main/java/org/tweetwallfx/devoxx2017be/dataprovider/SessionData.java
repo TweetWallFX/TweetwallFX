@@ -28,13 +28,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
+import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
 
 /**
  * Seesion Data Pojo Helper class
+ *
  * @author Sven Reimers
  */
 public class SessionData {
 
+    private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup).reversed().thenComparing(SessionData::getRoom);
     public final String room;
     public final List<String> speakers;
     public final String title;
@@ -42,8 +45,24 @@ public class SessionData {
     final boolean isNotAllocated;
     public final String roomSetup;
 
-    public static List<SessionData> from(Schedule schedule, OffsetTime now) {
-        List<SessionData> sessionData = schedule.getSlots().stream()
+    private SessionData(final ScheduleSlot slot) {
+        this.room = slot.getRoomName();
+        this.speakers = slot.getTalk().getSpeakers().stream().map(ref -> ref.getName()).collect(Collectors.toList());
+        this.title = slot.getTalk().getTitle();
+        this.beginTime = slot.getFromTime();
+        this.isNotAllocated = slot.isNotAllocated();
+        this.roomSetup = slot.getRoomSetup();
+    }
+
+    /**
+     * For testing purposes only.
+     */
+    static List<SessionData> from(final Schedule schedule, OffsetTime now) {
+        return from(schedule.getSlots(), now);
+    }
+
+    public static List<SessionData> from(List<ScheduleSlot> slots, OffsetTime now) {
+        List<SessionData> sessionData = slots.stream()
                 //                .filter(slot -> !slot.isNotAllocated())
                 .filter(slot -> null != slot.getTalk())
                 .filter(slot -> slot.getTalk().getTalkType() != "BOF (Bird of a Feather)")
@@ -53,27 +72,11 @@ public class SessionData {
                 .entrySet().stream()
                 .map(entry -> entry.getValue().stream().findFirst())
                 .map(optional -> optional.orElse(null))
-                .map(slot -> new SessionData(slot.getRoomName(),
-                        slot.getTalk().getSpeakers().stream().map(ref -> ref.getName()).collect(Collectors.toList()),
-                        slot.getTalk().getTitle(),
-                        slot.getFromTime(),
-                        slot.isNotAllocated(),
-                        slot.getRoomSetup()))
+                .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .collect(Collectors.toList());
         System.out.println("Possible Next Sessions (" + sessionData.size() + "):\n " + sessionData);
         return sessionData;
-    }
-
-    private static Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup).reversed().thenComparing(SessionData::getRoom);
-    
-    public SessionData(String room, List<String> speakers, String title, String beginTime, boolean isNotAllocated, String roomSetup) {
-        this.room = room;
-        this.speakers = speakers;
-        this.title = title;
-        this.beginTime = beginTime;
-        this.isNotAllocated = isNotAllocated;
-        this.roomSetup = roomSetup;
     }
 
     private String getRoom() {
@@ -83,7 +86,7 @@ public class SessionData {
     private String getRoomSetup() {
         return roomSetup;
     }
-    
+
     @Override
     public String toString() {
         return "SessionData{" + "room=" + room + ", speakers=" + speakers + ", title=" + title + ", beginTime=" + beginTime + ", isNotAllocated=" + isNotAllocated + '}';

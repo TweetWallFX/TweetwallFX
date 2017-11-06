@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +35,9 @@ public class Schedule {
     private List<ScheduleSlot> slots;
 
     public List<ScheduleSlot> getSlots() {
-        return slots;
+        return null == slots
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(slots);
     }
 
     public void setSlots(final List<ScheduleSlot> slots) {

@@ -35,44 +35,50 @@ import java.util.stream.StreamSupport;
 public interface CFPClient {
 
     /**
-     * Lists all Events the Client API has available.
+     * Lists all Events the Client API has available. Should the request fail
+     * for whatever reason en empty Optional is returned.
      *
      * @return a list of all events
      */
-    Events getEvents();
+    Optional<Events> getEvents();
 
     /**
-     * See the Event this Client works with.
+     * See the Event this Client works with. Should the request fail for
+     * whatever reason en empty Optional is returned.
      *
      * @return the Event
      */
-    Event getEvent();
+    Optional<Event> getEvent();
 
     /**
-     * Show the list of proposal types.
+     * Show the list of proposal types. Should the request fail for whatever
+     * reason en empty Optional is returned.
      *
      * @return the list of all proposal types
      */
-    ProposalTypes getProposalTypes();
+    Optional<ProposalTypes> getProposalTypes();
 
     /**
-     * Show the list of rooms.
+     * Show the list of rooms. Should the request fail for whatever reason en
+     * empty Optional is returned.
      *
      * @return the list of all rooms
      */
-    Rooms getRooms();
+    Optional<Rooms> getRooms();
 
     /**
-     * See the Schedule for the requested {@code day}.
+     * See the Schedule for the requested {@code day}. Should the request fail
+     * for whatever reason en empty Optional is returned.
      *
      * @param day the day of the week
      *
      * @return the schedule for the day
      */
-    Schedule getSchedule(final String day);
+    Optional<Schedule> getSchedule(final String day);
 
     /**
-     * See the Schedule for the requested {@code day} and {@code room}.
+     * See the Schedule for the requested {@code day} and {@code room}. Should
+     * the request fail for whatever reason en empty Optional is returned.
      *
      * @param day the day of the week
      *
@@ -80,46 +86,51 @@ public interface CFPClient {
      *
      * @return the schedule for the day
      */
-    Schedule getSchedule(final String day, final String room);
+    Optional<Schedule> getSchedule(final String day, final String room);
 
     /**
-     * See the list of Schedules.
+     * See the list of Schedules. Should the request fail for whatever reason en
+     * empty Optional is returned.
      *
      * @return the list of all schedules
      */
-    Schedules getSchedules();
+    Optional<Schedules> getSchedules();
 
     /**
-     * All Speakers having one or more talks at the Event.
+     * All Speakers having one or more talks at the Event. Should the request
+     * fail for whatever reason en empty list is returned.
      *
      * @return all Speakers with talks at the event
      */
     List<Speaker> getSpeakers();
 
     /**
-     * The speaker with a specific {@code id}.
+     * The speaker with a specific {@code id}. Should the request fail for
+     * whatever reason en empty Optional is returned.
      *
      * @param speakerId the id of the Speaker
      *
      * @return the Speaker
      */
-    Speaker getSpeaker(final String speakerId);
+    Optional<Speaker> getSpeaker(final String speakerId);
 
     /**
-     * The Talk identified by its unique {@code talkId}.
+     * The Talk identified by its unique {@code talkId}. Should the request fail
+     * for whatever reason en empty Optional is returned.
      *
      * @param talkId the unique ID of a talk
      *
      * @return the requested talk
      */
-    Talk getTalk(final String talkId);
+    Optional<Talk> getTalk(final String talkId);
 
     /**
-     * Show the list of tracks.
+     * Show the list of tracks. Should the request fail for whatever reason en
+     * empty Optional is returned.
      *
      * @return the list of all tracks
      */
-    Tracks getTracks();
+    Optional<Tracks> getTracks();
 
     /**
      * Shows the voting results for the requested {@code day}. Should the query

@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +50,9 @@ public class ProposalTypes {
     }
 
     public List<ProposalType> getProposalTypes() {
-        return proposalTypes;
+        return null == proposalTypes
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(proposalTypes);
     }
 
     public void setProposalTypes(final List<ProposalType> proposalTypes) {

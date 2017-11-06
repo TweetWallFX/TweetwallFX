@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +50,9 @@ public class Rooms {
     }
 
     public List<Room> getRooms() {
-        return rooms;
+        return null == rooms
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(rooms);
     }
 
     public void setRooms(final List<Room> rooms) {

@@ -23,6 +23,7 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,7 +54,9 @@ public class VotingResult {
     }
 
     public List<VotingResultTalk> getTalks() {
-        return talks;
+        return null == talks
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(talks);
     }
 
     public void setTalks(final List<VotingResultTalk> talks) {

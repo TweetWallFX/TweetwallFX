@@ -23,8 +23,9 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import java.util.Optional;
 import java.util.stream.Stream;
-import org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper;
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
  * See the list of Schedules.
@@ -34,8 +35,9 @@ public class Schedules extends ObjectWithLinksBase {
     public Stream<Schedule> getSchedules() {
         return getLinkStream(Link.Type.SCHEDULE)
                 .map(Link::getHref)
-                .map(RestCallHelper::getResponse)
-                .map(response -> RestCallHelper.readFrom(response, Schedule.class));
+                .map(urlString -> readOptionalFrom(urlString, Schedule.class))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     @Override

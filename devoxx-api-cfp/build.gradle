@@ -25,7 +25,9 @@
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versionJackson
     compile group: 'javax', name: 'javaee-api', version: '8.0'
-        
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
+    
+    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
     runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
     runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey
 }

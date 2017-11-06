@@ -49,68 +49,68 @@ public class CFPClientDevoxx2017BE implements CFPClient {
     private static final String CONFERENCE_BASE_URI = "https://cfp.devoxx.be/api/conferences/DVBE17";
 
     @Override
-    public Events getEvents() {
-        return readFrom(getResponse(BASE_URI + "conferences/"), Events.class);
+    public Optional<Events> getEvents() {
+        return readOptionalFrom(BASE_URI + "conferences/", Events.class);
     }
 
     @Override
-    public Event getEvent() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI), Event.class);
+    public Optional<Event> getEvent() {
+        return readOptionalFrom(CONFERENCE_BASE_URI, Event.class);
     }
 
     @Override
-    public ProposalTypes getProposalTypes() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/proposalTypes"), ProposalTypes.class);
+    public Optional<ProposalTypes> getProposalTypes() {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/proposalTypes", ProposalTypes.class);
     }
 
     @Override
-    public Rooms getRooms() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/rooms/"), Rooms.class);
+    public Optional<Rooms> getRooms() {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/rooms/", Rooms.class);
     }
 
     @Override
-    public Schedule getSchedule(final String day) {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/schedules/" + day), Schedule.class);
+    public Optional<Schedule> getSchedule(final String day) {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day, Schedule.class);
     }
 
     @Override
-    public Schedule getSchedule(final String day, final String room) {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/rooms/" + room + "/" + day), Schedule.class);
+    public Optional<Schedule> getSchedule(final String day, final String room) {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/rooms/" + room + "/" + day, Schedule.class);
     }
 
     @Override
-    public Schedules getSchedules() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/schedules/"), Schedules.class);
+    public Optional<Schedules> getSchedules() {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/", Schedules.class);
     }
 
     @Override
     public List<Speaker> getSpeakers() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/speakers/"), new GenericType<List<Speaker>>() {
-        });
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/speakers/", new GenericType<List<Speaker>>() {
+        }).orElse(Collections.emptyList());
     }
 
     @Override
-    public Speaker getSpeaker(final String speakerId) {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/speakers/" + speakerId), Speaker.class);
+    public Optional<Speaker> getSpeaker(final String speakerId) {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/speakers/" + speakerId, Speaker.class);
     }
 
     @Override
-    public Talk getTalk(final String talkId) {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/talks/" + talkId), Talk.class);
+    public Optional<Talk> getTalk(final String talkId) {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/talks/" + talkId, Talk.class);
     }
 
     @Override
-    public Tracks getTracks() {
-        return readFrom(getResponse(CONFERENCE_BASE_URI + "/tracks"), Tracks.class);
+    public Optional<Tracks> getTracks() {
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/tracks", Tracks.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsOverall() {
-        return readOptionalFrom(getResponse("https://cfp.devoxx.be/api/voting/v1/top/talks"), VotingResults.class);
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", VotingResults.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsDaily(final String day) {
-        return readOptionalFrom(getResponse("https://cfp.devoxx.be/api/voting/v1/top/talks", Collections.singletonMap("day", day)), VotingResults.class);
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", Collections.singletonMap("day", day), VotingResults.class);
     }
 }
