@@ -54,4 +54,10 @@ public class Devoxx17FlipOutTopRatedDay extends AbstractStep {
         return java.time.Duration.ZERO;
     }
 
+    @Override
+    public boolean shouldSkip(StepEngine.MachineContext context) {
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        return null == wordleSkin.getNode().lookup("#topRatedToday");
+    }
+    
 }
