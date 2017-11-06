@@ -25,11 +25,15 @@ package org.tweetwallfx.devoxx2017be.dataprovider;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
@@ -51,12 +55,13 @@ public class TweetStreamDataProvider implements DataProvider {
     private static final int HISTORY_SIZE = 25; 
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
+    private volatile Image latestTweetedImage = null;
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
     
     private TweetStreamDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
             LOGGER.info("new Tweet received");
-            addTweet(tweet);
+            addTweet(tweet); 
         });
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
@@ -66,6 +71,30 @@ public class TweetStreamDataProvider implements DataProvider {
             tweetListLock.writeLock().unlock();
         }
     }
+    
+    private void updateImage(Tweet tweet) {
+        Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
+            .findFirst().ifPresent(me -> {
+                String url;
+                switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
+                    case 0:
+                        url = me.getMediaUrl() + ":thumb";
+                        break;
+                    case 1:
+                        url = me.getMediaUrl() + ":small";
+                        break;
+                    case 2:
+                        url = me.getMediaUrl() + ":medium";
+                        break;
+                    case 3:
+                        url = me.getMediaUrl() + ":large";
+                        break;
+                    default:
+                        throw new RuntimeException("Illegal value");
+                }
+                latestTweetedImage = new Image(url);
+            });
+    }
 
     private void addTweet(Tweet tweet) {
         tweetListLock.writeLock().lock();   
@@ -74,9 +103,11 @@ public class TweetStreamDataProvider implements DataProvider {
                 Tweet originalTweet = tweet.getRetweetedTweet();
                 if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
                     tweets.addFirst(originalTweet);
+                    updateImage(originalTweet);                    
                 }
             } else {
                 tweets.addFirst(tweet);
+                updateImage(tweet);
             }
             if (tweets.size() > 4) {
                 tweets.removeLast();
@@ -84,6 +115,10 @@ public class TweetStreamDataProvider implements DataProvider {
         } finally {
             tweetListLock.writeLock().unlock();
         }
+    }
+    
+    public Optional<Image> getLatestImage() {
+        return Optional.ofNullable(latestTweetedImage);
     }
     
     public List<Tweet> getTweets() {
