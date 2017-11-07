@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * The "Room" object gives you details about location and room capacity.
  */
@@ -82,12 +84,12 @@ public class Room {
 
     @Override
     public String toString() {
-        return "Room{"
-                + "\n    id=" + getId()
-                + "\n    name=" + getName()
-                + "\n    capacity=" + getCapacity()
-                + "\n    setup=" + getSetup()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "id", getId(),
+                "name", getName(),
+                "capacity", getCapacity(),
+                "setup", getSetup()
+        )) + " extends " + super.toString();
     }
 
     public static enum Type {

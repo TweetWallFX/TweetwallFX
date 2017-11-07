@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * Voting results.
@@ -81,12 +82,12 @@ public class VotingResult {
 
     @Override
     public String toString() {
-        return "VotingResult{"
-                + "\n    totalResults=" + getTotalResults()
-                + "\n    trackId=" + getTrackId()
-                + "\n    talks=" + getTalks()
-                + "\n    talkTypeId=" + getTalkTypeId()
-                + "\n    day=" + getDay()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "totalResults", getTotalResults(),
+                "trackId", getTrackId(),
+                "talks", getTalks(),
+                "talkTypeId", getTalkTypeId(),
+                "day", getDay()
+        )) + " extends " + super.toString();
     }
 }

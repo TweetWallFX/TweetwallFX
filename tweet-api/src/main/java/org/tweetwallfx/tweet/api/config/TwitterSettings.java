@@ -26,6 +26,7 @@ package org.tweetwallfx.tweet.api.config;
 import java.util.Collections;
 import java.util.Map;
 import org.tweetwallfx.config.ConfigurationConverter;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * POJO for reading Settings concerning the twitter client.
@@ -128,11 +129,11 @@ public final class TwitterSettings {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{"
-                + "\n    extendedConfig=" + getExtendedConfig()
-                + "\n    extendedMode=" + isExtendedMode()
-                + "\n    oauth=" + String.valueOf(getOauth()).replaceAll("\n", "\n    ")
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "extendedConfig", getExtendedConfig(),
+                "extendedMode", isExtendedMode(),
+                "oauth", getOauth()
+        )) + " extends " + super.toString();
     }
 
     /**
@@ -237,12 +238,12 @@ public final class TwitterSettings {
 
         @Override
         public String toString() {
-            return getClass().getSimpleName() + "{"
-                    + "\n    consumerKey=" + getConsumerKey()
-                    + "\n    consumerSecret=" + getConsumerSecret()
-                    + "\n    accessToken=" + getAccessToken()
-                    + "\n    accessTokenSecret=" + getAccessTokenSecret()
-                    + "\n} extends " + super.toString();
+            return createToString(this, map(
+                    "consumerKey", getConsumerKey(),
+                    "consumerSecret", getConsumerSecret(),
+                    "accessToken", getAccessToken(),
+                    "accessTokenSecret", getAccessTokenSecret()
+            )) + " extends " + super.toString();
         }
     }
 }

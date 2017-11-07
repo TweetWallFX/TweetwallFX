@@ -26,6 +26,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A POJO containing links to other POJOs.
@@ -61,8 +62,8 @@ public abstract class ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "ObjectWithLinksBase{"
-                + "\n    links=" + Helper.convertCollectionForToString(getLinks())
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "links", getLinks()
+        )) + " extends " + super.toString();
     }
 }

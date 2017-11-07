@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A Schedule is a list of time slots for a specific day. Each slot is either a
@@ -46,8 +47,8 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule{"
-                + "\n    slots=" + Helper.convertCollectionForToString(getSlots())
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "slots", getSlots()
+        )) + " extends " + super.toString();
     }
 }

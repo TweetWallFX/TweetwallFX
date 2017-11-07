@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A listing of events handled by the REST API.
@@ -56,9 +57,9 @@ public class Events extends ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "Events{"
-                + "\n    content=" + getContent()
-                + "\n    events=" + Helper.convertCollectionForToString(getEvents().collect(Collectors.toList()))
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "content", getContent(),
+                "events", getEvents().collect(Collectors.toList())
+        )) + " extends " + super.toString();
     }
 }

@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * The voting result of a single talk.
  */
@@ -94,14 +96,14 @@ public class VotingResultTalk {
 
     @Override
     public String toString() {
-        return "VotingResultTalk{"
-                + "\n    proposalId=" + getProposalId()
-                + "\n    proposalTitle=" + getProposalTitle()
-                + "\n    proposalTalkType=" + getProposalTalkType()
-                + "\n    proposalTalkTypeId=" + getProposalTalkTypeId()
-                + "\n    ratingAverageScore=" + getRatingAverageScore()
-                + "\n    ratingTotalVotes=" + getRatingTotalVotes()
-                + "\n    proposalsSpeakers=" + getProposalsSpeakers()
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf(
+                mapEntry("proposalId", getProposalId()),
+                mapEntry("proposalTitle", getProposalTitle()),
+                mapEntry("proposalTalkType", getProposalTalkType()),
+                mapEntry("proposalTalkTypeId", getProposalTalkTypeId()),
+                mapEntry("ratingAverageScore", getRatingAverageScore()),
+                mapEntry("ratingTotalVotes", getRatingTotalVotes()),
+                mapEntry("proposalsSpeakers", getProposalsSpeakers())
+        )) + " extends " + super.toString();
     }
 }

@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Optional;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
+import static org.tweetwall.util.ToString.*;
 
 public class SpeakerReference {
 
@@ -53,9 +54,9 @@ public class SpeakerReference {
 
     @Override
     public String toString() {
-        return "SpeakerReference{"
-                + "\n    link=" + getLink()
-                + "\n    name=" + getName()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "link", getLink(),
+                "name", getName()
+        )) + " extends " + super.toString();
     }
 }

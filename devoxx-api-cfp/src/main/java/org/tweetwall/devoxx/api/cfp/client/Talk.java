@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * Describes a talk.
@@ -197,19 +198,19 @@ public class Talk extends ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "Talk{"
-                + "\n    id=" + getId()
-                + "\n    title=" + getTitle()
-                + "\n    audienceLevel=" + getAudienceLevel()
-                + "\n    talkType=" + getTalkType()
-                + "\n    summary=" + getSummary()
-                + "\n    summaryAsHtml=" + getSummaryAsHtml()
-                + "\n    lang=" + getLang()
-                + "\n    trackId=" + getTrackId()
-                + "\n    track=" + getTrack()
-                + "\n    tags=" + Helper.convertCollectionForToString(getTags())
-                + "\n    speakers=" + Helper.convertCollectionForToString(getSpeakers())
-                + "\n    (( hasCompleteInformation=" + hasCompleteInformation() + " ))"
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf(
+                mapEntry("id", getId()),
+                mapEntry("title", getTitle()),
+                mapEntry("audienceLevel", getAudienceLevel()),
+                mapEntry("talkType", getTalkType()),
+                mapEntry("summary", getSummary()),
+                mapEntry("summaryAsHtml", getSummaryAsHtml()),
+                mapEntry("lang", getLang()),
+                mapEntry("trackId", getTrackId()),
+                mapEntry("track", getTrack()),
+                mapEntry("tags", getTags()),
+                mapEntry("speakers", getSpeakers()),
+                mapEntry("hasCompleteInformation", hasCompleteInformation())
+        )) + " extends " + super.toString();
     }
 }

@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A conference is described by an eventCode, a label, a list of Locale, a
@@ -116,13 +117,13 @@ public class Event extends ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "Event{"
-                + "\n    eventCode=" + getEventCode()
-                + "\n    label=" + getLabel()
-                + "\n    localisation=" + getLocalisation()
-                + "\n    locale=" + Helper.convertCollectionForToString(getLocale())
-                + "\n    days=" + Helper.convertCollectionForToString(getDays())
-                + "\n    proposalTypesId=" + Helper.convertCollectionForToString(getProposalTypesId())
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf(
+                mapEntry("eventCode", getEventCode()),
+                mapEntry("label", getLabel()),
+                mapEntry("localisation", getLocalisation()),
+                mapEntry("locale", getLocale()),
+                mapEntry("days", getDays()),
+                mapEntry("proposalTypesId", getProposalTypesId())
+        )) + " extends " + super.toString();
     }
 }
