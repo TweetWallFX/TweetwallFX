@@ -37,6 +37,9 @@ buildscript {
             exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7 
         }
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'gradlePlugin', version: '1.6.0'
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '3.+'
+        // VCS dependency required by plugin 'gradle-info-plugin'
+        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
         gradleApi()
     }
 }
@@ -49,6 +52,7 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
     apply plugin: 'jacoco'
     apply plugin: 'eclipse'
+    apply plugin: 'nebula.info'
     
     group = 'org.tweetwallfx'
     version = '1.0'
