@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -350,6 +351,7 @@ public class CFPClientTest {
     }
 
     @Test
+    @Ignore // error prone as it is dependant upon the CFP API Server
     public void votingResultsOverallAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
@@ -361,6 +363,7 @@ public class CFPClientTest {
     }
 
     @Test
+    @Ignore // error prone as it is dependant upon the CFP API Server
     public void votingResultsDailyAreRetrievable() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
