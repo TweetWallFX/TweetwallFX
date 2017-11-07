@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.config;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import static org.tweetwall.util.ToString.*;
 
@@ -39,8 +37,8 @@ public final class TweetwallSettings {
      */
     public static final String CONFIG_KEY = "tweetwall";
     private String title;
-    private List<String> stylesheetResources;
-    private List<String> stylesheetFiles;
+    private String stylesheetResource;
+    private String stylesheetFile;
     private String query;
 
     /**
@@ -62,51 +60,47 @@ public final class TweetwallSettings {
     }
 
     /**
-     * Returns the list of resource paths containing stylesheets to be read from
-     * the Classpath.
+     * Returns the resource path containing stylesheet to be read from the
+     * Classpath.
      *
-     * @return the list of resource paths containing stylesheets to be read from
-     * the Classpath
+     * @return the resource path containing stylesheet to be read from the
+     * Classpath
      */
-    public List<String> getStylesheetResources() {
-        return null == stylesheetResources
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(stylesheetResources);
+    public String getStylesheetResource() {
+        return stylesheetResource;
     }
 
     /**
-     * Sets the list of resource paths containing stylesheets to be read from
-     * the Classpath.
+     * Sets the resource path containing stylesheet to be read from the
+     * Classpath.
      *
-     * @param stylesheetResources the list of resource paths containing
-     * stylesheets to be read from the Classpath
+     * @param stylesheetResource the resource path containing stylesheet to be
+     * read from the Classpath
      */
-    public void setStylesheetResources(final List<String> stylesheetResources) {
-        this.stylesheetResources = stylesheetResources;
+    public void setStylesheetResource(final String stylesheetResource) {
+        this.stylesheetResource = stylesheetResource;
     }
 
     /**
-     * Returns the list of resource paths containing stylesheets to be read from
+     * Returns the resource path containing stylesheet to be read from
      * the filesystem.
      *
-     * @return the list of resource paths containing stylesheets to be read from
+     * @return the resource path containing stylesheet to be read from
      * the filesystem
      */
-    public List<String> getStylesheetFiles() {
-        return null == stylesheetFiles
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(stylesheetFiles);
+    public String getStylesheetFile() {
+        return stylesheetFile;
     }
 
     /**
-     * Sets the list of resource paths containing stylesheets to be read from
+     * Sets the resource path containing stylesheet to be read from
      * the filesystem.
      *
-     * @param stylesheetFiles the list of resource paths containing stylesheets
-     * to be read from the filesystem
+     * @param stylesheetFile the resource path containing stylesheet to be read from
+     * the filesystem
      */
-    public void setStylesheetFiles(final List<String> stylesheetFiles) {
-        this.stylesheetFiles = stylesheetFiles;
+    public void setStylesheetFile(final String stylesheetFile) {
+        this.stylesheetFile = stylesheetFile;
     }
 
     /**
@@ -132,8 +126,8 @@ public final class TweetwallSettings {
     public String toString() {
         return createToString(this, map(
                 "title", getTitle(),
-                "stylesheetResources", getStylesheetResources(),
-                "stylesheetFiles", getStylesheetFiles(),
+                "stylesheetResource", getStylesheetResource(),
+                "stylesheetFile", getStylesheetFile(),
                 "query", getQuery()
         )) + " extends " + super.toString();
     }
