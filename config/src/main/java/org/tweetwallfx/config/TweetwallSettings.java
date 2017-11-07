@@ -26,6 +26,7 @@ package org.tweetwallfx.config;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * POJO for reading Settings concerning the Tweetwall itself.
@@ -129,12 +130,12 @@ public final class TweetwallSettings {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{"
-                + "\n    title=" + getTitle()
-                + "\n    stylesheetResources=" + getStylesheetResources()
-                + "\n    stylesheetFiles=" + getStylesheetFiles()
-                + "\n    query=" + getQuery()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "title", getTitle(),
+                "stylesheetResources", getStylesheetResources(),
+                "stylesheetFiles", getStylesheetFiles(),
+                "query", getQuery()
+        )) + " extends " + super.toString();
     }
 
     /**

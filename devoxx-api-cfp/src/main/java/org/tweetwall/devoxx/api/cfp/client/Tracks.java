@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A listing of tracks handled by the REST API.
@@ -61,9 +62,9 @@ public class Tracks {
 
     @Override
     public String toString() {
-        return "Tracks{"
-                + "\n    content=" + getContent()
-                + "\n    tracks=" + Helper.convertCollectionForToString(getTracks())
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "content", getContent(),
+                "tracks", getTracks()
+        )) + " extends " + super.toString();
     }
 }

@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * Voting results.
  */
@@ -40,8 +42,8 @@ public class VotingResults {
 
     @Override
     public String toString() {
-        return "VotingResults{"
-                + "\n    result=" + getResult()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "result", getResult()
+        )) + " extends " + super.toString();
     }
 }

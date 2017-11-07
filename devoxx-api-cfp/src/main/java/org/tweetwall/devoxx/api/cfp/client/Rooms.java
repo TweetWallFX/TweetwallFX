@@ -25,6 +25,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * Show the list of rooms.
@@ -61,9 +62,9 @@ public class Rooms {
 
     @Override
     public String toString() {
-        return "Rooms{"
-                + "\n    content=" + getContent()
-                + "\n    rooms=" + Helper.convertCollectionForToString(getRooms())
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "content", getContent(),
+                "rooms", getRooms()
+        )) + " extends " + super.toString();
     }
 }

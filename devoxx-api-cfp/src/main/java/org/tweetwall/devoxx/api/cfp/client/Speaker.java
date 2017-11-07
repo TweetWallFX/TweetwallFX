@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * POJO for a Speaker with the following fields:
@@ -209,19 +210,19 @@ public class Speaker extends ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "Speaker{"
-                + "\n    uuid=" + getUuid()
-                + "\n    bio=" + getBio()
-                + "\n    bioAsHtml=" + getBioAsHtml()
-                + "\n    firstName=" + getFirstName()
-                + "\n    lastName=" + getLastName()
-                + "\n    avatarURL=" + getAvatarURL()
-                + "\n    company=" + getCompany()
-                + "\n    blog=" + getBlog()
-                + "\n    twitter=" + getTwitter()
-                + "\n    lang=" + getLang()
-                + "\n    acceptedTalks=" + Helper.convertCollectionForToString(getAcceptedTalks())
-                + "\n    (( hasCompleteInformation=" + hasCompleteInformation() + " ))"
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf(
+                mapEntry("uuid", getUuid()),
+                mapEntry("bio", getBio()),
+                mapEntry("bioAsHtml", getBioAsHtml()),
+                mapEntry("firstName", getFirstName()),
+                mapEntry("lastName", getLastName()),
+                mapEntry("avatarURL", getAvatarURL()),
+                mapEntry("company", getCompany()),
+                mapEntry("blog", getBlog()),
+                mapEntry("twitter", getTwitter()),
+                mapEntry("lang", getLang()),
+                mapEntry("acceptedTalks", getAcceptedTalks()),
+                mapEntry("hasCompleteInformation", hasCompleteInformation())
+        )) + " extends " + super.toString();
     }
 }

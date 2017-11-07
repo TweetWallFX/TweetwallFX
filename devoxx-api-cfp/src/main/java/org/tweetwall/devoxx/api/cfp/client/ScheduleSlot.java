@@ -24,6 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * A
@@ -220,20 +221,20 @@ public class ScheduleSlot {
 
     @Override
     public String toString() {
-        return "ScheduleSlot{"
-                + "\n    roomId=" + getRoomId()
-                + "\n    notAllocated=" + isNotAllocated()
-                + "\n    fromTimeMillis=" + getFromTimeMillis()
-                + "\n    break=" + getBreakObject()
-                + "\n    roomSetup=" + getRoomSetup()
-                + "\n    talk=" + getTalk()
-                + "\n    fromTime=" + getFromTime()
-                + "\n    toTimeMillis=" + getToTimeMillis()
-                + "\n    toTime=" + getToTime()
-                + "\n    roomCapacity=" + getRoomCapacity()
-                + "\n    roomName=" + getRoomName()
-                + "\n    slotId=" + getSlotId()
-                + "\n    day=" + getDay()
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf(
+                mapEntry("roomId", getRoomId()),
+                mapEntry("notAllocated", isNotAllocated()),
+                mapEntry("fromTimeMillis", getFromTimeMillis()),
+                mapEntry("break", getBreakObject()),
+                mapEntry("roomSetup", getRoomSetup()),
+                mapEntry("talk", getTalk()),
+                mapEntry("fromTime", getFromTime()),
+                mapEntry("toTimeMillis", getToTimeMillis()),
+                mapEntry("toTime", getToTime()),
+                mapEntry("roomCapacity", getRoomCapacity()),
+                mapEntry("roomName", getRoomName()),
+                mapEntry("slotId", getSlotId()),
+                mapEntry("day", getDay())
+        )) + " extends " + super.toString();
     }
 }

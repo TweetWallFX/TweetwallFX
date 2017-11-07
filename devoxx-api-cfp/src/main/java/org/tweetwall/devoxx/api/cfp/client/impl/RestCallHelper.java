@@ -97,13 +97,13 @@ public class RestCallHelper {
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass) {
         return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
-                .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
+                .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus())
                 .map(r -> r.readEntity(typeClass));
     }
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final GenericType<T> genericType) {
         return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
-                .filter(r -> Response.Status.Family.SUCCESSFUL == r.getStatusInfo().getFamily())
+                .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus())
                 .map(r -> r.readEntity(genericType));
     }
 

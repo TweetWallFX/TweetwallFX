@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * A type of Proposal.
  */
@@ -69,10 +71,10 @@ public class ProposalType {
 
     @Override
     public String toString() {
-        return "ProposalTypes{"
-                + "\n    id=" + getId()
-                + "\n    description=" + getDescription()
-                + "\n    label=" + getLabel()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "id", getId(),
+                "description", getDescription(),
+                "label", getLabel()
+        )) + " extends " + super.toString();
     }
 }

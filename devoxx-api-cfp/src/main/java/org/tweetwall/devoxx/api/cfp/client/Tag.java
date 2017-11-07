@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 public class Tag {
 
     private String value;
@@ -37,8 +39,8 @@ public class Tag {
 
     @Override
     public String toString() {
-        return "Tag{"
-                + "\n    value=" + getValue()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "value", getValue()
+        )) + " extends " + super.toString();
     }
 }

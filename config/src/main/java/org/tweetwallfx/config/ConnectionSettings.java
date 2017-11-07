@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.config;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
  */
@@ -55,9 +57,9 @@ public final class ConnectionSettings {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "{"
-                + "\n    proxy=" + String.valueOf(getProxy()).replaceAll("\n", "\n    ")
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "proxy", getProxy()
+        )) + " extends " + super.toString();
     }
 
     /**
@@ -162,12 +164,12 @@ public final class ConnectionSettings {
 
         @Override
         public String toString() {
-            return getClass().getSimpleName() + "{"
-                    + "\n    host=" + getHost()
-                    + "\n    port=" + getPort()
-                    + "\n    user=" + getUser()
-                    + "\n    password=" + getPassword()
-                    + "\n} extends " + super.toString();
+            return createToString(this, map(
+                    "host", getHost(),
+                    "port", getPort(),
+                    "user", getUser(),
+                    "password", getPassword()
+            )) + " extends " + super.toString();
         }
     }
 }

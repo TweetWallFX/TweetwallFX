@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * A break slot in the schedule.
  */
@@ -67,11 +69,11 @@ public class Break {
 
     @Override
     public String toString() {
-        return "Break{"
-                + "\n    id=" + getId()
-                + "\n    nameEN=" + getNameEN()
-                + "\n    nameFR=" + getNameFR()
-                + "\n    room=" + getRoom()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "id", getId(),
+                "nameEN", getNameEN(),
+                "nameFR", getNameFR(),
+                "room", getRoom()
+        )) + " extends " + super.toString();
     }
 }

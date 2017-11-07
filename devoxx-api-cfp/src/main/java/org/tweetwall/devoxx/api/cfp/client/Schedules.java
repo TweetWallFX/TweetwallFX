@@ -26,6 +26,7 @@ package org.tweetwall.devoxx.api.cfp.client;
 import java.util.Optional;
 import java.util.stream.Stream;
 import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
+import static org.tweetwall.util.ToString.*;
 
 /**
  * See the list of Schedules.
@@ -42,7 +43,7 @@ public class Schedules extends ObjectWithLinksBase {
 
     @Override
     public String toString() {
-        return "Schedules{"
-                + "\n} extends " + super.toString();
+        return createToString(this, mapOf())
+                + " extends " + super.toString();
     }
 }

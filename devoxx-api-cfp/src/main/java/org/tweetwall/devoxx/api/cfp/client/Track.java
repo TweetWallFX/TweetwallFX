@@ -23,6 +23,8 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
+import static org.tweetwall.util.ToString.*;
+
 /**
  * A track of a event.
  */
@@ -82,11 +84,11 @@ public class Track {
 
     @Override
     public String toString() {
-        return "Track{"
-                + "\n    id=" + getId()
-                + "\n    imgsrc=" + getImgsrc()
-                + "\n    title=" + getTitle()
-                + "\n    description=" + getDescription()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "id", getId(),
+                "imgsrc", getImgsrc(),
+                "title", getTitle(),
+                "description", getDescription()
+        )) + " extends " + super.toString();
     }
 }

@@ -95,12 +95,12 @@ public class CFPClientTestImpl implements CFPClient {
     @Override
     public Optional<VotingResults> getVotingResultsOverall() {
 //        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks/", VotingResults.class);
-        return readOptionalFrom("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", VotingResults.class);
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", VotingResults.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsDaily(final String day) {
 //        return RestCallHelper.getData(BASE_URI + "voting/v1/top/talks", VotingResults.class, Collections.singletonMap("day", day));
-        return readOptionalFrom("https://cfp.devoxx.co.uk/api/voting/v1/top/talks", Collections.singletonMap("day", day), VotingResults.class);
+        return readOptionalFrom("https://cfp.devoxx.be/api/voting/v1/top/talks", Collections.singletonMap("day", day), VotingResults.class);
     }
 }
