@@ -38,6 +38,8 @@ include ':core'
 project(":core").name = "TweetWallFX-Core"
 include ':2d'
 project(":2d").name = "TweetWallFX-2D"
+include ':util'
+project(":util").name = "TweetWallFX-Utility"
 
 include ':devoxx'
 project(":devoxx").name = "TweetWallFX-Devoxx"
