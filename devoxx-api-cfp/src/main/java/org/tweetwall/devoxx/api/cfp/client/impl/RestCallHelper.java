@@ -59,19 +59,22 @@ public class RestCallHelper {
     }
 
     private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
-        LOGGER.info("Calling URL: " + url);
+        LOGGER.info("Calling URL: " + url + " with query parameters: " + queryParameters);
         WebTarget webTarget = getClient().target(getHttpsUrl(url));
 
         if (null != queryParameters && !queryParameters.isEmpty()) {
-            queryParameters.forEach((key, value) -> {
+            for (Map.Entry<String, Object> entry : queryParameters.entrySet()) {
+                final String key = entry.getKey();
+                final Object value = entry.getValue();
+
                 if (value instanceof Object[]) {
-                    webTarget.queryParam(key, Object[].class.cast(value));
+                    webTarget = webTarget.queryParam(key, Object[].class.cast(value));
                 } else if (value instanceof Collection) {
-                    webTarget.queryParam(key, ((Collection<?>) value).toArray());
+                    webTarget = webTarget.queryParam(key, ((Collection<?>) value).toArray());
                 } else {
-                    webTarget.queryParam(key, value);
+                    webTarget = webTarget.queryParam(key, value);
                 }
-            });
+            }
         }
 
         return webTarget
