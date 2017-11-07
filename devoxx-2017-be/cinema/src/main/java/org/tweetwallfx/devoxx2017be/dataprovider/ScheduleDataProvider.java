@@ -45,19 +45,18 @@ import org.tweetwallfx.tweet.api.TweetStream;
  */
 public class ScheduleDataProvider implements DataProvider {
 
-    private List<ScheduleSlot> scheduleSlots;
-
+    private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
+    
     private ScheduleDataProvider() {
-        updateSchedule();
     }
 
-    private void updateSchedule() {
+    public void updateSchedule() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
-        scheduleSlots = CFPClient.getClient()
+        CFPClient.getClient()
                 .getSchedule(System.getProperty("org.tweetwallfx.devoxxbe17.day", actualDayName))
                 .map(Schedule::getSlots)
-                .orElse(Collections.emptyList());
+                .ifPresent(slots -> {scheduleSlots = slots;});
     }
 
     public List<SessionData> getFilteredSessionData() {

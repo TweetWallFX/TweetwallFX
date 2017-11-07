@@ -28,25 +28,23 @@ import java.time.LocalDateTime;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
-import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
+import org.tweetwallfx.devoxx2017be.dataprovider.ScheduleDataProvider;
 
 /**
- * Step to trigger the updating of the voting results
+ * Step to trigger the updating of the schedule
  *
  * @author Sven Reimers
  */
-public class Devoxx17UpdateVotingResults extends AbstractStep {
+public class Devoxx17UpdateScheduleResults extends AbstractStep {
 
-    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);;    
+    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);;
     
     @Override
     public void doStep(StepEngine.MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final TopTalksTodayDataProvider topTalksToday = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
-        topTalksToday.updateVotigResults();
-        final TopTalksTodayDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
-        topTalksWeek.updateVotigResults();
-        nextUpDateTime = LocalDateTime.now().plusMinutes(5);                        
+        final ScheduleDataProvider scheduleProvider = wordleSkin.getSkinnable().getDataProvider(ScheduleDataProvider.class);
+        scheduleProvider.updateSchedule();
+        nextUpDateTime = LocalDateTime.now().plusMinutes(15);                
         context.proceed();
     }
 
@@ -59,4 +57,5 @@ public class Devoxx17UpdateVotingResults extends AbstractStep {
     public boolean shouldSkip(StepEngine.MachineContext context) {
         return LocalDateTime.now().isBefore(nextUpDateTime);
     }
+    
 }

@@ -1,5 +1,6 @@
 {
     "steps": [
+        "org.tweetwallfx.devoxx17be.steps.Devoxx17UpdateScheduleResults",
         "org.tweetwallfx.devoxx17be.steps.Devoxx17ShowSchedule",
         "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets",
         "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets",
