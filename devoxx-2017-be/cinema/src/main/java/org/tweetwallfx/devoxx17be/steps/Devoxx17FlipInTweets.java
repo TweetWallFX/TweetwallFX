@@ -69,6 +69,7 @@ public class Devoxx17FlipInTweets extends AbstractStep {
             ImageView view = new ImageView(image);
             view.setPreserveRatio(true);
             view.setFitHeight(140);
+            view.setFitWidth(259);
             view.layoutXProperty().bind(Bindings.add(Bindings.multiply(1490/1920.0, wordleSkin.getSkinnable().widthProperty()),
                     Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate()))*0.5, tweetList.widthProperty())));
             view.layoutYProperty().bind(Bindings.add(Bindings.multiply(405/1280.0, wordleSkin.getSkinnable().heightProperty()),
