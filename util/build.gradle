@@ -23,6 +23,5 @@
  */
 
 dependencies {
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-    compile project(':TweetWallFX-Utility')
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versionJackson
 }
