@@ -26,6 +26,7 @@ package org.tweetwallfx.devoxx2017be.dataprovider;
 import java.time.OffsetTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
@@ -37,7 +38,26 @@ import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
  */
 public class SessionData {
 
-    private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup).reversed().thenComparing(SessionData::getRoom);
+    private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup)
+            .reversed()
+            .thenComparing(SessionData::getRoom, new RoomComparator());
+    
+    private static class RoomComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            String[] room1_split = o1.split(" ");
+            String[] room2_split = o2.split(" ");
+            int room_part1 = room1_split[0].compareTo(room2_split[0]);
+            if (room_part1 == 0) {
+                return Integer.compare(Integer.valueOf(room1_split[1]), Integer.valueOf(room2_split[1]));
+            } else {
+                return room_part1;
+            }
+        }
+    }            
+    
+    
     public final String room;
     public final List<String> speakers;
     public final String title;
@@ -65,7 +85,6 @@ public class SessionData {
         List<SessionData> sessionData = slots.stream()
                 //                .filter(slot -> !slot.isNotAllocated())
                 .filter(slot -> null != slot.getTalk())
-                .filter(slot -> !slot.getTalk().getTalkType().equals("BOF (Bird of a Feather)"))
                 .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now.plusMinutes(10)))
                 .collect(Collectors.groupingBy(slot -> slot.getRoomId()))
                 .entrySet().stream()
@@ -74,6 +93,9 @@ public class SessionData {
                 .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .collect(Collectors.toList());
+        Optional<String> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
+        if (min.isPresent())
+            sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).collect(Collectors.toList());
         System.out.println("Possible Next Sessions (" + sessionData.size() + "):\n " + sessionData);
         return sessionData;
     }
