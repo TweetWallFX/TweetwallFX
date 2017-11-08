@@ -28,10 +28,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.OffsetTime;
 import java.util.List;
-import javax.json.bind.JsonbBuilder;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
+import org.tweetwall.util.JsonDataConverter;
 
 /**
  * Tests for Session Data Filtering
@@ -50,7 +50,7 @@ public class SessionDataTest {
         System.out.println("from");        
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()){
-            Schedule schedule = JsonbBuilder.create().fromJson(inputStream, Schedule.class);
+            Schedule schedule = JsonDataConverter.convertFromInputSTream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"));
             assertEquals(7, result.size());
         } 
@@ -61,7 +61,7 @@ public class SessionDataTest {
         System.out.println("from");        
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()){
-            Schedule schedule = JsonbBuilder.create().fromJson(inputStream, Schedule.class);
+            Schedule schedule = JsonDataConverter.convertFromInputSTream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("13:00Z"));
             assertEquals(7, result.size());
         } 
