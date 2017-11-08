@@ -52,7 +52,7 @@ public class SessionDataTest {
         try (InputStream inputStream = jsonFile.openStream()){
             Schedule schedule = JsonDataConverter.convertFromInputSTream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"));
-            assertEquals(7, result.size());
+            assertEquals(6, result.size());
         } 
     }
 
