@@ -43,7 +43,8 @@
 }
 
 .root {
-    /*-fx-font-family: 'BebasNeue';*/ 
+    -fx-font-family: 'System'; 
+    devoxx_gradient: linear-gradient(to bottom right, #f68b1f, derive(#f68b1f, -30%));
 }
 
 .statusline {
@@ -57,10 +58,10 @@
     -fx-background-graphic: url(Devoxx2017BackgroundImageV2.jpg);
     -fx-second-graphic: url(jug-bodensee-logo-weiss3-gross.png);
     -fx-display-tag-num: 25;
-    -fx-font: 12pt "BebasNeue";
+    /*-fx-font: 12pt "BebasNeue";*/
     -fx-font-size-min: 36;
     -fx-font-size-max: 72;
-    -fx-tweet-font-size: 54;
+    -fx-tweet-font-size: 48;
     
 }
 .wordle .bg-image {
