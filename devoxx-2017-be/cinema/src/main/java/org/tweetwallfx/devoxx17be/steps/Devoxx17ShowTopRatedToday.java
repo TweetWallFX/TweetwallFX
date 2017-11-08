@@ -101,6 +101,8 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
             Label voteCount = (Label) session.lookup("#voteCount");
             voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
             ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
+            speakerImage.setFitHeight(64);
+            speakerImage.setFitWidth(64);
             Rectangle clip = new Rectangle(
                     speakerImage.getFitWidth(), speakerImage.getFitHeight()
             );

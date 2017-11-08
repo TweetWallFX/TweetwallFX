@@ -103,6 +103,8 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
             voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
             ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
             speakerImage.setImage(SpeakerImageProvider.getSpeakerImage(votingResultTalk.speakerAvatar));
+            speakerImage.setFitHeight(64);
+            speakerImage.setFitWidth(64);            
             Rectangle clip = new Rectangle(
                     speakerImage.getFitWidth(), speakerImage.getFitHeight()
             );
