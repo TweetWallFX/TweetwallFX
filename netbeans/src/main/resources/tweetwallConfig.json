@@ -2,8 +2,6 @@
     "tweetwall" : {
         "query" : "#netbeans OR #netbeansday",
         "title" : "The JavaFX Tweetwall for NetBeans Day!",
-        "stylesheetResources" : [
-            "netbeans.css"
-        ]
+        "stylesheetResource" : "netbeans.css"
     }
 }

@@ -23,7 +23,7 @@
  */
 package org.tweetwallfx.generic;
 
-import java.util.stream.Stream;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -57,15 +57,12 @@ public class Main extends Application {
         final TweetwallSettings tweetwallSettings
                 = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
 
-        final Stream<String> resourcesStream = tweetwallSettings.getStylesheetResources()
-                .stream()
+        Optional.ofNullable(tweetwallSettings.getStylesheetResource())
                 .map(ClassLoader.getSystemClassLoader()::getResource)
-                .map(java.net.URL::toExternalForm);
-        final Stream<String> filesStream = tweetwallSettings.getStylesheetFiles()
-                .stream();
-
-        Stream.concat(resourcesStream, filesStream)
-                .forEach(scene.getStylesheets()::add);
+                .map(java.net.URL::toExternalForm)
+                .ifPresent(scene.getStylesheets()::add);
+        Optional.ofNullable(tweetwallSettings.getStylesheetFile())
+                .ifPresent(scene.getStylesheets()::add);
 
         StringPropertyAppender spa = new StringPropertyAppender();
 
