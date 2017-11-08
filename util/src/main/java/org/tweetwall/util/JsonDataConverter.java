@@ -23,16 +23,19 @@
  */
 package org.tweetwall.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.io.InputStream;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 
 /**
  * Converts data from an input into a typesafe object.
  */
 public class JsonDataConverter {
 
-    private static final ObjectMapper OM = new ObjectMapper();
+    private static final Jsonb JSONB = JsonbBuilder.create(new JsonbConfig()
+            .setProperty("jsonb.fail-on-unknown-properties", true)
+    );
 
     private JsonDataConverter() {
         // prevent instantiation
@@ -51,11 +54,7 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromObject(final Object object, final Class<T> typeClass) {
-        try {
-            return convertFromString(OM.writeValueAsString(object), typeClass);
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return convertFromString(JSONB.toJson(object), typeClass);
     }
 
     /**
@@ -71,11 +70,7 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromInputSTream(final InputStream inputStream, final Class<T> typeClass) {
-        try {
-            return OM.readValue(inputStream, typeClass);
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return JSONB.fromJson(inputStream, typeClass);
     }
 
     /**
@@ -91,10 +86,6 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
-        try {
-            return OM.readValue(jsonString, typeClass);
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return JSONB.fromJson(jsonString, typeClass);
     }
 }
