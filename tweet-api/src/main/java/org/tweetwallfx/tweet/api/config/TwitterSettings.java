@@ -130,6 +130,7 @@ public final class TwitterSettings {
     @Override
     public String toString() {
         return createToString(this, map(
+                "debugEnabled", isDebugEnabled(),
                 "extendedConfig", getExtendedConfig(),
                 "extendedMode", isExtendedMode(),
                 "oauth", getOauth()

@@ -41,10 +41,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwall.util.JsonDataConverter;
 
 /**
  * Configuration store of data enabling influence into the configuration of the
@@ -102,7 +101,7 @@ public final class Configuration {
                 .stream()
                 .peek(ce -> LOGGER.info("Processing key '" + ce.getKey() + "' with ConfigurationConverters " + ce.getValue() + '.'))
                 .filter(e -> result.containsKey(e.getKey()))
-                .forEach(e -> result.replace(e.getKey(), convertData(e.getValue().iterator().next(), result.get(e.getKey()))));
+                .forEach(e -> result.replace(e.getKey(), JsonDataConverter.convertFromObject(result.get(e.getKey()), e.getValue().iterator().next().getDataClass())));
 
         return result;
     }
@@ -145,15 +144,8 @@ public final class Configuration {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private static Object convertData(final ConfigurationConverter converter, final Object inputValue) {
-        final Jsonb jsonb = JsonbBuilder.create();
-        final String jsonString = jsonb.toJson(inputValue);
-
-        return jsonb.fromJson(jsonString, converter.getDataClass());
-    }
-
     private static Map<String, Object> readConfiguration(final InputStream input) {
-        return cast(JsonbBuilder.create().fromJson(input, Map.class));
+        return cast(JsonDataConverter.convertFromInputSTream(input, Map.class));
     }
 
     public static Configuration getInstance() {
