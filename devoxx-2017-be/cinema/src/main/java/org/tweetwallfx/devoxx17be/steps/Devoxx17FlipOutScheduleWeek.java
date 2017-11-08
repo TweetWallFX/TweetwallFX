@@ -26,24 +26,23 @@ package org.tweetwallfx.devoxx17be.steps;
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 
 /**
  * Devox 2017 Schedule Flip Out Animation Step
+ *
  * @author Sven Reimers
  */
 public class Devoxx17FlipOutScheduleWeek extends AbstractStep {
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-
         Node node = wordleSkin.getNode().lookup("#scheduleNode");
         FlipOutXTransition flipOutXTransition = new FlipOutXTransition(node);
-        flipOutXTransition.setOnFinished(e -> {            
+        flipOutXTransition.setOnFinished(e -> {
             wordleSkin.getPane().getChildren().remove(node);
             context.proceed();
         });
@@ -51,14 +50,14 @@ public class Devoxx17FlipOutScheduleWeek extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        return null == wordleSkin.getNode().lookup("#scheduleNode") || wordleSkin.getSkinnable().getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData().isEmpty();
+        return null == wordleSkin.getNode().lookup("#scheduleNode")
+                || context.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData().isEmpty();
     }
-    
 }

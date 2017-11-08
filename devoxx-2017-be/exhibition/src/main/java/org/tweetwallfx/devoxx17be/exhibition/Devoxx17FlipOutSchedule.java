@@ -26,22 +26,21 @@ package org.tweetwallfx.devoxx17be.exhibition;
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  * Devox 2017 Schedule Flip Out Animation Step
+ *
  * @author Sven Reimers
  */
 public class Devoxx17FlipOutSchedule extends AbstractStep {
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-
         Node node = wordleSkin.getNode().lookup("#scheduleNode");
         FlipOutXTransition flipOutXTransition = new FlipOutXTransition(node);
-        flipOutXTransition.setOnFinished(e -> {            
+        flipOutXTransition.setOnFinished(e -> {
             wordleSkin.getPane().getChildren().remove(node);
             context.proceed();
         });
@@ -49,14 +48,13 @@ public class Devoxx17FlipOutSchedule extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#scheduleNode");
     }
-    
 }

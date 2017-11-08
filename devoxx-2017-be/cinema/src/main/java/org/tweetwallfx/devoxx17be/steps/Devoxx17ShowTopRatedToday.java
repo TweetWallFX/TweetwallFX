@@ -39,7 +39,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
@@ -47,23 +47,23 @@ import org.tweetwallfx.devoxx2017be.dataprovider.VotedTalk;
 
 /**
  * Devox 2017 Show Top Rated Talks Today (Flip In) Animation Step
+ *
  * @author Sven Reimers
  */
 public class Devoxx17ShowTopRatedToday extends AbstractStep {
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final TopTalksTodayDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
+        final TopTalksTodayDataProvider dataProvider = context.getDataProvider(TopTalksTodayDataProvider.class);
 
         List<FlipInXTransition> transitions = new ArrayList<>();
         if (null == wordleSkin.getNode().lookup("#topRatedToday")) {
             try {
                 Node scheduleNode = FXMLLoader.<Node>load(this.getClass().getResource("/topratedtalktoday.fxml"));
                 transitions.add(new FlipInXTransition(scheduleNode));
-                scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0/1920.0, wordleSkin.getSkinnable().widthProperty()));
-                scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0/1280.0, wordleSkin.getSkinnable().heightProperty()));
+                scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()));
+                scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()));
                 wordleSkin.getPane().getChildren().add(scheduleNode);
 
                 GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
@@ -103,9 +103,7 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
             ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
             speakerImage.setFitHeight(64);
             speakerImage.setFitWidth(64);
-            Rectangle clip = new Rectangle(
-                    speakerImage.getFitWidth(), speakerImage.getFitHeight()
-            );
+            Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
             clip.setArcWidth(20);
             clip.setArcHeight(20);
             speakerImage.setClip(clip);
@@ -118,14 +116,12 @@ public class Devoxx17ShowTopRatedToday extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ZERO; // do not stop at this step;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
-        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        return wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
+    public boolean shouldSkip(final MachineContext context) {
+        return context.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
     }
-
 }

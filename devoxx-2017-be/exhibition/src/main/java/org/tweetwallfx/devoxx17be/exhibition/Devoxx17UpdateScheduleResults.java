@@ -25,9 +25,8 @@ package org.tweetwallfx.devoxx17be.exhibition;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  * Step to trigger the updating of the schedule
@@ -36,25 +35,23 @@ import org.tweetwallfx.controls.stepengine.StepEngine;
  */
 public class Devoxx17UpdateScheduleResults extends AbstractStep {
 
-    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);;
-    
+    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
+
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final ScheduleDataProvider scheduleProvider = wordleSkin.getSkinnable().getDataProvider(ScheduleDataProvider.class);
+    public void doStep(final MachineContext context) {
+        final ScheduleDataProvider scheduleProvider = context.getDataProvider(ScheduleDataProvider.class);
         scheduleProvider.updateSchedule();
-        nextUpDateTime = LocalDateTime.now().plusMinutes(15);                
+        nextUpDateTime = LocalDateTime.now().plusMinutes(15);
         context.proceed();
     }
 
     @Override
-    public Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         return LocalDateTime.now().isBefore(nextUpDateTime);
     }
-    
 }

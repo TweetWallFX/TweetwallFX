@@ -25,9 +25,8 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 
@@ -38,26 +37,25 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
  */
 public class Devoxx17UpdateVotingResults extends AbstractStep {
 
-    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);;    
-    
+    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
+
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final TopTalksTodayDataProvider topTalksToday = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
+    public void doStep(final MachineContext context) {
+        final TopTalksTodayDataProvider topTalksToday = context.getDataProvider(TopTalksTodayDataProvider.class);
         topTalksToday.updateVotigResults();
-        final TopTalksWeekDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksWeekDataProvider.class);
+        final TopTalksWeekDataProvider topTalksWeek = context.getDataProvider(TopTalksWeekDataProvider.class);
         topTalksWeek.updateVotingResults();
-        nextUpDateTime = LocalDateTime.now().plusMinutes(5);                        
+        nextUpDateTime = LocalDateTime.now().plusMinutes(5);
         context.proceed();
     }
 
     @Override
-    public Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         return LocalDateTime.now().isBefore(nextUpDateTime);
     }
 }

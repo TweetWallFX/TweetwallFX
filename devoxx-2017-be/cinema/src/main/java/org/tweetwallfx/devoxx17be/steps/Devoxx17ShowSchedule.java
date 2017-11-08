@@ -37,44 +37,46 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.ScheduleDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.SessionData;
 
 /**
  * Devox 2017 Show Schedule (Flip In) Animation Step
+ *
  * @author Sven Reimers
  */
 public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-        
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final ScheduleDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(ScheduleDataProvider.class);
-        
+        final ScheduleDataProvider dataProvider = context.getDataProvider(ScheduleDataProvider.class);
+
         List<FlipInXTransition> transitions = new ArrayList<>();
         if (null == wordleSkin.getNode().lookup("#scheduleNode")) {
             try {
                 Node scheduleNode = FXMLLoader.<Node>load(this.getClass().getResource("/schedule.fxml"));
                 transitions.add(new FlipInXTransition(scheduleNode));
-                scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0/1920.0, wordleSkin.getSkinnable().widthProperty()));
-                scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0/1280.0, wordleSkin.getSkinnable().heightProperty()));
+                scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()));
+                scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()));
                 wordleSkin.getPane().getChildren().add(scheduleNode);
-                
+
                 GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
-                int col=0;
-                int row=0;
-                
+                int col = 0;
+                int row = 0;
+
                 Iterator<SessionData> iterator = dataProvider.getFilteredSessionData().iterator();
                 while (iterator.hasNext()) {
                     Node node = createSessionNode(iterator.next());
                     grid.getChildren().add(node);
                     GridPane.setColumnIndex(node, col);
                     GridPane.setRowIndex(node, row);
-                    col = (col == 0)? 1 : 0;
-                    if (col == 0 ) row++;
+                    col = (col == 0) ? 1 : 0;
+                    if (col == 0) {
+                        row++;
+                    }
                 }
             } catch (IOException ex) {
                 LogManager.getLogger(Devoxx17ShowSchedule.class.getName()).error(ex);
@@ -84,20 +86,19 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
         flipIns.getChildren().addAll(transitions);
         flipIns.setOnFinished(e -> context.proceed());
 
-        flipIns.play();                
-        
+        flipIns.play();
     }
-    
+
     private Node createSessionNode(SessionData sessionData) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/session.fxml"));
-            Text title = (Text)session.lookup("#title");
+            Text title = (Text) session.lookup("#title");
             title.setText(sessionData.title);
-            Text speakers = (Text)session.lookup("#speakers");
+            Text speakers = (Text) session.lookup("#speakers");
             speakers.setText(sessionData.speakers.stream().collect(Collectors.joining(", ")));
-            Label room = (Label)session.lookup("#room");
+            Label room = (Label) session.lookup("#room");
             room.setText(sessionData.room);
-            Label startTime = (Label)session.lookup("#startTime");
+            Label startTime = (Label) session.lookup("#startTime");
             startTime.setText(sessionData.beginTime);
             return session;
         } catch (IOException ex) {
@@ -105,5 +106,4 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
             throw new RuntimeException(ex);
         }
     }
-        
 }

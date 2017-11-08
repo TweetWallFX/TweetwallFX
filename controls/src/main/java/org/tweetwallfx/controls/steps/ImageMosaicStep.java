@@ -46,7 +46,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 
@@ -60,9 +60,9 @@ public class ImageMosaicStep extends AbstractStep {
     private int count = 0;
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        ImageMosaicDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(ImageMosaicDataProvider.class);
+        ImageMosaicDataProvider dataProvider = context.getDataProvider(ImageMosaicDataProvider.class);
         pane = wordleSkin.getPane();
         if (dataProvider.getImages().size() < 35) {
             context.proceed();
@@ -77,11 +77,11 @@ public class ImageMosaicStep extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(1);
     }
 
-    private void executeAnimations(StepEngine.MachineContext context) {
+    private void executeAnimations(final MachineContext context) {
         ImageWallAnimationTransition highlightAndZoomTransition
                 = createHighlightAndZoomTransition();
         highlightAndZoomTransition.transition.play();
@@ -119,7 +119,7 @@ public class ImageMosaicStep extends AbstractStep {
         });
     }
 
-    private Transition createMosaicTransition(List<ImageStore> imageStores) {
+    private Transition createMosaicTransition(final List<ImageStore> imageStores) {
         SequentialTransition fadeIn = new SequentialTransition();
         List<FadeTransition> allFadeIns = new ArrayList<>();
 
@@ -232,7 +232,7 @@ public class ImageMosaicStep extends AbstractStep {
         return new ImageWallAnimationTransition(seqT, column, row);
     }
 
-    private Transition createReverseHighlightAndZoomTransition(int column, int row) {
+    private Transition createReverseHighlightAndZoomTransition(final int column, final int row) {
         ImageView randomView = rects[column][row];
         randomView.toFront();
         ParallelTransition firstParallelTransition = new ParallelTransition();
@@ -277,16 +277,13 @@ public class ImageMosaicStep extends AbstractStep {
         return seqT;
     }
 
-    private void cleanup() {
-    }
-
     private static class ImageWallAnimationTransition {
 
-        final Transition transition;
-        final int column;
-        final int row;
+        private final Transition transition;
+        private final int column;
+        private final int row;
 
-        public ImageWallAnimationTransition(Transition transition, int column, int row) {
+        public ImageWallAnimationTransition(final Transition transition, final int column, final int row) {
             this.transition = transition;
             this.column = column;
             this.row = row;
