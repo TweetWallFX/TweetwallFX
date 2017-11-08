@@ -23,7 +23,6 @@
  */
 package org.tweetwall.devoxx.api.cfp.client;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import static org.tweetwall.util.ToString.*;
 
 /**
@@ -67,7 +66,6 @@ public class ScheduleSlot {
     /**
      * The break description.
      */
-    @JsonAlias({"break"})
     private Break breakObject;
 
     /**
@@ -139,11 +137,11 @@ public class ScheduleSlot {
         this.fromTimeMillis = fromTimeMillis;
     }
 
-    public Break getBreakObject() {
+    public Break getBreak() {
         return breakObject;
     }
 
-    public void setBreakObject(final Break breakObject) {
+    public void setBreak(final Break breakObject) {
         this.breakObject = breakObject;
     }
 
@@ -225,7 +223,7 @@ public class ScheduleSlot {
                 mapEntry("roomId", getRoomId()),
                 mapEntry("notAllocated", isNotAllocated()),
                 mapEntry("fromTimeMillis", getFromTimeMillis()),
-                mapEntry("break", getBreakObject()),
+                mapEntry("break", getBreak()),
                 mapEntry("roomSetup", getRoomSetup()),
                 mapEntry("talk", getTalk()),
                 mapEntry("fromTime", getFromTime()),
