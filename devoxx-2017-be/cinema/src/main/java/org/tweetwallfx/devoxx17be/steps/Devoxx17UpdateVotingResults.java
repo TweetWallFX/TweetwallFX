@@ -29,6 +29,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
+import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 
 /**
  * Step to trigger the updating of the voting results
@@ -44,8 +45,8 @@ public class Devoxx17UpdateVotingResults extends AbstractStep {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         final TopTalksTodayDataProvider topTalksToday = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
         topTalksToday.updateVotigResults();
-        final TopTalksTodayDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksTodayDataProvider.class);
-        topTalksWeek.updateVotigResults();
+        final TopTalksWeekDataProvider topTalksWeek = wordleSkin.getSkinnable().getDataProvider(TopTalksWeekDataProvider.class);
+        topTalksWeek.updateVotingResults();
         nextUpDateTime = LocalDateTime.now().plusMinutes(5);                        
         context.proceed();
     }
