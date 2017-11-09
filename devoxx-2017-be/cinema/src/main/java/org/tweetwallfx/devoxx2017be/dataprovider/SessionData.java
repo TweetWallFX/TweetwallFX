@@ -88,7 +88,6 @@ public class SessionData {
         List<SessionData> sessionData = slots.stream()
                 //                .filter(slot -> !slot.isNotAllocated())
                 .filter(slot -> null != slot.getTalk())
-                .filter(slot -> !slot.getTalk().getTalkType().equals("Ignite Sessions"))
                 .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now.plusMinutes(10)))
                 .collect(Collectors.groupingBy(slot -> slot.getRoomId()))
                 .entrySet().stream()
