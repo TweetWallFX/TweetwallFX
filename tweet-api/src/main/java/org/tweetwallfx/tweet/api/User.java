@@ -36,6 +36,8 @@ public interface User {
     String getProfileImageUrl();
 
     String getScreenName();
+    
+    int getFollowersCount();
 
     boolean isVerified();
     /**

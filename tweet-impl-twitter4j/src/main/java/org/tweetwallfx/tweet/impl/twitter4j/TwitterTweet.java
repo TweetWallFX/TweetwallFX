@@ -246,6 +246,12 @@ final class TwitterTweet implements Tweet {
         public boolean isVerified() {
             return user.isVerified();
         }
+
+        @Override
+        public int getFollowersCount() {
+            return user.getFollowersCount();
+        }
+        
     }
 
     @Override
