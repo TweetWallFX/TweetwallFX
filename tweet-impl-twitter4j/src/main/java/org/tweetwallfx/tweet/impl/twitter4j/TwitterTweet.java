@@ -251,7 +251,6 @@ final class TwitterTweet implements Tweet {
         public int getFollowersCount() {
             return user.getFollowersCount();
         }
-        
     }
 
     @Override
