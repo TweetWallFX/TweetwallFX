@@ -73,49 +73,53 @@ public class TweetStreamDataProvider implements DataProvider {
     }
     
     private void updateImage(Tweet tweet) {
-        Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
-            .findFirst().ifPresent(me -> {
-                String url;
-                switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
-                    case 0:
-                        url = me.getMediaUrl() + ":thumb";
-                        break;
-                    case 1:
-                        url = me.getMediaUrl() + ":small";
-                        break;
-                    case 2:
-                        url = me.getMediaUrl() + ":medium";
-                        break;
-                    case 3:
-                        url = me.getMediaUrl() + ":large";
-                        break;
-                    default:
-                        throw new RuntimeException("Illegal value");
-                }
-                latestTweetedImage = new Image(url);
-            });
+        if (tweet.getUser().getFollowersCount() > 50) {
+            Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
+                .findFirst().ifPresent(me -> {
+                    String url;
+                    switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
+                        case 0:
+                            url = me.getMediaUrl() + ":thumb";
+                            break;
+                        case 1:
+                            url = me.getMediaUrl() + ":small";
+                            break;
+                        case 2:
+                            url = me.getMediaUrl() + ":medium";
+                            break;
+                        case 3:
+                            url = me.getMediaUrl() + ":large";
+                            break;
+                        default:
+                            throw new RuntimeException("Illegal value");
+                    }
+                    latestTweetedImage = new Image(url);
+                });
+        }
     }
 
     private void addTweet(Tweet tweet) {
-        tweetListLock.writeLock().lock();   
-        try {
-            if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
-                if (tweet.isRetweet()) {
-                    Tweet originalTweet = tweet.getRetweetedTweet();
-                    if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
-                        tweets.addFirst(originalTweet);
-                        updateImage(originalTweet);                    
+        if (tweet.getUser().getFollowersCount() > 50) {
+            tweetListLock.writeLock().lock();   
+            try {
+                if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
+                    if (tweet.isRetweet()) {
+                        Tweet originalTweet = tweet.getRetweetedTweet();
+                        if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                            tweets.addFirst(originalTweet);
+                            updateImage(originalTweet);                    
+                        }
+                    } else {
+                        tweets.addFirst(tweet);
+                        updateImage(tweet);
                     }
-                } else {
-                    tweets.addFirst(tweet);
-                    updateImage(tweet);
+                    if (tweets.size() > 4) {
+                        tweets.removeLast();
+                    }
                 }
-                if (tweets.size() > 4) {
-                    tweets.removeLast();
-                }
+            } finally {
+                tweetListLock.writeLock().unlock();
             }
-        } finally {
-            tweetListLock.writeLock().unlock();
         }
     }
     
