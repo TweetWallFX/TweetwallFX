@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls.steps;
 
-//import org.tweetwallfx.controls.Wordle;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -48,41 +47,37 @@ import org.tweetwallfx.controls.transition.FontSizeTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
- *
  * @author Jörg Michelberger
  */
 public class TweetToCloudStep extends AbstractStep {
 
     @Override
-    public java.time.Duration preferredStepDuration(MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(10);
     }
 
     @Override
-    public void doStep(MachineContext context) {
-//        context.getWordle().setLayoutMode(Wordle.LayoutMode.TWEET);
-        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
-//        Wordle wordle = (Wordle)context.get("Wordle");
-        
-        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
+    public void doStep(final MachineContext context) {
+        List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
 
         if (sortedWords.isEmpty()) {
             return;
         }
 
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
- 
+
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(),layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
         if (null != wordleSkin.getSecondLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getSecondLogo().getBoundsInParent());
         }
-        
+
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
         Duration defaultDuration = Duration.seconds(1.5);
 
@@ -155,7 +150,7 @@ public class TweetToCloudStep extends AbstractStep {
             });
             fadeOutTransitions.add(ft);
         }
-        
+
         ParallelTransition fadeOuts = new ParallelTransition();
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         ParallelTransition moves = new ParallelTransition();

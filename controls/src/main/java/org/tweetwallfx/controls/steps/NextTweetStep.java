@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,23 @@
 package org.tweetwallfx.controls.steps;
 
 import java.time.Duration;
-import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
- *
- * @author Sven
+ * @author Sven Reimers
  */
 public class NextTweetStep extends AbstractStep {
 
     @Override
-    public Duration preferredStepDuration(MachineContext context) {
+    public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
     }
 
     @Override
-    public void doStep(MachineContext context) {
-        WordleSkin skin = (WordleSkin) context.get("WordleSkin");
-        skin.getSkinnable().getDataProvider(TweetDataProvider.class).nextTweet();
+    public void doStep(final MachineContext context) {
+        context.getDataProvider(TweetDataProvider.class).nextTweet();
         context.proceed();
     }
 }

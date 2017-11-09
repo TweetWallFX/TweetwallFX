@@ -24,33 +24,45 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
+import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
- *
  * @author Jörg Michelberger
  */
 public final class StepEngine {
 
-    private static final Logger LOG = LogManager.getLogger(StepEngine.class.getName());
+    private static final Logger STARTUP_LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOG = LogManager.getLogger(StepEngine.class);
     private volatile boolean terminated = false;
-
     private final Lock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
-
     private final StepIterator stateIterator;
-
     private final MachineContext context = new MachineContext();
 
-    public StepEngine(StepIterator stateIterator) {
-        this.stateIterator = stateIterator;
+    public StepEngine() {
+        initDataProviders();
+        stateIterator = createStepIterator();
         //initialize every step with context
         stateIterator.applyWith((step) -> step.initStep(context));
     }
@@ -59,20 +71,70 @@ public final class StepEngine {
         return context;
     }
 
+    private static StepIterator createStepIterator() {
+        return StepIterator.ofDefaultConfiguration();
+    }
+
+    private void initDataProviders() {
+        STARTUP_LOGGER.info("create TweetStream");
+
+        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+        STARTUP_LOGGER.info("query: " + searchText);
+        final TweetFilterQuery query = new TweetFilterQuery()
+                .track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
+        final TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
+
+        STARTUP_LOGGER.info("create DataProviders");
+        final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
+                .map(factory -> factory.create(tweetStream))
+                .peek(dataProvider -> LOG.info("created " + dataProvider))
+                .collect(Collectors.toList());
+        final List<DataProvider.HistoryAware> historyAwareProviders = providers.stream()
+                .filter(DataProvider.HistoryAware.class::isInstance)
+                .map(DataProvider.HistoryAware.class::cast)
+                .collect(Collectors.toList());
+
+        if (!historyAwareProviders.isEmpty()) {
+            Tweeter.getInstance()
+                    .searchPaged(new TweetQuery().query(searchText).count(100), 20)
+                    .forEach(tweet -> historyAwareProviders.stream().forEach(hap -> hap.processTweet(tweet)));
+        }
+
+        STARTUP_LOGGER.info("initDataProviders done");
+        providers.forEach(context::addDataProvider);
+    }
+
     public final class MachineContext {
 
         private final Map<String, Object> properties = new HashMap<>();
+        private final List<DataProvider> dataProviders = new ArrayList<>();
 
-        public Object get(String key) {
+        public Object get(final String key) {
             return properties.get(key);
         }
 
-        public Object put(String key, Object value) {
+        public Object put(final String key, final Object value) {
             return properties.put(key, value);
         }
 
         public void proceed() {
             StepEngine.this.proceed();
+        }
+
+        public void addDataProvider(final DataProvider dataProvider) {
+            dataProviders.add(Objects.requireNonNull(
+                    dataProvider,
+                    "Parameter dataProvider must not be null!"));
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T extends DataProvider> T getDataProvider(final Class<T> klazz) {
+            return dataProviders
+                    .stream()
+                    .filter(klazz::isInstance)
+                    .map(klazz::cast)
+                    .findFirst()
+                    .orElse(null);
         }
     }
 
@@ -106,7 +168,7 @@ public final class StepEngine {
             lock.lock();
             try {
                 if (stepToExecute.requiresPlatformThread()) {
-                    Platform.runLater(() -> stepToExecute.doStep(context));                    
+                    Platform.runLater(() -> stepToExecute.doStep(context));
                 } else {
                     stepToExecute.doStep(context);
                 }
