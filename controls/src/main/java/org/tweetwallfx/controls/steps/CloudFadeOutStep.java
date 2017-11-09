@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2015 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
+//import org.tweetwallfx.controls.Wordle;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.FadeTransition;
@@ -35,18 +36,21 @@ import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
+ *
  * @author Jörg Michelberger
  */
 public class CloudFadeOutStep extends AbstractStep {
-
+    
     @Override
-    public java.time.Duration preferredStepDuration(final MachineContext context) {
+    public java.time.Duration preferredStepDuration(MachineContext context) {
         return java.time.Duration.ofSeconds(2);
     }
 
     @Override
-    public void doStep(final MachineContext context) {
-        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+    public void doStep(MachineContext context) {
+//        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
+        
+        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
 
@@ -63,9 +67,9 @@ public class CloudFadeOutStep extends AbstractStep {
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
-
+        
         ParallelTransition fadeLOuts = new ParallelTransition();
-
+        
         fadeLOuts.getChildren().addAll(fadeOutTransitions);
         fadeLOuts.setOnFinished(e -> context.proceed());
         fadeLOuts.play();

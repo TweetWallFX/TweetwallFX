@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2016 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,8 @@ import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
- * @author Sven Reimers
+ *
+ * @author Sven
  */
 public class PauseStep extends AbstractStep {
 
@@ -38,17 +39,21 @@ public class PauseStep extends AbstractStep {
         this(Duration.ofSeconds(5));
     }
     
-    public PauseStep(final Duration pause) {
+    public PauseStep(long pause) {
+        this(Duration.ofMillis(pause));
+    }
+
+    public PauseStep(Duration pause) {
         this.pause = pause;
     }
     
     @Override
-    public Duration preferredStepDuration(final MachineContext context) {
+    public Duration preferredStepDuration(MachineContext context) {
         return this.pause;
     }
 
     @Override
-    public void doStep(final MachineContext context) {
+    public void doStep(MachineContext context) {
         context.proceed();
     }
 }

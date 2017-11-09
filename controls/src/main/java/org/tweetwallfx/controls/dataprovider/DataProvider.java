@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2016 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,23 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
- * @author Sven Reimers
+ *
+ * @author sven
  */
 public interface DataProvider {
-
+    
     public static interface Factory {
-
+        
         public DataProvider create(TweetStream tweetStream);
+        
     }
-
+    
     public static interface HistoryAware {
-
+        
         public void processTweet(Tweet tweet);
+        
     }
-
+    
     public String getName();
+    
 }
