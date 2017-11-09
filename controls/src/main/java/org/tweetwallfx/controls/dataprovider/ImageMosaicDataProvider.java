@@ -69,7 +69,7 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
     @Override
     public void processTweet(Tweet tweet) {
         log.info("new Tweet received");
-        if (null == tweet.getMediaEntries() || tweet.isRetweet()) {
+        if (null == tweet.getMediaEntries() || tweet.isRetweet() || tweet.getUser().getFollowersCount() < 25) {
             return;
         }
         Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))

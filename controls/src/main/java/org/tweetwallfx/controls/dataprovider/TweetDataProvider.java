@@ -39,7 +39,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
 public class TweetDataProvider implements DataProvider {
     
     private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
-    private static final int HISTORY_SIZE = 20; 
+    private static final int HISTORY_SIZE = 50; 
 
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
@@ -50,7 +50,9 @@ public class TweetDataProvider implements DataProvider {
     private TweetDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
             LOGGER.info("new Tweet received");
-            this.nextTweet = tweet;
+            if (tweet.getUser().getFollowersCount() > 25) {
+                this.nextTweet = tweet;
+            }
             this.lastTweetCollection = null;
         });
     }
@@ -62,8 +64,10 @@ public class TweetDataProvider implements DataProvider {
     private List<Tweet> getLatestHistory() {
         LOGGER.info("Reinit the history");
         return Tweeter.getInstance().search(new TweetQuery()
-                        .query(searchText)
-                        .count(HISTORY_SIZE)).collect(Collectors.toList());        
+                .query(searchText)
+                .count(HISTORY_SIZE))
+                .filter(tweet -> tweet.getUser().getFollowersCount() > 25)
+                .collect(Collectors.toList());
     }
     
     public Tweet nextTweet() {
