@@ -71,7 +71,6 @@ public class StepIterator implements Iterator<Step> {
         public StepIterator build() {
             return new StepIterator(steps);
         }
-
     }
 
     public static StepIterator ofDefaultConfiguration() {
