@@ -42,7 +42,7 @@ import org.tweetwallfx.tweet.api.TweetStream;
  */
 public final class TopTalksTodayDataProvider implements DataProvider {
 
-    List<VotedTalk> votedTalks = Collections.emptyList();
+    private List<VotedTalk> votedTalks = Collections.emptyList();
 
     private TopTalksTodayDataProvider() {
         updateVotigResults();
@@ -57,13 +57,16 @@ public final class TopTalksTodayDataProvider implements DataProvider {
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
-                .sorted(Comparator.comparing(this::averageFormattedVote).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
+                .sorted(Comparator
+                        .comparing(TopTalksTodayDataProvider::averageFormattedVote)
+                        .thenComparing(VotingResultTalk::getRatingTotalVotes)
+                        .reversed())
                 .limit(5)
                 .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
-    
-    private String averageFormattedVote(VotingResultTalk ratedTalk) {
+
+    private static String averageFormattedVote(final VotingResultTalk ratedTalk) {
         return String.format("%.1f", ratedTalk.getRatingAverageScore());
     }
 
@@ -79,8 +82,13 @@ public final class TopTalksTodayDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public DataProvider create(TweetStream tweetStream) {
+        public TopTalksTodayDataProvider create(final TweetStream tweetStream) {
             return new TopTalksTodayDataProvider();
+        }
+
+        @Override
+        public Class<TopTalksTodayDataProvider> getDataProviderClass() {
+            return TopTalksTodayDataProvider.class;
         }
     }
 }

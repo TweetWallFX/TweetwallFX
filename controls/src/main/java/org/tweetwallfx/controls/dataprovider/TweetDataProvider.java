@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,26 +37,26 @@ import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
 public class TweetDataProvider implements DataProvider {
-    
+
     private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
-    private static final int HISTORY_SIZE = 50; 
+    private static final int HISTORY_SIZE = 50;
 
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
-    
-    private TweetDataProvider(TweetStream tweetStream) {
-        tweetStream.onTweet(tweet -> {
+
+    private TweetDataProvider(final TweetStream tweetStream) {
+        tweetStream.onTweet(t -> {
             LOGGER.info("new Tweet received");
-            if (tweet.getUser().getFollowersCount() > 25) {
-                this.nextTweet = tweet;
+            if (t.getUser().getFollowersCount() > 25) {
+                this.nextTweet = t;
             }
             this.lastTweetCollection = null;
         });
     }
-    
+
     public Tweet getTweet() {
         return this.tweet;
     }
@@ -66,28 +66,28 @@ public class TweetDataProvider implements DataProvider {
         return Tweeter.getInstance().search(new TweetQuery()
                 .query(searchText)
                 .count(HISTORY_SIZE))
-                .filter(tweet -> tweet.getUser().getFollowersCount() > 25)
+                .filter(t -> t.getUser().getFollowersCount() > 25)
                 .collect(Collectors.toList());
     }
-    
+
     public Tweet nextTweet() {
         if (null == nextTweet) {
             if (null == lastTweetCollection) {
                 lastTweetCollection = getLatestHistory();
             }
             nextTweet = lastTweetCollection.stream()
-                    .filter(tweet -> !history.contains(tweet.getId()))
+                    .filter(t -> !history.contains(t.getId()))
                     .skip((long) (Math.random() * (HISTORY_SIZE - history.size())))
                     .findFirst()
                     .orElse(null);
-        } 
+        }
         if (null != nextTweet) {
             tweet = nextTweet;
             nextTweet = null;
         }
         if (tweet != null) {
             history.addLast(tweet.getId());
-            if (history.size() > HISTORY_SIZE -1 ) {
+            if (history.size() > HISTORY_SIZE - 1) {
                 history.removeFirst();
             }
         }
@@ -102,8 +102,13 @@ public class TweetDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetDataProvider create(TweetStream tweetStream) {
+        public TweetDataProvider create(final TweetStream tweetStream) {
             return new TweetDataProvider(tweetStream);
+        }
+
+        @Override
+        public Class<TweetDataProvider> getDataProviderClass() {
+            return TweetDataProvider.class;
         }
     }
 }

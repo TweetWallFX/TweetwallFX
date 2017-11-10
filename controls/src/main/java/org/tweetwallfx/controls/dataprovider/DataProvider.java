@@ -39,6 +39,14 @@ public interface DataProvider {
     interface Factory {
 
         /**
+         * Returns the class of the Provider this factory will create via
+         * {@link #create(org.tweetwallfx.tweet.api.TweetStream)}.
+         *
+         * @return the class of the Provider this factory will create
+         */
+        Class<? extends DataProvider> getDataProviderClass();
+
+        /**
          * Creates a DataProvider using the provided parameters.
          *
          * @param tweetStream A {@link TweetStream}.

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,16 +44,16 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
     private List<Word> additionalTweetWords = null;
     private final Map<String, Long> tree = new TreeMap<>();
 
-    private TagCloudDataProvider(TweetStream tweetStream) {
+    private TagCloudDataProvider(final TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
     @Override
-    public void processTweet(Tweet tweet) {
+    public void processTweet(final Tweet tweet) {
         updateTree(tweet);
     }
 
-    public void setAdditionalTweetWords(List<Word> newWordList) {
+    public void setAdditionalTweetWords(final List<Word> newWordList) {
         this.additionalTweetWords = newWordList;
     }
 
@@ -93,7 +93,10 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
         public TagCloudDataProvider create(TweetStream tweetStream) {
             return new TagCloudDataProvider(tweetStream);
         }
-
-    }
     
+        @Override
+        public Class<TagCloudDataProvider> getDataProviderClass() {
+            return TagCloudDataProvider.class;
+        }
+    }
 }

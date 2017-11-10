@@ -52,13 +52,16 @@ public final class TopTalksWeekDataProvider implements DataProvider {
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
-                .sorted(Comparator.comparing(this::averageFormattedVote).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
+                .sorted(Comparator
+                        .comparing(TopTalksWeekDataProvider::averageFormattedVote)
+                        .thenComparing(VotingResultTalk::getRatingTotalVotes)
+                        .reversed())
                 .limit(5)
                 .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
 
-    private String averageFormattedVote(VotingResultTalk ratedTalk) {
+    private static String averageFormattedVote(final VotingResultTalk ratedTalk) {
         return String.format("%.1f", ratedTalk.getRatingAverageScore());
     }
 
@@ -74,8 +77,13 @@ public final class TopTalksWeekDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public DataProvider create(TweetStream tweetStream) {
+        public TopTalksWeekDataProvider create(TweetStream tweetStream) {
             return new TopTalksWeekDataProvider();
+        }
+
+        @Override
+        public Class<TopTalksWeekDataProvider> getDataProviderClass() {
+            return TopTalksWeekDataProvider.class;
         }
     }
 }
