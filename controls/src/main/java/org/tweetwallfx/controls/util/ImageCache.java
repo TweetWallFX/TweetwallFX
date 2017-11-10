@@ -79,7 +79,7 @@ public class ImageCache {
 
         @Override
         public Image create(final String url) {
-            return new Image(readToInputStream(resolve(url)));
+            return new Image(resolve(url));
         }
     }
 
@@ -87,7 +87,7 @@ public class ImageCache {
 
         @Override
         public Image create(final String url) {
-            return new Image(readToInputStream(resolve(url)), 64, 64, true, false);
+            return new Image(resolve(url), 64, 64, true, false);
         }
     }
 }

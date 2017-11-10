@@ -23,12 +23,8 @@
  */
 package org.tweetwallfx.controls.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -120,49 +116,6 @@ public class URLHelper {
         return encodeURL(resolvedURL);
     }
 
-    /**
-     * Reads the data being returned from a call to the provided
-     * {@code urlString} and returns it as an {@code byte[]}. In case of an
-     * error during the read operation {@code null} is returned.
-     *
-     * @param urlString the URL (in the form of an String) to read from
-     *
-     * @return the read data
-     */
-    public static byte[] readURL(final String urlString) {
-        final String protocol = urlString.substring(0, urlString.indexOf("//") + 2);
-        final String encodedURL = protocol + SLASH_SPLITTER.splitAsStream(urlString.substring(protocol.length()))
-                .map(wrapFunction(part -> URLEncoder.encode(part, "UTF-8")))
-                .collect(Collectors.joining("/"));
-
-        try {
-            final URL url = URI.create(encodedURL).toURL();
-            return readURL(url);
-        } catch (final IOException ex) {
-            LOGGER.error(ex);
-            return null;
-        }
-    }
-
-    /**
-     * Reads the data being returned from a call to the provided
-     * {@code urlString} and returns it as an {@link InputStream}. In case of an
-     * error during the read operation an empty InputStream is returned.
-     *
-     * @param urlString the URL (in the form of an String) to read from
-     *
-     * @return the read data
-     */
-    public static InputStream readToInputStream(final String urlString) {
-        final byte[] data = readURL(urlString);
-
-        if (null == data) {
-            return new ByteArrayInputStream(new byte[0]);
-        } else {
-            return new ByteArrayInputStream(data);
-        }
-    }
-
     private static String encodeURL(final String urlString) {
         final String protocol = urlString.substring(0, urlString.indexOf("//") + 2);
 
@@ -177,24 +130,6 @@ public class URLHelper {
             LOGGER.warn("Encoding URL to UTF-8 failed. URL='" + urlString + "'", ex);
             return urlString;
         }
-    }
-
-    private static byte[] readURL(final URL url) throws IOException {
-        try (final InputStream inputStream = url.openStream()) {
-            return readInputStream(inputStream);
-        }
-    }
-
-    private static byte[] readInputStream(final InputStream inputStream) throws IOException {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream(8 * 1024);
-        final byte[] bytes = new byte[8 * 1024];
-        int read;
-
-        while (-1 != (read = inputStream.read(bytes))) {
-            baos.write(bytes, 0, read);
-        }
-
-        return baos.toByteArray();
     }
 
     private static <T, R> Function<T, R> wrapFunction(final ExceptionalFunction<T, R> exceptionalFunction) {
