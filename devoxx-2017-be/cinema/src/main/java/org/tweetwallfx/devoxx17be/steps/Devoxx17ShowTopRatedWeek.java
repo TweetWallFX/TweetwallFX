@@ -37,6 +37,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
@@ -51,6 +52,8 @@ import org.tweetwallfx.devoxx2017be.dataprovider.VotedTalk;
  * @author Sven Reimers
  */
 public class Devoxx17ShowTopRatedWeek extends AbstractStep {
+
+    private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowTopRatedWeek.class);
 
     @Override
     public void doStep(final MachineContext context) {
@@ -79,7 +82,7 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
                     row += 1;
                 }
             } catch (IOException ex) {
-                LogManager.getLogger(Devoxx17ShowTopRatedWeek.class.getName()).error(ex);
+                LOGGER.error(ex);
             }
         }
         ParallelTransition flipIns = new ParallelTransition();
@@ -103,16 +106,14 @@ public class Devoxx17ShowTopRatedWeek extends AbstractStep {
             ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
             speakerImage.setImage(SpeakerImageProvider.getSpeakerImage(votingResultTalk.speakerAvatar));
             speakerImage.setFitHeight(64);
-            speakerImage.setFitWidth(64);            
-            Rectangle clip = new Rectangle(
-                    speakerImage.getFitWidth(), speakerImage.getFitHeight()
-            );
+            speakerImage.setFitWidth(64);
+            Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
             clip.setArcWidth(20);
             clip.setArcHeight(20);
             speakerImage.setClip(clip);
             return session;
         } catch (IOException ex) {
-            LogManager.getLogger(Devoxx17ShowSchedule.class).error(ex);
+            LOGGER.error(ex);
             throw new RuntimeException(ex);
         }
     }
