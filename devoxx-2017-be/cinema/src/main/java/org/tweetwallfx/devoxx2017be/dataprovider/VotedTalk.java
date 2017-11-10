@@ -49,7 +49,7 @@ public class VotedTalk {
                 talk.getProposalTitle());
     }
 
-    private VotedTalk(String speakers, double ratingAverageScore, int ratingTotalVotes, String proposalId, String proposalTitle) {
+    private VotedTalk(final String speakers, final double ratingAverageScore, final int ratingTotalVotes, final String proposalId, final String proposalTitle) {
         this.speakers = speakers;
         this.ratingAverageScore = ratingAverageScore;
         this.ratingTotalVotes = ratingTotalVotes;
