@@ -46,7 +46,7 @@ import org.tweetwallfx.tweet.api.TweetStream;
 public class ScheduleDataProvider implements DataProvider {
 
     private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
-    
+
     private ScheduleDataProvider() {
     }
 
@@ -56,13 +56,15 @@ public class ScheduleDataProvider implements DataProvider {
         CFPClient.getClient()
                 .getSchedule(System.getProperty("org.tweetwallfx.devoxxbe17.day", actualDayName))
                 .map(Schedule::getSlots)
-                .ifPresent(slots -> {scheduleSlots = slots;});
+                .ifPresent(slots -> {
+                    scheduleSlots = slots;
+                });
     }
 
     public List<SessionData> getFilteredSessionData() {
         String time = System.getProperty("org.tweetwallfx.devoxxbe17.time");
         OffsetTime liveOffset = null == time
-                ? OffsetTime.now(ZoneOffset.UTC).plus(TimeZone.getDefault().getRawOffset(),ChronoUnit.MILLIS)
+                ? OffsetTime.now(ZoneOffset.UTC).plus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS)
                 : OffsetTime.parse(time);
         return SessionData.from(scheduleSlots, liveOffset);
     }
@@ -75,8 +77,13 @@ public class ScheduleDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public DataProvider create(TweetStream tweetStream) {
+        public DataProvider create(final TweetStream tweetStream) {
             return new ScheduleDataProvider();
+        }
+
+        @Override
+        public Class<ScheduleDataProvider> getDataProviderClass() {
+            return ScheduleDataProvider.class;
         }
     }
 }

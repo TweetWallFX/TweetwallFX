@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,23 +45,24 @@ import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
 /**
- * Provides an always current list of tweets based on the configured query.
- * The history length is not yet configurable.
+ * Provides an always current list of tweets based on the configured query. The
+ * history length is not yet configurable.
+ *
  * @author Sven Reimers
  */
 public class TweetStreamDataProvider implements DataProvider {
-    
+
     private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
-    private static final int HISTORY_SIZE = 25; 
+    private static final int HISTORY_SIZE = 25;
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
     private volatile Image latestTweetedImage = null;
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-    
-    private TweetStreamDataProvider(TweetStream tweetStream) {
+
+    private TweetStreamDataProvider(final TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> {
             LOGGER.info("new Tweet received");
-            addTweet(tweet); 
+            addTweet(tweet);
         });
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
@@ -71,43 +72,43 @@ public class TweetStreamDataProvider implements DataProvider {
             tweetListLock.writeLock().unlock();
         }
     }
-    
-    private void updateImage(Tweet tweet) {
+
+    private void updateImage(final Tweet tweet) {
         if (tweet.getUser().getFollowersCount() > 50) {
             Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
-                .findFirst().ifPresent(me -> {
-                    String url;
-                    switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
-                        case 0:
-                            url = me.getMediaUrl() + ":thumb";
-                            break;
-                        case 1:
-                            url = me.getMediaUrl() + ":small";
-                            break;
-                        case 2:
-                            url = me.getMediaUrl() + ":medium";
-                            break;
-                        case 3:
-                            url = me.getMediaUrl() + ":large";
-                            break;
-                        default:
-                            throw new RuntimeException("Illegal value");
-                    }
-                    latestTweetedImage = new Image(url);
-                });
+                    .findFirst().ifPresent(me -> {
+                        String url;
+                        switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
+                            case 0:
+                                url = me.getMediaUrl() + ":thumb";
+                                break;
+                            case 1:
+                                url = me.getMediaUrl() + ":small";
+                                break;
+                            case 2:
+                                url = me.getMediaUrl() + ":medium";
+                                break;
+                            case 3:
+                                url = me.getMediaUrl() + ":large";
+                                break;
+                            default:
+                                throw new RuntimeException("Illegal value");
+                        }
+                        latestTweetedImage = new Image(url);
+                    });
         }
     }
 
-    private void addTweet(Tweet tweet) {
+    private void addTweet(final Tweet tweet) {
         if (tweet.getUser().getFollowersCount() > 50) {
-            tweetListLock.writeLock().lock();   
+            tweetListLock.writeLock().lock();
             try {
                 if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
                     if (tweet.isRetweet()) {
                         Tweet originalTweet = tweet.getRetweetedTweet();
-                        if(tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                        if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
                             tweets.addFirst(originalTweet);
-                            updateImage(originalTweet);                    
+                            updateImage(originalTweet);
                         }
                     } else {
                         tweets.addFirst(tweet);
@@ -122,11 +123,11 @@ public class TweetStreamDataProvider implements DataProvider {
             }
         }
     }
-    
+
     public Optional<Image> getLatestImage() {
         return Optional.ofNullable(latestTweetedImage);
     }
-    
+
     public List<Tweet> getTweets() {
         try {
             tweetListLock.readLock().lock();
@@ -139,10 +140,10 @@ public class TweetStreamDataProvider implements DataProvider {
     private List<Tweet> getLatestHistory() {
         LOGGER.info("Reinit the history");
         return Tweeter.getInstance().search(new TweetQuery()
-                        .query(searchText)
-                        .count(HISTORY_SIZE)).collect(Collectors.toList());        
+                .query(searchText)
+                .count(HISTORY_SIZE)).collect(Collectors.toList());
     }
-    
+
     @Override
     public String getName() {
         return "TweetStream";
@@ -151,10 +152,13 @@ public class TweetStreamDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetStreamDataProvider create(TweetStream tweetStream) {
+        public TweetStreamDataProvider create(final TweetStream tweetStream) {
             return new TweetStreamDataProvider(tweetStream);
         }
-    
+
+        @Override
+        public Class<TweetStreamDataProvider> getDataProviderClass() {
+            return TweetStreamDataProvider.class;
+        }
     }
-    
 }

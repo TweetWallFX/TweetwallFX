@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -43,36 +43,33 @@ import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 
 /**
- *
- * @author sven
+ * @author Sven Reimers
  */
 public class ImageMosaicDataProvider implements DataProvider, DataProvider.HistoryAware {
 
-    private static final Logger log = LogManager.getLogger(ImageMosaicDataProvider.class);
-
+    private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
     private final MediaCache cache;
-
-    private Executor imageLoader = Executors.newSingleThreadExecutor(r -> {
+    private final Executor imageLoader = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r);
         t.setName("Image-Downloader");
         t.setDaemon(true);
         return t;
     });
+    private final List<ImageStore> images = new CopyOnWriteArrayList<>();
 
-    private List<ImageStore> images = new CopyOnWriteArrayList<>();
-
-    private ImageMosaicDataProvider(TweetStream tweetStream) {
+    private ImageMosaicDataProvider(final TweetStream tweetStream) {
         cache = MediaCache.INSTANCE;
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
     @Override
-    public void processTweet(Tweet tweet) {
-        log.info("new Tweet received");
+    public void processTweet(final Tweet tweet) {
+        LOG.info("new Tweet received");
         if (null == tweet.getMediaEntries() || tweet.isRetweet() || tweet.getUser().getFollowersCount() < 25) {
             return;
         }
-        Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
+        Arrays.stream(tweet.getMediaEntries())
+                .filter(me -> me.getType().equals("photo"))
                 .forEach(me -> {
                     String url;
                     switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
@@ -99,7 +96,7 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
         return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    private void addImage(Tweet tweet, long mediaId, String url, Date date) {
+    private void addImage(final Tweet tweet, final long mediaId, final String url, final Date date) {
         Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
             protected Optional<ImageStore> call() throws Exception {
@@ -130,23 +127,28 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
     public String getName() {
         return "MosaicDataProvider";
     }
-    
+
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public ImageMosaicDataProvider create(TweetStream tweetStream) {
+        public ImageMosaicDataProvider create(final TweetStream tweetStream) {
             return new ImageMosaicDataProvider(tweetStream);
         }
-    
-    }       
+
+        @Override
+        public Class<ImageMosaicDataProvider> getDataProviderClass() {
+            return ImageMosaicDataProvider.class;
+        }
+    }
 
     public static class ImageStore {
+
         private final Tweet tweet;
         private final Image image;
         private final Instant instant;
         private final long mediaId;
 
-        public ImageStore(Tweet tweet, Image image, Instant instant, long mediaId) {
+        public ImageStore(final Tweet tweet, final Image image, final Instant instant, final long mediaId) {
             this.tweet = tweet;
             this.image = image;
             this.instant = instant;
@@ -180,7 +182,7 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -206,5 +208,4 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
             return true;
         }
     }
-
 }
