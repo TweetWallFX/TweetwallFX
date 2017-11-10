@@ -70,7 +70,7 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
             return;
         }
         Arrays.stream(tweet.getMediaEntries())
-                .filter(MediaTweetEntryType.photo.isType())
+                .filter(MediaTweetEntryType.photo::isType)
                 .forEach(me -> {
                     String url;
                     switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {

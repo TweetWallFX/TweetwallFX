@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
-import java.util.function.Predicate;
-
 /**
  * Type enum for Media ENtries in a tweet.
  */
@@ -35,11 +33,12 @@ public enum MediaTweetEntryType {
     animated_gif;
 
     /**
-     * Produces a Predicate checking that a MediaTweetEntry is of the type;
+     * Determines if the MediaTweetEntry is of the same type as this
+     * MediaTweetEntryType;
      *
-     * @return the created Predicate
+     * @return {@code true} in case the entries type is the same as this
      */
-    public Predicate<MediaTweetEntry> isType() {
-        return mte -> this.equals(mte.getType());
+    public boolean isType(final MediaTweetEntry mte) {
+        return this.equals(mte.getType());
     }
 }
