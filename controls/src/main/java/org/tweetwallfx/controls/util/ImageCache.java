@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +29,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import javafx.scene.image.Image;
+import static org.tweetwallfx.controls.util.URLHelper.*;
 
 /**
- *
- * @author sven
+ * @author Sven Reimers
  */
 public class ImageCache {
-    
+
     private final int maxSize;
     private final Map<String, Reference<Image>> cache = new HashMap<>();
     private final LinkedList<String> lru = new LinkedList<>();
@@ -45,7 +45,7 @@ public class ImageCache {
         this.creator = creator;
         this.maxSize = maxSize;
     }
-    
+
     public ImageCache(final ImageCreator creator) {
         this(creator, 10);
     }
@@ -72,14 +72,14 @@ public class ImageCache {
 
     public static interface ImageCreator {
 
-        Image create(String url);
+        Image create(final String url);
     }
 
     public static class DefaultImageCreator implements ImageCreator {
 
         @Override
         public Image create(final String url) {
-            return new Image(url);
+            return new Image(resolve(url));
         }
     }
 
@@ -87,8 +87,7 @@ public class ImageCache {
 
         @Override
         public Image create(final String url) {
-            return new Image(url, 64, 64, true, false);
+            return new Image(resolve(url), 64, 64, true, false);
         }
     }
-    
 }
