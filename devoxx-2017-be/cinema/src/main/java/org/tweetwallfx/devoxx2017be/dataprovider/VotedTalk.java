@@ -25,6 +25,7 @@ package org.tweetwallfx.devoxx2017be.dataprovider;
 
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Speaker;
+import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
 
 /**
  * Simple Wrapper for accessing VotedTalk informations.
@@ -40,7 +41,15 @@ public class VotedTalk {
     public final String proposalTitle;
     public final String speakerAvatar;
 
-    public VotedTalk(String speakers, double ratingAverageScore, int ratingTotalVotes, String proposalId, String proposalTitle) {
+    public VotedTalk(final VotingResultTalk talk) {
+        this(talk.getProposalsSpeakers(),
+                talk.getRatingAverageScore(),
+                talk.getRatingTotalVotes(),
+                talk.getProposalId(),
+                talk.getProposalTitle());
+    }
+
+    private VotedTalk(String speakers, double ratingAverageScore, int ratingTotalVotes, String proposalId, String proposalTitle) {
         this.speakers = speakers;
         this.ratingAverageScore = ratingAverageScore;
         this.ratingTotalVotes = ratingTotalVotes;

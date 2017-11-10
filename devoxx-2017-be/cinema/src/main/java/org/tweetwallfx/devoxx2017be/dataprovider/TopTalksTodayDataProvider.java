@@ -59,13 +59,7 @@ public final class TopTalksTodayDataProvider implements DataProvider {
         votedTalks = votingResults.stream()
                 .sorted(Comparator.comparing(this::averageFormattedVote).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
-                .map(talk -> 
-                    new VotedTalk(talk.getProposalsSpeakers(),
-                            talk.getRatingAverageScore(),
-                            talk.getRatingTotalVotes(),
-                            talk.getProposalId(),
-                            talk.getProposalTitle())
-                )
+                .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
     
