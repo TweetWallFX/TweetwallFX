@@ -34,6 +34,7 @@ import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * DataProvider Implementation for Top Talks Week
+ *
  * @author Sven Reimers
  */
 public final class TopTalksWeekDataProvider implements DataProvider {
@@ -44,7 +45,7 @@ public final class TopTalksWeekDataProvider implements DataProvider {
         updateVotingResults();
     }
 
-    public void updateVotingResults() {        
+    public void updateVotingResults() {
         List<VotingResultTalk> votingResults = CFPClient.getClient()
                 .getVotingResultsOverall()
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
@@ -53,21 +54,15 @@ public final class TopTalksWeekDataProvider implements DataProvider {
         votedTalks = votingResults.stream()
                 .sorted(Comparator.comparing(this::averageFormattedVote).thenComparing(VotingResultTalk::getRatingTotalVotes).reversed())
                 .limit(5)
-                .map(talk -> 
-                    new VotedTalk(talk.getProposalsSpeakers(),
-                            talk.getRatingAverageScore(),
-                            talk.getRatingTotalVotes(),
-                            talk.getProposalId(),
-                            talk.getProposalTitle())
-                )                
+                .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
-    
+
     private String averageFormattedVote(VotingResultTalk ratedTalk) {
         return String.format("%.1f", ratedTalk.getRatingAverageScore());
-    }    
+    }
 
-    public List<VotedTalk> getFilteredSessionData() {        
+    public List<VotedTalk> getFilteredSessionData() {
         return votedTalks;
     }
 
