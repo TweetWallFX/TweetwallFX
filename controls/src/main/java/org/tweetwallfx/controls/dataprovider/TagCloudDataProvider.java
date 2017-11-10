@@ -38,13 +38,12 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryAware {
 
-    private final static int NUM_MAX_WORDS = 40;
-    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
-    
-    private List<Word> additionalTweetWords = null;
-    private Map<String, Long> tree = new TreeMap<>();
+    private static final int NUM_MAX_WORDS = 40;
+    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Map.Entry.comparingByValue();
 
-    
+    private List<Word> additionalTweetWords = null;
+    private final Map<String, Long> tree = new TreeMap<>();
+
     private TagCloudDataProvider(TweetStream tweetStream) {
         tweetStream.onTweet(tweet -> processTweet(tweet));
     }
@@ -54,19 +53,18 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
         updateTree(tweet);
     }
 
-    
     public void setAdditionalTweetWords(List<Word> newWordList) {
         this.additionalTweetWords = newWordList;
     }
-    
+
     public List<Word> getAdditionalTweetWords() {
         return this.additionalTweetWords;
     }
-    
+
     public List<Word> getWords() {
         return tree.entrySet().stream()
-                    .sorted(COMPARATOR.reversed())
-                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());        
+                .sorted(COMPARATOR.reversed())
+                .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());
     }
 
     private void updateTree(final Tweet tweet) {
@@ -80,25 +78,22 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
                 .map(StopList::removeEmojis)
-                .filter(StopList::notIn)                
-                .forEach(w -> 
-                    tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L)
-                );
+                .filter(StopList::notIn)
+                .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
     }
-    
-    
+
     @Override
     public String getName() {
         return "TagCloud";
     }
-    
+
     public static class Factory implements DataProvider.Factory {
 
         @Override
         public TagCloudDataProvider create(TweetStream tweetStream) {
             return new TagCloudDataProvider(tweetStream);
         }
-    
-    }    
+
+    }
     
 }
