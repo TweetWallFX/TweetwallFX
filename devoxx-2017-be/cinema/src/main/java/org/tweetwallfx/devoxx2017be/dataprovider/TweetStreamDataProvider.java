@@ -43,6 +43,7 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
  * Provides an always current list of tweets based on the configured query. The
@@ -75,7 +76,8 @@ public class TweetStreamDataProvider implements DataProvider {
 
     private void updateImage(final Tweet tweet) {
         if (tweet.getUser().getFollowersCount() > 50) {
-            Arrays.stream(tweet.getMediaEntries()).filter(me -> me.getType().equals("photo"))
+            Arrays.stream(tweet.getMediaEntries())
+                    .filter(MediaTweetEntryType.photo.isType())
                     .findFirst().ifPresent(me -> {
                         String url;
                         switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
@@ -155,7 +157,7 @@ public class TweetStreamDataProvider implements DataProvider {
         public TweetStreamDataProvider create(final TweetStream tweetStream) {
             return new TweetStreamDataProvider(tweetStream);
         }
-
+        
         @Override
         public Class<TweetStreamDataProvider> getDataProviderClass() {
             return TweetStreamDataProvider.class;

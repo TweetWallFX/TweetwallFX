@@ -41,6 +41,7 @@ import org.tweetwallfx.tweet.api.TweetStream;
 
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
  * @author Sven Reimers
@@ -69,7 +70,7 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
             return;
         }
         Arrays.stream(tweet.getMediaEntries())
-                .filter(me -> me.getType().equals("photo"))
+                .filter(MediaTweetEntryType.photo.isType())
                 .forEach(me -> {
                     String url;
                     switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {

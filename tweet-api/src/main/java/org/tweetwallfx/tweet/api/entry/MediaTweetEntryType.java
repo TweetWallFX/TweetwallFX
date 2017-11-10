@@ -23,55 +23,23 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
-import java.util.Map;
+import java.util.function.Predicate;
 
-public interface MediaTweetEntry extends TweetEntry {
+/**
+ * Type enum for Media ENtries in a tweet.
+ */
+public enum MediaTweetEntryType {
 
-    /**
-     * Returns the id of the media.
-     *
-     * @return the id of the media
-     */
-    long getId();
-
-    /**
-     * Returns the media URL.
-     *
-     * @return the media URL
-     */
-    String getMediaUrl();
+    photo,
+    video,
+    animated_gif;
 
     /**
-     * Returns size variations of the media.
+     * Produces a Predicate checking that a MediaTweetEntry is of the type;
      *
-     * @return size variations of the media
+     * @return the created Predicate
      */
-    Map<Integer, Size> getSizes();
-
-    interface Size extends java.io.Serializable {
-
-        Integer THUMB = 0;
-        Integer SMALL = 1;
-        Integer MEDIUM = 2;
-        Integer LARGE = 3;
-        int FIT = 100;
-        int CROP = 101;
-
-        int getWidth();
-
-        int getHeight();
-
-        int getResize();
-    }
-
-    /**
-     * Returns the media type.
-     *
-     * @return the media type
-     */
-    MediaTweetEntryType getType();
-
-    static Size createSize(final int width, final int height, final int resize) {
-        return new MediaTweetEntrySize(width, height, resize);
+    public Predicate<MediaTweetEntry> isType() {
+        return mte -> this.equals(mte.getType());
     }
 }
