@@ -36,6 +36,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
@@ -48,6 +49,8 @@ import org.tweetwallfx.devoxx2017be.dataprovider.SessionData;
  * @author Sven Reimers
  */
 public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
+
+    private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowSchedule.class);
 
     @Override
     public void doStep(final MachineContext context) {
@@ -79,7 +82,7 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
                     }
                 }
             } catch (IOException ex) {
-                LogManager.getLogger(Devoxx17ShowSchedule.class.getName()).error(ex);
+                LOGGER.error(ex);
             }
         }
         ParallelTransition flipIns = new ParallelTransition();
@@ -102,7 +105,7 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
             startTime.setText(sessionData.beginTime);
             return session;
         } catch (IOException ex) {
-            LogManager.getLogger(Devoxx17ShowSchedule.class).error(ex);
+            LOGGER.error(ex);
             throw new RuntimeException(ex);
         }
     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,13 +33,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
-import org.tweetwallfx.controls.WordleSkin;
+import org.apache.logging.log4j.Logger;
 
 /**
- * 
  * @author Jörg Michelberger
  */
-public class StepIterator implements Iterator<Step>{
+public class StepIterator implements Iterator<Step> {
+
+    private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private Step current = null;
     private int stateIndex = 0;
     private final List<Step> states = new ArrayList<>();
@@ -51,39 +52,38 @@ public class StepIterator implements Iterator<Step>{
 
     private static class Builder {
 
-        private final List<Step> states = new ArrayList<>();
-        
+        private final List<Step> steps = new ArrayList<>();
+
         public Builder addStep(String classname) {
             try {
                 Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
                 if (newInstance instanceof Step) {
-                    states.add((Step)newInstance);
+                    steps.add((Step) newInstance);
                 } else {
-                    LogManager.getLogger(StepIterator.class).error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
+                    LOGGER.error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
                 }
             } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException ex) {
-                LogManager.getLogger(StepIterator.class).error("Failure instatiating step for " + classname,ex);
-            } 
+                LOGGER.error("Failure instatiating step for " + classname, ex);
+            }
             return this;
         }
-        
+
         public StepIterator build() {
-            return new StepIterator(states);
+            return new StepIterator(steps);
         }
-        
     }
-    
+
     public static StepIterator ofDefaultConfiguration() {
         StepIterator.Builder builder = new StepIterator.Builder();
-        try(InputStream s =  Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")){
+        try (InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")) {
             StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
             stepEngineConfig.steps.forEach(className -> builder.addStep(className));
         } catch (IOException ex) {
-            LogManager.getLogger(WordleSkin.class.getName()).error("IO Problem loading steps description file", ex);
+            LOGGER.error("IO Problem loading steps description file", ex);
         }
         return builder.build();
     }
-    
+
     public static StepIterator of(Step... steps) {
         return new StepIterator(Arrays.asList(steps));
     }
@@ -91,19 +91,19 @@ public class StepIterator implements Iterator<Step>{
     public static StepIterator of(List<Step> steps) {
         return new StepIterator(steps);
     }
-    
+
     private StepIterator(List<Step> states) {
         this.states.addAll(states);
-    }    
-    
+    }
+
     void applyWith(Consumer<Step> consumer) {
         states.forEach(consumer);
     }
-    
+
     public Step getCurrent() {
         return current;
     }
-    
+
     public Step getNext() {
         int getIndex = stateIndex;
         if (getIndex == states.size()) {
@@ -111,7 +111,7 @@ public class StepIterator implements Iterator<Step>{
         }
         return states.get(getIndex);
     }
-    
+
     @Override
     public Step next() {
         if (stateIndex == states.size()) {

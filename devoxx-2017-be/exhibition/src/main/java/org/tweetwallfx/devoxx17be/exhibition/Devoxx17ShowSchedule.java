@@ -38,6 +38,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.AbstractStep;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
@@ -48,6 +49,8 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  * @author Sven Reimers
  */
 public class Devoxx17ShowSchedule extends AbstractStep {
+
+    private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowSchedule.class);
 
     @Override
     public void doStep(final MachineContext context) {
@@ -79,7 +82,7 @@ public class Devoxx17ShowSchedule extends AbstractStep {
                     }
                 }
             } catch (IOException ex) {
-                LogManager.getLogger(Devoxx17ShowSchedule.class.getName()).error(ex);
+                LOGGER.error(ex);
             }
         }
         ParallelTransition flipIns = new ParallelTransition();
@@ -102,7 +105,7 @@ public class Devoxx17ShowSchedule extends AbstractStep {
             startTime.setText(sessionData.beginTime);
             return session;
         } catch (IOException ex) {
-            LogManager.getLogger(Devoxx17ShowSchedule.class).error(ex);
+            LOGGER.error(ex);
             throw new RuntimeException(ex);
         }
     }
