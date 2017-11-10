@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +27,45 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
+ * A Provider of data. The type of data is implementation specific.
  *
- * @author sven
+ * @author Sven Reimers
  */
 public interface DataProvider {
-    
-    public static interface Factory {
-        
-        public DataProvider create(TweetStream tweetStream);
-        
+
+    /**
+     * A Factory creating a {@link DataProvider}.
+     */
+    interface Factory {
+
+        /**
+         * Creates a DataProvider using the provided parameters.
+         *
+         * @param tweetStream A {@link TweetStream}.
+         *
+         * @return the created DataProvider
+         */
+        DataProvider create(final TweetStream tweetStream);
     }
-    
-    public static interface HistoryAware {
-        
-        public void processTweet(Tweet tweet);
-        
+
+    /**
+     * Interface enabling call backs for history tweets enabling the build-up of
+     * historical data.
+     */
+    interface HistoryAware {
+
+        /**
+         * Callback to process a historic tweet
+         *
+         * @param tweet a historic tweet
+         */
+        void processTweet(final Tweet tweet);
     }
-    
-    public String getName();
-    
+
+    /**
+     * Returns the name of this {@link DataProvider}.
+     *
+     * @return the name of this {@link DataProvider}
+     */
+    String getName();
 }
