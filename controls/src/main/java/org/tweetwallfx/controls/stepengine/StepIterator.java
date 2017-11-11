@@ -73,29 +73,6 @@ public class StepIterator implements Iterator<Step> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private static class Builder {
-
-        private final List<Step> steps = new ArrayList<>();
-
-        public Builder addStep(final String classname) {
-            try {
-                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
-                if (newInstance instanceof Step) {
-                    steps.add((Step) newInstance);
-                } else {
-                    LOGGER.error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
-                }
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException ex) {
-                LOGGER.error("Failure instatiating step for " + classname, ex);
-            }
-            return this;
-        }
-
-        public StepIterator build() {
-            return new StepIterator(steps);
-        }
-    }
-
     void applyWith(final Consumer<Step> consumer) {
         steps.forEach(consumer);
     }
@@ -120,5 +97,28 @@ public class StepIterator implements Iterator<Step> {
         }
         current = steps.get(stepIndex++);
         return current;
+    }
+
+    private static class Builder {
+
+        private final List<Step> steps = new ArrayList<>();
+
+        public Builder addStep(final String classname) {
+            try {
+                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
+                if (newInstance instanceof Step) {
+                    steps.add((Step) newInstance);
+                } else {
+                    LOGGER.error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
+                }
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException ex) {
+                LOGGER.error("Failure instatiating step for " + classname, ex);
+            }
+            return this;
+        }
+
+        public StepIterator build() {
+            return new StepIterator(steps);
+        }
     }
 }
