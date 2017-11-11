@@ -42,19 +42,68 @@ public class StepIterator implements Iterator<Step> {
 
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private Step current = null;
-    private int stateIndex = 0;
-    private final List<Step> states = new ArrayList<>();
+    private int stepIndex = 0;
+    private final List<Step> steps = new ArrayList<>();
+
+    private StepIterator(final List<Step> steps) {
+        this.steps.addAll(steps);
+    }
+
+    public static StepIterator of(final Step... steps) {
+        return new StepIterator(Arrays.asList(steps));
+    }
+
+    public static StepIterator of(final List<Step> steps) {
+        return new StepIterator(steps);
+    }
+
+    public static StepIterator ofDefaultConfiguration() {
+        StepIterator.Builder builder = new StepIterator.Builder();
+        try (InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")) {
+            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
+            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
+        } catch (IOException ex) {
+            LOGGER.error("IO Problem loading steps description file", ex);
+        }
+        return builder.build();
+    }
 
     @Override
     public boolean hasNext() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    void applyWith(final Consumer<Step> consumer) {
+        steps.forEach(consumer);
+    }
+
+    public Step getCurrent() {
+        return current;
+    }
+
+    public Step getNext() {
+        int getIndex = stepIndex;
+        if (getIndex == steps.size()) {
+            getIndex = 0;
+        }
+        return steps.get(getIndex);
+    }
+
+    @Override
+    public Step next() {
+        if (stepIndex == steps.size()) {
+            //loop
+            stepIndex = 0;
+        }
+        current = steps.get(stepIndex++);
+        return current;
+    }
+
     private static class Builder {
 
         private final List<Step> steps = new ArrayList<>();
 
-        public Builder addStep(String classname) {
+        public Builder addStep(final String classname) {
             try {
                 Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
                 if (newInstance instanceof Step) {
@@ -71,54 +120,5 @@ public class StepIterator implements Iterator<Step> {
         public StepIterator build() {
             return new StepIterator(steps);
         }
-    }
-
-    public static StepIterator ofDefaultConfiguration() {
-        StepIterator.Builder builder = new StepIterator.Builder();
-        try (InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")) {
-            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
-            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
-        } catch (IOException ex) {
-            LOGGER.error("IO Problem loading steps description file", ex);
-        }
-        return builder.build();
-    }
-
-    public static StepIterator of(Step... steps) {
-        return new StepIterator(Arrays.asList(steps));
-    }
-
-    public static StepIterator of(List<Step> steps) {
-        return new StepIterator(steps);
-    }
-
-    private StepIterator(List<Step> states) {
-        this.states.addAll(states);
-    }
-
-    void applyWith(Consumer<Step> consumer) {
-        states.forEach(consumer);
-    }
-
-    public Step getCurrent() {
-        return current;
-    }
-
-    public Step getNext() {
-        int getIndex = stateIndex;
-        if (getIndex == states.size()) {
-            getIndex = 0;
-        }
-        return states.get(getIndex);
-    }
-
-    @Override
-    public Step next() {
-        if (stateIndex == states.size()) {
-            //loop
-            stateIndex = 0;
-        }
-        current = states.get(stateIndex++);
-        return current;
     }
 }
