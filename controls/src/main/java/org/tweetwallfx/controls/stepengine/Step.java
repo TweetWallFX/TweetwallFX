@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,48 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.time.Duration;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
- *
  * @author Jörg Michelberger
  */
 public interface Step {
-    void initStep(StepEngine.MachineContext context);
-    boolean shouldSkip(StepEngine.MachineContext context);
-    void prepareStep(StepEngine.MachineContext context);
-    void doStep(StepEngine.MachineContext context);
-    void leaveStep(StepEngine.MachineContext context);
-    Duration preferredStepDuration(StepEngine.MachineContext context);
+
+    void initStep(final MachineContext context);
+
+    boolean shouldSkip(final MachineContext context);
+
+    void prepareStep(final MachineContext context);
+
+    void doStep(final MachineContext context);
+
+    void leaveStep(final MachineContext context);
+
+    Duration preferredStepDuration(final MachineContext context);
+
     String getName();
+
     boolean requiresPlatformThread();
+
+    /**
+     * A Factory creating a {@link DataProvider}.
+     */
+    interface Factory {
+
+        /**
+         * Returns the class of the Provider this factory will create via
+         * {@link #create(org.tweetwallfx.tweet.api.TweetStream)}.
+         *
+         * @return the class of the Provider this factory will create
+         */
+        Class<? extends Step> getStepClass();
+
+        /**
+         * Creates a Step.
+         *
+         * @return the created Step
+         */
+        Step create();
+    }
 }
