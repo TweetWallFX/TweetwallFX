@@ -25,7 +25,7 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
@@ -35,7 +35,7 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
  *
  * @author Sven Reimers
  */
-public class Devoxx17FlipOutScheduleToday extends AbstractStep {
+public class Devoxx17FlipOutScheduleToday implements Step {
 
     @Override
     public void doStep(final MachineContext context) {

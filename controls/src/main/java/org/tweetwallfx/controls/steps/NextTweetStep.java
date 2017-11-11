@@ -25,13 +25,13 @@ package org.tweetwallfx.controls.steps;
 
 import java.time.Duration;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  * @author Sven Reimers
  */
-public class NextTweetStep extends AbstractStep {
+public class NextTweetStep implements Step {
 
     @Override
     public Duration preferredStepDuration(final MachineContext context) {

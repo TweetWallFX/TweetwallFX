@@ -38,6 +38,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.ScheduleDataProvider;
@@ -92,7 +93,7 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
         flipIns.play();
     }
 
-    private Node createSessionNode(SessionData sessionData) {
+    private Node createSessionNode(final SessionData sessionData) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/session.fxml"));
             Text title = (Text) session.lookup("#title");

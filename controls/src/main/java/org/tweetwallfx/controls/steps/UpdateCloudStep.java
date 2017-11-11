@@ -40,14 +40,14 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
  * @author Jörg Michelberger
  */
-public class UpdateCloudStep extends AbstractStep {
+public class UpdateCloudStep implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
 

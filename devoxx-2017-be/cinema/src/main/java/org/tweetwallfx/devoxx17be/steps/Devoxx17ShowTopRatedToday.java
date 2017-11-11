@@ -39,7 +39,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.SpeakerImageProvider;
@@ -51,7 +51,7 @@ import org.tweetwallfx.devoxx2017be.dataprovider.VotedTalk;
  *
  * @author Sven Reimers
  */
-public class Devoxx17ShowTopRatedToday extends AbstractStep {
+public class Devoxx17ShowTopRatedToday implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowTopRatedToday.class);
 

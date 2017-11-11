@@ -38,14 +38,14 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
  * @author Sven Reimers
  */
-public class CloudToCloudStep extends AbstractStep {
+public class CloudToCloudStep implements Step {
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {

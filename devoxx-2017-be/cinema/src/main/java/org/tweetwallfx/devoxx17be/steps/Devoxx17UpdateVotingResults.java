@@ -25,7 +25,7 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
@@ -35,7 +35,7 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
  *
  * @author Sven Reimers
  */
-public class Devoxx17UpdateVotingResults extends AbstractStep {
+public class Devoxx17UpdateVotingResults implements Step {
 
     private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
 

@@ -41,7 +41,7 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
@@ -49,7 +49,7 @@ import org.tweetwallfx.controls.transition.LocationTransition;
 /**
  * @author Jörg Michelberger
  */
-public class TweetToCloudStep extends AbstractStep {
+public class TweetToCloudStep implements Step {
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {

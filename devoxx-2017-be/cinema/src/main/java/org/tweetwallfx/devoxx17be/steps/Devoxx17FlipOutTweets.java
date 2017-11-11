@@ -32,21 +32,21 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.Step;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 
 /**
  * Devox 2017 TweetStream Flip Out Animation Step
+ *
  * @author Sven Reimers
  */
-public class Devoxx17FlipOutTweets extends AbstractStep {
+public class Devoxx17FlipOutTweets implements Step {
+
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
-
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-
         VBox vbox = (VBox) wordleSkin.getNode().lookup("#tweetList");
 
         List<Transition> transitions = new ArrayList<>();
@@ -73,12 +73,12 @@ public class Devoxx17FlipOutTweets extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#tweetList");
     }

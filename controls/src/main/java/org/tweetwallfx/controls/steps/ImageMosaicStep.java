@@ -45,12 +45,12 @@ import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 
-public class ImageMosaicStep extends AbstractStep {
+public class ImageMosaicStep implements Step {
 
     private static final Random RANDOM = new Random();
     private final ImageView[][] rects = new ImageView[6][5];

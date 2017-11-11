@@ -32,21 +32,30 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public interface Step {
 
-    void initStep(final MachineContext context);
+    default void initStep(final MachineContext context) {
+    }
 
-    boolean shouldSkip(final MachineContext context);
+    default boolean shouldSkip(final MachineContext context) {
+        return false;
+    }
 
-    void prepareStep(final MachineContext context);
+    default void prepareStep(final MachineContext context) {
+    }
 
     void doStep(final MachineContext context);
 
-    void leaveStep(final MachineContext context);
+    default void leaveStep(final MachineContext context) {
+    }
 
     Duration preferredStepDuration(final MachineContext context);
 
-    String getName();
+    default String getName() {
+        return getClass().getName();
+    }
 
-    boolean requiresPlatformThread();
+    default boolean requiresPlatformThread() {
+        return true;
+    }
 
     /**
      * A Factory creating a {@link DataProvider}.
