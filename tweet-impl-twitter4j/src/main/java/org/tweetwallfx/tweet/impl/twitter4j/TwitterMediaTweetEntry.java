@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 import java.util.Map;
 import java.util.TreeMap;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 import twitter4j.MediaEntity;
 
 final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> implements MediaTweetEntry {
@@ -59,7 +60,7 @@ final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> im
     }
 
     @Override
-    public String getType() {
-        return getT().getType();
+    public MediaTweetEntryType getType() {
+        return MediaTweetEntryType.valueOf(getT().getType());
     }
 }
