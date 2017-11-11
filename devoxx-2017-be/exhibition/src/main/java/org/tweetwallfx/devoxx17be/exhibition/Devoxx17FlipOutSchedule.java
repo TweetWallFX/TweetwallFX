@@ -35,6 +35,10 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class Devoxx17FlipOutSchedule implements Step {
 
+    private Devoxx17FlipOutSchedule() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
 
@@ -58,5 +62,22 @@ public class Devoxx17FlipOutSchedule implements Step {
     public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#scheduleNode");
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutSchedule}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutSchedule create() {
+            return new Devoxx17FlipOutSchedule();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutSchedule> getStepClass() {
+            return Devoxx17FlipOutSchedule.class;
+        }
     }
 }

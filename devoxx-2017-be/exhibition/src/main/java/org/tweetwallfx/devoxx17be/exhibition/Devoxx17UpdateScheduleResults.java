@@ -37,6 +37,10 @@ public class Devoxx17UpdateScheduleResults implements Step {
 
     private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
 
+    private Devoxx17UpdateScheduleResults() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
         final ScheduleDataProvider scheduleProvider = context.getDataProvider(ScheduleDataProvider.class);
@@ -53,5 +57,22 @@ public class Devoxx17UpdateScheduleResults implements Step {
     @Override
     public boolean shouldSkip(final MachineContext context) {
         return LocalDateTime.now().isBefore(nextUpDateTime);
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17UpdateScheduleResults}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17UpdateScheduleResults create() {
+            return new Devoxx17UpdateScheduleResults();
+        }
+
+        @Override
+        public Class<Devoxx17UpdateScheduleResults> getStepClass() {
+            return Devoxx17UpdateScheduleResults.class;
+        }
     }
 }

@@ -43,6 +43,9 @@ import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
  */
 public class Devoxx17FlipOutTweets implements Step {
 
+    private Devoxx17FlipOutTweets() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -83,4 +86,20 @@ public class Devoxx17FlipOutTweets implements Step {
         return null == wordleSkin.getNode().lookup("#tweetList");
     }
 
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutTweets}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutTweets create() {
+            return new Devoxx17FlipOutTweets();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutTweets> getStepClass() {
+            return Devoxx17FlipOutTweets.class;
+        }
+    }
 }

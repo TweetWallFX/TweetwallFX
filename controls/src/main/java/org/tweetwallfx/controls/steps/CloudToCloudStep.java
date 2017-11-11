@@ -47,6 +47,10 @@ import org.tweetwallfx.controls.transition.LocationTransition;
  */
 public class CloudToCloudStep implements Step {
 
+    private CloudToCloudStep() {
+        // prevent external instantiation
+    }
+
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
@@ -143,5 +147,22 @@ public class CloudToCloudStep implements Step {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudToCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public CloudToCloudStep create() {
+            return new CloudToCloudStep();
+        }
+
+        @Override
+        public Class<CloudToCloudStep> getStepClass() {
+            return CloudToCloudStep.class;
+        }
     }
 }

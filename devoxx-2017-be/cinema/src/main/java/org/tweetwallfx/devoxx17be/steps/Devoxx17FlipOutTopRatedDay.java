@@ -36,6 +36,9 @@ import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
  */
 public class Devoxx17FlipOutTopRatedDay implements Step {
 
+    private Devoxx17FlipOutTopRatedDay() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -59,5 +62,22 @@ public class Devoxx17FlipOutTopRatedDay implements Step {
     public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#topRatedToday");
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutTopRatedDay}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutTopRatedDay create() {
+            return new Devoxx17FlipOutTopRatedDay();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutTopRatedDay> getStepClass() {
+            return Devoxx17FlipOutTopRatedDay.class;
+        }
     }
 }

@@ -49,6 +49,10 @@ import org.tweetwallfx.controls.transition.LocationTransition;
  */
 public class UpdateCloudStep implements Step {
 
+    private UpdateCloudStep() {
+        // prevent external instantiation
+    }
+
     private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
 
     @Override
@@ -157,5 +161,22 @@ public class UpdateCloudStep implements Step {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link UpdateCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public UpdateCloudStep create() {
+            return new UpdateCloudStep();
+        }
+
+        @Override
+        public Class<UpdateCloudStep> getStepClass() {
+            return UpdateCloudStep.class;
+        }
     }
 }

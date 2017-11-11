@@ -33,6 +33,10 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class NextTweetStep implements Step {
 
+    private NextTweetStep() {
+        // prevent external instantiation
+    }
+
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
@@ -42,5 +46,22 @@ public class NextTweetStep implements Step {
     public void doStep(final MachineContext context) {
         context.getDataProvider(TweetDataProvider.class).nextTweet();
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link NextTweetStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public NextTweetStep create() {
+            return new NextTweetStep();
+        }
+
+        @Override
+        public Class<NextTweetStep> getStepClass() {
+            return NextTweetStep.class;
+        }
     }
 }

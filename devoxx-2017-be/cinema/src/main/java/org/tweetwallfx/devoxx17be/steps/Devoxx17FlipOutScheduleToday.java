@@ -37,6 +37,10 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
  */
 public class Devoxx17FlipOutScheduleToday implements Step {
 
+    private Devoxx17FlipOutScheduleToday() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -59,5 +63,22 @@ public class Devoxx17FlipOutScheduleToday implements Step {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#scheduleNode")
                 || context.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutScheduleToday}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutScheduleToday create() {
+            return new Devoxx17FlipOutScheduleToday();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutScheduleToday> getStepClass() {
+            return Devoxx17FlipOutScheduleToday.class;
+        }
     }
 }

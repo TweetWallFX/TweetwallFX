@@ -52,6 +52,10 @@ import org.tweetwallfx.controls.transition.SizeTransition;
 
 public class ImageMosaicStep implements Step {
 
+    private ImageMosaicStep() {
+        // prevent external instantiation
+    }
+
     private static final Random RANDOM = new Random();
     private final ImageView[][] rects = new ImageView[6][5];
     private final Bounds[][] bounds = new Bounds[6][5];
@@ -287,6 +291,23 @@ public class ImageMosaicStep implements Step {
             this.transition = transition;
             this.column = column;
             this.row = row;
+        }
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link ImageMosaicStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public ImageMosaicStep create() {
+            return new ImageMosaicStep();
+        }
+
+        @Override
+        public Class<ImageMosaicStep> getStepClass() {
+            return ImageMosaicStep.class;
         }
     }
 }

@@ -44,6 +44,10 @@ public class AddTweetToCloudStep implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(AddTweetToCloudStep.class);
 
+    private AddTweetToCloudStep() {
+        // prevent external instantiation
+    }
+
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
@@ -72,5 +76,22 @@ public class AddTweetToCloudStep implements Step {
 
         context.getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link AddTweetToCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public AddTweetToCloudStep create() {
+            return new AddTweetToCloudStep();
+        }
+
+        @Override
+        public Class<AddTweetToCloudStep> getStepClass() {
+            return AddTweetToCloudStep.class;
+        }
     }
 }

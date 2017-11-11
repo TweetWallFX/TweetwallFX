@@ -52,6 +52,10 @@ import org.tweetwallfx.tweet.api.Tweet;
  */
 public class Devoxx17FlipInTweets implements Step {
 
+    protected Devoxx17FlipInTweets() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
         double[] spacing = new double[]{150, 20, 20, 20, 20, 10};
@@ -151,5 +155,22 @@ public class Devoxx17FlipInTweets implements Step {
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(15);
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipInTweets}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipInTweets create() {
+            return new Devoxx17FlipInTweets();
+        }
+
+        @Override
+        public Class<Devoxx17FlipInTweets> getStepClass() {
+            return Devoxx17FlipInTweets.class;
+        }
     }
 }

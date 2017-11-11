@@ -34,15 +34,7 @@ public class PauseStep implements Step {
 
     private final Duration pause;
 
-    public PauseStep() {
-        this(Duration.ofSeconds(5));
-    }
-    
-    public PauseStep(long pause) {
-        this(Duration.ofMillis(pause));
-    }
-
-    public PauseStep(Duration pause) {
+    private PauseStep(final Duration pause) {
         this.pause = pause;
     }
 
@@ -54,5 +46,22 @@ public class PauseStep implements Step {
     @Override
     public void doStep(final MachineContext context) {
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link PauseStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public PauseStep create() {
+            return new PauseStep(Duration.ofSeconds(5));
+        }
+
+        @Override
+        public Class<PauseStep> getStepClass() {
+            return PauseStep.class;
+        }
     }
 }

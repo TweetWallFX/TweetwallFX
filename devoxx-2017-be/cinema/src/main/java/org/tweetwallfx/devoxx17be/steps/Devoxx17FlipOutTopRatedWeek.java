@@ -36,6 +36,10 @@ import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
  */
 public class Devoxx17FlipOutTopRatedWeek implements Step {
 
+    private Devoxx17FlipOutTopRatedWeek() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
 
@@ -61,4 +65,20 @@ public class Devoxx17FlipOutTopRatedWeek implements Step {
         return null == wordleSkin.getNode().lookup("#topRatedWeek");
     }
 
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutTopRatedWeek}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutTopRatedWeek create() {
+            return new Devoxx17FlipOutTopRatedWeek();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutTopRatedWeek> getStepClass() {
+            return Devoxx17FlipOutTopRatedWeek.class;
+        }
+    }
 }

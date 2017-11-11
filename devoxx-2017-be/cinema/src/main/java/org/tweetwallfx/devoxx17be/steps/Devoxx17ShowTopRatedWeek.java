@@ -55,6 +55,10 @@ public class Devoxx17ShowTopRatedWeek implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowTopRatedWeek.class);
 
+    private Devoxx17ShowTopRatedWeek() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -126,5 +130,22 @@ public class Devoxx17ShowTopRatedWeek implements Step {
     @Override
     public boolean shouldSkip(final MachineContext context) {
         return context.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData().isEmpty();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17ShowTopRatedWeek}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17ShowTopRatedWeek create() {
+            return new Devoxx17ShowTopRatedWeek();
+        }
+
+        @Override
+        public Class<Devoxx17ShowTopRatedWeek> getStepClass() {
+            return Devoxx17ShowTopRatedWeek.class;
+        }
     }
 }

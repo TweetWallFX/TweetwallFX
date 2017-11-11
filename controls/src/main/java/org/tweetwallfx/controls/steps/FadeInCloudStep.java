@@ -46,6 +46,10 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class FadeInCloudStep implements Step {
 
+    private FadeInCloudStep() {
+        // prevent external instantiation
+    }
+
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
@@ -103,5 +107,22 @@ public class FadeInCloudStep implements Step {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link FadeInCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public FadeInCloudStep create() {
+            return new FadeInCloudStep();
+        }
+
+        @Override
+        public Class<FadeInCloudStep> getStepClass() {
+            return FadeInCloudStep.class;
+        }
     }
 }

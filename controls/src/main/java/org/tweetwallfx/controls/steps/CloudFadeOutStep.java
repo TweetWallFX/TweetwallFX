@@ -39,6 +39,10 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  */
 public class CloudFadeOutStep implements Step {
 
+    private CloudFadeOutStep() {
+        // prevent external instantiation
+    }
+
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(2);
@@ -69,5 +73,22 @@ public class CloudFadeOutStep implements Step {
         fadeLOuts.getChildren().addAll(fadeOutTransitions);
         fadeLOuts.setOnFinished(e -> context.proceed());
         fadeLOuts.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudFadeOutStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public CloudFadeOutStep create() {
+            return new CloudFadeOutStep();
+        }
+
+        @Override
+        public Class<CloudFadeOutStep> getStepClass() {
+            return CloudFadeOutStep.class;
+        }
     }
 }

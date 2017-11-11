@@ -52,6 +52,10 @@ public class Devoxx17ShowSchedule implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowSchedule.class);
 
+    private Devoxx17ShowSchedule() {
+        // prevent external instantiation
+    }
+
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -113,5 +117,22 @@ public class Devoxx17ShowSchedule implements Step {
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ofSeconds(20);
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17ShowSchedule}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17ShowSchedule create() {
+            return new Devoxx17ShowSchedule();
+        }
+
+        @Override
+        public Class<Devoxx17ShowSchedule> getStepClass() {
+            return Devoxx17ShowSchedule.class;
+        }
     }
 }

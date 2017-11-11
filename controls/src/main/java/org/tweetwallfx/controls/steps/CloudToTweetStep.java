@@ -62,6 +62,10 @@ import org.tweetwallfx.tweet.api.Tweet;
  */
 public class CloudToTweetStep implements Step {
 
+    private CloudToTweetStep() {
+        // prevent external instantiation
+    }
+
     //TODO: push this attributes into doStep!
     private Point2D lowerLeft;  //OMG, how can this be piped through a lambda?
     private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
@@ -340,5 +344,22 @@ public class CloudToTweetStep implements Step {
         }
 
         return originalTweet;
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudToTweetStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public CloudToTweetStep create() {
+            return new CloudToTweetStep();
+        }
+
+        @Override
+        public Class<CloudToTweetStep> getStepClass() {
+            return CloudToTweetStep.class;
+        }
     }
 }
