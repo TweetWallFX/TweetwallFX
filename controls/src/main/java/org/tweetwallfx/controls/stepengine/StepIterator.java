@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -138,12 +139,9 @@ public class StepIterator implements Iterator<Step> {
             } else {
                 final Step step = factory.create();
 
-                if (null == step) {
-                    LOGGER.error("Step.Factory '{}' failed to create Step '{}'", factory, stepClassName);
-                } else {
-                    LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
-                    steps.add(step);
-                }
+                Objects.requireNonNull(step, () -> "Step.Factory '" + factory + "' failed to create Step '" + stepClassName + "'!");
+                LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
+                steps.add(step);
             }
 
             return this;
