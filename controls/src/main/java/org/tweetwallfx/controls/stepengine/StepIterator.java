@@ -134,7 +134,7 @@ public class StepIterator implements Iterator<Step> {
             final Step.Factory factory = FACTORIES.get(stepClassName);
 
             if (null == factory) {
-                LOGGER.error("No Factory exist that can create Step '{}'", stepClassName);
+                LOGGER.error("No Factory exists that can create Step '{}'", stepClassName);
             } else {
                 final Step step = factory.create();
 
