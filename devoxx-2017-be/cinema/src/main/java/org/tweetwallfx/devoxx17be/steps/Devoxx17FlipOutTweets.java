@@ -76,11 +76,6 @@ public class Devoxx17FlipOutTweets implements Step {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(final MachineContext context) {
-        return java.time.Duration.ZERO;
-    }
-
-    @Override
     public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#tweetList");

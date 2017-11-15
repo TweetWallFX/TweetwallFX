@@ -123,11 +123,6 @@ public class Devoxx17ShowTopRatedWeek implements Step {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(final MachineContext context) {
-        return java.time.Duration.ZERO; // do not stop at this step;
-    }
-
-    @Override
     public boolean shouldSkip(final MachineContext context) {
         return context.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData().isEmpty();
     }

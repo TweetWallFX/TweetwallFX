@@ -24,7 +24,6 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.time.Duration;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
@@ -47,7 +46,9 @@ public interface Step {
     default void leaveStep(final MachineContext context) {
     }
 
-    Duration preferredStepDuration(final MachineContext context);
+    default Duration preferredStepDuration(final MachineContext context) {
+        return Duration.ZERO;
+    }
 
     default String getName() {
         return getClass().getName();

@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx17be.steps;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
@@ -51,11 +50,6 @@ public class Devoxx17UpdateVotingResults implements Step {
         topTalksWeek.updateVotingResults();
         nextUpDateTime = LocalDateTime.now().plusMinutes(5);
         context.proceed();
-    }
-
-    @Override
-    public Duration preferredStepDuration(final MachineContext context) {
-        return Duration.ZERO;
     }
 
     @Override
