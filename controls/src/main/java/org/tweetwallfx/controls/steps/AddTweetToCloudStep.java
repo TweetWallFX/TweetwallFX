@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,11 +45,6 @@ public class AddTweetToCloudStep implements Step {
 
     private AddTweetToCloudStep() {
         // prevent external instantiation
-    }
-
-    @Override
-    public Duration preferredStepDuration(final MachineContext context) {
-        return Duration.ZERO;
     }
 
     @Override
