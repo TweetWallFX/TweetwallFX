@@ -58,15 +58,14 @@ public interface Step {
     }
 
     /**
-     * A Factory creating a {@link DataProvider}.
+     * A Factory creating a {@link Step}.
      */
     interface Factory {
 
         /**
-         * Returns the class of the Provider this factory will create via
-         * {@link #create(org.tweetwallfx.tweet.api.TweetStream)}.
+         * Returns the class of the Step this factory will create.
          *
-         * @return the class of the Provider this factory will create
+         * @return the class of the Step this factory will create
          */
         Class<? extends Step> getStepClass();
 
