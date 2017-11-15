@@ -25,13 +25,17 @@ package org.tweetwallfx.controls.steps;
 
 import java.time.Duration;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  * @author Sven Reimers
  */
-public class NextTweetStep extends AbstractStep {
+public class NextTweetStep implements Step {
+
+    private NextTweetStep() {
+        // prevent external instantiation
+    }
 
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
@@ -42,5 +46,22 @@ public class NextTweetStep extends AbstractStep {
     public void doStep(final MachineContext context) {
         context.getDataProvider(TweetDataProvider.class).nextTweet();
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link NextTweetStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public NextTweetStep create() {
+            return new NextTweetStep();
+        }
+
+        @Override
+        public Class<NextTweetStep> getStepClass() {
+            return NextTweetStep.class;
+        }
     }
 }

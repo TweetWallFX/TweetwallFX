@@ -25,7 +25,7 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
@@ -35,7 +35,11 @@ import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
  *
  * @author Sven Reimers
  */
-public class Devoxx17FlipOutScheduleToday extends AbstractStep {
+public class Devoxx17FlipOutScheduleToday implements Step {
+
+    private Devoxx17FlipOutScheduleToday() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -59,5 +63,22 @@ public class Devoxx17FlipOutScheduleToday extends AbstractStep {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#scheduleNode")
                 || context.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData().isEmpty();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutScheduleToday}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutScheduleToday create() {
+            return new Devoxx17FlipOutScheduleToday();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutScheduleToday> getStepClass() {
+            return Devoxx17FlipOutScheduleToday.class;
+        }
     }
 }

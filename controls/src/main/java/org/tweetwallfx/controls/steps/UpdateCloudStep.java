@@ -40,14 +40,18 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
  * @author Jörg Michelberger
  */
-public class UpdateCloudStep extends AbstractStep {
+public class UpdateCloudStep implements Step {
+
+    private UpdateCloudStep() {
+        // prevent external instantiation
+    }
 
     private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
 
@@ -157,5 +161,22 @@ public class UpdateCloudStep extends AbstractStep {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link UpdateCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public UpdateCloudStep create() {
+            return new UpdateCloudStep();
+        }
+
+        @Override
+        public Class<UpdateCloudStep> getStepClass() {
+            return UpdateCloudStep.class;
+        }
     }
 }

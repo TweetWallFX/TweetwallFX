@@ -38,13 +38,17 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
  * @author Jörg Michelberger
  */
-public class FadeInCloudStep extends AbstractStep {
+public class FadeInCloudStep implements Step {
+
+    private FadeInCloudStep() {
+        // prevent external instantiation
+    }
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
@@ -103,5 +107,22 @@ public class FadeInCloudStep extends AbstractStep {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link FadeInCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public FadeInCloudStep create() {
+            return new FadeInCloudStep();
+        }
+
+        @Override
+        public Class<FadeInCloudStep> getStepClass() {
+            return FadeInCloudStep.class;
+        }
     }
 }

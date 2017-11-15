@@ -39,7 +39,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TweetStreamDataProvider;
@@ -50,7 +50,11 @@ import org.tweetwallfx.tweet.api.Tweet;
  *
  * @author Sven Reimers
  */
-public class Devoxx17FlipInTweets extends AbstractStep {
+public class Devoxx17FlipInTweets implements Step {
+
+    protected Devoxx17FlipInTweets() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -151,5 +155,22 @@ public class Devoxx17FlipInTweets extends AbstractStep {
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(15);
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipInTweets}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipInTweets create() {
+            return new Devoxx17FlipInTweets();
+        }
+
+        @Override
+        public Class<Devoxx17FlipInTweets> getStepClass() {
+            return Devoxx17FlipInTweets.class;
+        }
     }
 }

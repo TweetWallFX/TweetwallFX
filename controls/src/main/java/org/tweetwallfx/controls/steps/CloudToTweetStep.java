@@ -51,7 +51,7 @@ import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
@@ -60,7 +60,11 @@ import org.tweetwallfx.tweet.api.Tweet;
 /**
  * @author Jörg Michelberger
  */
-public class CloudToTweetStep extends AbstractStep {
+public class CloudToTweetStep implements Step {
+
+    private CloudToTweetStep() {
+        // prevent external instantiation
+    }
 
     //TODO: push this attributes into doStep!
     private Point2D lowerLeft;  //OMG, how can this be piped through a lambda?
@@ -340,5 +344,22 @@ public class CloudToTweetStep extends AbstractStep {
         }
 
         return originalTweet;
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudToTweetStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public CloudToTweetStep create() {
+            return new CloudToTweetStep();
+        }
+
+        @Override
+        public Class<CloudToTweetStep> getStepClass() {
+            return CloudToTweetStep.class;
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls.steps;
 
-//import org.tweetwallfx.controls.Wordle;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.FadeTransition;
@@ -32,25 +31,26 @@ import javafx.animation.Transition;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
- *
  * @author Jörg Michelberger
  */
-public class CloudFadeOutStep extends AbstractStep {
-    
+public class CloudFadeOutStep implements Step {
+
+    private CloudFadeOutStep() {
+        // prevent external instantiation
+    }
+
     @Override
-    public java.time.Duration preferredStepDuration(MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(2);
     }
 
     @Override
-    public void doStep(MachineContext context) {
-//        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
-        
-        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
+    public void doStep(final MachineContext context) {
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
 
@@ -67,11 +67,28 @@ public class CloudFadeOutStep extends AbstractStep {
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
-        
+
         ParallelTransition fadeLOuts = new ParallelTransition();
-        
+
         fadeLOuts.getChildren().addAll(fadeOutTransitions);
         fadeLOuts.setOnFinished(e -> context.proceed());
         fadeLOuts.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudFadeOutStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public CloudFadeOutStep create() {
+            return new CloudFadeOutStep();
+        }
+
+        @Override
+        public Class<CloudFadeOutStep> getStepClass() {
+            return CloudFadeOutStep.class;
+        }
     }
 }

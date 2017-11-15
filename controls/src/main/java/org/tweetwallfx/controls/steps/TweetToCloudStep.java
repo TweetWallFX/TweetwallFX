@@ -41,7 +41,7 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
@@ -49,7 +49,11 @@ import org.tweetwallfx.controls.transition.LocationTransition;
 /**
  * @author Jörg Michelberger
  */
-public class TweetToCloudStep extends AbstractStep {
+public class TweetToCloudStep implements Step {
+
+    private TweetToCloudStep() {
+        // prevent external instantiation
+    }
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
@@ -161,5 +165,22 @@ public class TweetToCloudStep extends AbstractStep {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link TweetToCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public TweetToCloudStep create() {
+            return new TweetToCloudStep();
+        }
+
+        @Override
+        public Class<TweetToCloudStep> getStepClass() {
+            return TweetToCloudStep.class;
+        }
     }
 }

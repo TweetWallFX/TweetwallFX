@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -40,9 +40,13 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class AddTweetToCloudStep extends AbstractStep {
+public class AddTweetToCloudStep implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(AddTweetToCloudStep.class);
+
+    private AddTweetToCloudStep() {
+        // prevent external instantiation
+    }
 
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
@@ -72,5 +76,22 @@ public class AddTweetToCloudStep extends AbstractStep {
 
         context.getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link AddTweetToCloudStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public AddTweetToCloudStep create() {
+            return new AddTweetToCloudStep();
+        }
+
+        @Override
+        public Class<AddTweetToCloudStep> getStepClass() {
+            return AddTweetToCloudStep.class;
+        }
     }
 }

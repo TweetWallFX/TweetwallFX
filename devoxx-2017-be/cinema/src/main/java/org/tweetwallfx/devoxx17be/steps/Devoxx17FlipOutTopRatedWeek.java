@@ -25,24 +25,29 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.controls.stepengine.Step;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 
 /**
  * Devox 2017 Top Rated Talks Week Flip Out Animation Step
+ *
  * @author Sven Reimers
  */
-public class Devoxx17FlipOutTopRatedWeek extends AbstractStep {
+public class Devoxx17FlipOutTopRatedWeek implements Step {
+
+    private Devoxx17FlipOutTopRatedWeek() {
+        // prevent external instantiation
+    }
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
+    public void doStep(final MachineContext context) {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         Node node = wordleSkin.getNode().lookup("#topRatedWeek");
         FlipOutXTransition flipOutXTransition = new FlipOutXTransition(node);
-        flipOutXTransition.setOnFinished(e -> {            
+        flipOutXTransition.setOnFinished(e -> {
             wordleSkin.getPane().getChildren().remove(node);
             context.proceed();
         });
@@ -50,14 +55,30 @@ public class Devoxx17FlipOutTopRatedWeek extends AbstractStep {
     }
 
     @Override
-    public java.time.Duration preferredStepDuration(StepEngine.MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ZERO;
     }
 
     @Override
-    public boolean shouldSkip(StepEngine.MachineContext context) {
+    public boolean shouldSkip(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         return null == wordleSkin.getNode().lookup("#topRatedWeek");
     }
 
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17FlipOutTopRatedWeek}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17FlipOutTopRatedWeek create() {
+            return new Devoxx17FlipOutTopRatedWeek();
+        }
+
+        @Override
+        public Class<Devoxx17FlipOutTopRatedWeek> getStepClass() {
+            return Devoxx17FlipOutTopRatedWeek.class;
+        }
+    }
 }

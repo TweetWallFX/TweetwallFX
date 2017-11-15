@@ -25,12 +25,15 @@ package org.tweetwallfx.controls.stepengine;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,7 +73,7 @@ public class StepIterator implements Iterator<Step> {
 
     @Override
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     void applyWith(final Consumer<Step> consumer) {
@@ -101,19 +104,48 @@ public class StepIterator implements Iterator<Step> {
 
     private static class Builder {
 
+        private static final Map<String, Step.Factory> FACTORIES;
+
+        static {
+            LOGGER.info("loading configurations data converters");
+            final Map<String, List<Step.Factory>> converters = StreamSupport
+                    .stream(ServiceLoader.load(Step.Factory.class).spliterator(), false)
+                    .peek(sf -> LOGGER.info("Registering Step.Factory '{}' which creates the Step '{}'", sf, sf.getStepClass().getCanonicalName()))
+                    .collect(Collectors.groupingBy(sf -> sf.getStepClass().getCanonicalName()));
+
+            // ensure there are no conflicting ConfigurationConverter registered for a specific key
+            converters.entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().size() > 1)
+                    .findAny()
+                    .ifPresent(e -> {
+                        throw new IllegalArgumentException("At most one ConfigurationConverter may be registered to convert configuration data but the following ConfigurationConverters are registered: " + e.getValue());
+                    });
+
+            // only one element in the list. so use the one element in the list instead of the list
+            FACTORIES = converters.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
+        }
+
         private final List<Step> steps = new ArrayList<>();
 
-        public Builder addStep(final String classname) {
-            try {
-                Object newInstance = Thread.currentThread().getContextClassLoader().loadClass(classname).getDeclaredConstructor().newInstance();
-                if (newInstance instanceof Step) {
-                    steps.add((Step) newInstance);
+        public Builder addStep(final String stepClassName) {
+            final Step.Factory factory = FACTORIES.get(stepClassName);
+
+            if (null == factory) {
+                LOGGER.error("No Factory exists that can create Step '{}'", stepClassName);
+            } else {
+                final Step step = factory.create();
+
+                if (null == step) {
+                    LOGGER.error("Step.Factory '{}' failed to create Step '{}'", factory, stepClassName);
                 } else {
-                    LOGGER.error("Class cannot be cast to Step " + classname + ". Skipping adding the step.");
+                    LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
+                    steps.add(step);
                 }
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException ex) {
-                LOGGER.error("Failure instatiating step for " + classname, ex);
             }
+
             return this;
         }
 

@@ -45,12 +45,16 @@ import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 
-public class ImageMosaicStep extends AbstractStep {
+public class ImageMosaicStep implements Step {
+
+    private ImageMosaicStep() {
+        // prevent external instantiation
+    }
 
     private static final Random RANDOM = new Random();
     private final ImageView[][] rects = new ImageView[6][5];
@@ -287,6 +291,23 @@ public class ImageMosaicStep extends AbstractStep {
             this.transition = transition;
             this.column = column;
             this.row = row;
+        }
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link ImageMosaicStep}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public ImageMosaicStep create() {
+            return new ImageMosaicStep();
+        }
+
+        @Override
+        public Class<ImageMosaicStep> getStepClass() {
+            return ImageMosaicStep.class;
         }
     }
 }

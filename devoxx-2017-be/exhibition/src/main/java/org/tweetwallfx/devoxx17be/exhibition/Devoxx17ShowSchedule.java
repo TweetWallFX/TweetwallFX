@@ -40,7 +40,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 
 /**
@@ -48,9 +48,13 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
  *
  * @author Sven Reimers
  */
-public class Devoxx17ShowSchedule extends AbstractStep {
+public class Devoxx17ShowSchedule implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowSchedule.class);
+
+    private Devoxx17ShowSchedule() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -113,5 +117,22 @@ public class Devoxx17ShowSchedule extends AbstractStep {
     @Override
     public Duration preferredStepDuration(final MachineContext context) {
         return Duration.ofSeconds(20);
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17ShowSchedule}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17ShowSchedule create() {
+            return new Devoxx17ShowSchedule();
+        }
+
+        @Override
+        public Class<Devoxx17ShowSchedule> getStepClass() {
+            return Devoxx17ShowSchedule.class;
+        }
     }
 }

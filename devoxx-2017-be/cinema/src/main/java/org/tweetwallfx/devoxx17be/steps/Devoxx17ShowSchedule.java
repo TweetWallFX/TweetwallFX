@@ -38,6 +38,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.ScheduleDataProvider;
@@ -51,6 +52,10 @@ import org.tweetwallfx.devoxx2017be.dataprovider.SessionData;
 public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
 
     private static final Logger LOGGER = LogManager.getLogger(Devoxx17ShowSchedule.class);
+
+    private Devoxx17ShowSchedule() {
+        // prevent external instantiation
+    }
 
     @Override
     public void doStep(final MachineContext context) {
@@ -92,7 +97,7 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
         flipIns.play();
     }
 
-    private Node createSessionNode(SessionData sessionData) {
+    private Node createSessionNode(final SessionData sessionData) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/session.fxml"));
             Text title = (Text) session.lookup("#title");
@@ -107,6 +112,23 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
         } catch (IOException ex) {
             LOGGER.error(ex);
             throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link Devoxx17ShowSchedule}.
+     */
+    public static final class Factory implements Step.Factory {
+
+        @Override
+        public Devoxx17ShowSchedule create() {
+            return new Devoxx17ShowSchedule();
+        }
+
+        @Override
+        public Class<Devoxx17ShowSchedule> getStepClass() {
+            return Devoxx17ShowSchedule.class;
         }
     }
 }
