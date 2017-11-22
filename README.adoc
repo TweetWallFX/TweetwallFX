@@ -11,7 +11,7 @@ Create a new Application for TweetWall within https://apps.twitter.com[Twitter A
 with the twitter account that will be used to run the TweetWallFX. You have to enter at least the
 website of your company. After doing so generate a new access token under `Keys and Access Tokens`.
 
-Update the `config.properties` file with your OAuth values as follows:
+Update the `tweetwallConfig.json` file with your OAuth values as follows:
 
 [source,plain]
 ----
