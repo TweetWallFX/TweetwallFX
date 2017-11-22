@@ -1,12 +1,6 @@
 {
     "twitter" : {
-        "extendedMode" : true,
-    	"oauth" : {
-            "consumerKey" : "Lb8sTFznrRmuS4OniePGSHXHE",
-            "consumerSecret" : "28W7o3702hgvoSK9iysmlLmlfh0ouMBUL00RWG8rV6jcZD8RUg",
-            "accessToken" : "58441169-X8s2NbK19FEoEsBnxXh4wqmLqksOaumgivf6TWKiB",
-            "accessToken" : "ecret=JMvQypJA1GxqtPqTYXs4Hqx5xRkXNZhnzZtICUPG7Bz92"
-    	}
+        "extendedMode" : true
     },
     "tweetwall" : {
         "query" : "#devoxx",
