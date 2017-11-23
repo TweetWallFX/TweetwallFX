@@ -11,17 +11,26 @@ Create a new Application for TweetWall within https://apps.twitter.com[Twitter A
 with the twitter account that will be used to run the TweetWallFX. You have to enter at least the
 website of your company. After doing so generate a new access token under `Keys and Access Tokens`.
 
-Update the `config.properties` file with your OAuth values as follows:
+Update the `tweetwallConfig.json` file with your OAuth values as follows:
 
 [source,plain]
 ----
-tweetwall.twitter.query=#myevent OR #someothertag
-tweetwall.title=The JavaFX Tweetwall for my Event
-tweetwall.stylesheet=tweetwall.css
-tweetwall.twitter.oauth.consumerKey=v8SvGzboGrvU148cKs8PghI1v <1>
-tweetwall.twitter.oauth.consumerSecret=12w6vg612hgvoGk0iysMlLvKfh0ouMcVg00RWG8rV6jccZ8RUg <2>
-tweetwall.twitter.oauth.accessToken=12cF34j9-cF3cGz819x4j2iQ6Vgh4wqmLqksxHzRFt78D3WKiB <3>
-tweetwall.twitter.oauth.accessTokenSecret=2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG7Bz92x4 <4>
+{
+    "twitter" : {
+        "extendedMode" : true,
+        "oauth" : {
+            "consumerKey" : "v8SvGzboGrvU148cKs8PghI1v", <1>
+            "consumerSecret" : "12w6vg612hgvoGk0iysMlLvKfh0ouMcVg00RWG8rV6jccZ8RUg", <2>
+            "accessToken" : "12cF34j9-cF3cGz819x4j2iQ6Vgh4wqmLqksxHzRFt78D3WKiB", <3>
+            "accessTokenSecret" : "2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG7Bz92x4" <4>
+        }
+    },
+    "tweetwall" : {
+        "query" : "#myevent OR #someothertag",
+        "title" : "The JavaFX Tweetwall for my Event",
+        "stylesheetResource" : "tweetwall.css"
+    }
+}
 ----
 <1> The Consumer Key (API Key)
 <2> The Consumer Secret (API Secret)

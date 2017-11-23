@@ -307,14 +307,14 @@ public final class Configuration {
         return Stream.concat(previous.keySet().stream(), next.keySet().stream())
                 .sorted()
                 .distinct()
-                .collect(Collectors.toMap(Function.identity(), key -> mergeValue(previous.get(key), next.get(key))));
+                .collect(Collectors.toMap(Function.identity(), key -> mergeValue(key, previous.get(key), next.get(key))));
     }
 
-    private static Object mergeValue(final Object previous, final Object next) {
+    private static Object mergeValue(final String key, final Object previous, final Object next) {
         if (null == previous) {
-            return next;
+            return Objects.requireNonNull(next, key + " Parameter next must not be null!");
         } else if (null == next) {
-            return previous;
+            return Objects.requireNonNull(previous, key + " Parameter previous must not be null!");
         }
 
         final Class<?> pClass = previous.getClass();
