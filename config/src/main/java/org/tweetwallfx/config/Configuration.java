@@ -59,7 +59,7 @@ public final class Configuration {
         Paths.get("etc", CONFIG_FILENAME),
         Paths.get(CONFIG_FILENAME)};
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
-    private static final Map<String, List<ConfigurationConverter>> CONVERTERS;
+    private static final Map<String, ConfigurationConverter> CONVERTERS;
 
     static {
         LOGGER.info("loading configurations data converters");
@@ -76,7 +76,9 @@ public final class Configuration {
                     throw new IllegalArgumentException("At most one ConfigurationConverter may be registered to convert configuration data but the following ConfigurationConverters are registered: " + e.getValue());
                 });
 
-        CONVERTERS = converters;
+        CONVERTERS = converters.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
     }
 
     private static final Configuration INSTANCE = new Configuration();
@@ -168,9 +170,9 @@ public final class Configuration {
 
         CONVERTERS.entrySet()
                 .stream()
-                .peek(ce -> LOGGER.info("Processing key '" + ce.getKey() + "' with ConfigurationConverters " + ce.getValue() + '.'))
+                .peek(ce -> LOGGER.info("Processing key '" + ce.getKey() + "' with ConfigurationConverter '" + ce.getValue() + "'"))
                 .filter(e -> input.containsKey(e.getKey()))
-                .forEach(e -> result.put(e.getKey(), JsonDataConverter.convertFromObject(input.get(e.getKey()), e.getValue().iterator().next().getDataClass())));
+                .forEach(e -> result.put(e.getKey(), JsonDataConverter.convertFromObject(input.get(e.getKey()), e.getValue().getDataClass())));
 
         return result;
     }
