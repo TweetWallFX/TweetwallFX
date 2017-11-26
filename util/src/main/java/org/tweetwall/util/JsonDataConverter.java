@@ -69,7 +69,7 @@ public class JsonDataConverter {
      *
      * @return the converted object
      */
-    public static <T> T convertFromInputSTream(final InputStream inputStream, final Class<T> typeClass) {
+    public static <T> T convertFromInputStream(final InputStream inputStream, final Class<T> typeClass) {
         return JSONB.fromJson(inputStream, typeClass);
     }
 

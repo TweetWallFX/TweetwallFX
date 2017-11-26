@@ -151,7 +151,7 @@ public final class Configuration {
     }
 
     private static Map<String, Object> readConfiguration(final InputStream input) {
-        final Map<String, Object> result = cast(JsonDataConverter.convertFromInputSTream(input, Map.class));
+        final Map<String, Object> result = cast(JsonDataConverter.convertFromInputStream(input, Map.class));
 
         try {
             convertConfigData(result);
