@@ -50,7 +50,7 @@ public class SessionDataTest {
         System.out.println("from");        
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()){
-            Schedule schedule = JsonDataConverter.convertFromInputSTream(inputStream, Schedule.class);
+            Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"));
             assertEquals(6, result.size());
         } 
@@ -61,7 +61,7 @@ public class SessionDataTest {
         System.out.println("from");        
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()){
-            Schedule schedule = JsonDataConverter.convertFromInputSTream(inputStream, Schedule.class);
+            Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("13:00Z"));
             assertEquals(7, result.size());
         } 
