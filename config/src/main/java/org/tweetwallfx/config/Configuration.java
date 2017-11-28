@@ -164,7 +164,7 @@ public final class Configuration {
 
     private static Map<String, Object> convertConfigData(final Map<String, Object> input) {
         // convert configuration data
-        final Map<String, Object> result = new HashMap<>();
+        final Map<String, Object> result = new HashMap<>(input);
 
         CONVERTERS.entrySet()
                 .stream()
