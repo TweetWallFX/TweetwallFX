@@ -23,11 +23,7 @@
  */
 package org.tweetwallfx.controls.stepengine;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,46 +31,38 @@ import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.json.bind.JsonbBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Jörg Michelberger
  */
-public class StepIterator implements Iterator<Step> {
+public class StepIterator {
 
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private Step current = null;
     private int stepIndex = 0;
-    private final List<Step> steps = new ArrayList<>();
+    private final List<Step> steps;
 
     private StepIterator(final List<Step> steps) {
-        this.steps.addAll(steps);
-    }
+        this.steps = new ArrayList<>(steps);
 
-    public static StepIterator of(final Step... steps) {
-        return new StepIterator(Arrays.asList(steps));
-    }
-
-    public static StepIterator of(final List<Step> steps) {
-        return new StepIterator(steps);
-    }
-
-    public static StepIterator ofDefaultConfiguration() {
-        StepIterator.Builder builder = new StepIterator.Builder();
-        try (InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream("steps.json")) {
-            StepEngineConfiguration stepEngineConfig = JsonbBuilder.create().fromJson(s, StepEngineConfiguration.class);
-            stepEngineConfig.steps.forEach(className -> builder.addStep(className));
-        } catch (IOException ex) {
-            LOGGER.error("IO Problem loading steps description file", ex);
+        if (steps.isEmpty()) {
+            throw new IllegalArgumentException("StepIterator has no steps to iterate through!");
         }
-        return builder.build();
     }
 
-    @Override
-    public boolean hasNext() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    static StepIterator create() {
+        final Builder builder = new Builder();
+
+        Configuration.getInstance()
+                .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
+                .getSteps()
+                .forEach(builder::addStep);
+
+        return builder.build();
     }
 
     void applyWith(final Consumer<Step> consumer) {
@@ -93,7 +81,6 @@ public class StepIterator implements Iterator<Step> {
         return steps.get(getIndex);
     }
 
-    @Override
     public Step next() {
         if (stepIndex == steps.size()) {
             //loop
@@ -131,18 +118,16 @@ public class StepIterator implements Iterator<Step> {
 
         private final List<Step> steps = new ArrayList<>();
 
-        public Builder addStep(final String stepClassName) {
+        private Builder addStep(final StepEngineSettings.Step configStep) {
+            final String stepClassName = configStep.getStepClassName();
             final Step.Factory factory = FACTORIES.get(stepClassName);
 
-            if (null == factory) {
-                LOGGER.error("No Factory exists that can create Step '{}'", stepClassName);
-            } else {
-                final Step step = factory.create();
+            Objects.requireNonNull(factory, "Step.Factory creating '" + stepClassName + "' does not exist!");
+            final Step step = factory.create(configStep);
 
-                Objects.requireNonNull(step, () -> "Step.Factory '" + factory + "' failed to create Step '" + stepClassName + "'!");
-                LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
-                steps.add(step);
-            }
+            Objects.requireNonNull(step, () -> "Step.Factory '" + factory + "' failed to create Step!");
+            LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
+            steps.add(step);
 
             return this;
         }

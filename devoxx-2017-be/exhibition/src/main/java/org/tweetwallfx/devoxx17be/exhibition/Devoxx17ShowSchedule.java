@@ -42,6 +42,7 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * Devox 2017 Show Schedule (Flip In) Animation Step
@@ -126,7 +127,7 @@ public class Devoxx17ShowSchedule implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17ShowSchedule create() {
+        public Devoxx17ShowSchedule create(final StepEngineSettings.Step stepSettings) {
             return new Devoxx17ShowSchedule();
         }
 

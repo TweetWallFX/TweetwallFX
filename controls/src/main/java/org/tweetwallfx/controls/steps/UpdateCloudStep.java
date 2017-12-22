@@ -42,6 +42,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.LocationTransition;
 
 /**
@@ -170,7 +171,7 @@ public class UpdateCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public UpdateCloudStep create() {
+        public UpdateCloudStep create(final StepEngineSettings.Step stepSettings) {
             return new UpdateCloudStep();
         }
 

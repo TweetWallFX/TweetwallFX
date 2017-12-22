@@ -24,8 +24,12 @@
 package org.tweetwallfx.controls.steps;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import static org.tweetwall.util.ToString.*;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Sven Reimers
@@ -55,13 +59,48 @@ public class PauseStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public PauseStep create() {
-            return new PauseStep(Duration.ofSeconds(5));
+        public Step create(final StepEngineSettings.Step stepSettings) {
+            final Config config = stepSettings.getConfig(Config.class);
+            return new PauseStep(config.getDuration());
         }
 
         @Override
         public Class<PauseStep> getStepClass() {
             return PauseStep.class;
+        }
+    }
+
+    public static class Config {
+
+        private ChronoUnit unit = ChronoUnit.SECONDS;
+        private long amount = 5;
+
+        public ChronoUnit getUnit() {
+            return unit;
+        }
+
+        public void setUnit(final ChronoUnit unit) {
+            this.unit = Objects.requireNonNull(unit, "unit must not be null!");
+        }
+
+        public long getAmount() {
+            return amount;
+        }
+
+        public void setAmount(final long amount) {
+            this.amount = amount;
+        }
+
+        private Duration getDuration() {
+            return Duration.of(getAmount(), getUnit());
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "amount", getAmount(),
+                    "unit", getUnit()
+            )) + " extends " + super.toString();
         }
     }
 }

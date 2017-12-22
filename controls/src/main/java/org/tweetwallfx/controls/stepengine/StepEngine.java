@@ -61,18 +61,16 @@ public final class StepEngine {
     private final MachineContext context = new MachineContext();
 
     public StepEngine() {
+        STARTUP_LOGGER.info("create StepIterator");
+        stateIterator = StepIterator.create();
+        STARTUP_LOGGER.info("init DataProviders");
         initDataProviders();
-        stateIterator = createStepIterator();
         //initialize every step with context
         stateIterator.applyWith((step) -> step.initStep(context));
     }
 
     public MachineContext getContext() {
         return context;
-    }
-
-    private static StepIterator createStepIterator() {
-        return StepIterator.ofDefaultConfiguration();
     }
 
     private void initDataProviders() {

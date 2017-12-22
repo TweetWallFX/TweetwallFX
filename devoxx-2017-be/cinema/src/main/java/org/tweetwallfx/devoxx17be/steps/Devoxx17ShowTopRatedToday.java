@@ -41,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
@@ -134,7 +135,7 @@ public class Devoxx17ShowTopRatedToday implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17ShowTopRatedToday create() {
+        public Devoxx17ShowTopRatedToday create(final StepEngineSettings.Step stepSettings) {
             return new Devoxx17ShowTopRatedToday();
         }
 

@@ -27,6 +27,7 @@ import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.devoxx17be.animations.FlipOutXTransition;
 
 /**
@@ -66,7 +67,7 @@ public class Devoxx17FlipOutTopRatedDay implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17FlipOutTopRatedDay create() {
+        public Devoxx17FlipOutTopRatedDay create(final StepEngineSettings.Step stepSettings) {
             return new Devoxx17FlipOutTopRatedDay();
         }
 

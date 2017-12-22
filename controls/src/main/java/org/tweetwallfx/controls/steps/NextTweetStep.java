@@ -26,6 +26,7 @@ package org.tweetwallfx.controls.steps;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Sven Reimers
@@ -49,7 +50,7 @@ public class NextTweetStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public NextTweetStep create() {
+        public NextTweetStep create(final StepEngineSettings.Step stepSettings) {
             return new NextTweetStep();
         }
 

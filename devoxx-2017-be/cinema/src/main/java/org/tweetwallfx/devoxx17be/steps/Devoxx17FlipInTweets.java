@@ -41,6 +41,7 @@ import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.devoxx17be.animations.FlipInXTransition;
 import org.tweetwallfx.devoxx2017be.dataprovider.TweetStreamDataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -164,7 +165,7 @@ public class Devoxx17FlipInTweets implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17FlipInTweets create() {
+        public Devoxx17FlipInTweets create(final StepEngineSettings.Step stepSettings) {
             return new Devoxx17FlipInTweets();
         }
 

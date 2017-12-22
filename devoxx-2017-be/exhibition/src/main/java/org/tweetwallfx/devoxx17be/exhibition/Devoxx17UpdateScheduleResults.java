@@ -26,6 +26,7 @@ package org.tweetwallfx.devoxx17be.exhibition;
 import java.time.LocalDateTime;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * Step to trigger the updating of the schedule
@@ -60,7 +61,7 @@ public class Devoxx17UpdateScheduleResults implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17UpdateScheduleResults create() {
+        public Devoxx17UpdateScheduleResults create(final StepEngineSettings.Step stepSettings) {
             return new Devoxx17UpdateScheduleResults();
         }
 
