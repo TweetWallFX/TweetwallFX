@@ -135,7 +135,7 @@ public class Devoxx17ShowTopRatedWeek implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17ShowTopRatedWeek create(final StepEngineSettings.Step stepSettings) {
+        public Devoxx17ShowTopRatedWeek create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17ShowTopRatedWeek();
         }
 

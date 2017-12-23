@@ -123,7 +123,7 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17ShowSchedule create(final StepEngineSettings.Step stepSettings) {
+        public Devoxx17ShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17ShowSchedule();
         }
 

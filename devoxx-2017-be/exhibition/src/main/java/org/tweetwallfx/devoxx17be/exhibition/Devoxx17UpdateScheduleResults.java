@@ -61,7 +61,7 @@ public class Devoxx17UpdateScheduleResults implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17UpdateScheduleResults create(final StepEngineSettings.Step stepSettings) {
+        public Devoxx17UpdateScheduleResults create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17UpdateScheduleResults();
         }
 

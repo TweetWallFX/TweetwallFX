@@ -50,7 +50,7 @@ public class NextTweetStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public NextTweetStep create(final StepEngineSettings.Step stepSettings) {
+        public NextTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new NextTweetStep();
         }
 

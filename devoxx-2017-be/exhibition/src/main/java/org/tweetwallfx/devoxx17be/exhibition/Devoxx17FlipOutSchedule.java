@@ -67,7 +67,7 @@ public class Devoxx17FlipOutSchedule implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17FlipOutSchedule create(final StepEngineSettings.Step stepSettings) {
+        public Devoxx17FlipOutSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17FlipOutSchedule();
         }
 

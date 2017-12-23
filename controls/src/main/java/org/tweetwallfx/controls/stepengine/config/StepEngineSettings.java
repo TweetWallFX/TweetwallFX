@@ -42,13 +42,13 @@ public final class StepEngineSettings {
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "stepEngine";
-    private List<Step> steps = Collections.emptyList();
+    private List<StepDefinition> steps = Collections.emptyList();
 
-    public List<Step> getSteps() {
+    public List<StepDefinition> getSteps() {
         return steps;
     }
 
-    public void setSteps(final List<Step> steps) {
+    public void setSteps(final List<StepDefinition> steps) {
         Objects.requireNonNull(steps, "steps must not be null!");
         this.steps = steps;
     }
@@ -77,7 +77,7 @@ public final class StepEngineSettings {
         }
     }
 
-    public static final class Step {
+    public static final class StepDefinition {
 
         private String stepClassName;
         private Map<String, Object> config;

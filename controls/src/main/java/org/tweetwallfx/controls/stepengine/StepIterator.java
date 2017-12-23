@@ -118,7 +118,7 @@ public class StepIterator {
 
         private final List<Step> steps = new ArrayList<>();
 
-        private Builder addStep(final StepEngineSettings.Step configStep) {
+        private Builder addStep(final StepEngineSettings.StepDefinition configStep) {
             final String stepClassName = configStep.getStepClassName();
             final Step.Factory factory = FACTORIES.get(stepClassName);
 

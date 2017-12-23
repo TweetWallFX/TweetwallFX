@@ -89,7 +89,7 @@ public class Devoxx17FlipOutTweets implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17FlipOutTweets create(final StepEngineSettings.Step stepSettings) {
+        public Devoxx17FlipOutTweets create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17FlipOutTweets();
         }
 

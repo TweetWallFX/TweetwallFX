@@ -117,7 +117,7 @@ public class FadeInCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public FadeInCloudStep create(final StepEngineSettings.Step stepSettings) {
+        public FadeInCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new FadeInCloudStep();
         }
 

@@ -59,8 +59,8 @@ public class PauseStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Step create(final StepEngineSettings.Step stepSettings) {
-            final Config config = stepSettings.getConfig(Config.class);
+        public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
+            final Config config = stepDefinition.getConfig(Config.class);
             return new PauseStep(config.getDuration());
         }
 

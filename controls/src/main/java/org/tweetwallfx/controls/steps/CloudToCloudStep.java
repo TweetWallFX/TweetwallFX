@@ -157,7 +157,7 @@ public class CloudToCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public CloudToCloudStep create(final StepEngineSettings.Step stepSettings) {
+        public CloudToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudToCloudStep();
         }
 

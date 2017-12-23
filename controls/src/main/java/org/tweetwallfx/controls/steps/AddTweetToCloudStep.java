@@ -80,7 +80,7 @@ public class AddTweetToCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public AddTweetToCloudStep create(final StepEngineSettings.Step stepSettings) {
+        public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new AddTweetToCloudStep();
         }
 

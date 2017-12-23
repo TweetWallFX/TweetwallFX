@@ -83,7 +83,7 @@ public class CloudFadeOutStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public CloudFadeOutStep create(final StepEngineSettings.Step stepSettings) {
+        public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudFadeOutStep();
         }
 

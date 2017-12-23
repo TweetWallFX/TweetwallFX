@@ -79,6 +79,6 @@ public interface Step {
          *
          * @return the created Step
          */
-        Step create(final StepEngineSettings.Step stepSettings);
+        Step create(final StepEngineSettings.StepDefinition stepSettings);
     }
 }

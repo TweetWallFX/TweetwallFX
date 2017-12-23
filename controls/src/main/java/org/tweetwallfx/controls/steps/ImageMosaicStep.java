@@ -302,7 +302,7 @@ public class ImageMosaicStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public ImageMosaicStep create(final StepEngineSettings.Step stepSettings) {
+        public ImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new ImageMosaicStep();
         }
 

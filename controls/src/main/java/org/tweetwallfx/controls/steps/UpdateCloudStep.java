@@ -171,7 +171,7 @@ public class UpdateCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public UpdateCloudStep create(final StepEngineSettings.Step stepSettings) {
+        public UpdateCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new UpdateCloudStep();
         }
 

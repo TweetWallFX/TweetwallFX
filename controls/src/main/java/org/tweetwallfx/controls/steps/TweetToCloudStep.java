@@ -175,7 +175,7 @@ public class TweetToCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public TweetToCloudStep create(final StepEngineSettings.Step stepSettings) {
+        public TweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new TweetToCloudStep();
         }
 
