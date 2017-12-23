@@ -33,6 +33,7 @@ import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -79,7 +80,7 @@ public class AddTweetToCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public AddTweetToCloudStep create() {
+        public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new AddTweetToCloudStep();
         }
 

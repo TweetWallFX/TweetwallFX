@@ -40,6 +40,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Jörg Michelberger
@@ -116,7 +117,7 @@ public class FadeInCloudStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public FadeInCloudStep create() {
+        public FadeInCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new FadeInCloudStep();
         }
 

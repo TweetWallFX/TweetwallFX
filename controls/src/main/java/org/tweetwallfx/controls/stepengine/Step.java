@@ -25,6 +25,7 @@ package org.tweetwallfx.controls.stepengine;
 
 import java.time.Duration;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Jörg Michelberger
@@ -73,8 +74,11 @@ public interface Step {
         /**
          * Creates a Step.
          *
+         * @param stepSettings the settings object for which the Step is to be
+         * created
+         *
          * @return the created Step
          */
-        Step create();
+        Step create(final StepEngineSettings.StepDefinition stepSettings);
     }
 }

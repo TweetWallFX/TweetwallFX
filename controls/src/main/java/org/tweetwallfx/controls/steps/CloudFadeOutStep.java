@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * @author Jörg Michelberger
@@ -82,7 +83,7 @@ public class CloudFadeOutStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public CloudFadeOutStep create() {
+        public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudFadeOutStep();
         }
 

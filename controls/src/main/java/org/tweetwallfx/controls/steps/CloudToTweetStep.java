@@ -53,6 +53,7 @@ import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FontSizeTransition;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -353,7 +354,7 @@ public class CloudToTweetStep implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public CloudToTweetStep create() {
+        public CloudToTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudToTweetStep();
         }
 

@@ -26,6 +26,7 @@ package org.tweetwallfx.devoxx17be.steps;
 import java.time.LocalDateTime;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 
@@ -64,7 +65,7 @@ public class Devoxx17UpdateVotingResults implements Step {
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17UpdateVotingResults create() {
+        public Devoxx17UpdateVotingResults create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new Devoxx17UpdateVotingResults();
         }
 
