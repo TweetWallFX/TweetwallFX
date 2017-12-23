@@ -127,7 +127,7 @@ public final class Configuration {
                 LOGGER.info("Found config file: " + url);
 
                 try (final InputStream is = url.openStream()) {
-                    result = Stream.concat(result, Stream.of(readConfiguration(is)));
+                    result = Stream.concat(result, Stream.of(readConfiguration(is, "Classpath entry '" + url.toExternalForm() + '\'')));
                 }
             }
         } catch (final IOException ioe) {
@@ -145,23 +145,23 @@ public final class Configuration {
                 .peek(p -> LOGGER.info("Found config override file: " + p.toAbsolutePath()))
                 .map(p -> {
                     try (InputStream is = Files.newInputStream(p)) {
-                        return readConfiguration(is);
+                        return readConfiguration(is, "File '" + p.toString() + "'");
                     } catch (IOException ioe) {
                         throw new RuntimeException("Error loading configuration data from " + p, ioe);
                     }
                 });
     }
 
-    private static Map<String, Object> readConfiguration(final InputStream input) {
-        final Map<String, Object> result = cast(JsonDataConverter.convertFromInputStream(input, Map.class));
-
+    private static Map<String, Object> readConfiguration(final InputStream input, final String dataSourceIdentification) {
         try {
-            convertConfigData(result);
-        } catch (final Throwable t) {
-            throw new RuntimeException(t);
-        }
+            final Map<String, Object> result = cast(JsonDataConverter.convertFromInputStream(input, Map.class));
 
-        return result;
+            convertConfigData(result);
+
+            return result;
+        } catch (final Throwable t) {
+            throw new RuntimeException(dataSourceIdentification + " either does not contain a valid JSONObject or has an invalid structure!", t);
+        }
     }
 
     private static Map<String, Object> convertConfigData(final Map<String, Object> input) {
