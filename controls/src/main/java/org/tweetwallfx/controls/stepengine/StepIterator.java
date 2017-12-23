@@ -24,16 +24,20 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
@@ -45,9 +49,11 @@ public class StepIterator {
     private Step current = null;
     private int stepIndex = 0;
     private final List<Step> steps;
+    private final Set<Class<? extends DataProvider>> requiredDataProviders;
 
-    private StepIterator(final List<Step> steps) {
+    private StepIterator(final List<Step> steps, final Set<Class<? extends DataProvider>> requiredDataProviders) {
         this.steps = new ArrayList<>(steps);
+        this.requiredDataProviders = Collections.unmodifiableSet(requiredDataProviders);
 
         if (steps.isEmpty()) {
             throw new IllegalArgumentException("StepIterator has no steps to iterate through!");
@@ -79,6 +85,10 @@ public class StepIterator {
             getIndex = 0;
         }
         return steps.get(getIndex);
+    }
+
+    public Set<Class<? extends DataProvider>> getRequiredDataProviders() {
+        return requiredDataProviders;
     }
 
     public Step next() {
@@ -117,13 +127,15 @@ public class StepIterator {
         }
 
         private final List<Step> steps = new ArrayList<>();
+        private final Set<Class<? extends DataProvider>> requiredDataProviders = new HashSet<>();
 
-        private Builder addStep(final StepEngineSettings.StepDefinition configStep) {
-            final String stepClassName = configStep.getStepClassName();
+        private Builder addStep(final StepEngineSettings.StepDefinition stepDefinition) {
+            final String stepClassName = stepDefinition.getStepClassName();
             final Step.Factory factory = FACTORIES.get(stepClassName);
 
             Objects.requireNonNull(factory, "Step.Factory creating '" + stepClassName + "' does not exist!");
-            final Step step = factory.create(configStep);
+            requiredDataProviders.addAll(factory.getRequiredDataProviders(stepDefinition));
+            final Step step = factory.create(stepDefinition);
 
             Objects.requireNonNull(step, () -> "Step.Factory '" + factory + "' failed to create Step!");
             LOGGER.info("Step.Factory '{}' created '{}'", factory, step);
@@ -133,7 +145,7 @@ public class StepIterator {
         }
 
         public StepIterator build() {
-            return new StepIterator(steps);
+            return new StepIterator(steps, requiredDataProviders);
         }
     }
 }

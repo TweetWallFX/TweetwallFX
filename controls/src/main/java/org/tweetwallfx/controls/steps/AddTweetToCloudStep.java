@@ -23,12 +23,15 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
@@ -87,6 +90,11 @@ public class AddTweetToCloudStep implements Step {
         @Override
         public Class<AddTweetToCloudStep> getStepClass() {
             return AddTweetToCloudStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TweetDataProvider.class, TagCloudDataProvider.class);
         }
     }
 }

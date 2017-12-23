@@ -24,6 +24,8 @@
 package org.tweetwallfx.devoxx17be.steps;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -39,6 +41,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
@@ -172,6 +175,11 @@ public class Devoxx17FlipInTweets implements Step {
         @Override
         public Class<Devoxx17FlipInTweets> getStepClass() {
             return Devoxx17FlipInTweets.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TweetStreamDataProvider.class);
         }
     }
 }

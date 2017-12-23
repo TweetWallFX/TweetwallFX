@@ -25,6 +25,8 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import javafx.animation.ParallelTransition;
@@ -39,6 +41,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
@@ -142,6 +145,11 @@ public class Devoxx17ShowTopRatedWeek implements Step {
         @Override
         public Class<Devoxx17ShowTopRatedWeek> getStepClass() {
             return Devoxx17ShowTopRatedWeek.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TopTalksWeekDataProvider.class);
         }
     }
 }

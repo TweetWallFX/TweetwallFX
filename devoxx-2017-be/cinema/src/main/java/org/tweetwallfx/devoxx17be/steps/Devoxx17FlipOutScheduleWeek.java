@@ -23,8 +23,11 @@
  */
 package org.tweetwallfx.devoxx17be.steps;
 
+import java.util.Arrays;
+import java.util.Collection;
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
@@ -75,6 +78,11 @@ public class Devoxx17FlipOutScheduleWeek implements Step {
         @Override
         public Class<Devoxx17FlipOutScheduleWeek> getStepClass() {
             return Devoxx17FlipOutScheduleWeek.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TopTalksWeekDataProvider.class);
         }
     }
 }

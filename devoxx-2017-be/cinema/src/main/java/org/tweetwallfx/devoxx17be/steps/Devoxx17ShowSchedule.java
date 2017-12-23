@@ -25,6 +25,8 @@ package org.tweetwallfx.devoxx17be.steps;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
@@ -130,6 +133,11 @@ public class Devoxx17ShowSchedule extends Devoxx17FlipInTweets {
         @Override
         public Class<Devoxx17ShowSchedule> getStepClass() {
             return Devoxx17ShowSchedule.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(ScheduleDataProvider.class);
         }
     }
 }
