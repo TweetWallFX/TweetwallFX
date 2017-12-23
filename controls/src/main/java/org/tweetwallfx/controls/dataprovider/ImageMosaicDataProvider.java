@@ -37,7 +37,6 @@ import java.util.concurrent.Executors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetStream;
 
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
@@ -46,7 +45,7 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 /**
  * @author Sven Reimers
  */
-public class ImageMosaicDataProvider implements DataProvider, DataProvider.HistoryAware {
+public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
     private final MediaCache cache;
@@ -58,13 +57,17 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
     });
     private final List<ImageStore> images = new CopyOnWriteArrayList<>();
 
-    private ImageMosaicDataProvider(final TweetStream tweetStream) {
+    private ImageMosaicDataProvider() {
         cache = MediaCache.INSTANCE;
-        tweetStream.onTweet(tweet -> processTweet(tweet));
     }
 
     @Override
-    public void processTweet(final Tweet tweet) {
+    public void processNewTweet(final Tweet tweet) {
+        processHistoryTweet(tweet);
+    }
+
+    @Override
+    public void processHistoryTweet(final Tweet tweet) {
         LOG.info("new Tweet received");
         if (null == tweet.getMediaEntries() || tweet.isRetweet() || tweet.getUser().getFollowersCount() < 25) {
             return;
@@ -132,8 +135,8 @@ public class ImageMosaicDataProvider implements DataProvider, DataProvider.Histo
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public ImageMosaicDataProvider create(final TweetStream tweetStream) {
-            return new ImageMosaicDataProvider(tweetStream);
+        public ImageMosaicDataProvider create() {
+            return new ImageMosaicDataProvider();
         }
 
         @Override

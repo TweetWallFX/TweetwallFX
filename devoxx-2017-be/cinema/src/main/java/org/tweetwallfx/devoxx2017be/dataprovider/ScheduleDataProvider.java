@@ -36,7 +36,6 @@ import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * DataProvider Implementation for Schedule Data
@@ -77,7 +76,7 @@ public class ScheduleDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public DataProvider create(final TweetStream tweetStream) {
+        public DataProvider create() {
             return new ScheduleDataProvider();
         }
 

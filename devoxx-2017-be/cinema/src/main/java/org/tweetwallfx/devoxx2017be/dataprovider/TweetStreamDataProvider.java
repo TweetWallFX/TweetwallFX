@@ -41,7 +41,6 @@ import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
-import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
@@ -51,7 +50,7 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
  *
  * @author Sven Reimers
  */
-public class TweetStreamDataProvider implements DataProvider {
+public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
     private static final int HISTORY_SIZE = 25;
@@ -60,11 +59,7 @@ public class TweetStreamDataProvider implements DataProvider {
     private volatile Image latestTweetedImage = null;
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
 
-    private TweetStreamDataProvider(final TweetStream tweetStream) {
-        tweetStream.onTweet(tweet -> {
-            LOGGER.info("new Tweet received");
-            addTweet(tweet);
-        });
+    private TweetStreamDataProvider() {
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
         try {
@@ -72,6 +67,12 @@ public class TweetStreamDataProvider implements DataProvider {
         } finally {
             tweetListLock.writeLock().unlock();
         }
+    }
+
+    @Override
+    public void processNewTweet(final Tweet tweet) {
+        LOGGER.info("new Tweet received");
+        addTweet(tweet);
     }
 
     private void updateImage(final Tweet tweet) {
@@ -154,8 +155,8 @@ public class TweetStreamDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetStreamDataProvider create(final TweetStream tweetStream) {
-            return new TweetStreamDataProvider(tweetStream);
+        public TweetStreamDataProvider create() {
+            return new TweetStreamDataProvider();
         }
 
         @Override

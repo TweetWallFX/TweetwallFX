@@ -31,12 +31,11 @@ import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryAware {
+public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final int NUM_MAX_WORDS = 40;
     private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Map.Entry.comparingByValue();
@@ -44,12 +43,17 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
     private List<Word> additionalTweetWords = null;
     private final Map<String, Long> tree = new TreeMap<>();
 
-    private TagCloudDataProvider(final TweetStream tweetStream) {
-        tweetStream.onTweet(tweet -> processTweet(tweet));
+    private TagCloudDataProvider() {
+        // prevent external instantiation
     }
 
     @Override
-    public void processTweet(final Tweet tweet) {
+    public void processNewTweet(final Tweet tweet) {
+        updateTree(tweet);
+    }
+
+    @Override
+    public void processHistoryTweet(final Tweet tweet) {
         updateTree(tweet);
     }
 
@@ -90,8 +94,8 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TagCloudDataProvider create(TweetStream tweetStream) {
-            return new TagCloudDataProvider(tweetStream);
+        public TagCloudDataProvider create() {
+            return new TagCloudDataProvider();
         }
     
         @Override

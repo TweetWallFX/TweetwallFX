@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * DataProvider Implementation for Top Talks Week
@@ -77,7 +76,7 @@ public final class TopTalksWeekDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TopTalksWeekDataProvider create(TweetStream tweetStream) {
+        public TopTalksWeekDataProvider create() {
             return new TopTalksWeekDataProvider();
         }
 
