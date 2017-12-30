@@ -170,7 +170,7 @@ public class TwitterTweeter extends Tweeter {
                     startupLogger.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
                     if (null != queryResult) {
-                        LOGGER.info("RateLimi: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit()
+                        LOGGER.info("RateLimit: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit()
                                 + " resetting in " + queryResult.getRateLimitStatus().getSecondsUntilReset() + "s");
                         statuses = queryResult.getTweets().iterator();
                     }
