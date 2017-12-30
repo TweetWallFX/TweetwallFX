@@ -24,6 +24,9 @@
 package org.tweetwallfx.devoxx17be.steps;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
@@ -72,6 +75,11 @@ public class Devoxx17UpdateVotingResults implements Step {
         @Override
         public Class<Devoxx17UpdateVotingResults> getStepClass() {
             return Devoxx17UpdateVotingResults.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TopTalksTodayDataProvider.class, TopTalksWeekDataProvider.class);
         }
     }
 }

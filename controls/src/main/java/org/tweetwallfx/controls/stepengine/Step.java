@@ -24,6 +24,9 @@
 package org.tweetwallfx.controls.stepengine;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
@@ -74,11 +77,33 @@ public interface Step {
         /**
          * Creates a Step.
          *
-         * @param stepSettings the settings object for which the Step is to be
+         * @param stepDefinition the settings object for which the Step is to be
          * created
          *
          * @return the created Step
          */
-        Step create(final StepEngineSettings.StepDefinition stepSettings);
+        Step create(final StepEngineSettings.StepDefinition stepDefinition);
+
+        /**
+         * Retrieves the classes of {@link DataProvider DataProviders} required
+         * by the created {@link Step}.
+         * <p>
+         *
+         * <b>Important: Any {@link DataProvider} that is used must be contained
+         * within the returned Collection in order to be certain that the
+         * DataProvider is instantiated. If it is not declared to be required it
+         * is highly likely that it will not be instantiated and thus produce a
+         * {@link NullPointerException} downstream.</b>
+         *
+         * @param stepDefinition the settings object for which the Step is to be
+         * created
+         *
+         * @return a Collection containing the classes of
+         * {@link DataProvider DataProviders} required by the created
+         * {@link Step}
+         */
+        default Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
+            return Collections.emptyList();
+        }
     }
 }

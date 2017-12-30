@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -73,15 +74,26 @@ public final class StepEngine {
     }
 
     private void initDataProviders() {
+        final Set<Class<? extends DataProvider>> requiredDataProviders = stateIterator.getRequiredDataProviders();
         STARTUP_LOGGER.info("init DataProviders");
+
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
         STARTUP_LOGGER.info("query: " + searchText);
 
         STARTUP_LOGGER.info("create DataProviders");
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
+                .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
                 .map(DataProvider.Factory::create)
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
+
+        requiredDataProviders.stream()
+                .filter(rdpc -> !providers.stream().anyMatch(rdpc::isInstance))
+                .findAny()
+                .ifPresent(rdpc -> {
+                    throw new IllegalStateException("DataProvider '" + rdpc.getCanonicalName() + "' is required but no DataProvider.Factory was found creating it!");
+                });
+
         final List<DataProvider.NewTweetAware> newTweetAwareProviders = providers.stream()
                 .filter(DataProvider.NewTweetAware.class::isInstance)
                 .map(DataProvider.NewTweetAware.class::cast)
@@ -140,7 +152,7 @@ public final class StepEngine {
                     .filter(klazz::isInstance)
                     .map(klazz::cast)
                     .findFirst()
-                    .orElse(null);
+                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' has not been registered."));
         }
     }
 
