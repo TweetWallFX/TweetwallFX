@@ -26,6 +26,8 @@ package org.tweetwallfx.controls.steps;
 import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -50,6 +52,7 @@ import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
@@ -361,6 +364,11 @@ public class CloudToTweetStep implements Step {
         @Override
         public Class<CloudToTweetStep> getStepClass() {
             return CloudToTweetStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TweetDataProvider.class);
         }
     }
 }

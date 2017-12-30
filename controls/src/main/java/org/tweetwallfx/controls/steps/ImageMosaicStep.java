@@ -24,6 +24,8 @@
 package org.tweetwallfx.controls.steps;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -43,6 +45,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
 import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
 import org.tweetwallfx.controls.stepengine.Step;
@@ -309,6 +312,11 @@ public class ImageMosaicStep implements Step {
         @Override
         public Class<ImageMosaicStep> getStepClass() {
             return ImageMosaicStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(ImageMosaicDataProvider.class);
         }
     }
 }
