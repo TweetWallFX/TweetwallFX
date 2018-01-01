@@ -58,15 +58,15 @@ public final class StepEngine {
     private volatile boolean terminated = false;
     private final Lock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
-    private final StepIterator stateIterator;
+    private final StepIterator stepIterator;
     private final MachineContext context = new MachineContext();
 
     public StepEngine() {
         STARTUP_LOGGER.info("create StepIterator");
-        stateIterator = StepIterator.create();
+        stepIterator = StepIterator.create();
         initDataProviders();
         //initialize every step with context
-        stateIterator.applyWith((step) -> step.initStep(context));
+        stepIterator.applyWith(step -> step.initStep(context));
     }
 
     public MachineContext getContext() {
@@ -74,7 +74,7 @@ public final class StepEngine {
     }
 
     private void initDataProviders() {
-        final Set<Class<? extends DataProvider>> requiredDataProviders = stateIterator.getRequiredDataProviders();
+        final Set<Class<? extends DataProvider>> requiredDataProviders = stepIterator.getRequiredDataProviders();
         STARTUP_LOGGER.info("init DataProviders");
 
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
@@ -175,10 +175,10 @@ public final class StepEngine {
 
             long start = System.currentTimeMillis();
 
-            Step step = stateIterator.next();
+            Step step = stepIterator.next();
             while (step.shouldSkip(context)) {
                 LOG.info("Skip step: {}", step.getClass().getSimpleName());
-                step = stateIterator.next();
+                step = stepIterator.next();
             }
             final Step stepToExecute = step;
             Duration duration = step.preferredStepDuration(context);
