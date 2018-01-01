@@ -24,7 +24,6 @@
 package org.tweetwallfx.controls.dataprovider;
 
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetStream;
 
 /**
  * A Provider of data. The type of data is implementation specific.
@@ -47,29 +46,40 @@ public interface DataProvider {
         Class<? extends DataProvider> getDataProviderClass();
 
         /**
-         * Creates a DataProvider using the provided parameters.
-         *
-         * @param tweetStream A {@link TweetStream}.
+         * Creates a DataProvider.
          *
          * @return the created DataProvider
          */
-        DataProvider create(final TweetStream tweetStream);
+        DataProvider create();
     }
 
     /**
      * Interface enabling call backs for history tweets enabling the build-up of
      * historical data.
      */
-    interface HistoryAware {
+    interface HistoryAware extends DataProvider {
 
         /**
          * Callback to process a historic tweet
          *
          * @param tweet a historic tweet
          */
-        void processTweet(final Tweet tweet);
+        void processHistoryTweet(final Tweet tweet);
     }
 
+    /**
+     * Interface enabling callbacks for receiving newly created tweets.
+     */
+    interface NewTweetAware extends DataProvider {
+        
+        /**
+         * Callback to process a new tweet
+         *
+         * @param tweet a new tweet
+         */
+        void processNewTweet(final Tweet tweet);
+    }
+    
     /**
      * Returns the name of this {@link DataProvider}.
      *

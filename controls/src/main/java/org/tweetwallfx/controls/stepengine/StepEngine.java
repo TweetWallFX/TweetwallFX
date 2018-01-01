@@ -64,7 +64,6 @@ public final class StepEngine {
     public StepEngine() {
         STARTUP_LOGGER.info("create StepIterator");
         stateIterator = StepIterator.create();
-        STARTUP_LOGGER.info("init DataProviders");
         initDataProviders();
         //initialize every step with context
         stateIterator.applyWith((step) -> step.initStep(context));
@@ -76,18 +75,15 @@ public final class StepEngine {
 
     private void initDataProviders() {
         final Set<Class<? extends DataProvider>> requiredDataProviders = stateIterator.getRequiredDataProviders();
-        STARTUP_LOGGER.info("create TweetStream");
+        STARTUP_LOGGER.info("init DataProviders");
 
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
         STARTUP_LOGGER.info("query: " + searchText);
-        final TweetFilterQuery query = new TweetFilterQuery()
-                .track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
-        final TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
 
         STARTUP_LOGGER.info("create DataProviders");
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
                 .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
-                .map(factory -> factory.create(tweetStream))
+                .map(DataProvider.Factory::create)
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
 
@@ -98,15 +94,28 @@ public final class StepEngine {
                     throw new IllegalStateException("DataProvider '" + rdpc.getCanonicalName() + "' is required but no DataProvider.Factory was found creating it!");
                 });
 
+        final List<DataProvider.NewTweetAware> newTweetAwareProviders = providers.stream()
+                .filter(DataProvider.NewTweetAware.class::isInstance)
+                .map(DataProvider.NewTweetAware.class::cast)
+                .collect(Collectors.toList());
         final List<DataProvider.HistoryAware> historyAwareProviders = providers.stream()
                 .filter(DataProvider.HistoryAware.class::isInstance)
                 .map(DataProvider.HistoryAware.class::cast)
                 .collect(Collectors.toList());
 
+        if (!newTweetAwareProviders.isEmpty()) {
+            STARTUP_LOGGER.info("create TweetStream");
+            final TweetFilterQuery query = new TweetFilterQuery()
+                    .track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
+            final TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
+            
+            newTweetAwareProviders.forEach(ntadp -> tweetStream.onTweet(ntadp::processNewTweet));
+        }
+
         if (!historyAwareProviders.isEmpty()) {
             Tweeter.getInstance()
                     .searchPaged(new TweetQuery().query(searchText).count(100), 20)
-                    .forEach(tweet -> historyAwareProviders.stream().forEach(hap -> hap.processTweet(tweet)));
+                    .forEach(tweet -> historyAwareProviders.stream().forEach(hap -> hap.processHistoryTweet(tweet)));
         }
 
         STARTUP_LOGGER.info("initDataProviders done");

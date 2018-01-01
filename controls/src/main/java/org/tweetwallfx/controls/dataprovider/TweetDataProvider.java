@@ -33,10 +33,9 @@ import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
-import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
-public class TweetDataProvider implements DataProvider {
+public class TweetDataProvider implements DataProvider.NewTweetAware {
 
     private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 50;
@@ -47,14 +46,17 @@ public class TweetDataProvider implements DataProvider {
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
 
-    private TweetDataProvider(final TweetStream tweetStream) {
-        tweetStream.onTweet(t -> {
-            LOGGER.info("new Tweet received");
-            if (t.getUser().getFollowersCount() > 25) {
-                this.nextTweet = t;
-            }
-            this.lastTweetCollection = null;
-        });
+    private TweetDataProvider() {
+        // prevent external instantiation
+    }
+
+    @Override
+    public void processNewTweet(final Tweet tweet) {
+        LOGGER.info("new Tweet received");
+        if (tweet.getUser().getFollowersCount() > 25) {
+            this.nextTweet = tweet;
+        }
+        this.lastTweetCollection = null;
     }
 
     public Tweet getTweet() {
@@ -102,8 +104,8 @@ public class TweetDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetDataProvider create(final TweetStream tweetStream) {
-            return new TweetDataProvider(tweetStream);
+        public TweetDataProvider create() {
+            return new TweetDataProvider();
         }
 
         @Override
