@@ -30,7 +30,7 @@ import javafx.scene.text.Text;
  *
  * @author sven
  */
-public class AbstractWordNodeFactory {
+class AbstractWordNodeFactory {
 
     private final Configuration configuration;
 
@@ -40,12 +40,12 @@ public class AbstractWordNodeFactory {
 
     public static AbstractWordNodeFactory createFactory(Configuration configuration) {
         return new AbstractWordNodeFactory(configuration);
-    }    
-    
+    }
+
     public void fontSizeAdaption(Text text, double fontSize) {
         text.setFont(Font.font(text.getFont().getFamily(), fontSize));
-    }   
-    
+    }
+
     public Text createTextNode(String word) {
         Text textNode = new Text(word);
         textNode.getStyleClass().setAll("tag");
@@ -55,9 +55,9 @@ public class AbstractWordNodeFactory {
         textNode.setCache(true);
 //        textNode.setCacheHint(CacheHint.SPEED);
         return textNode;
-    }      
+    }
 
-    static class Configuration {
+    protected static class Configuration {
 
         final Font font;
 
@@ -65,5 +65,4 @@ public class AbstractWordNodeFactory {
             this.font = font;
         }
     }
-    
 }

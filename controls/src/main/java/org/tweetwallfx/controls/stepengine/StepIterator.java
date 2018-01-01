@@ -43,7 +43,7 @@ import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 /**
  * @author Jörg Michelberger
  */
-public class StepIterator {
+class StepIterator {
 
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private Step current = null;
