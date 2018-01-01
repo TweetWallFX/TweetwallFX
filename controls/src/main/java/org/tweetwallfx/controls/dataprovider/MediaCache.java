@@ -39,7 +39,7 @@ public enum MediaCache {
     }
 
     public boolean hasCachedMedia(long mediaId) {
-        if (imageCache.containsKey(Long.valueOf(mediaId))) {
+        if (imageCache.containsKey(mediaId)) {
             log.debug("Media id: " + mediaId + " - exists in cache");
             return true;
         }
@@ -47,10 +47,10 @@ public enum MediaCache {
     }
 
     public Optional<CachedMedia> getCachedMedia(long mediaId) {
-        return Optional.ofNullable(imageCache.get(Long.valueOf(mediaId)));
+        return Optional.ofNullable(imageCache.get(mediaId));
     }
 
     public void putCachedMedia(long mediaId, CachedMedia image) {
-        imageCache.put(Long.valueOf(mediaId), image);
+        imageCache.put(mediaId, image);
     }
 }
