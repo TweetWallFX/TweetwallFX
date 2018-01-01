@@ -75,18 +75,6 @@ public class StepIterator {
         steps.forEach(consumer);
     }
 
-    public Step getCurrent() {
-        return current;
-    }
-
-    public Step getNext() {
-        int getIndex = stepIndex;
-        if (getIndex == steps.size()) {
-            getIndex = 0;
-        }
-        return steps.get(getIndex);
-    }
-
     public Set<Class<? extends DataProvider>> getRequiredDataProviders() {
         return requiredDataProviders;
     }
