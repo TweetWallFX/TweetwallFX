@@ -31,7 +31,7 @@ import java.util.Objects;
  */
 public class Word implements Comparable<Word> {
 
-    private String text;
+    private final String text;
     private double weight;
 
     public Word(String text, double weight) {

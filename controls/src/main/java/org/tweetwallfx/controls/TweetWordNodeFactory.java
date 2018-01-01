@@ -32,7 +32,7 @@ import javafx.scene.text.Text;
  */
 public class TweetWordNodeFactory extends AbstractWordNodeFactory {
 
-    private Configuration configuration;
+    private final Configuration configuration;
     
     private TweetWordNodeFactory(Configuration configuration) {
         super(configuration);

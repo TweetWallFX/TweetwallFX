@@ -24,7 +24,6 @@
 package org.tweetwallfx.controls;
 
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 /**
  *
@@ -32,7 +31,7 @@ import javafx.scene.text.Text;
  */
 public class CloudWordNodeFactory extends AbstractWordNodeFactory {
 
-    private Configuration configuration;
+    private final Configuration configuration;
     
     private CloudWordNodeFactory(Configuration configuration) {
         super(configuration);

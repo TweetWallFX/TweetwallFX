@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls;
 
-import javafx.scene.CacheHint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 

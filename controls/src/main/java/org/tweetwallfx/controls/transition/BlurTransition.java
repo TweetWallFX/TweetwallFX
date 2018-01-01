@@ -23,7 +23,6 @@
  */package org.tweetwallfx.controls.transition;
 
 import javafx.animation.Transition;
-import javafx.scene.Node;
 import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 
