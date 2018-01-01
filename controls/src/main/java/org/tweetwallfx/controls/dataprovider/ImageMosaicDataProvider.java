@@ -189,27 +189,19 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
-            }
-            if (obj == null) {
+            } else if (null == obj || getClass() != obj.getClass()) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
+
             final ImageStore other = (ImageStore) obj;
-            if (this.mediaId != other.mediaId) {
-                return false;
-            }
-            if (!Objects.equals(this.tweet, other.tweet)) {
-                return false;
-            }
-            if (!Objects.equals(this.image, other.image)) {
-                return false;
-            }
-            if (!Objects.equals(this.instant, other.instant)) {
-                return false;
-            }
-            return true;
+            boolean result = true;
+
+            result &= this.mediaId == other.mediaId;
+            result &= Objects.equals(this.tweet, other.tweet);
+            result &= Objects.equals(this.image, other.image);
+            result &= Objects.equals(this.instant, other.instant);
+
+            return result;
         }
     }
 }
