@@ -63,10 +63,10 @@ public class WordleSkin extends SkinBase<Wordle> {
     private ImageView logo;
     private ImageView secondLogo;
     private ImageView backgroundImage;
-    private Font font;
-    private int fontSizeMin;
-    private int fontSizeMax;
-    private int tweetFontSize;
+    private final Font font;
+    private final int fontSizeMin;
+    private final int fontSizeMax;
+    private final int tweetFontSize;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());

@@ -43,7 +43,7 @@ import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 /**
  * @author Jörg Michelberger
  */
-public class StepIterator {
+class StepIterator {
 
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private Step current = null;
@@ -73,18 +73,6 @@ public class StepIterator {
 
     void applyWith(final Consumer<Step> consumer) {
         steps.forEach(consumer);
-    }
-
-    public Step getCurrent() {
-        return current;
-    }
-
-    public Step getNext() {
-        int getIndex = stepIndex;
-        if (getIndex == steps.size()) {
-            getIndex = 0;
-        }
-        return steps.get(getIndex);
     }
 
     public Set<Class<? extends DataProvider>> getRequiredDataProviders() {

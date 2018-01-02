@@ -51,7 +51,7 @@ public final class WordleLayout {
     
     private final Random rand = new Random();    
     
-    private Map<Word, Bounds> wordLayoutMap;
+    private final Map<Word, Bounds> wordLayoutMap;
     private final Configuration configuration;
     private final CloudWordNodeFactory wordNodeFactory;
     private WordleLayout initialLayoutSolution;
