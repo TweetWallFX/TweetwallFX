@@ -1,0 +1,45 @@
+{
+    "twitter": {
+        "extendedMode": true
+    },
+    "tweetwall": {
+        "query": "#devoxx",
+        "title": "The JavaFX Tweetwall for Devoxx 2017!",
+        "stylesheetResource": "tweetwall.css"
+    },
+    "stepEngine": {
+        "steps": [
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.FadeInCloudStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.NextTweetStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.AddTweetToCloudStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.CloudToCloudStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.CloudToTweetStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.PauseStep",
+                "config": {
+                    "amount": 5,
+                    "unit": "SECONDS"
+                }
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.TweetToCloudStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.CloudFadeOutStep"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.ImageMosaicStep"
+            }
+        ]
+    }
+}
