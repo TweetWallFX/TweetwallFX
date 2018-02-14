@@ -68,6 +68,10 @@ project(":javaone").name = "TweetWallFX-JavaOne"
 include ':generic2d'
 project(":generic2d").name = "TweetWallFX-Generic2D"
 
+include ':voxxed-days-zurich'
+project(":voxxed-days-zurich").name = "TweetWallFX-Voxxed-Days-Zurich"
+
+
 // disabled subproject for future reference
 //include ':3d'
 //project(':3d').name = 'TweetWallFX-3D'
