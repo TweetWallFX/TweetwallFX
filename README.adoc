@@ -7,7 +7,7 @@ image:https://img.shields.io/travis/{project-full-path}/{github-branch}.svg["Bui
 
 ## Getting OAuth keys
 
-Create a new Application for TweetWall within https://apps.twitter.com[Twitter Apps site] signing in 
+Create a new Application for TweetWall within https://apps.twitter.com[Twitter Apps site] signing in
 with the twitter account that will be used to run the TweetWallFX. You have to enter at least the
 website of your company. After doing so generate a new access token under `Keys and Access Tokens`.
 
