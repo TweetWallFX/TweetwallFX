@@ -55,7 +55,7 @@
 .wordle {
     -fx-graphic: url(Devoxx-Logo-White.png);
     -fx-background-color: black;
-    -fx-background-graphic: url(VDZ-whiteband.png);
+    -fx-background-graphic: url(vdz18-whiteband.png);
     -fx-second-graphic: url(jug-bodensee-logo-weiss3-gross.png);
     -fx-display-tag-num: 25;
     /*-fx-font: 12pt "BebasNeue";*/
