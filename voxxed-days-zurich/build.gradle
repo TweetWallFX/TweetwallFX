@@ -27,6 +27,8 @@ mainClassName = 'org.tweetwallfx.generic.Main'
 
 tasks.withType(JavaExec) {
     main mainClassName
+    jvmArgs '-Dorg.tweetwallfx.vdz.day=thursday'
+    jvmArgs '-Dorg.tweetwallfx.vdz.time=10:00Z'
 }
 
 task('debug', dependsOn: 'classes', type: JavaExec) {
