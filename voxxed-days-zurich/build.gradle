@@ -29,6 +29,8 @@ tasks.withType(JavaExec) {
     main mainClassName
     jvmArgs '-Dorg.tweetwallfx.vdz.day=thursday'
     jvmArgs '-Dorg.tweetwallfx.vdz.time=10:00Z'
+    jvmArgs '-Djavafx.verbose=true'
+    jvmArgs '-Dprism.verbose=true'
 }
 
 task('debug', dependsOn: 'classes', type: JavaExec) {

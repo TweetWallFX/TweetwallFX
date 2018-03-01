@@ -23,13 +23,19 @@
  */
 package org.tweetwallfx.vdz.cfp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.junit.After;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -153,7 +159,6 @@ public class CFPClientTest {
     }
 
     @Test
-    @Ignore
     public void scheduleIsRetrievableForADay() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);

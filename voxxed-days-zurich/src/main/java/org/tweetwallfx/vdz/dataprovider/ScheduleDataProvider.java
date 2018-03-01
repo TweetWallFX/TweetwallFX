@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.slf4j.LoggerFactory;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
@@ -48,6 +49,7 @@ public class ScheduleDataProvider implements DataProvider {
     private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
 
     private ScheduleDataProvider() {
+        updateSchedule();
     }
 
     public void updateSchedule() {
@@ -57,6 +59,7 @@ public class ScheduleDataProvider implements DataProvider {
                 .getSchedule(System.getProperty("org.tweetwallfx.vdz.day", actualDayName))
                 .map(Schedule::getSlots)
                 .ifPresent(slots -> {
+                    LoggerFactory.getLogger(getClass()).error("updateSchedule: " + slots);
                     scheduleSlots = slots;
                 });
     }

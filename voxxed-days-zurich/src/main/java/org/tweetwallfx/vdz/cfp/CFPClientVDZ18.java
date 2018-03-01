@@ -23,10 +23,14 @@
  */
 package org.tweetwallfx.vdz.cfp;
 
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import javax.ws.rs.core.GenericType;
+
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Event;
 import org.tweetwall.devoxx.api.cfp.client.Events;
@@ -38,7 +42,6 @@ import org.tweetwall.devoxx.api.cfp.client.Speaker;
 import org.tweetwall.devoxx.api.cfp.client.Talk;
 import org.tweetwall.devoxx.api.cfp.client.Tracks;
 import org.tweetwall.devoxx.api.cfp.client.VotingResults;
-import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
  * CFPClient working with Voxxed Days Zurich.
@@ -70,7 +73,7 @@ public class CFPClientVDZ18 implements CFPClient {
 
     @Override
     public Optional<Schedule> getSchedule(final String day) {
-        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day, Schedule.class);
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day +"/", Schedule.class);
     }
 
     @Override

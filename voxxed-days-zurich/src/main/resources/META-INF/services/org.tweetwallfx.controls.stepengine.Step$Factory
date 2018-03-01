@@ -1,2 +1,3 @@
 org.tweetwallfx.vdz.steps.FlipInTweets$Factory
 org.tweetwallfx.vdz.steps.ShowSchedule$Factory
+org.tweetwallfx.vdz.steps.UpdateScheduleResults$Factory
