@@ -3,42 +3,30 @@
         "extendedMode": true
     },
     "tweetwall": {
-        "query": "#devoxx",
-        "title": "The JavaFX Tweetwall for Devoxx 2017!",
+        "query": "#vdz18 OR #voxxed OR 'java' OR #NoBillag",
+        "title": "The JavaFX Tweetwall for Voxxed Days Zürich 2018!",
         "stylesheetResource": "tweetwall.css"
     },
     "stepEngine": {
         "steps": [
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.FadeInCloudStep"
+                "stepClassName": "org.tweetwallfx.vdz.steps.FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.NextTweetStep"
+                "stepClassName": "org.tweetwallfx.vdz.steps.ShowSchedule"
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.AddTweetToCloudStep"
-            },
-            {
-                "stepClassName": "org.tweetwallfx.controls.steps.CloudToCloudStep"
-            },
-            {
-                "stepClassName": "org.tweetwallfx.controls.steps.CloudToTweetStep"
+                "stepClassName": "org.tweetwallfx.vdz.steps.UpdateScheduleResults"
             },
             {
                 "stepClassName": "org.tweetwallfx.controls.steps.PauseStep",
                 "config": {
-                    "amount": 5,
+                    "amount": 1,
                     "unit": "SECONDS"
                 }
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.TweetToCloudStep"
-            },
-            {
-                "stepClassName": "org.tweetwallfx.controls.steps.CloudFadeOutStep"
-            },
-            {
-                "stepClassName": "org.tweetwallfx.controls.steps.ImageMosaicStep"
+                "stepClassName": "org.tweetwallfx.vdz.steps.FlipOutTweets"
             }
         ]
     }

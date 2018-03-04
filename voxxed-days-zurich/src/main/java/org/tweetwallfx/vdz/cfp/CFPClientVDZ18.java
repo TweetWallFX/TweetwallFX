@@ -21,12 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.api.cfp.client.implvdz2018;
+package org.tweetwallfx.vdz.cfp;
+
+import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import javax.ws.rs.core.GenericType;
+
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Event;
 import org.tweetwall.devoxx.api.cfp.client.Events;
@@ -38,19 +42,18 @@ import org.tweetwall.devoxx.api.cfp.client.Speaker;
 import org.tweetwall.devoxx.api.cfp.client.Talk;
 import org.tweetwall.devoxx.api.cfp.client.Tracks;
 import org.tweetwall.devoxx.api.cfp.client.VotingResults;
-import static org.tweetwall.devoxx.api.cfp.client.impl.RestCallHelper.*;
 
 /**
- * CFPClient working with Voxxed Days Zurich 2018.
+ * CFPClient working with Voxxed Days Zurich.
  */
-public class CFPClientVoxxedDaysZurich2018 implements CFPClient {
+public class CFPClientVDZ18 implements CFPClient {
 
-    private static final String BASE_URI = "https://cfp-vdz.exteso.com/api/";
-    private static final String CONFERENCE_BASE_URI = "https://cfp-vdz.exteso.com/api/conferences/VDZ";
+    private static final String BASE_URI = "https://cfp-vdz.exteso.com/api";
+    private static final String CONFERENCE_BASE_URI = BASE_URI + "/conferences/VDZ18";
 
     @Override
     public Optional<Events> getEvents() {
-        return readOptionalFrom(BASE_URI + "conferences", Events.class);
+        return readOptionalFrom(BASE_URI + "/conferences/", Events.class);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class CFPClientVoxxedDaysZurich2018 implements CFPClient {
 
     @Override
     public Optional<Schedule> getSchedule(final String day) {
-        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day + "/", Schedule.class);
+        return readOptionalFrom(CONFERENCE_BASE_URI + "/schedules/" + day +"/", Schedule.class);
     }
 
     @Override
@@ -106,11 +109,12 @@ public class CFPClientVoxxedDaysZurich2018 implements CFPClient {
 
     @Override
     public Optional<VotingResults> getVotingResultsOverall() {
-        return readOptionalFrom("http://cfp-vdz.exteso.com/api/voting/v1/top/talks", VotingResults.class);
+        return readOptionalFrom(BASE_URI + "/voting/v1/top/talks", VotingResults.class);
     }
 
     @Override
     public Optional<VotingResults> getVotingResultsDaily(final String day) {
-        return readOptionalFrom("http://cfp-vdz.exteso.com/api/voting/v1/top/talks", Collections.singletonMap("day", day), VotingResults.class);
+        return readOptionalFrom(BASE_URI + "/voting/v1/top/talks", Collections.singletonMap("day", day),
+                VotingResults.class);
     }
 }

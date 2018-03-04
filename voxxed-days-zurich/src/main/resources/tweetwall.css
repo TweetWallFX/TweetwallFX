@@ -44,19 +44,19 @@
 
 .root {
     -fx-font-family: 'System'; 
-    devoxx_gradient: linear-gradient(to bottom right, #f68b1f, derive(#f68b1f, -30%));
+    devoxx_gradient: linear-gradient(to bottom right, #83c2ed, derive(#83c2ed, -30%))
 }
 
 .statusline {
     /*-fx-font: 12px "Calibri";*/ 
-    -fx-text-fill: red !important;     
+    -fx-text-fill: red !important;
 }
 
 .wordle {
-    -fx-graphic: url(Devoxx-Logo-White.png);
-    -fx-background-color: black;
-    -fx-background-graphic: url(vdz18-whiteband.png);
-    -fx-second-graphic: url(jug-bodensee-logo-weiss3-gross.png);
+    -fx-graphic: none;
+    -fx-background-color: none;
+    -fx-background-graphic: url(vdz18-background-single.png);
+    /* -fx-second-graphic: none;*/
     -fx-display-tag-num: 25;
     /*-fx-font: 12pt "BebasNeue";*/
     -fx-font-size-min: 36;
@@ -65,23 +65,16 @@
     
 }
 .wordle .bg-image {
-    -fx-opacity: 0.4;
+    /*--fx-opacity: 0.8; */
 }
 
 .wordle .secondlogo {
     -fx-scale-x: 0.4;
     -fx-scale-y: 0.4;
-    -fx-background-color: white;    
-    /*position: relative;*/
-    /*-fx-alignment: BOTTOM_RIGHT;*/
-    /*-fx-translate-x: +900;
-    -fx-translate-y: +100;*/
+    -fx-background-color: white;
 }
 
 .wordle .logo {
-    /*visibility: hidden;*/
-/*    -fx-scale-x: 0.7;
-    -fx-scale-y: 0.7;*/
     -fx-translate-x: +150;
     -fx-translate-y: -150;
 }
@@ -96,26 +89,25 @@
 }
 
 .wordle .name {
-    -fx-font-size: 36px; 
-    -fx-text-fill: white; 
-    -fx-font-weight: bold;    
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .wordle .handle {
     -fx-font-size: 28px;
-    -fx-text-fill: white;   
+    -fx-text-fill: white;
 }
 
 .tweetFlow {
     -fx-font-family: 'Twitter Color Emoji';
-    -fx-font-size: 1em;    
-    -fx-fill: blanchedalmond;
+    -fx-font-size: 1em;
+    -fx-fill: #285285;
 }
 
 .tweetDisplay {
-    -fx-border-color: black;
-    -fx-border-style: solid;
-    -fx-border-width: 0pt 0pt 1pt 0pt;
-    /*-fx-border-radius: 5pt;*/
     -fx-border-insets: 5pt;
+    -fx-background-color: devoxx_gradient;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow( three-pass-box , #285285 , 4, 0.0 , 4.0 , 4.0 );
 }
