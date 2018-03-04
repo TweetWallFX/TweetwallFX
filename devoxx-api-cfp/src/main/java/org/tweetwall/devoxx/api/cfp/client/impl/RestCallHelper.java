@@ -84,7 +84,7 @@ public class RestCallHelper {
 
     public static Optional<Response> getOptionalResponse(final String url, final Map<String, Object> queryParameters) {
         try {
-            return Optional.of(getResponse(url, queryParameters));
+            return Optional.ofNullable(getResponse(url, queryParameters));
         } catch (final ProcessingException pe) {
             LOGGER.error("Encountered ProcessingException while calling to '" + url + "'", pe);
             return Optional.empty();
