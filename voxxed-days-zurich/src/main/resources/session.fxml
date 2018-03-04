@@ -41,7 +41,7 @@
       </TextFlow>
       <TextFlow maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="209.0" textAlignment="RIGHT" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: blanchedalmond;" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
+            <Text id="speakers" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: #285285;" text="Johan Vos, Erwin Morrhey, Joeri Sykora, José Pereda" />
          </children>
       </TextFlow>
       <Label id="room" layoutX="233.0" layoutY="2.0" style="-fx-font-weight: bold; -fx-font-size: 14pt;" text="Room 10" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />

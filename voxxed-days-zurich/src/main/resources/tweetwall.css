@@ -44,7 +44,7 @@
 
 .root {
     -fx-font-family: 'System'; 
-    devoxx_gradient: linear-gradient(to bottom right, #f68b1f, derive(#f68b1f, -30%));
+    devoxx_gradient: linear-gradient(to bottom right, #83c2ed, derive(#83c2ed, -30%));
 }
 
 .statusline {
