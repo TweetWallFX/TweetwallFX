@@ -58,13 +58,20 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private final String searchText = Configuration.getInstance()
             .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-    
+
+    private int minFollowersCount = 0;
+    private volatile Image latestTweetedImage;
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
-    private volatile Image latestTweetedImage = null;
 
     private TweetStreamDataProvider() {
         Platform.runLater(() -> {
             LOGGER.info("Initialize tweet stream provider");
+            try {
+                minFollowersCount = Integer
+                        .parseInt(System.getProperty("org.tweetwallfx.vdz.min.followers", "0"));
+            } catch (NumberFormatException e) {
+                LOGGER.error("Unable to get minimum followers count", e);
+            }
             List<Tweet> history = getLatestHistory();
             tweetListLock.writeLock().lock();
             try {
@@ -74,7 +81,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             }
         });
     }
-    
+
     public int getMaxTweets() {
         return MAX_TWEETS;
     }
@@ -86,7 +93,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private void updateImage(final Tweet tweet) {
-        if (tweet.getUser().getFollowersCount() > 50) {
+        if (tweet.getUser().getFollowersCount() >= minFollowersCount) {
             Arrays.stream(tweet.getMediaEntries()).filter(MediaTweetEntryType.photo::isType)
                     .findFirst().ifPresent(me -> {
                         String url;
@@ -117,12 +124,9 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         if (tweet.getUser().getFollowersCount() > 50) {
             tweetListLock.writeLock().lock();
             try {
-//                if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
-//                }
                 if (tweet.isRetweet()) {
                     Tweet originalTweet = tweet.getRetweetedTweet();
-                    if (tweets.stream()
-                            .noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                    if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
                         tweets.addFirst(originalTweet);
                         updateImage(originalTweet);
                     }
