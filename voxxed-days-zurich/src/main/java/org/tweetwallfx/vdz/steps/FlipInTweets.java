@@ -64,8 +64,9 @@ public class FlipInTweets implements Step {
 
     @Override
     public void doStep(final MachineContext context) {
-        double[] spacing = new double[]{150, 20, 20, 20, 20, 10};
-        double[] maxWidth = new double[]{400, 400, 380, 320, 290, 270};
+        double[] spacing = new double[] {170, 20, 20, 20, 20, 10};
+        double[] maxWidth = new double[]{400, 400, 400, 400, 400, 400};
+//        double[] maxWidth = new double[]{400, 400, 380, 320, 290, 270};
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         final TweetStreamDataProvider dataProvider = context.getDataProvider(TweetStreamDataProvider.class);
@@ -74,16 +75,16 @@ public class FlipInTweets implements Step {
 
         List<Transition> transitions = new ArrayList<>();
 
+        // tweet image
         dataProvider.getLatestImage().ifPresent(image -> {
             ImageView view = new ImageView(image);
             view.setPreserveRatio(true);
             view.setFitHeight(140);
             view.setFitWidth(259);
-            view.layoutXProperty().bind(Bindings.add(Bindings.multiply(1490 / 1920.0, wordleSkin.getSkinnable().widthProperty()),
+            view.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330 / 1920.0, wordleSkin.getSkinnable().widthProperty()),
                     Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.widthProperty())));
-            view.layoutYProperty().bind(Bindings.add(Bindings.multiply(405 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
+            view.layoutYProperty().bind(Bindings.add(Bindings.multiply(320 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
                     Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.heightProperty())));
-//            view.setRotate(-18);
             view.setId("tweetImage");
             view.setOpacity(0);
             wordleSkin.getPane().getChildren().add(view);
@@ -93,11 +94,11 @@ public class FlipInTweets implements Step {
             fadeTransition.setDelay(Duration.seconds(0.2));
             transitions.add(fadeTransition);
         });
+
         tweetList.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()),
                 Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.widthProperty())));
-        tweetList.layoutYProperty().bind(Bindings.add(Bindings.multiply(330.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
+        tweetList.layoutYProperty().bind(Bindings.add(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
                 Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.heightProperty())));
-//        tweetList.setRotate(-18);
 
         List<Tweet> tweets = dataProvider.getTweets();
         for (int i = 0; i < Math.min(tweets.size(), 4); i++) {
@@ -132,6 +133,7 @@ public class FlipInTweets implements Step {
     }
 
     private HBox createSingleTweetDisplay(final Tweet displayTweet, final WordleSkin wordleSkin, final double maxWidth) {
+        // shorten tweet text here if needed
         String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
         Text text = new Text(textWithoutMediaUrls.replaceAll("[\n\r]", "|"));
         text.setCache(true);

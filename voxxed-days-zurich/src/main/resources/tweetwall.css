@@ -44,7 +44,7 @@
 
 .root {
     -fx-font-family: 'System'; 
-    devoxx_gradient: linear-gradient(to bottom right, #83c2ed, derive(#83c2ed, -30%));
+    devoxx_gradient: linear-gradient(to bottom right, #83c2ed, derive(#83c2ed, -30%))
 }
 
 .statusline {
@@ -109,13 +109,11 @@
 .tweetFlow {
     -fx-font-family: 'Twitter Color Emoji';
     -fx-font-size: 1em;
-    -fx-fill: blanchedalmond;
+    -fx-fill: #285285;
 }
 
 .tweetDisplay {
-    -fx-border-color: white;
-    -fx-border-style: solid;
-    -fx-border-width: 0pt 0pt 1pt 0pt;
-    /*-fx-border-radius: 5pt;*/
     -fx-border-insets: 5pt;
+    -fx-background-color: devoxx_gradient;
+    -fx-background-radius: 10;
 }
