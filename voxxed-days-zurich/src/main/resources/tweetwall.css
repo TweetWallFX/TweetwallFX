@@ -54,7 +54,7 @@
 
 .wordle {
     -fx-graphic: none;
-    -fx-background-color: none;
+    -fx-background-color: black;
     -fx-background-graphic: url(vdz18-background-single.png);
     /* -fx-second-graphic: none;*/
     -fx-display-tag-num: 25;

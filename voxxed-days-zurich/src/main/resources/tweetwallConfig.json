@@ -3,7 +3,7 @@
         "extendedMode": true
     },
     "tweetwall": {
-        "query": "#vdz18 OR #voxxed OR 'java' OR #NoBillag",
+        "query": "#vdz18 OR #voxxed OR #java",
         "title": "The JavaFX Tweetwall for Voxxed Days Zürich 2018!",
         "stylesheetResource": "tweetwall.css"
     },
