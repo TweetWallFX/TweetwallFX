@@ -25,6 +25,7 @@ package org.tweetwallfx.generic;
 
 import java.util.Optional;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -51,7 +52,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
-        Scene scene = new Scene(borderPane, 800, 600);
+        Scene scene = new Scene(borderPane, 1920, 1280);
         borderPane.getStyleClass().add("splash");
 
         final TweetwallSettings tweetwallSettings
@@ -80,7 +81,7 @@ public class Main extends Application {
         statusLineHost.getChildren().add(statusLineText);
 
         tweetsTask = new TagTweets(borderPane);
-        tweetsTask.start();
+        Platform.runLater(tweetsTask::start);
 
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isMetaDown() && event.getCharacter().equals("d")) {
@@ -96,7 +97,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
 
         primaryStage.show();
-        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
     }
 
     @Override
