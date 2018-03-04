@@ -3,7 +3,7 @@
         "extendedMode": true
     },
     "tweetwall": {
-        "query": "#vdz18 #voxxed java",
+        "query": "#vdz18 OR #voxxed OR 'java' OR #NoBillag",
         "title": "The JavaFX Tweetwall for Voxxed Days Zürich 2018!",
         "stylesheetResource": "tweetwall.css"
     },
@@ -17,6 +17,16 @@
             },
             {
                 "stepClassName": "org.tweetwallfx.vdz.steps.UpdateScheduleResults"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.controls.steps.PauseStep",
+                "config": {
+                    "amount": 1,
+                    "unit": "SECONDS"
+                }
+            },
+            {
+                "stepClassName": "org.tweetwallfx.vdz.steps.FlipOutTweets"
             }
         ]
     }

@@ -51,17 +51,20 @@ import javafx.scene.image.Image;
  * @author Sven Reimers
  */
 public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
-
     private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
     private static final int HISTORY_SIZE = 25;
+    private static final int MAX_TWEETS = 7;
+
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
-    private volatile Deque<Tweet> tweets = new ArrayDeque<>();
-    private volatile Image latestTweetedImage = null;
     private final String searchText = Configuration.getInstance()
             .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+    
+    private volatile Deque<Tweet> tweets = new ArrayDeque<>();
+    private volatile Image latestTweetedImage = null;
 
     private TweetStreamDataProvider() {
         Platform.runLater(() -> {
+            LOGGER.info("Initialize tweet stream provider");
             List<Tweet> history = getLatestHistory();
             tweetListLock.writeLock().lock();
             try {
@@ -71,10 +74,14 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             }
         });
     }
+    
+    public int getMaxTweets() {
+        return MAX_TWEETS;
+    }
 
     @Override
     public void processNewTweet(final Tweet tweet) {
-        LOGGER.info("new Tweet received");
+        LOGGER.info("New tweet received");
         addTweet(tweet);
     }
 
@@ -106,24 +113,25 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private void addTweet(final Tweet tweet) {
+        LOGGER.info("Add tweet {}", tweet.getId());
         if (tweet.getUser().getFollowersCount() > 50) {
             tweetListLock.writeLock().lock();
             try {
-                if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
-                    if (tweet.isRetweet()) {
-                        Tweet originalTweet = tweet.getRetweetedTweet();
-                        if (tweets.stream()
-                                .noneMatch(twt -> originalTweet.getId() == twt.getId())) {
-                            tweets.addFirst(originalTweet);
-                            updateImage(originalTweet);
-                        }
-                    } else {
-                        tweets.addFirst(tweet);
-                        updateImage(tweet);
+//                if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
+//                }
+                if (tweet.isRetweet()) {
+                    Tweet originalTweet = tweet.getRetweetedTweet();
+                    if (tweets.stream()
+                            .noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                        tweets.addFirst(originalTweet);
+                        updateImage(originalTweet);
                     }
-                    if (tweets.size() > 4) {
-                        tweets.removeLast();
-                    }
+                } else {
+                    tweets.addFirst(tweet);
+                    updateImage(tweet);
+                }
+                if (tweets.size() > MAX_TWEETS) {
+                    tweets.removeLast();
                 }
             } finally {
                 tweetListLock.writeLock().unlock();

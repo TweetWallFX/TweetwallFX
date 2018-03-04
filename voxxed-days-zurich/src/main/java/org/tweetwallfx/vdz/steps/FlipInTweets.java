@@ -61,8 +61,9 @@ public class FlipInTweets implements Step {
 
     @Override
     public void doStep(final MachineContext context) {
-        double[] spacing = new double[] {170, 20, 20, 20, 20, 10};
-        double[] maxWidth = new double[] {400, 400, 400, 400, 400, 400};
+//        double[] spacing = new double[] {170, 20, 20, 20, 20, 20, 10};
+        double[] spacing = new double[] {10, 10, 10, 10, 10, 10, 10, 10};
+        double[] maxWidth = new double[] {400, 400, 400, 400, 400, 400, 400, 400};
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         final TweetStreamDataProvider dataProvider =
@@ -73,6 +74,45 @@ public class FlipInTweets implements Step {
         List<Transition> transitions = new ArrayList<>();
 
         // tweet image
+//        addTweetImage(wordleSkin, dataProvider, tweetList, transitions);
+
+        tweetList.layoutXProperty()
+                .bind(Bindings.add(
+                        Bindings.multiply(1330.0 / 1920.0,
+                                wordleSkin.getSkinnable().widthProperty()),
+                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                tweetList.widthProperty())));
+        tweetList.layoutYProperty()
+                .bind(Bindings.add(
+                        Bindings.multiply(200.0 / 1280.0,
+                                wordleSkin.getSkinnable().heightProperty()),
+                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                tweetList.heightProperty())));
+
+        List<Tweet> tweets = dataProvider.getTweets();
+        for (int i = 0; i < Math.min(tweets.size(), dataProvider.getMaxTweets()); i++) {
+            HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
+            tweet.setMaxWidth(maxWidth[i] + 64 + 10);
+            tweet.getStyleClass().add("tweetDisplay");
+            transitions.add(new FlipInXTransition(tweet));
+            tweetList.getChildren().add(tweet);
+            VBox.setMargin(tweet, new Insets(0, 0, spacing[i], 0));
+            // if (i < 5 && i != 1) {
+            // Pane pane = new Pane();
+            // pane.getChildren().add(new Line(0, 0, maxWidth[i], 0));
+            // pane.setPadding(new Insets(spacing[i] / 2., 0, spacing[i] / 2., 0));
+            // tweetList.getChildren().add(pane);
+            // }
+        }
+        ParallelTransition flipIns = new ParallelTransition();
+        flipIns.getChildren().addAll(transitions);
+        flipIns.setOnFinished(e -> context.proceed());
+
+        flipIns.play();
+    }
+
+    private void addTweetImage(WordleSkin wordleSkin, final TweetStreamDataProvider dataProvider,
+            VBox tweetList, List<Transition> transitions) {
         dataProvider.getLatestImage().ifPresent(image -> {
             ImageView view = new ImageView(image);
             view.setPreserveRatio(true);
@@ -99,40 +139,6 @@ public class FlipInTweets implements Step {
             fadeTransition.setDelay(Duration.seconds(0.2));
             transitions.add(fadeTransition);
         });
-
-        tweetList.layoutXProperty()
-                .bind(Bindings.add(
-                        Bindings.multiply(1330.0 / 1920.0,
-                                wordleSkin.getSkinnable().widthProperty()),
-                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
-                                tweetList.widthProperty())));
-        tweetList.layoutYProperty()
-                .bind(Bindings.add(
-                        Bindings.multiply(200.0 / 1280.0,
-                                wordleSkin.getSkinnable().heightProperty()),
-                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
-                                tweetList.heightProperty())));
-
-        List<Tweet> tweets = dataProvider.getTweets();
-        for (int i = 0; i < Math.min(tweets.size(), 4); i++) {
-            HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
-            tweet.setMaxWidth(maxWidth[i] + 64 + 10);
-            tweet.getStyleClass().add("tweetDisplay");
-            transitions.add(new FlipInXTransition(tweet));
-            tweetList.getChildren().add(tweet);
-            VBox.setMargin(tweet, new Insets(0, 0, spacing[i], 0));
-            // if (i < 5 && i != 1) {
-            // Pane pane = new Pane();
-            // pane.getChildren().add(new Line(0, 0, maxWidth[i], 0));
-            // pane.setPadding(new Insets(spacing[i] / 2., 0, spacing[i] / 2., 0));
-            // tweetList.getChildren().add(pane);
-            // }
-        }
-        ParallelTransition flipIns = new ParallelTransition();
-        flipIns.getChildren().addAll(transitions);
-        flipIns.setOnFinished(e -> context.proceed());
-
-        flipIns.play();
     }
 
     private VBox getOrCreateTweetList(final WordleSkin wordleSkin) {
@@ -171,7 +177,9 @@ public class FlipInTweets implements Step {
         name.setCacheHint(CacheHint.SPEED);
         VBox imageBox = new VBox(profileImageView);
         imageBox.setPadding(new Insets(10, 0, 10, 10));
-        HBox tweet = new HBox(imageBox, new VBox(name, flow));
+        VBox tweetBox = new VBox(name, flow);
+        tweetBox.setPadding(new Insets(10, 10, 10, 0));
+        HBox tweet = new HBox(imageBox, tweetBox);
         tweet.setCacheHint(CacheHint.QUALITY);
         tweet.setSpacing(10);
         return tweet;

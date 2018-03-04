@@ -87,10 +87,11 @@ public class ShowSchedule extends FlipInTweets {
                     grid.getChildren().add(node);
                     GridPane.setColumnIndex(node, col);
                     GridPane.setRowIndex(node, row);
-                    col = (col == 0) ? 1 : 0;
-                    if (col == 0) {
-                        row++;
-                    }
+                    row++;
+//                    col = (col == 0) ? 1 : 0;
+//                    if (col == 0) {
+//                        row++;
+//                    }
                 }
             } catch (IOException ex) {
                 LOGGER.error(ex);

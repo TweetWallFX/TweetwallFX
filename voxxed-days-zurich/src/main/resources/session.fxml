@@ -32,7 +32,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="131.0" prefWidth="309.0" style="-fx-background-color: devoxx_gradient; -fx-background-radius: 5;" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="131.0" prefWidth="309.0" style="-fx-background-color: devoxx_gradient; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextFlow layoutY="86.0" maxHeight="-Infinity" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="301.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
          <children>
@@ -47,7 +47,9 @@
       <Label id="room" layoutX="233.0" layoutY="2.0" style="-fx-font-weight: bold; -fx-font-size: 14pt;" text="Room 10" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
       <Label id="startTime" layoutX="5.0" layoutY="29.0" text="14:00" />
    </children>
+<!--
    <effect>
       <DropShadow color="#9a9494" offsetX="2.0" offsetY="2.0" />
    </effect>
+-->
 </AnchorPane>

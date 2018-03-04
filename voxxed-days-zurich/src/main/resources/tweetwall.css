@@ -72,16 +72,9 @@
     -fx-scale-x: 0.4;
     -fx-scale-y: 0.4;
     -fx-background-color: white;
-    /*position: relative;*/
-    /*-fx-alignment: BOTTOM_RIGHT;*/
-    /*-fx-translate-x: +900;
-    -fx-translate-y: +100;*/
 }
 
 .wordle .logo {
-    /*visibility: hidden;*/
-/*    -fx-scale-x: 0.7;
-    -fx-scale-y: 0.7;*/
     -fx-translate-x: +150;
     -fx-translate-y: -150;
 }
@@ -116,4 +109,5 @@
     -fx-border-insets: 5pt;
     -fx-background-color: devoxx_gradient;
     -fx-background-radius: 10;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
