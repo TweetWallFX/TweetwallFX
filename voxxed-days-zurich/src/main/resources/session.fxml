@@ -48,6 +48,6 @@
       <Label id="startTime" layoutX="5.0" layoutY="29.0" text="14:00" />
    </children>
    <effect>
-      <DropShadow color="#285285" offsetX="2.0" offsetY="2.0" />
+      <DropShadow color="#285285" offsetX="4.0" offsetY="4.0" />
    </effect>
 </AnchorPane>

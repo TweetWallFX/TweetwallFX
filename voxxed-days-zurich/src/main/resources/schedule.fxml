@@ -62,7 +62,7 @@
             <Insets bottom="10.0" />
          </BorderPane.margin>
          <effect>
-      <DropShadow color="#285285" offsetX="2.0" offsetY="2.0" />
+      <DropShadow color="#285285" offsetX="4.0" offsetY="4.0" />
          </effect>
       </AnchorPane>
    </top>
