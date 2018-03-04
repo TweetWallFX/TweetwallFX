@@ -55,7 +55,7 @@
 .wordle {
     -fx-graphic: none;
     -fx-background-color: none;
-    -fx-background-graphic: url(vdz18-background.png);
+    -fx-background-graphic: url(vdz18-background-single.png);
     /* -fx-second-graphic: none;*/
     -fx-display-tag-num: 25;
     /*-fx-font: 12pt "BebasNeue";*/
@@ -65,7 +65,7 @@
     
 }
 .wordle .bg-image {
-    -fx-opacity: 0.8;
+    /*--fx-opacity: 0.8; */
 }
 
 .wordle .secondlogo {
@@ -96,24 +96,24 @@
 }
 
 .wordle .name {
-    -fx-font-size: 36px; 
-    -fx-text-fill: white; 
-    -fx-font-weight: bold;    
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .wordle .handle {
     -fx-font-size: 28px;
-    -fx-text-fill: white;   
+    -fx-text-fill: white;
 }
 
 .tweetFlow {
     -fx-font-family: 'Twitter Color Emoji';
-    -fx-font-size: 1em;    
+    -fx-font-size: 1em;
     -fx-fill: blanchedalmond;
 }
 
 .tweetDisplay {
-    -fx-border-color: black;
+    -fx-border-color: white;
     -fx-border-style: solid;
     -fx-border-width: 0pt 0pt 1pt 0pt;
     /*-fx-border-radius: 5pt;*/

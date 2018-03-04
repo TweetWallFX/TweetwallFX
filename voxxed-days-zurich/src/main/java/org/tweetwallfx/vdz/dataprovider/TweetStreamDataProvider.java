@@ -3,23 +3,20 @@
  *
  * Copyright 2014-2017 TweetWallFX
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.tweetwallfx.vdz.dataprovider;
 
@@ -33,7 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-import javafx.scene.image.Image;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
@@ -44,9 +41,12 @@ import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+
 /**
- * Provides an always current list of tweets based on the configured query. The
- * history length is not yet configurable.
+ * Provides an always current list of tweets based on the configured query. The history length is
+ * not yet configurable.
  *
  * @author Sven Reimers
  */
@@ -57,16 +57,19 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
     private volatile Image latestTweetedImage = null;
-    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+    private final String searchText = Configuration.getInstance()
+            .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
 
     private TweetStreamDataProvider() {
-        List<Tweet> history = getLatestHistory();
-        tweetListLock.writeLock().lock();
-        try {
-            history.forEach(this::addTweet);
-        } finally {
-            tweetListLock.writeLock().unlock();
-        }
+        Platform.runLater(() -> {
+            List<Tweet> history = getLatestHistory();
+            tweetListLock.writeLock().lock();
+            try {
+                history.forEach(this::addTweet);
+            } finally {
+                tweetListLock.writeLock().unlock();
+            }
+        });
     }
 
     @Override
@@ -77,11 +80,11 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private void updateImage(final Tweet tweet) {
         if (tweet.getUser().getFollowersCount() > 50) {
-            Arrays.stream(tweet.getMediaEntries())
-                    .filter(MediaTweetEntryType.photo::isType)
+            Arrays.stream(tweet.getMediaEntries()).filter(MediaTweetEntryType.photo::isType)
                     .findFirst().ifPresent(me -> {
                         String url;
-                        switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
+                        switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder())
+                                .get()) {
                             case 0:
                                 url = me.getMediaUrl() + ":thumb";
                                 break;
@@ -109,7 +112,8 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 if (!tweet.getUser().getScreenName().equals("1120blackfriday")) {
                     if (tweet.isRetweet()) {
                         Tweet originalTweet = tweet.getRetweetedTweet();
-                        if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                        if (tweets.stream()
+                                .noneMatch(twt -> originalTweet.getId() == twt.getId())) {
                             tweets.addFirst(originalTweet);
                             updateImage(originalTweet);
                         }
@@ -142,9 +146,8 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private List<Tweet> getLatestHistory() {
         LOGGER.info("Reinit the history");
-        return Tweeter.getInstance().search(new TweetQuery()
-                .query(searchText)
-                .count(HISTORY_SIZE)).collect(Collectors.toList());
+        return Tweeter.getInstance().search(new TweetQuery().query(searchText).count(HISTORY_SIZE))
+                .collect(Collectors.toList());
     }
 
     @Override
