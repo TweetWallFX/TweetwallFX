@@ -3,23 +3,20 @@
  *
  * Copyright 2017 TweetWallFX
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.tweetwallfx.vdz.steps;
 
@@ -65,11 +62,11 @@ public class FlipInTweets implements Step {
     @Override
     public void doStep(final MachineContext context) {
         double[] spacing = new double[] {170, 20, 20, 20, 20, 10};
-        double[] maxWidth = new double[]{400, 400, 400, 400, 400, 400};
-//        double[] maxWidth = new double[]{400, 400, 380, 320, 290, 270};
+        double[] maxWidth = new double[] {400, 400, 400, 400, 400, 400};
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final TweetStreamDataProvider dataProvider = context.getDataProvider(TweetStreamDataProvider.class);
+        final TweetStreamDataProvider dataProvider =
+                context.getDataProvider(TweetStreamDataProvider.class);
 
         VBox tweetList = getOrCreateTweetList(wordleSkin);
 
@@ -81,10 +78,18 @@ public class FlipInTweets implements Step {
             view.setPreserveRatio(true);
             view.setFitHeight(140);
             view.setFitWidth(259);
-            view.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330 / 1920.0, wordleSkin.getSkinnable().widthProperty()),
-                    Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.widthProperty())));
-            view.layoutYProperty().bind(Bindings.add(Bindings.multiply(320 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
-                    Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.heightProperty())));
+            view.layoutXProperty()
+                    .bind(Bindings.add(
+                            Bindings.multiply(1330 / 1920.0,
+                                    wordleSkin.getSkinnable().widthProperty()),
+                            Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                    tweetList.widthProperty())));
+            view.layoutYProperty()
+                    .bind(Bindings.add(
+                            Bindings.multiply(310 / 1280.0,
+                                    wordleSkin.getSkinnable().heightProperty()),
+                            Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                    tweetList.heightProperty())));
             view.setId("tweetImage");
             view.setOpacity(0);
             wordleSkin.getPane().getChildren().add(view);
@@ -95,10 +100,18 @@ public class FlipInTweets implements Step {
             transitions.add(fadeTransition);
         });
 
-        tweetList.layoutXProperty().bind(Bindings.add(Bindings.multiply(1330.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()),
-                Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.widthProperty())));
-        tweetList.layoutYProperty().bind(Bindings.add(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()),
-                Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5, tweetList.heightProperty())));
+        tweetList.layoutXProperty()
+                .bind(Bindings.add(
+                        Bindings.multiply(1330.0 / 1920.0,
+                                wordleSkin.getSkinnable().widthProperty()),
+                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                tweetList.widthProperty())));
+        tweetList.layoutYProperty()
+                .bind(Bindings.add(
+                        Bindings.multiply(200.0 / 1280.0,
+                                wordleSkin.getSkinnable().heightProperty()),
+                        Bindings.multiply(Math.sin(Math.toRadians(tweetList.getRotate())) * 0.5,
+                                tweetList.heightProperty())));
 
         List<Tweet> tweets = dataProvider.getTweets();
         for (int i = 0; i < Math.min(tweets.size(), 4); i++) {
@@ -108,12 +121,12 @@ public class FlipInTweets implements Step {
             transitions.add(new FlipInXTransition(tweet));
             tweetList.getChildren().add(tweet);
             VBox.setMargin(tweet, new Insets(0, 0, spacing[i], 0));
-//            if (i < 5 && i != 1) {
-//                Pane pane = new Pane();
-//                pane.getChildren().add(new Line(0, 0, maxWidth[i], 0));
-//                pane.setPadding(new Insets(spacing[i] / 2., 0, spacing[i] / 2., 0));
-//                tweetList.getChildren().add(pane);
-//            }
+            // if (i < 5 && i != 1) {
+            // Pane pane = new Pane();
+            // pane.getChildren().add(new Line(0, 0, maxWidth[i], 0));
+            // pane.setPadding(new Insets(spacing[i] / 2., 0, spacing[i] / 2., 0));
+            // tweetList.getChildren().add(pane);
+            // }
         }
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
@@ -132,14 +145,16 @@ public class FlipInTweets implements Step {
         return vbox;
     }
 
-    private HBox createSingleTweetDisplay(final Tweet displayTweet, final WordleSkin wordleSkin, final double maxWidth) {
+    private HBox createSingleTweetDisplay(final Tweet displayTweet, final WordleSkin wordleSkin,
+            final double maxWidth) {
         // shorten tweet text here if needed
         String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
         Text text = new Text(textWithoutMediaUrls.replaceAll("[\n\r]", "|"));
         text.setCache(true);
         text.setCacheHint(CacheHint.SPEED);
         text.getStyleClass().add("tweetText");
-        Image profileImage = wordleSkin.getProfileImageCache().get(displayTweet.getUser().getBiggerProfileImageUrl());
+        Image profileImage = wordleSkin.getProfileImageCache()
+                .get(displayTweet.getUser().getBiggerProfileImageUrl());
         ImageView profileImageView = new ImageView(profileImage);
         profileImageView.setSmooth(true);
         profileImageView.setCacheHint(CacheHint.QUALITY);
@@ -154,7 +169,9 @@ public class FlipInTweets implements Step {
         name.getStyleClass().add("tweetUsername");
         name.setCache(true);
         name.setCacheHint(CacheHint.SPEED);
-        HBox tweet = new HBox(profileImageView, new VBox(name, flow));
+        VBox imageBox = new VBox(profileImageView);
+        imageBox.setPadding(new Insets(10, 0, 10, 10));
+        HBox tweet = new HBox(imageBox, new VBox(name, flow));
         tweet.setCacheHint(CacheHint.QUALITY);
         tweet.setSpacing(10);
         return tweet;
@@ -182,7 +199,8 @@ public class FlipInTweets implements Step {
         }
 
         @Override
-        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(
+                final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TweetStreamDataProvider.class);
         }
     }
