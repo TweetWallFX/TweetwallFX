@@ -23,61 +23,57 @@
  */
 package org.tweetwallfx.vdz.steps;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
-import org.tweetwallfx.vdz.dataprovider.ScheduleDataProvider;
+import org.tweetwallfx.vdz.animation.FlipOutXTransition;
+
+import javafx.scene.Node;
 
 /**
- * Step to trigger the updating of the schedule
+ * Schedule Flip Out Animation Step
  *
  * @author Sven Reimers
  */
-public class UpdateScheduleResults implements Step {
+public class FlipOutScheduleToday implements Step {
 
-    private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
-
-    private UpdateScheduleResults() {
+    private FlipOutScheduleToday() {
         // prevent external instantiation
     }
 
     @Override
     public void doStep(final MachineContext context) {
-        final ScheduleDataProvider scheduleProvider = context.getDataProvider(ScheduleDataProvider.class);
-        scheduleProvider.updateSchedule();
-        nextUpDateTime = LocalDateTime.now().plusMinutes(5);
-        context.proceed();
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        Node node = wordleSkin.getNode().lookup("#scheduleNode");
+        FlipOutXTransition flipOutXTransition = new FlipOutXTransition(node);
+        flipOutXTransition.setOnFinished(e -> {
+            wordleSkin.getPane().getChildren().remove(node);
+            context.proceed();
+        });
+        flipOutXTransition.play();
     }
 
     @Override
     public boolean shouldSkip(final MachineContext context) {
-        return LocalDateTime.now().isBefore(nextUpDateTime);
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
+        return null == wordleSkin.getNode().lookup("#scheduleNode");
     }
 
     /**
      * Implementation of {@link Step.Factory} as Service implementation creating
-     * {@link UpdateScheduleResults}.
+     * {@link FlipOutScheduleToday}.
      */
     public static final class Factory implements Step.Factory {
 
         @Override
-        public UpdateScheduleResults create(final StepEngineSettings.StepDefinition stepDefinition) {
-            return new UpdateScheduleResults();
+        public FlipOutScheduleToday create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new FlipOutScheduleToday();
         }
 
         @Override
-        public Class<UpdateScheduleResults> getStepClass() {
-            return UpdateScheduleResults.class;
-        }
-
-        @Override
-        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(ScheduleDataProvider.class);
+        public Class<FlipOutScheduleToday> getStepClass() {
+            return FlipOutScheduleToday.class;
         }
     }
 }
