@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +25,14 @@ package org.tweetwallfx.controls.stepengine.config;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import org.tweetwall.util.JsonDataConverter;
+import org.tweetwall.util.ConfigurableObjectBase;
 import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.config.ConnectionSettings;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.Step;
+import org.tweetwallfx.controls.stepengine.StepEngine;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
@@ -43,19 +45,54 @@ public final class StepEngineSettings {
      */
     public static final String CONFIG_KEY = "stepEngine";
     private List<StepDefinition> steps = Collections.emptyList();
+    private List<DataProviderSetting> dataProviderSettings = Collections.emptyList();
 
+    /**
+     * Returns a list containing the definitions for the steps in the
+     * {@link StepEngine}.
+     *
+     * @return a list containing the definitions for the steps in the
+     * {@link StepEngine}
+     */
     public List<StepDefinition> getSteps() {
         return steps;
     }
 
+    /**
+     * Sets a list containing the definitions for the steps in the
+     * {@link StepEngine}.
+     *
+     * @param steps a list containing the definitions for the steps in the
+     * {@link StepEngine}
+     */
     public void setSteps(final List<StepDefinition> steps) {
         Objects.requireNonNull(steps, "steps must not be null!");
         this.steps = steps;
     }
 
+    /**
+     * Returns a list of settings for {@link DataProvider} instances.
+     *
+     * @return a list of settings for {@link DataProvider} instances
+     */
+    public List<DataProviderSetting> getDataProviderSettings() {
+        return dataProviderSettings;
+    }
+
+    /**
+     * Sets a list of settings for {@link DataProvider} instances.
+     *
+     * @param dataProviderSettings a list of settings for {@link DataProvider}
+     * instances
+     */
+    public void setDataProviderSettings(final List<DataProviderSetting> dataProviderSettings) {
+        this.dataProviderSettings = dataProviderSettings;
+    }
+
     @Override
     public String toString() {
         return createToString(this, map(
+                "dataProviderSettings", getDataProviderSettings(),
                 "steps", getSteps()
         )) + " extends " + super.toString();
     }
@@ -77,37 +114,75 @@ public final class StepEngineSettings {
         }
     }
 
-    public static final class StepDefinition {
+    /**
+     * Configurable object containing configuration data (via
+     * {@link #getConfig()} or {@link #getConfig(java.lang.Class)}) for a
+     * {@link Step} instance (identified via {@link #getStepClassName()}.
+     */
+    public static final class StepDefinition extends ConfigurableObjectBase {
 
         private String stepClassName;
-        private Map<String, Object> config;
 
+        /**
+         * Returns the class name of the {@link Step}.
+         *
+         * @return the class name of the {@link Step}
+         */
         public String getStepClassName() {
             return stepClassName;
         }
 
+        /**
+         * Sets the class name of the {@link Step}.
+         *
+         * @param stepClassName the class name of the {@link Step}
+         */
         public void setStepClassName(final String stepClassName) {
             this.stepClassName = stepClassName;
-        }
-
-        public Map<String, Object> getConfig() {
-            return null == config
-                    ? Collections.emptyMap()
-                    : Collections.unmodifiableMap(config);
-        }
-
-        public <T> T getConfig(final Class<T> typeClass) {
-            return JsonDataConverter.convertFromObject(getConfig(), typeClass);
-        }
-
-        public void setConfig(final Map<String, Object> config) {
-            this.config = config;
         }
 
         @Override
         public String toString() {
             return createToString(this, map(
                     "stepClassName", getStepClassName(),
+                    "config", getConfig()
+            )) + " extends " + super.toString();
+        }
+    }
+
+    /**
+     * Configurable object containing configuration data (via
+     * {@link #getConfig()} or {@link #getConfig(java.lang.Class)}) for a
+     * {@link DataProvider} instance (identified via
+     * {@link #getDataProviderClassName()}.
+     */
+    public static class DataProviderSetting extends ConfigurableObjectBase {
+
+        private String dataProviderClassName;
+
+        /**
+         * Returns the class name of the {@link DataProvider}.
+         *
+         * @return the class name of the {@link DataProvider}
+         */
+        public String getDataProviderClassName() {
+            return dataProviderClassName;
+        }
+
+        /**
+         * Sets the class name of the {@link DataProvider}
+         *
+         * @param dataProviderClassName the class name of the
+         * {@link DataProvider}
+         */
+        public void setDataProviderClassName(final String dataProviderClassName) {
+            this.dataProviderClassName = dataProviderClassName;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "dataProviderClassName", getDataProviderClassName(),
                     "config", getConfig()
             )) + " extends " + super.toString();
         }

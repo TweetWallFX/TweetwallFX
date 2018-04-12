@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * DataProvider Implementation for Schedule Data
@@ -77,7 +78,7 @@ public class ScheduleDataProvider implements DataProvider {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public ScheduleDataProvider create() {
+        public ScheduleDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new ScheduleDataProvider();
         }
 
