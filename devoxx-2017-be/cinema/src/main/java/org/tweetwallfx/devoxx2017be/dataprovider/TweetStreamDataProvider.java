@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
@@ -155,7 +156,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetStreamDataProvider create() {
+        public TweetStreamDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TweetStreamDataProvider();
         }
 

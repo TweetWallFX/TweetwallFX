@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -43,6 +43,7 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * Provides an always current list of tweets based on the configured query. The history length is
@@ -170,7 +171,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TweetStreamDataProvider create() {
+        public TweetStreamDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TweetStreamDataProvider();
         }
 

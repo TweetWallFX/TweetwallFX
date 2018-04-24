@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -94,7 +95,7 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TagCloudDataProvider create() {
+        public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TagCloudDataProvider();
         }
     

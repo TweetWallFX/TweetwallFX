@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -43,6 +44,7 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -81,9 +83,21 @@ public final class StepEngine {
         STARTUP_LOGGER.info("query: " + searchText);
 
         STARTUP_LOGGER.info("create DataProviders");
+        final Map<String, StepEngineSettings.DataProviderSetting> dataProviderSettings = Configuration.getInstance()
+                .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
+                .getDataProviderSettings()
+                .stream()
+                .collect(Collectors.toMap(
+                        StepEngineSettings.DataProviderSetting::getDataProviderClassName,
+                        Function.identity(),
+                        (dps1, dps2) -> {
+                            throw new IllegalArgumentException("At most one DataProviderSetting entry may exist for a DataProvider type (uncompliant DataProvider type: '" + dps1.getDataProviderClassName() + "').");
+                        }));
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
                 .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
-                .map(DataProvider.Factory::create)
+                .map(dpf -> dpf.create(dataProviderSettings.getOrDefault(
+                        dpf.getDataProviderClass().getName(),
+                        new StepEngineSettings.DataProviderSetting())))
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
 
@@ -108,7 +122,7 @@ public final class StepEngine {
             final TweetFilterQuery query = new TweetFilterQuery()
                     .track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
             final TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
-            
+
             newTweetAwareProviders.forEach(ntadp -> tweetStream.onTweet(ntadp::processNewTweet));
         }
 

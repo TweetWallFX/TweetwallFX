@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -40,6 +40,7 @@ import org.tweetwallfx.tweet.api.Tweet;
 
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
@@ -135,7 +136,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public ImageMosaicDataProvider create() {
+        public ImageMosaicDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new ImageMosaicDataProvider();
         }
 

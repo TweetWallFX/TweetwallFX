@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**
@@ -39,7 +40,7 @@ public interface DataProvider {
 
         /**
          * Returns the class of the Provider this factory will create via
-         * {@link #create(org.tweetwallfx.tweet.api.TweetStream)}.
+         * {@link #create(org.tweetwallfx.controls.stepengine.config.StepEngineSettings.DataProviderSetting)}.
          *
          * @return the class of the Provider this factory will create
          */
@@ -48,9 +49,12 @@ public interface DataProvider {
         /**
          * Creates a DataProvider.
          *
+         * @param dataProviderSetting the settings object for the
+         * {@link DataProvider} about to be created.
+         *
          * @return the created DataProvider
          */
-        DataProvider create();
+        DataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting);
     }
 
     /**
@@ -71,7 +75,7 @@ public interface DataProvider {
      * Interface enabling callbacks for receiving newly created tweets.
      */
     interface NewTweetAware extends DataProvider {
-        
+
         /**
          * Callback to process a new tweet
          *
@@ -79,7 +83,7 @@ public interface DataProvider {
          */
         void processNewTweet(final Tweet tweet);
     }
-    
+
     /**
      * Returns the name of this {@link DataProvider}.
      *
