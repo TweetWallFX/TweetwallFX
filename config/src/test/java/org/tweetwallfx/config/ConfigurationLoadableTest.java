@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.config;
 
+import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -53,5 +54,27 @@ public class ConfigurationLoadableTest {
     @After
     public void after() {
         System.out.println("####################   END: " + testName.getMethodName() + " ####################");
+    }
+
+    @Test
+    public void testCustomizedConfigurationLoaded() {
+        final Configuration configuration = Configuration.getInstance();
+        Assertions.assertThat(configuration)
+                .as("configuration is not null").isNotNull();
+
+        // key test is only available if file 'src/test/resources/myCustomConfig.json' was loaded by Configuration
+        final Object testConfig = configuration.getConfig("test");
+
+        Assertions.assertThat(testConfig)
+                .isNotNull()
+                .isInstanceOf(Map.class);
+        
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> testConfigMap = (Map<String, Object>) testConfig;
+
+        Assertions.assertThat(testConfigMap)
+                .isNotNull()
+                .containsOnlyKeys("fileName")
+                .containsEntry("fileName", "myCustomConfig.json");
     }
 }
