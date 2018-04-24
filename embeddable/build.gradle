@@ -33,11 +33,11 @@ dependencies {
 task copyToLib(type: Copy) {
     into buildDir.path + '/lib'
     from configurations.runtime
-}    
+}
 
 nbm {
     //        moduleName = 'org.tweetwallfx.embeddable'
-    
+
     friendPackages {
         add 'org.tweetwallfx.embeddable'
     }

@@ -45,6 +45,6 @@ dependencies {
     compile project(':TweetWallFX-Devoxx-API-CFP')
     compile project(':TweetWallFX-Devoxx-API-CFP')
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
-        
+
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
 }

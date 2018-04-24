@@ -29,17 +29,18 @@ buildscript {
         }
         jcenter()
     }
-    
+
     dependencies {
         classpath group: 'cz.kubacki.gradle.plugins', name: 'gradle-nbm-plugin', version: '1.17.0', {
             // Workaround for bad transitive dependencies
             exclude group:'org.slf4j', module:'slf4j-simple'
-            exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7 
+            exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7
         }
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'gradlePlugin', version: '1.6.0'
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '3.+'
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
+        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.10.0'
         gradleApi()
     }
 }
@@ -53,19 +54,19 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'eclipse'
     apply plugin: 'nebula.info'
-    
+
     group = 'org.tweetwallfx'
     version = '1.0'
-    
+
     repositories {
         jcenter()
     }
-    
+
     dependencies {
         testCompile group: 'junit', name: 'junit', version: versionJUnit
         testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
     }
-    
+
     jar {
         manifest.attributes provider: 'gradle'
     }
@@ -75,26 +76,49 @@ subprojects {
         options.compilerArgs << '-Werror'
         options.compilerArgs << '-proc:none'
     }
-    
+
     spotbugs {
         ignoreFailures = false
     }
 
     tasks.withType(com.github.spotbugs.SpotBugsTask) {
-        
         // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
         def sourceSetName = (name - 'spotbugs').uncapitalize()
         dependsOn( sourceSets[sourceSetName].classesTaskName)
-            
+
         reports {
             xml.enabled = false
             html.enabled = true
         }
     }
-    
+
     tasks.withType(JavaExec) {
         jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
         jvmArgs '--add-modules java.xml.bind'
+    }
+}
+
+allprojects {
+    apply plugin: "com.diffplug.gradle.spotless"
+
+    spotless {
+        format 'textBasedFiles', {
+            target \
+                '**/*.gradle',
+                '**/*.asciidoc',
+                '**/*.adoc',
+                '**/*.asc',
+                '**/*.md',
+                '**/.gitignore'
+
+            trimTrailingWhitespace()
+            indentWithSpaces(4)
+            endWithNewline()
+        }
+    }
+
+    afterEvaluate {
+        check.dependsOn(spotlessCheck)
     }
 }
 
@@ -106,7 +130,7 @@ task createFolders(description: 'Creates the folders for the projects and source
             println 'Creating project folder: ' + p.getProjectDir()
             p.getProjectDir().mkdirs()
         }
-        
+
         if (p.hasProperty('sourceSets')) {
             p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
                 if (!srcDir.isDirectory()) {
