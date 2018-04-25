@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.junit.After;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -50,6 +54,13 @@ import org.tweetwall.devoxx.api.cfp.client.VotingResults;
 
 public class CFPClientTest {
 
+    private static final boolean CFP_REACHABLE = Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
+            .target(CFPClientDevoxx2017BE.BASE_URI)
+            .request(MediaType.APPLICATION_JSON)
+            .get()
+            .getStatusInfo()
+            .getFamily();
+
     @Rule
     public TestName testName = new TestName();
 
@@ -63,16 +74,25 @@ public class CFPClientTest {
         System.out.println("####################   END: " + testName.getMethodName() + " ####################");
     }
 
+    private static void ignoreIfServerUnreachable() {
+        if (!CFP_REACHABLE) {
+            System.out.println("CFP Server is unreachable");
+            Assume.assumeTrue(false);
+        }
+    }
+
     @Test
     public void clientImplIsFound() {
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
         assertEquals(1, CFPClient.getClientStream().count());
+        assertEquals(CFPClientDevoxx2017BE.class, client.getClass());
     }
 
     @Test
     public void eventsAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -89,6 +109,7 @@ public class CFPClientTest {
 
     @Test
     public void eventIsRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -105,6 +126,7 @@ public class CFPClientTest {
 
     @Test
     public void proposalTypesAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -121,6 +143,7 @@ public class CFPClientTest {
 
     @Test
     public void roomsAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -137,6 +160,7 @@ public class CFPClientTest {
 
     @Test
     public void schedulesAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -154,6 +178,7 @@ public class CFPClientTest {
 
     @Test
     public void scheduleIsRetrievableForADay() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -171,6 +196,7 @@ public class CFPClientTest {
 
     @Test
     public void scheduleIsRetrievableForADayAndRoom() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -188,6 +214,7 @@ public class CFPClientTest {
 
     @Test
     public void speakersAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -199,6 +226,7 @@ public class CFPClientTest {
 
     @Test
     public void speakerInformationIsCompletable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -219,7 +247,7 @@ public class CFPClientTest {
         System.out.println("speakerOptionalReload: " + speakerOptionalReload);
         assertTrue(speakerOptionalReload.isPresent());
         assertTrue(speakerOptionalReload.get().hasCompleteInformation());
-        
+
         Speaker speaker = speakerOptionalReload.get();
         System.out.println("speaker: " + speaker);
         assertNotNull(speaker);
@@ -227,6 +255,7 @@ public class CFPClientTest {
 
     @Test
     public void speakerIsRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -245,6 +274,7 @@ public class CFPClientTest {
 
     @Test
     public void talkInformationIsCompletable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -270,7 +300,7 @@ public class CFPClientTest {
         System.out.println("incompleteTalkOptionalReload: " + incompleteTalkOptionalReload);
         assertTrue(incompleteTalkOptionalReload.isPresent());
         assertTrue(incompleteTalkOptionalReload.get().hasCompleteInformation());
-        
+
         final Talk completeTalk = incompleteTalkOptionalReload.get();
         assertNotNull(completeTalk);
         assertTrue(completeTalk.hasCompleteInformation());
@@ -279,6 +309,7 @@ public class CFPClientTest {
 
     @Test
     public void talkCanGetSpeakers() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -318,6 +349,7 @@ public class CFPClientTest {
 
     @Test
     public void talkIsRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -336,6 +368,7 @@ public class CFPClientTest {
 
     @Test
     public void tracksAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -353,6 +386,7 @@ public class CFPClientTest {
     @Test
     @Ignore // error prone as it is dependant upon the CFP API Server
     public void votingResultsOverallAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);
@@ -365,6 +399,7 @@ public class CFPClientTest {
     @Test
     @Ignore // error prone as it is dependant upon the CFP API Server
     public void votingResultsDailyAreRetrievable() {
+        ignoreIfServerUnreachable();
         final CFPClient client = CFPClient.getClient();
         System.out.println("client: " + client);
         assertNotNull(client);

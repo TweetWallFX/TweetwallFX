@@ -48,7 +48,7 @@ import org.tweetwall.devoxx.api.cfp.client.VotingResults;
  */
 public class CFPClientVDZ18 implements CFPClient {
 
-    private static final String BASE_URI = "https://cfp-vdz.exteso.com/api";
+    public static final String BASE_URI = "https://cfp-vdz.exteso.com/api";
     private static final String CONFERENCE_BASE_URI = BASE_URI + "/conferences/VDZ18";
 
     @Override
