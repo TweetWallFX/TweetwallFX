@@ -1,0 +1,16 @@
+{
+    "steps": [
+        "org.tweetwallfx.devoxx17be.exhibition.Devoxx17UpdateScheduleResults",
+        "org.tweetwallfx.devoxx17be.exhibition.Devoxx17ShowSchedule",
+        "org.tweetwallfx.devoxx17be.exhibition.Devoxx17FlipOutSchedule",
+        "org.tweetwallfx.controls.steps.FadeInCloudStep",
+        "org.tweetwallfx.controls.steps.NextTweetStep",
+        "org.tweetwallfx.controls.steps.AddTweetToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudToTweetStep",
+        "org.tweetwallfx.controls.steps.PauseStep",
+        "org.tweetwallfx.controls.steps.TweetToCloudStep",
+        "org.tweetwallfx.controls.steps.CloudFadeOutStep",
+        "org.tweetwallfx.controls.steps.ImageMosaicStep"
+    ]
+}
