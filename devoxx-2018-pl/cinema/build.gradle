@@ -42,5 +42,5 @@ dependencies {
     compile project(':TweetWallFX-Generic2D')
     compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
     compile project(':TweetWallFX-Devoxx-API-CFP')
-    runtime project(":devoxx-2017-be:CFP-Implementation-2018-PL")
+    runtime project(":devoxx-2018-pl:CFP-Implementation-2018-PL")
 }
