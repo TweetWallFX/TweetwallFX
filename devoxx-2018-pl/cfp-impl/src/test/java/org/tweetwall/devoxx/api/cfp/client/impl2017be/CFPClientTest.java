@@ -51,11 +51,12 @@ import org.tweetwall.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwall.devoxx.api.cfp.client.Talk;
 import org.tweetwall.devoxx.api.cfp.client.Tracks;
 import org.tweetwall.devoxx.api.cfp.client.VotingResults;
+import org.tweetwall.devoxx.api.cfp.client.impl2018pl.CFPClientDevoxx2018PL;
 
 public class CFPClientTest {
 
     private static final boolean CFP_REACHABLE = Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
-            .target(CFPClientDevoxx2017BE.BASE_URI)
+            .target(CFPClientDevoxx2018PL.BASE_URI)
             .request(MediaType.APPLICATION_JSON)
             .get()
             .getStatusInfo()
@@ -87,7 +88,7 @@ public class CFPClientTest {
         System.out.println("client: " + client);
         assertNotNull(client);
         assertEquals(1, CFPClient.getClientStream().count());
-        assertEquals(CFPClientDevoxx2017BE.class, client.getClass());
+        assertEquals(CFPClientDevoxx2018PL.class, client.getClass());
     }
 
     @Test

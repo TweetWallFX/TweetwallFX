@@ -27,9 +27,9 @@ mainClassName = "org.tweetwallfx.generic.Main"
 
 tasks.withType(JavaExec) {
     main mainClassName
-    jvmArgs '-Dorg.tweetwallfx.devoxxbe17.day=tuesday'
-    jvmArgs '-Dorg.tweetwallfx.devoxxbe17.time=10:00Z'
-    jvmArgs '-Dorg.tweetwallfx.devoxxbe17.proposal=CTH-5247'
+    jvmArgs '-Dorg.tweetwallfx.devoxxpl18.day=tuesday'
+    jvmArgs '-Dorg.tweetwallfx.devoxxpl18.time=10:00Z'
+    jvmArgs '-Dorg.tweetwallfx.devoxxpl18.proposal=CTH-5247'
 }
 
 task('debug', dependsOn: 'classes', type: JavaExec) {
@@ -42,5 +42,5 @@ dependencies {
     compile project(':TweetWallFX-Generic2D')
     compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
     compile project(':TweetWallFX-Devoxx-API-CFP')
-    runtime project(":devoxx-2017-be:CFP-Implementation-2017-BE")
+    runtime project(":devoxx-2017-be:CFP-Implementation-2018-PL")
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2017 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.devoxx18pl.dataprovider;
 
-apply plugin: 'application'
-mainClassName = 'org.tweetwallfx.generic.Main'
+import javafx.scene.image.Image;
+import org.tweetwallfx.controls.util.ImageCache;
 
-tasks.withType(JavaExec) {
-    main mainClassName
-}
+/**
+ * Utility to provide a simple api to get the cached speaker image
+ * @author Sven Reimers
+ */
+public final class SpeakerImageProvider {
+    
+        private final static ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
 
-task('debug', dependsOn: 'classes', type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    debug = true
-}
-
-dependencies {
-    compile project(':TweetWallFX-Generic2D')
-    compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
-    compile project(':TweetWallFX-Devoxx-API-CFP')
-    runtime project(":devoxx-2017-be:CFP-Implementation-2018-PL")
+        public static Image getSpeakerImage(String url) {
+            return profileImageCache.get(url);
+        }
+    
 }
