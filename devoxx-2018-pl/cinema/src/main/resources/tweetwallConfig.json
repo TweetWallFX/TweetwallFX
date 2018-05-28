@@ -4,7 +4,7 @@
     },
     "tweetwall" : {
         "query" : "#devoxx",
-        "title" : "The JavaFX Tweetwall for Devoxx 2017!",
+        "title" : "The JavaFX Cinema Tweetwall for Devoxx PL 2018!",
         "stylesheetResource" : "tweetwall.css"
     }
 }
