@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,36 +51,21 @@ import static org.tweetwall.util.ToString.*;
  */
 public final class Configuration {
 
-    private static final String CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName", "tweetwallConfig.json");
-    private static final Path[] CONFIG_FILE_PATHS = new Path[]{
-        Paths.get(System.getProperty("user.home"), CONFIG_FILENAME),
-        Paths.get("etc", CONFIG_FILENAME),
-        Paths.get(CONFIG_FILENAME)};
+    private static final String STANDARD_CONFIG_FILENAME = "tweetwallConfig.json";
+    private static final String CUSTOM_CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName");
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
-    private static final Map<String, ConfigurationConverter> CONVERTERS;
-
-    static {
-        LOGGER.info("loading configurations data converters");
-        final Map<String, List<ConfigurationConverter>> converters = StreamSupport
-                .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
-                .collect(Collectors.groupingBy(ConfigurationConverter::getResponsibleKey));
-
-        // ensure there are no conflicting ConfigurationConverter registered for a specific key
-        converters.entrySet()
-                .stream()
-                .filter(e -> e.getValue().size() > 1)
-                .findAny()
-                .ifPresent(e -> {
-                    throw new IllegalArgumentException("At most one ConfigurationConverter may be registered to convert configuration data but the following ConfigurationConverters are registered: " + e.getValue());
-                });
-
-        CONVERTERS = converters.entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
-    }
-
+    private static final Map<String, ConfigurationConverter> CONVERTERS = StreamSupport
+            .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
+            .collect(Collectors.toMap(
+                    ConfigurationConverter::getResponsibleKey,
+                    Function.identity(),
+                    (first, second) -> {
+                        // ensure there are no conflicting ConfigurationConverter registered for a specific key
+                        throw new IllegalArgumentException(String.format("At most one ConfigurationConverter may be registered to "
+                                + "convert configuration data of a specific key, but the following ConfigurationConverters are "
+                                + "registered for key '%s': [%s, %s]", first.getResponsibleKey(), first, second));
+                    }));
     private static final Configuration INSTANCE = new Configuration();
-
     private final Map<String, Object> configurationData = new HashMap<>();
 
     private Configuration() {
@@ -95,8 +78,7 @@ public final class Configuration {
         LOGGER.info("Configurations:");
         configData.entrySet()
                 .stream()
-                .map(e -> String.format("'%s' -> '%s'", String.valueOf(e.getKey()), String.valueOf(e.getValue())))
-                .forEach(LOGGER::info);
+                .forEach(e -> LOGGER.info("'{}' -> '{}", e.getKey(), e.getValue()));
 
         configurationData.clear();
         configurationData.putAll(configData);
@@ -107,20 +89,28 @@ public final class Configuration {
         Map<String, Object> result = Collections.emptyMap();
 
         for (Map<String, Object> map : Stream.concat(
-                loadConfigurationDataFromClasspath(),
-                loadConfigurationDataFromFilesystem()).collect(Collectors.toList())) {
+                loadConfigurationDataFromClasspath(STANDARD_CONFIG_FILENAME),
+                loadConfigurationDataFromFilesystem(STANDARD_CONFIG_FILENAME)).collect(Collectors.toList())) {
             result = mergeMap(result, map);
+        }
+
+        if (null != CUSTOM_CONFIG_FILENAME && !STANDARD_CONFIG_FILENAME.equals(CUSTOM_CONFIG_FILENAME)) {
+            for (Map<String, Object> map : Stream.concat(
+                    loadConfigurationDataFromClasspath(CUSTOM_CONFIG_FILENAME),
+                    loadConfigurationDataFromFilesystem(CUSTOM_CONFIG_FILENAME)).collect(Collectors.toList())) {
+                result = mergeMap(result, map);
+            }
         }
 
         return convertConfigData(result);
     }
 
-    private static Stream<Map<String, Object>> loadConfigurationDataFromClasspath() {
-        LOGGER.info("Searching for configuration files in path '/" + CONFIG_FILENAME + "'");
+    private static Stream<Map<String, Object>> loadConfigurationDataFromClasspath(final String configFileName) {
+        LOGGER.info("Searching for configuration files in path '/{}'", configFileName);
         Stream<Map<String, Object>> result = Stream.empty();
 
         try {
-            final Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources(CONFIG_FILENAME);
+            final Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources(configFileName);
 
             while (resources.hasMoreElements()) {
                 final URL url = resources.nextElement();
@@ -131,18 +121,25 @@ public final class Configuration {
                 }
             }
         } catch (final IOException ioe) {
-            throw new RuntimeException("Error loading configuration data from classpath '/" + CONFIG_FILENAME + "'", ioe);
+            throw new RuntimeException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
         }
 
         return result;
     }
 
-    private static Stream<Map<String, Object>> loadConfigurationDataFromFilesystem() {
-        LOGGER.info("Searching for configuration files at paths: " + Arrays.toString(CONFIG_FILE_PATHS));
+    private static Stream<Path> getConfigFilePaths(final String configFileName) {
+        return Stream.of(
+                Paths.get(System.getProperty("user.home"), configFileName),
+                Paths.get("etc", configFileName),
+                Paths.get(configFileName)
+        );
+    }
 
-        return Arrays.stream(CONFIG_FILE_PATHS)
+    private static Stream<Map<String, Object>> loadConfigurationDataFromFilesystem(final String configFileName) {
+        return getConfigFilePaths(configFileName)
+                .peek(p -> LOGGER.debug("Searching for configuration files at path: {}", p.toAbsolutePath()))
                 .filter(Files::isRegularFile)
-                .peek(p -> LOGGER.info("Found config override file: " + p.toAbsolutePath()))
+                .peek(p -> LOGGER.info("Found config override file: {}", p.toAbsolutePath()))
                 .map(p -> {
                     try (InputStream is = Files.newInputStream(p)) {
                         return readConfiguration(is, "File '" + p.toString() + "'");
@@ -170,7 +167,7 @@ public final class Configuration {
 
         CONVERTERS.entrySet()
                 .stream()
-                .peek(ce -> LOGGER.info("Processing key '" + ce.getKey() + "' with ConfigurationConverter '" + ce.getValue() + "'"))
+                .peek(ce -> LOGGER.info("Processing key '{}' with ConfigurationConverter '{}'", ce.getKey(), ce.getValue()))
                 .filter(e -> input.containsKey(e.getKey()))
                 .forEach(e -> result.put(e.getKey(), JsonDataConverter.convertFromObject(input.get(e.getKey()), e.getValue().getDataClass())));
 
@@ -251,7 +248,7 @@ public final class Configuration {
      *
      * @return the value of the requested entry
      */
-    public <T> T getConfigTyped(final String param, final Class<T> paramClass, final Object defaultValue) {
+    public <T> T getConfigTyped(final String param, final Class<T> paramClass, final T defaultValue) {
         return cast(getConfig(param, defaultValue));
     }
 
@@ -324,10 +321,8 @@ public final class Configuration {
 
         if (pClass.getName().startsWith("java.lang.") || nClass.getName().startsWith("java.lang.")) {
             return next;
-
-        } else if (Map.class
-                .isInstance(previous) && Map.class
-                .isInstance(next)) {
+        } else if (Map.class.isInstance(previous)
+                && Map.class.isInstance(next)) {
             return mergeMap(cast(previous), cast(next));
         } else {
             throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
