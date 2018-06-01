@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-apply plugin: 'groovy'
+package org.tweetwall.util
 
-dependencies {
-    compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
+import spock.lang.Specification
+import spock.lang.Unroll
 
-    runtime group: 'org.eclipse', name: 'yasson', version: versionJasson
-    runtime group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
+@Unroll
+class StringNumberComparatorSpec extends Specification {
+    
+    def "#result == compare(#string1, #string2)"() {
+        expect:
+        result == StringNumberComparator.INSTANCE.compare(string1, string2)
+        
+        where:
+        [result, string1, string2] << [
+            [
+                0,
+                'A',
+                'A',
+            ],
+            [
+                0,
+                'Alpha',
+                'Alpha',
+            ],
+            [
+                -1,
+                'Alpha 0',
+                'Alpha 00',
+            ],
+            [
+                -1,
+                'Alpha 0',
+                'Alpha 0 ',
+            ],
+            [
+                1,
+                'Beta 20',
+                'Beta 2',
+            ],
+            [
+                1,
+                'Beta 00020',
+                'Beta 2',
+            ],
+        ]
+    }
 }
