@@ -34,9 +34,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
 
 import org.junit.After;
 import org.junit.Assume;
@@ -60,15 +62,24 @@ import org.tweetwall.devoxx.api.cfp.client.VotingResults;
 
 public class CFPClientTest {
 
-    private static final boolean CFP_REACHABLE = Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
-            .target(CFPClientVDZ18.BASE_URI)
-            .request(MediaType.APPLICATION_JSON)
-            .get()
-            .getStatusInfo()
-            .getFamily();
+    private static final boolean CFP_REACHABLE = isCfpReachable();
 
     @Rule
     public TestName testName = new TestName();
+
+    private static boolean isCfpReachable() {
+        try {
+            return Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
+                    .target(CFPClientVDZ18.BASE_URI)
+                    .request(MediaType.APPLICATION_JSON)
+                    .get()
+                    .getStatusInfo()
+                    .getFamily();
+        } catch (final ProcessingException pe) {
+            LogManager.getLogger(CFPClientTest.class).error(pe, pe);
+            return false;
+        }
+    }
 
     @Before
     public void before() {
