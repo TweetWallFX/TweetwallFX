@@ -4,11 +4,20 @@
     },
     "tweetwall": {
         "query": "#devoxx",
-        "title": "The JavaFX Tweetwall for Devoxx 2017!",
+        "title": "The JavaFX Exhibition Tweetwall for Devoxx BE 2017 Exhition!",
         "stylesheetResource": "tweetwall.css"
     },
     "stepEngine": {
         "steps": [
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.exhibition.Devoxx17UpdateScheduleResults"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.exhibition.Devoxx17ShowSchedule"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.exhibition.Devoxx17FlipOutSchedule"
+            },
             {
                 "stepClassName": "org.tweetwallfx.controls.steps.FadeInCloudStep"
             },
