@@ -1,0 +1,19 @@
+{
+    "steps": [
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxUpdateScheduleResults",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxShowSchedule",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipInTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxUpdateVotingResults",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutScheduleToday",        
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedToday",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipInTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTopRatedDay",        
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutScheduleWeek",        
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedWeek",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipInTweets",
+        "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTopRatedWeek"
+    ]
+}
