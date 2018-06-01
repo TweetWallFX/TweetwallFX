@@ -1,10 +1,59 @@
 {
-    "twitter" : {
-        "extendedMode" : true
+    "twitter": {
+        "extendedMode": true
     },
-    "tweetwall" : {
-        "query" : "#devoxx",
-        "title" : "The JavaFX Tweetwall for Devoxx 2017!",
-        "stylesheetResource" : "tweetwall.css"
+    "tweetwall": {
+        "query": "#devoxx",
+        "title": "The JavaFX Cinema Tweetwall for Devoxx BE 2017!",
+        "stylesheetResource": "tweetwall.css"
+    },
+    "stepEngine": {
+        "steps": [
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1UpdateScheduleResults"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowSchedule"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1UpdateVotingResults"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutScheduleToday"
+            },        
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowTopRatedToday"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTopRatedDay"
+            },        
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutScheduleWeek"
+            },        
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowTopRatedWeek"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+            },
+            {
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTopRatedWeek"
+            }
+        ]
     }
 }
