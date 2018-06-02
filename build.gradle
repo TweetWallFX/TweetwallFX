@@ -120,6 +120,13 @@ allprojects {
     afterEvaluate {
         check.dependsOn(spotlessCheck)
     }
+
+    plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
+        dependencies {
+            compile group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
+            testCompile group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
+        }
+    }
 }
 
 description = 'TweetWallFX'

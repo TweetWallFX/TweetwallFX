@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.vdz.dataprovider;
 
-import java.io.Serializable;
 import java.time.OffsetTime;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +30,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
+import org.tweetwall.util.StringNumberComparator;
 
 /**
  * Seesion Data Pojo Helper class
@@ -41,25 +41,7 @@ public class SessionData {
 
     private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup)
             .reversed()
-            .thenComparing(SessionData::getRoom, new RoomComparator());
-    
-    private static class RoomComparator implements Comparator<String>, Serializable {
-
-        private static final long serialVersionUID = -1; 
-        
-        @Override
-        public int compare(String o1, String o2) {
-            String[] room1_split = o1.split(" ");
-            String[] room2_split = o2.split(" ");
-            int room_part1 = room1_split[0].compareTo(room2_split[0]);
-            if (room_part1 == 0) {
-                return Integer.compare(Integer.parseInt(room1_split[1]), Integer.parseInt(room2_split[1]));
-            } else {
-                return room_part1;
-            }
-        }
-    }            
-    
+            .thenComparing(SessionData::getRoom, StringNumberComparator.INSTANCE);
     
     public final String room;
     public final List<String> speakers;
