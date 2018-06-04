@@ -51,6 +51,7 @@ public class RestCallHelper {
     }
 
     private static String getHttpsUrl(final String url) {
+        Objects.requireNonNull(url, "url parameter must not be null!");
         if (url.startsWith("http:")) {
             return url.replaceAll("^http:", "https:");
         } else {
@@ -59,7 +60,7 @@ public class RestCallHelper {
     }
 
     private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
-        LOGGER.info("Calling URL: " + url + " with query parameters: " + queryParameters);
+        LOGGER.info("Calling URL: {} with query parameters: {}", url, queryParameters);
         WebTarget webTarget = getClient().target(getHttpsUrl(url));
 
         if (null != queryParameters && !queryParameters.isEmpty()) {
@@ -77,9 +78,12 @@ public class RestCallHelper {
             }
         }
 
-        return webTarget
+        final Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
                 .get();
+        LOGGER.info("Received Response: {}", response);
+
+        return response;
     }
 
     public static Optional<Response> getOptionalResponse(final String url, final Map<String, Object> queryParameters) {

@@ -1,0 +1,7 @@
+{
+    "devoxxCFP": {
+        "baseUri": "https://cfp.devoxx.pl/api",
+        "eventId": "DevoxxPL2018",
+        "votingResultsUri": "https://cfp.devoxx.pl/api/voting/v1/top/talks"
+    }
+}

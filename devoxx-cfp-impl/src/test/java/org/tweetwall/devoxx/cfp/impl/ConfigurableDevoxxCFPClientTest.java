@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwall.devoxx.cfp.impl;
 
-apply plugin: 'application'
-mainClassName = 'org.tweetwallfx.generic.Main'
+import org.tweetwall.devoxx.cfp.test.CFPClientTestBase;
 
-tasks.withType(JavaExec) {
-    main mainClassName
-    jvmArgs '-Dorg.tweetwallfx.vdz.day=thursday'
-    jvmArgs '-Dorg.tweetwallfx.vdz.time=10:00Z'
-    jvmArgs '-Dorg.tweetwallfx.vdz.min.followers=10'
-    jvmArgs '-Djavafx.verbose=true'
-    jvmArgs '-Dprism.verbose=true'
-}
+public class ConfigurableDevoxxCFPClientTest extends CFPClientTestBase {
 
-task('debug', dependsOn: 'classes', type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath
-    debug = true
-}
-
-dependencies {
-    compile project(':TweetWallFX-Generic2D')
-    compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
-    compile project(':TweetWallFX-Devoxx-API-CFP')
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
-
-    runtime project(':TweetWallFX-Devoxx-CFP-Impl')
-    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-
-    testCompile project(':TweetWallFX-Devoxx-CFP-Test')
+    public ConfigurableDevoxxCFPClientTest() {
+        super("monday", "room8", "OZB-4067");
+    }
 }
