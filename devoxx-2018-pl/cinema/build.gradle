@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ mainClassName = "org.tweetwallfx.generic.Main"
 
 tasks.withType(JavaExec) {
     main mainClassName
-    jvmArgs '-Dorg.tweetwallfx.devoxxpl18.day=thursday'
-    jvmArgs '-Dorg.tweetwallfx.devoxxpl18.time=09:00Z'
+    jvmArgs '-Dorg.tweetwallfx.scheduledata.day=thursday'
+    jvmArgs '-Dorg.tweetwallfx.scheduledata.time=09:00Z'
     jvmArgs '-Dorg.tweetwallfx.devoxxpl18.proposal=IIW-98017'
 }
 
@@ -38,9 +38,11 @@ task('debug', dependsOn: 'classes', type: JavaExec) {
 }
 
 dependencies {
-    compile project(':TweetWallFX-Controls')
+    compile project(':TweetWallFX-Devoxx-API-CFP')
+    compile project(':TweetWallFX-Devoxx-CFP-StepEngine')
     compile project(':TweetWallFX-Generic2D')
     compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
-    compile project(':TweetWallFX-Devoxx-API-CFP')
-    runtime project(":devoxx-2018-pl:CFP-Implementation-2018-PL")
+
+    runtime project(":devoxx-2017-be:CFP-Implementation-2017-BE")
+    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
 }

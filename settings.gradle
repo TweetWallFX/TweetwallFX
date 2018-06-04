@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,8 @@ include ':devoxx-2015'
 project(":devoxx-2015").name = "TweetWallFX-Devoxx-2015"
 include ':devoxx-api-cfp'
 project(":devoxx-api-cfp").name = "TweetWallFX-Devoxx-API-CFP"
+include ':devoxx-cfp-stepengine'
+project(":devoxx-cfp-stepengine").name = "TweetWallFX-Devoxx-CFP-StepEngine"
 include ':devoxx-cfp-impl'
 project(":devoxx-cfp-impl").name = "TweetWallFX-Devoxx-CFP-Impl"
 include ':devoxx-cfp-test'

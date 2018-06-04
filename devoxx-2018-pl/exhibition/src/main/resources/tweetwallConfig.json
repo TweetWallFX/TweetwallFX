@@ -10,7 +10,11 @@
     "stepEngine": {
         "steps": [
             {
-                "stepClassName": "org.tweetwallfx.devoxx18pl.exhibition.DevoxxUpdateScheduleResults"
+                "stepClassName": "org.tweetwall.devoxx.cfp.stepengine.steps.UpdateScheduleResults",
+                "config": {
+                    "initialOffset": 5,
+                    "updateInteval": 15
+                }
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.exhibition.DevoxxShowSchedule"

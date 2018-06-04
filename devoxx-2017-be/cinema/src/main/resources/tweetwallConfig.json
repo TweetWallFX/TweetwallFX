@@ -10,49 +10,53 @@
     "stepEngine": {
         "steps": [
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1UpdateScheduleResults"
+                "stepClassName": "org.tweetwall.devoxx.cfp.stepengine.steps.UpdateScheduleResults",
+                "config": {
+                    "initialOffset": 5,
+                    "updateInteval": 15
+                }
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowSchedule"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17ShowSchedule"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1UpdateVotingResults"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17UpdateVotingResults"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutScheduleToday"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleToday"
             },        
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowTopRatedToday"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedToday"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTopRatedDay"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTopRatedDay"
             },        
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutScheduleWeek"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleWeek"
             },        
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1ShowTopRatedWeek"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedWeek"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipInTweets"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx1FlipOutTopRatedWeek"
+                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTopRatedWeek"
             }
         ]
     }

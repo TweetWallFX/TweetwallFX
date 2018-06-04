@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx18pl.dataprovider;
+package org.tweetwall.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.LocalDateTime;
 import java.time.OffsetTime;
@@ -31,6 +31,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.TimeZone;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
@@ -40,38 +41,41 @@ import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
  * DataProvider Implementation for Schedule Data
- *
- * @author Sven Reimers
  */
 public class ScheduleDataProvider implements DataProvider {
 
     private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
 
     private ScheduleDataProvider() {
+        // prevent instantiation
     }
 
     public void updateSchedule() {
-        String actualDayName = LocalDateTime.now().getDayOfWeek()
-                .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         CFPClient.getClient()
-                .getSchedule(System.getProperty("org.tweetwallfx.devoxxpl18.day", actualDayName))
+                .getSchedule(Optional
+                        .ofNullable(System.getProperty("org.tweetwallfx.scheduledata.day"))
+                        .orElseGet(()
+                                -> LocalDateTime.now()
+                                .getDayOfWeek()
+                                .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                                .toLowerCase(Locale.ENGLISH)))
                 .map(Schedule::getSlots)
-                .ifPresent(slots -> {
-                    scheduleSlots = slots;
-                });
+                .ifPresent(slots -> scheduleSlots = slots);
     }
 
     public List<SessionData> getFilteredSessionData() {
-        String time = System.getProperty("org.tweetwallfx.devoxxpl18.time");
-        OffsetTime liveOffset = null == time
-                ? OffsetTime.now(ZoneOffset.UTC).plus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS)
-                : OffsetTime.parse(time);
+        OffsetTime liveOffset = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.time"))
+                .map(OffsetTime::parse)
+                .orElseGet(()
+                        -> OffsetTime
+                        .now(ZoneOffset.UTC)
+                        .plus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS));
         return SessionData.from(scheduleSlots, liveOffset);
     }
 
     @Override
     public String getName() {
-        return "Schedule-Devoxx2017BE";
+        return "ScheduleDataProvider";
     }
 
     public static class Factory implements DataProvider.Factory {
