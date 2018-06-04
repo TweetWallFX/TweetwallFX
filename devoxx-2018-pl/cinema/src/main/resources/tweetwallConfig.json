@@ -1,16 +1,20 @@
 {
-    "twitter" : {
-        "extendedMode" : true
+    "twitter": {
+        "extendedMode": true
     },
-    "tweetwall" : {
-        "query" : "#devoxx",
+    "tweetwall": {
+        "query": "#devoxx",
         "title" : "The JavaFX Cinema Tweetwall for Devoxx PL 2018!",
-        "stylesheetResource" : "tweetwall.css"
+        "stylesheetResource": "tweetwall.css"
     },
     "stepEngine": {
         "steps": [
             {
-                "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxUpdateScheduleResults"
+                "stepClassName": "org.tweetwall.devoxx.cfp.stepengine.steps.UpdateScheduleResults",
+                "config": {
+                    "initialOffset": 5,
+                    "updateInteval": 15
+                }
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxShowSchedule"

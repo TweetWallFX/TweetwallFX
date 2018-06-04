@@ -41,6 +41,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwall.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider;
+import org.tweetwall.devoxx.cfp.stepengine.dataprovider.SessionData;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;

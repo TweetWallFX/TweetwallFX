@@ -1,4 +1,3 @@
-org.tweetwallfx.devoxx18pl.dataprovider.ScheduleDataProvider$Factory
 org.tweetwallfx.devoxx18pl.dataprovider.TopTalksTodayDataProvider$Factory
 org.tweetwallfx.devoxx18pl.dataprovider.TopTalksWeekDataProvider$Factory
 org.tweetwallfx.devoxx18pl.dataprovider.TweetStreamDataProvider$Factory

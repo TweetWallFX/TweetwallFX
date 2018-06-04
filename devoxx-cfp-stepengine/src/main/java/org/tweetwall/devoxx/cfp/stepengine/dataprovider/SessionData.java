@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.vdz.dataprovider;
+package org.tweetwall.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.OffsetTime;
 import java.util.Comparator;
@@ -30,29 +30,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
+import org.tweetwall.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwall.util.StringNumberComparator;
 
 /**
  * Seesion Data Pojo Helper class
- *
- * @author Sven Reimers
  */
 public class SessionData {
 
     private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup)
             .reversed()
             .thenComparing(SessionData::getRoom, StringNumberComparator.INSTANCE);
-    
+
     public final String room;
     public final List<String> speakers;
     public final String title;
     public final String beginTime;
-    final boolean isNotAllocated;
+    public final boolean isNotAllocated;
     public final String roomSetup;
 
     private SessionData(final ScheduleSlot slot) {
         this.room = slot.getRoomName();
-        this.speakers = slot.getTalk().getSpeakers().stream().map(ref -> ref.getName()).collect(Collectors.toList());
+        this.speakers = slot.getTalk().getSpeakers().stream().map(SpeakerReference::getName).collect(Collectors.toList());
         this.title = slot.getTalk().getTitle();
         this.beginTime = slot.getFromTime();
         this.isNotAllocated = slot.isNotAllocated();
@@ -68,7 +67,6 @@ public class SessionData {
 
     public static List<SessionData> from(List<ScheduleSlot> slots, OffsetTime now) {
         List<SessionData> sessionData = slots.stream()
-                //                .filter(slot -> !slot.isNotAllocated())
                 .filter(slot -> null != slot.getTalk())
                 .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now.plusMinutes(10)))
                 .collect(Collectors.groupingBy(slot -> slot.getRoomId()))
@@ -78,9 +76,10 @@ public class SessionData {
                 .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .collect(Collectors.toList());
-        Optional<String> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
-        if (min.isPresent())
+        final Optional<String> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
+        if (min.isPresent()) {
             sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).collect(Collectors.toList());
+        }
         System.out.println("Possible Next Sessions (" + sessionData.size() + "):\n " + sessionData);
         return sessionData;
     }
@@ -97,5 +96,4 @@ public class SessionData {
     public String toString() {
         return "SessionData{" + "room=" + room + ", speakers=" + speakers + ", title=" + title + ", beginTime=" + beginTime + ", isNotAllocated=" + isNotAllocated + '}';
     }
-
 }

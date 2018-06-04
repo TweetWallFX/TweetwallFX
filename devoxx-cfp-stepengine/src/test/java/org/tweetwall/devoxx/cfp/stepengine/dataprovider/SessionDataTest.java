@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx18pl.dataprovider;
+package org.tweetwall.devoxx.cfp.stepengine.dataprovider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,40 +32,31 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.util.JsonDataConverter;
-import org.tweetwallfx.devoxx18pl.dataprovider.SessionData;
 
 /**
  * Tests for Session Data Filtering
- * @author sven
  */
 public class SessionDataTest {
-    
-    public SessionDataTest() {
-    }
 
-    /**
-     * Test of from method, of class SessionData.
-     */
     @Test
     public void testFrom1035OnMonday() throws IOException {
-        System.out.println("from");        
+        System.out.println("from");
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
-        try (InputStream inputStream = jsonFile.openStream()){
+        try (InputStream inputStream = jsonFile.openStream()) {
             Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"));
             assertEquals(6, result.size());
-        } 
+        }
     }
 
     @Test
     public void testFrom1300OnMonday() throws IOException {
-        System.out.println("from");        
+        System.out.println("from");
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
-        try (InputStream inputStream = jsonFile.openStream()){
+        try (InputStream inputStream = jsonFile.openStream()) {
             Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
             List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("13:00Z"));
             assertEquals(7, result.size());
-        } 
+        }
     }
-    
 }
