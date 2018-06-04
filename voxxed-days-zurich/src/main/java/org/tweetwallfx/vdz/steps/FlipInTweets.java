@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,16 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.vdz.animation.FlipInXTransition;
-import org.tweetwallfx.vdz.dataprovider.TweetStreamDataProvider;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
@@ -47,6 +37,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.dataprovider.DataProvider;
+import org.tweetwallfx.controls.stepengine.Step;
+import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.controls.transition.FlipInXTransition;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.vdz.dataprovider.TweetStreamDataProvider;
 
 /**
  * TweetStream Flip In Animation Step

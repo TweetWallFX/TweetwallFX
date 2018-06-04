@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.vdz.animation;
+package org.tweetwallfx.controls.transition;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
