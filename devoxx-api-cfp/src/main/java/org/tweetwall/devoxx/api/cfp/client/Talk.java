@@ -92,6 +92,11 @@ public class Talk extends ObjectWithLinksBase {
      */
     private List<SpeakerReference> speakers;
 
+    /**
+     * A URL to a video of this talk.
+     */
+    private String videoURL;
+
     public String getId() {
         return id;
     }
@@ -184,6 +189,14 @@ public class Talk extends ObjectWithLinksBase {
         this.speakers = speakers;
     }
 
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(final String videoURL) {
+        this.videoURL = videoURL;
+    }
+
     public boolean hasCompleteInformation() {
         return !getLinkStream(Link.Type.TALK).findAny().isPresent();
     }
@@ -210,6 +223,7 @@ public class Talk extends ObjectWithLinksBase {
                 mapEntry("track", getTrack()),
                 mapEntry("tags", getTags()),
                 mapEntry("speakers", getSpeakers()),
+                mapEntry("videoURL", getVideoURL()),
                 mapEntry("hasCompleteInformation", hasCompleteInformation())
         )) + " extends " + super.toString();
     }

@@ -32,5 +32,10 @@
                 "stepClassName": "org.tweetwallfx.vdz.steps.FlipOutTweets"
             }
         ]
+    },
+    "devoxxCFP": {
+        "baseUri": "https://cfp-vdz.exteso.com/api",
+        "eventId": "VDZ18",
+        "votingResultsUri": "https://cfp-vdz.exteso.com/api/voting/v1/top/talks"
     }
 }

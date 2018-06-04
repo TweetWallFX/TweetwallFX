@@ -151,6 +151,15 @@ public interface CFPClient {
     Optional<VotingResults> getVotingResultsOverall();
 
     /**
+     * Provides a flag indicating that voting results are retrievable. That is
+     * not to mean that voting results are available only that voting results
+     * can be queried. The query result may be empty.
+     *
+     * @return a flag indicating that voting results are retrievable
+     */
+    boolean canGetVotingResults();
+
+    /**
      * Stream of all available {@link CFPClient CFPClients}.
      *
      * @return Stream containing all available CFPClients
