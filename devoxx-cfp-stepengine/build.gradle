@@ -22,9 +22,6 @@
  * THE SOFTWARE.
  */
 dependencies {
-//    compile project(':TweetWallFX-Configuration')
     compile project(':TweetWallFX-Controls')
     compile project(':TweetWallFX-Devoxx-API-CFP')
-//
-//    testCompile project(':TweetWallFX-Devoxx-CFP-Test')
 }

@@ -46,8 +46,8 @@ import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipInXTransition;
-import org.tweetwallfx.devoxx2017be.dataprovider.TweetStreamDataProvider;
 import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider;
 
 /**
  * Devox 2017 TweetStream Flip In Animation Step

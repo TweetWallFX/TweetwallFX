@@ -42,6 +42,7 @@ dependencies {
     compile project(':TweetWallFX-Devoxx-CFP-StepEngine')
     compile project(':TweetWallFX-Generic2D')
     compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    compile project(':TweetWallFX-Tweet-StepEngine')
 
     runtime project(":devoxx-2017-be:CFP-Implementation-2017-BE")
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j

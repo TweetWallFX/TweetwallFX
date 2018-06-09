@@ -31,6 +31,17 @@
             {
                 "stepClassName": "org.tweetwallfx.vdz.steps.FlipOutTweets"
             }
+        ],
+        "dataProviderSettings": [
+            {
+                "dataProviderClassName": "org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider",
+                "config": {
+                    "blockedTwitterUserScreenNames": [],
+                    "historySize": 25,
+                    "maxTweets": 7,
+                    "minFollowersCount": 50
+                }
+            }
         ]
     },
     "devoxxCFP": {
