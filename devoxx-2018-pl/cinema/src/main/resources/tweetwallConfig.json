@@ -58,6 +58,19 @@
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTopRatedWeek"
             }
+        ],
+        "dataProviderSettings": [
+            {
+                "dataProviderClassName": "org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider",
+                "config": {
+                    "blockedTwitterUserScreenNames": [
+                        "1120blackfriday"
+                    ],
+                    "historySize": 25,
+                    "maxTweets": 4,
+                    "minFollowersCount": 50
+                }
+            }
         ]
     }
 }

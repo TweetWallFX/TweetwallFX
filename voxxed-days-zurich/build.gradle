@@ -40,10 +40,11 @@ task('debug', dependsOn: 'classes', type: JavaExec) {
 }
 
 dependencies {
-    compile project(':TweetWallFX-Generic2D')
-    compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
     compile project(':TweetWallFX-Devoxx-API-CFP')
     compile project(':TweetWallFX-Devoxx-CFP-StepEngine')
+    compile project(':TweetWallFX-Generic2D')
+    compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    compile project(':TweetWallFX-Tweet-StepEngine')
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
 
     runtime project(':TweetWallFX-Devoxx-CFP-Impl')
