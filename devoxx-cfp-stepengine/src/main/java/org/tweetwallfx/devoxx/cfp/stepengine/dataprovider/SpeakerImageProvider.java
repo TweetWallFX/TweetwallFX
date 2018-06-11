@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx2017be.dataprovider;
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import javafx.scene.image.Image;
 import org.tweetwallfx.controls.util.ImageCache;
 
 /**
  * Utility to provide a simple api to get the cached speaker image
+ *
  * @author Sven Reimers
  */
 public final class SpeakerImageProvider {
-    
-        private final static ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
 
-        public static Image getSpeakerImage(String url) {
-            return profileImageCache.get(url);
-        }
-    
+    private static final ImageCache PROFILE_IMAGE_CACHE = new ImageCache(new ImageCache.ProfileImageCreator());
+
+    public static Image getSpeakerImage(final String url) {
+        return PROFILE_IMAGE_CACHE.get(url);
+    }
 }
