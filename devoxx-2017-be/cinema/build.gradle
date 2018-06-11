@@ -29,7 +29,7 @@ tasks.withType(JavaExec) {
     main mainClassName
     jvmArgs '-Dorg.tweetwallfx.scheduledata.day=tuesday'
     jvmArgs '-Dorg.tweetwallfx.scheduledata.time=10:00Z'
-    jvmArgs '-Dorg.tweetwallfx.devoxxbe17.proposal=CTH-5247'
+    jvmArgs '-Dorg.tweetwallfx.scheduledata.proposal=CTH-5247'
 }
 
 task('debug', dependsOn: 'classes', type: JavaExec) {

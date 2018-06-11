@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx2017be.dataprovider;
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Speaker;
@@ -56,7 +56,7 @@ public class VotedTalk {
         this.proposalId = proposalId;
         this.proposalTitle = proposalTitle;
         this.speakerAvatar = CFPClient.getClient()
-                .getTalk(System.getProperty("org.tweetwallfx.devoxxbe17.proposal", proposalId))
+                .getTalk(System.getProperty("org.tweetwallfx.scheduledata.proposal", proposalId))
                 .flatMap(talk -> talk.getSpeakers().get(0).getSpeaker())
                 .map(Speaker::getAvatarURL)
                 .orElse(null);

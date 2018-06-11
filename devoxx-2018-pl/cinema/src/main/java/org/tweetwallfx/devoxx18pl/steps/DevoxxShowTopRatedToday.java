@@ -47,8 +47,8 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipInXTransition;
 import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.SpeakerImageProvider;
-import org.tweetwallfx.devoxx18pl.dataprovider.TopTalksTodayDataProvider;
-import org.tweetwallfx.devoxx18pl.dataprovider.VotedTalk;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksTodayDataProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.VotedTalk;
 
 /**
  * Devox 2017 Show Top Rated Talks Today (Flip In) Animation Step

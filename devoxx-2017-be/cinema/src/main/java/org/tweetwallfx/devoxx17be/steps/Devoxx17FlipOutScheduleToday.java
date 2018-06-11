@@ -32,7 +32,7 @@ import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipOutXTransition;
-import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksTodayDataProvider;
 
 /**
  * Devox 2017 Schedule Flip Out Animation Step

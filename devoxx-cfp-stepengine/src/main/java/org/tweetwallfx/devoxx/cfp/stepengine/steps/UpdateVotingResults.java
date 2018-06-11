@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 TweetWallFX
+ * Copyright 2017-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx17be.steps;
+package org.tweetwallfx.devoxx.cfp.stepengine.steps;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -30,20 +30,21 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
-import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksTodayDataProvider;
-import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksTodayDataProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksWeekDataProvider;
 
 /**
  * Step to trigger the updating of the voting results
  *
  * @author Sven Reimers
  */
-public class Devoxx17UpdateVotingResults implements Step {
+public class UpdateVotingResults implements Step {
 
     private LocalDateTime nextUpDateTime = LocalDateTime.now().minusMinutes(5);
+    private final Config config;
 
-    private Devoxx17UpdateVotingResults() {
-        // prevent external instantiation
+    private UpdateVotingResults(final Config config) {
+        this.config = config;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Devoxx17UpdateVotingResults implements Step {
         topTalksToday.updateVotigResults();
         final TopTalksWeekDataProvider topTalksWeek = context.getDataProvider(TopTalksWeekDataProvider.class);
         topTalksWeek.updateVotingResults();
-        nextUpDateTime = LocalDateTime.now().plusMinutes(5);
+        nextUpDateTime = LocalDateTime.now().plusMinutes(config.getUpdateInteval());
         context.proceed();
     }
 
@@ -63,23 +64,49 @@ public class Devoxx17UpdateVotingResults implements Step {
 
     /**
      * Implementation of {@link Step.Factory} as Service implementation creating
-     * {@link Devoxx17UpdateVotingResults}.
+     * {@link UpdateVotingResults}.
      */
     public static final class Factory implements Step.Factory {
 
         @Override
-        public Devoxx17UpdateVotingResults create(final StepEngineSettings.StepDefinition stepDefinition) {
-            return new Devoxx17UpdateVotingResults();
+        public UpdateVotingResults create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new UpdateVotingResults(stepDefinition.getConfig(Config.class));
         }
 
         @Override
-        public Class<Devoxx17UpdateVotingResults> getStepClass() {
-            return Devoxx17UpdateVotingResults.class;
+        public Class<UpdateVotingResults> getStepClass() {
+            return UpdateVotingResults.class;
         }
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TopTalksTodayDataProvider.class, TopTalksWeekDataProvider.class);
+            return Arrays.asList(
+                    TopTalksTodayDataProvider.class,
+                    TopTalksWeekDataProvider.class);
+        }
+    }
+
+    /**
+     * POJO used to configure {@link UpdateVotingResults}.
+     */
+    public static class Config {
+
+        /**
+         * Interval of minutes between actual calls to update the voting result
+         * data. Defaults to {@code 5}.
+         */
+        private int updateInteval = 5;
+
+        public int getUpdateInteval() {
+            return updateInteval;
+        }
+
+        public void setUpdateInteval(final int updateInteval) {
+            if (updateInteval < 0) {
+                throw new IllegalArgumentException("property 'updateInteval' must not be a negative number");
+            }
+
+            this.updateInteval = updateInteval;
         }
     }
 }
