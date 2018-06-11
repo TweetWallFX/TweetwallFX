@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.cfp.stepengine.dataprovider;
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.io.IOException;
 import java.io.InputStream;

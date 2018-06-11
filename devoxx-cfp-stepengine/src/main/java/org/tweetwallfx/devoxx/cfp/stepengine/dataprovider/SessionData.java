@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.cfp.stepengine.dataprovider;
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.OffsetTime;
 import java.util.Comparator;

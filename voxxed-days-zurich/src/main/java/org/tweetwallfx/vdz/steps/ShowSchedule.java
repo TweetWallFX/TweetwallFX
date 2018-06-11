@@ -39,14 +39,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwall.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider;
-import org.tweetwall.devoxx.cfp.stepengine.dataprovider.SessionData;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipInXTransition;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.SessionData;
 
 /**
  * Devox 2017 Show Schedule (Flip In) Animation Step
