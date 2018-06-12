@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.cfp.stepengine.steps;
+package org.tweetwallfx.devoxx.cfp.stepengine.steps;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
-import org.tweetwall.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider;
 import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider;
 
 /**
  * Step to trigger the updating of the schedule
