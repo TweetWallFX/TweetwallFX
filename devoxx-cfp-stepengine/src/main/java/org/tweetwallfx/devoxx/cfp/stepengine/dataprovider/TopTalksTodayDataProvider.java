@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx18pl.dataprovider;
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
@@ -33,30 +36,34 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
- * DataProvider Implementation for Top Talks Week
+ * DataProvider Implementation for Top Talks Today
  *
  * @author Sven Reimers
  */
-public final class TopTalksWeekDataProvider implements DataProvider {
+public final class TopTalksTodayDataProvider implements DataProvider {
 
-    List<VotedTalk> votedTalks = Collections.emptyList();
+    private List<VotedTalk> votedTalks = Collections.emptyList();
+    private final Config config;
 
-    private TopTalksWeekDataProvider() {
-        updateVotingResults();
+    private TopTalksTodayDataProvider(final Config config) {
+        this.config = config;
+        updateVotigResults();
     }
 
-    public void updateVotingResults() {
+    public void updateVotigResults() {
+        String actualDayName = LocalDateTime.now().getDayOfWeek()
+                .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
-                .getVotingResultsOverall()
+                .getVotingResultsDaily(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName))
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
                 .sorted(Comparator
-                        .comparing(TopTalksWeekDataProvider::averageFormattedVote)
+                        .comparing(TopTalksTodayDataProvider::averageFormattedVote)
                         .thenComparing(VotingResultTalk::getRatingTotalVotes)
                         .reversed())
-                .limit(5)
+                .limit(config.getNrVotes())
                 .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
@@ -71,19 +78,46 @@ public final class TopTalksWeekDataProvider implements DataProvider {
 
     @Override
     public String getName() {
-        return "TRTW-Devoxx2017BE";
+        return "Devoxx-CFP-TopTalksToday";
     }
 
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link TopTalksTodayDataProvider}.
+     */
     public static class Factory implements DataProvider.Factory {
 
         @Override
-        public TopTalksWeekDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
-            return new TopTalksWeekDataProvider();
+        public TopTalksTodayDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
+            return new TopTalksTodayDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
         @Override
-        public Class<TopTalksWeekDataProvider> getDataProviderClass() {
-            return TopTalksWeekDataProvider.class;
+        public Class<TopTalksTodayDataProvider> getDataProviderClass() {
+            return TopTalksTodayDataProvider.class;
+        }
+    }
+
+    /**
+     * POJO used to configure {@link TopTalksTodayDataProvider}.
+     */
+    public static class Config {
+
+        /**
+         * The number of votes to produce at most. Defaults to {@code 5}.
+         */
+        private int nrVotes = 5;
+
+        public int getNrVotes() {
+            return nrVotes;
+        }
+
+        public void setNrVotes(final int nrVotes) {
+            if (nrVotes < 0) {
+                throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
+            }
+
+            this.nrVotes = nrVotes;
         }
     }
 }

@@ -7,4 +7,3 @@ org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTweets$Factory
 org.tweetwallfx.devoxx18pl.steps.DevoxxShowSchedule$Factory
 org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedToday$Factory
 org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedWeek$Factory
-org.tweetwallfx.devoxx18pl.steps.DevoxxUpdateVotingResults$Factory
