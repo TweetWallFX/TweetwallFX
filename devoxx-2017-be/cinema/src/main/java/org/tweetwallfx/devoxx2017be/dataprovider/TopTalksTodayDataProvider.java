@@ -52,7 +52,7 @@ public final class TopTalksTodayDataProvider implements DataProvider {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
-                .getVotingResultsDaily(System.getProperty("org.tweetwalfx.devoxxbe17.day", actualDayName))
+                .getVotingResultsDaily(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName))
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
                 .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
