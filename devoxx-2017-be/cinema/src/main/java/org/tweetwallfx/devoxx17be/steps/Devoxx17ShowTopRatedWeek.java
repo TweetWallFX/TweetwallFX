@@ -46,7 +46,7 @@ import org.tweetwallfx.controls.stepengine.Step;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipInXTransition;
-import org.tweetwallfx.devoxx2017be.dataprovider.SpeakerImageProvider;
+import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.TopTalksWeekDataProvider;
 import org.tweetwallfx.devoxx2017be.dataprovider.VotedTalk;
 
