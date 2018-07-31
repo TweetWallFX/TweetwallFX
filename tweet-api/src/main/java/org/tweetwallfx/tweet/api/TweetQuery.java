@@ -37,7 +37,6 @@ public final class TweetQuery {
     private Integer count = null;
     private String since = null;
     private Long sinceId = null;
-//    private String geocode = null;
     private String until = null;
     private ResultType resultType = null;
 
@@ -264,48 +263,6 @@ public final class TweetQuery {
         return this;
     }
 
-//    /**
-//     * Returns the specified geocode
-//     *
-//     * @return geocode
-//     */
-//    public String getGeocode() {
-//        return geocode;
-//    }
-//
-//    public static enum Unit {
-//
-//        mi, km
-//    }
-//
-//    /**
-//     * returns tweets by users located within a given radius of the given
-//     * latitude/longitude, where the user's location is taken from their Twitter
-//     * profile
-//     *
-//     * @param location geo location
-//     * @param radius radius
-//     * @param unit either of {@link Unit}
-//     */
-//    public void setGeoCode(GeoLocation location, double radius, Unit unit) {
-//        this.geocode = location.getLatitude() + "," + location.getLongitude() + "," + radius + unit.name();
-//    }
-//
-//    /**
-//     * returns tweets by users located within a given radius of the given
-//     * latitude/longitude, where the user's location is taken from their Twitter
-//     * profile
-//     *
-//     * @param location geo location
-//     * @param radius radius
-//     * @param unit either of {@link Unit}
-//     * @return the instance
-//     */
-//    public TweetQuery geoCode(GeoLocation location, double radius, Unit unit) {
-//        setGeoCode(location, radius, unit);
-//        return this;
-//    }
-
     /**
      * Returns until
      *
@@ -396,7 +353,6 @@ public final class TweetQuery {
         return Objects.equals(count, query1.count)
                 && Objects.equals(maxId, query1.maxId)
                 && Objects.equals(sinceId, query1.sinceId)
-//                && Objects.equals(geocode, query1.geocode)
                 && Objects.equals(lang, query1.lang)
                 && Objects.equals(locale, query1.locale)
                 && Objects.equals(query, query1.query)
@@ -415,7 +371,6 @@ public final class TweetQuery {
         result = 31 * result + Objects.hashCode(count);
         result = 31 * result + Objects.hashCode(since);
         result = 31 * result + Objects.hashCode(sinceId);
-//        result = 31 * result + Objects.hashCode(geocode);
         result = 31 * result + Objects.hashCode(until);
         result = 31 * result + Objects.hashCode(resultType);
         return result;
@@ -431,7 +386,6 @@ public final class TweetQuery {
                 + ", count=" + count
                 + ", since='" + since + '\''
                 + ", sinceId=" + sinceId
-//                + ", geocode='" + geocode + '\''
                 + ", until='" + until + '\''
                 + ", resultType='" + resultType + '\''
                 + '}';
