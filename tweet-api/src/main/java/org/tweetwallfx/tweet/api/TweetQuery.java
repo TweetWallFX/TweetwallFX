@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,10 @@
  */
 package org.tweetwallfx.tweet.api;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class TweetQuery {
 
@@ -48,22 +51,29 @@ public final class TweetQuery {
     }
 
     /**
-     * Sets the query string
+     * Sets the query string. All query conditions are AND connected.
      *
-     * @param query the query string
+     * @param queryConditions the query string
      */
-    public void setQuery(String query) {
-        this.query = query;
+    public void setQuery(final String... queryConditions) {
+        this.query = Arrays.stream(queryConditions)
+                .filter(s -> null != s && !s.isEmpty())
+                .collect(Collectors.collectingAndThen(
+                        Collectors.joining(" "),
+                        s -> s.isEmpty() ? null : s));
     }
 
     /**
      * Sets the query string
      *
-     * @param query the query string
+     * @param queryConditions the query conditions
+     *
      * @return the instance
+     *
+     * @see #setQuery(java.lang.String...) for more details
      */
-    public TweetQuery query(String query) {
-        setQuery(query);
+    public TweetQuery query(final String... queryConditions) {
+        setQuery(queryConditions);
         return this;
     }
 
@@ -425,5 +435,37 @@ public final class TweetQuery {
                 + ", until='" + until + '\''
                 + ", resultType='" + resultType + '\''
                 + '}';
+    }
+
+    public static String queryOR(final String... conditions) {
+        return Arrays.stream(conditions)
+                .filter(s -> null != s && !s.isEmpty())
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        l -> l.isEmpty()
+                        ? null
+                        : 1 == l.size()
+                        ? l.get(0)
+                        : l.stream().collect(Collectors.joining(" OR ", "( ", " )"))));
+    }
+
+    public static String queryFrom(final String from) {
+        return Optional.ofNullable(from)
+                .map(s -> "from:" + from)
+                .orElse(null);
+    }
+
+    public static String queryTo(final String to) {
+        return Optional.ofNullable(to)
+                .map(s -> "to:" + to)
+                .orElse(null);
+    }
+
+    public static String queryFilterMedia() {
+        return "Filter:media";
+    }
+
+    public static String queryFilterLinks() {
+        return "Filter:Links";
     }
 }
