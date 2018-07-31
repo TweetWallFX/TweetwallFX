@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,10 +50,6 @@ public class TwitterTweeter extends Tweeter {
 
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
 
-    public TwitterTweeter() {
-        TwitterOAuth.exception().addListener((observable, oldValue, newValue) -> setLatestException(newValue));
-    }
-
     @Override
     public TweetStream createTweetStream(TweetFilterQuery tweetFilterQuery) {
         TwitterTweetStream twitterTweetStream = new TwitterTweetStream(tweetFilterQuery);
@@ -68,7 +64,6 @@ public class TwitterTweeter extends Tweeter {
         try {
             return new TwitterTweet(twitter.showStatus(tweetId));
         } catch (TwitterException ex) {
-            setLatestException(ex);
             throw new IllegalArgumentException("Error getting Status for " + tweetId, ex);
         }
     }
@@ -82,7 +77,6 @@ public class TwitterTweeter extends Tweeter {
         try {
             result = twitter.search(query);
         } catch (TwitterException ex) {
-            setLatestException(ex);
             LOGGER.error("Error getting QueryResult for " + query, ex);
             return Stream.empty();
         }
@@ -93,7 +87,7 @@ public class TwitterTweeter extends Tweeter {
     @Override
     public Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages) {
         final Query query = getQuery(tweetQuery);
-        final Iterable<Tweet> iterable = () -> new PagedIterator(this, query, numberOfPages);
+        final Iterable<Tweet> iterable = () -> new PagedIterator(query, numberOfPages);
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
@@ -141,14 +135,12 @@ public class TwitterTweeter extends Tweeter {
 
     private static class PagedIterator implements Iterator<Tweet> {
 
-        private final TwitterTweeter tweeter;
         private QueryResult queryResult;
         private Iterator<Status> statuses;
         private static final Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
         private int numberOfPages;
 
-        public PagedIterator(final TwitterTweeter tweeter, final Query query, int numberOfPages) {
-            this.tweeter = tweeter;
+        public PagedIterator(final Query query, int numberOfPages) {
             this.numberOfPages = --numberOfPages;
             queryNext(query);
         }
@@ -176,7 +168,6 @@ public class TwitterTweeter extends Tweeter {
                     }
                 } catch (TwitterException ex) {
                     startupLogger.trace("Querying next page failed: " + query, ex);
-                    tweeter.setLatestException(ex);
                     LOGGER.error("Error getting QueryResult for " + query, ex);
                     queryResult = null;
                     statuses = null;
