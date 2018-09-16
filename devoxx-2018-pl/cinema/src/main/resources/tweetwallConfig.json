@@ -42,7 +42,7 @@
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutTopRatedDay"
-            },        
+            },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutScheduleWeek"
             },
