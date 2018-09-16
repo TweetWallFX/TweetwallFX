@@ -13,7 +13,10 @@
                 "stepClassName": "org.tweetwallfx.vdz.steps.FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.vdz.steps.FlipOutScheduleToday"
+                "stepClassName": "org.tweetwallfx.controls.steps.NodeFadeOutStep",
+                "config": {
+                    "nodeSelector": "#scheduleNode"
+                }
             },
             {
                 "stepClassName": "org.tweetwallfx.vdz.steps.ShowSchedule"
