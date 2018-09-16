@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -57,11 +59,22 @@ public final class StepEngine {
 
     private static final Logger STARTUP_LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
     private static final Logger LOG = LogManager.getLogger(StepEngine.class);
+    private static final ThreadGroup THREAD_GROUP = new ThreadGroup("StepEngine");
     private volatile boolean terminated = false;
     private final Lock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
     private final StepIterator stepIterator;
     private final MachineContext context = new MachineContext();
+    private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(THREAD_GROUP, r, "engine");
+        t.setDaemon(true);
+        return t;
+    });
+    private final ExecutorService auxiliaryExecutor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(THREAD_GROUP, r, "auxiliary");
+        t.setDaemon(true);
+        return t;
+    });
 
     public StepEngine() {
         STARTUP_LOGGER.info("create StepIterator");
@@ -96,8 +109,8 @@ public final class StepEngine {
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
                 .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
                 .map(dpf -> dpf.create(dataProviderSettings.getOrDefault(
-                        dpf.getDataProviderClass().getName(),
-                        new StepEngineSettings.DataProviderSetting())))
+                dpf.getDataProviderClass().getName(),
+                new StepEngineSettings.DataProviderSetting())))
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
 
@@ -171,19 +184,23 @@ public final class StepEngine {
     }
 
     public void go() {
-        process();
+        engineExecutor.execute(() -> process());
     }
 
-    void proceed() {
-        lock.lock();
-        try {
-            condition.signalAll();
-        } finally {
-            lock.unlock();
+    private void proceed() {
+        if (Platform.isFxApplicationThread()) {
+            auxiliaryExecutor.execute(() -> proceed());
+        } else {
+            lock.lock();
+            try {
+                condition.signalAll();
+            } finally {
+                lock.unlock();
+            }
         }
     }
 
-    void process() {
+    private void process() {
         while (!terminated) {
             LOG.info("process to next step ");
 
