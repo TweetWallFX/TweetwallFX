@@ -51,7 +51,7 @@ public class FlipInXTransition extends Transition {
     private final Timeline timeline;
     
     /**
-     * Create new FlipOutXTransition
+     * Create new FlipInXTransition
      * 
      * @param node The node to affect
      */
