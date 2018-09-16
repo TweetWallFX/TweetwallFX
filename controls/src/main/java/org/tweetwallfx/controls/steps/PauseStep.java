@@ -52,6 +52,11 @@ public class PauseStep implements Step {
         context.proceed();
     }
 
+    @Override
+    public boolean requiresPlatformThread() {
+        return false;
+    }
+
     /**
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link PauseStep}.
