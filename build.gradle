@@ -110,6 +110,7 @@ allprojects {
                 '**/*.asciidoc',
                 '**/*.adoc',
                 '**/*.asc',
+                '**/*.json',
                 '**/*.md',
                 '**/.gitignore'
 

@@ -1,6 +1,6 @@
 {
     "connectionSettings" : {
-    	"proxy" : {
+        "proxy" : {
             "host" : null,
             "port" : -1,
             "user" : null,
