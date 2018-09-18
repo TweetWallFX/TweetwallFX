@@ -54,6 +54,8 @@ public abstract class Tweeter {
     public abstract TweetStream createTweetStream(TweetFilterQuery filterQuery);
 
     public abstract Tweet getTweet(final long tweetId);
+    
+    public abstract User getUser(final String userId);
 
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 
