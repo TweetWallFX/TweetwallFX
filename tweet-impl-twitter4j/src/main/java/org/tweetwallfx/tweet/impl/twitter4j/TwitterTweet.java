@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ final class TwitterTweet implements Tweet {
 
     public TwitterTweet(final Status status) {
         this.status = status;
-        this.user = new TwitterUser(status);
+        this.user = new TwitterUser(status.getUser());
 
         final HashtagEntity[] hashtagEntities = status.getHashtagEntities();
 
@@ -202,55 +202,6 @@ final class TwitterTweet implements Tweet {
     @Override
     public UserMentionTweetEntry[] getUserMentionEntries() {
         return userMentionTweetEntries;
-    }
-
-    private static class TwitterUser implements User {
-
-        private final twitter4j.User user;
-
-        public TwitterUser(final Status status) {
-            this.user = status.getUser();
-        }
-
-        @Override
-        public String getBiggerProfileImageUrl() {
-            return user.getBiggerProfileImageURL();
-        }
-
-        @Override
-        public long getId() {
-            return user.getId();
-        }
-
-        @Override
-        public String getLang() {
-            return user.getLang();
-        }
-
-        @Override
-        public String getName() {
-            return user.getName();
-        }
-
-        @Override
-        public String getProfileImageUrl() {
-            return user.getProfileImageURL();
-        }
-
-        @Override
-        public String getScreenName() {
-            return user.getScreenName();
-        }
-
-        @Override
-        public boolean isVerified() {
-            return user.isVerified();
-        }
-
-        @Override
-        public int getFollowersCount() {
-            return user.getFollowersCount();
-        }
     }
 
     @Override

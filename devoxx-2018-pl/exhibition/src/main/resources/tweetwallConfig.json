@@ -20,7 +20,10 @@
                 "stepClassName": "org.tweetwallfx.devoxx18pl.exhibition.DevoxxShowSchedule"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx18pl.exhibition.DevoxxFlipOutSchedule"
+                "stepClassName": "org.tweetwallfx.controls.steps.NodeFadeOutStep",
+                "config": {
+                    "nodeSelector": "#scheduleNode"
+                }
             },
             {
                 "stepClassName": "org.tweetwallfx.controls.steps.FadeInCloudStep"

@@ -41,7 +41,10 @@
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTopRatedDay"
+                "stepClassName": "org.tweetwallfx.controls.steps.NodeFadeOutStep",
+                "config": {
+                    "nodeSelector": "#topRatedToday"
+                }
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleWeek"
@@ -56,7 +59,10 @@
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
             },
             {
-                "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTopRatedWeek"
+                "stepClassName": "org.tweetwallfx.controls.steps.NodeFadeOutStep",
+                "config": {
+                    "nodeSelector": "#topRatedWeek"
+                }
             }
         ],
         "dataProviderSettings": [
