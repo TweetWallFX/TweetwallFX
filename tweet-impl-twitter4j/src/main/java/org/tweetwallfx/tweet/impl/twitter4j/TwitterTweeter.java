@@ -36,6 +36,7 @@ import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.User;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -65,6 +66,17 @@ public class TwitterTweeter extends Tweeter {
             return new TwitterTweet(twitter.showStatus(tweetId));
         } catch (TwitterException ex) {
             throw new IllegalArgumentException("Error getting Status for " + tweetId, ex);
+        }
+    }
+
+    @Override
+    public User getUser(final String userId) {
+        final Twitter twitter = new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
+
+        try {
+            return new TwitterUser(twitter.showUser(userId));
+        } catch (TwitterException ex) {
+            throw new IllegalArgumentException("Error getting User for " + userId, ex);
         }
     }
 
