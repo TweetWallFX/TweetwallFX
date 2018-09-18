@@ -31,11 +31,6 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'cz.kubacki.gradle.plugins', name: 'gradle-nbm-plugin', version: '1.17.0', {
-            // Workaround for bad transitive dependencies
-            exclude group:'org.slf4j', module:'slf4j-simple'
-            exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7
-        }
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.2'
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '3.+'
         // VCS dependency required by plugin 'gradle-info-plugin'
