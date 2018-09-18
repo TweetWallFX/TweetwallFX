@@ -30,7 +30,7 @@
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutScheduleToday"
-            },        
+            },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedToday"
             },
@@ -48,7 +48,7 @@
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxFlipOutScheduleWeek"
-            },        
+            },
             {
                 "stepClassName": "org.tweetwallfx.devoxx18pl.steps.DevoxxShowTopRatedWeek"
             },
