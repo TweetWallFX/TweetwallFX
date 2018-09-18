@@ -1,4 +1,3 @@
 org.tweetwallfx.vdz.steps.FlipInTweets$Factory
-org.tweetwallfx.vdz.steps.FlipOutScheduleToday$Factory
 org.tweetwallfx.vdz.steps.ShowSchedule$Factory
 org.tweetwallfx.vdz.steps.FlipOutTweets$Factory
