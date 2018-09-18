@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
@@ -264,12 +262,6 @@ public class WordleSkin extends SkinBase<Wordle> {
             stackPane.getChildren().add(0, backgroundImage);
         }
     }
-    private final ExecutorService tickTockExecutor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r);
-        t.setName("TickTock");
-        t.setDaemon(true);
-        return t;
-    });
 
     private void prepareStepMachine() {
         STARTUP_LOGGER.info("Prepare StepMachine");
@@ -277,7 +269,6 @@ public class WordleSkin extends SkinBase<Wordle> {
         final StepEngine s = new StepEngine();
         s.getContext().put("WordleSkin", this);
         STARTUP_LOGGER.info("Prepare StepMachine done");
-
-        tickTockExecutor.execute(() -> s.go());
+        s.go();
     }
 }
