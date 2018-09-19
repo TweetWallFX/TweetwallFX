@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,53 +45,55 @@ apply plugin: 'build-dashboard'
 apply plugin: 'org.sonarqube'
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'com.github.spotbugs'
-    apply plugin: 'jacoco'
-    apply plugin: 'eclipse'
-    apply plugin: 'nebula.info'
+    if (childProjects.isEmpty()) {
+        apply plugin: 'java'
+        apply plugin: 'idea'
+        apply plugin: 'com.github.spotbugs'
+        apply plugin: 'jacoco'
+        apply plugin: 'eclipse'
+        apply plugin: 'nebula.info'
 
-    group = 'org.tweetwallfx'
-    version = '1.0'
+        group = 'org.tweetwallfx'
+        version = '1.0'
 
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: versionJUnit
-        testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
-    }
-
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
-
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << '-Xlint:all'
-        options.compilerArgs << '-Werror'
-        options.compilerArgs << '-proc:none'
-    }
-
-    spotbugs {
-        ignoreFailures = false
-    }
-
-    tasks.withType(com.github.spotbugs.SpotBugsTask) {
-        // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
-        def sourceSetName = (name - 'spotbugs').uncapitalize()
-        dependsOn( sourceSets[sourceSetName].classesTaskName)
-
-        reports {
-            xml.enabled = false
-            html.enabled = true
+        repositories {
+            jcenter()
         }
-    }
 
-    tasks.withType(JavaExec) {
-        jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
-        jvmArgs '--add-modules java.xml.bind'
+        dependencies {
+            testCompile group: 'junit', name: 'junit', version: versionJUnit
+            testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
+        }
+
+        jar {
+            manifest.attributes provider: 'gradle'
+        }
+
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << '-Xlint:all'
+            options.compilerArgs << '-Werror'
+            options.compilerArgs << '-proc:none'
+        }
+
+        spotbugs {
+            ignoreFailures = false
+        }
+
+        tasks.withType(com.github.spotbugs.SpotBugsTask) {
+            // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
+            def sourceSetName = (name - 'spotbugs').uncapitalize()
+            dependsOn( sourceSets[sourceSetName].classesTaskName)
+
+            reports {
+                xml.enabled = false
+                html.enabled = true
+            }
+        }
+
+        tasks.withType(JavaExec) {
+            jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
+            jvmArgs '--add-modules java.xml.bind'
+        }
     }
 }
 
