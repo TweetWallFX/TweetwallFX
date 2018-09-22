@@ -41,12 +41,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.StepEngine;
 
-/**
- * @author Sven Reimers
- */
 public class WordleSkin extends SkinBase<Wordle> {
 
-    private static final Logger STARTUP_LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOG = LogManager.getLogger("org.tweetwallfx.startup");
     private static final Logger LOGGER = LogManager.getLogger(WordleSkin.class);
     public final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
@@ -264,11 +261,11 @@ public class WordleSkin extends SkinBase<Wordle> {
     }
 
     private void prepareStepMachine() {
-        STARTUP_LOGGER.info("Prepare StepMachine");
+        LOG.info("Prepare StepMachine");
 
         final StepEngine s = new StepEngine();
         s.getContext().put("WordleSkin", this);
-        STARTUP_LOGGER.info("Prepare StepMachine done");
+        LOG.info("Prepare StepMachine done");
         s.go();
     }
 }

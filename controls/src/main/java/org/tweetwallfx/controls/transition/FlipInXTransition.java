@@ -45,7 +45,8 @@ import javafx.util.Duration;
  * @author Sven Reimers
  */
 public class FlipInXTransition extends Transition {
-    private final Interpolator EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
+
+    private static final Interpolator EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
     private Camera oldCamera;
     private final Node node;
     private final Timeline timeline;

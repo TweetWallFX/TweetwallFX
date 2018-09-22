@@ -24,7 +24,6 @@
 package org.tweetwall.util;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -66,7 +65,7 @@ public final class StringNumberComparator implements Comparator<String> {
             final int result;
 
             if (isNumber(part1) && isNumber(part2)) {
-                result = new BigInteger(part1).compareTo(new BigInteger(part2));
+                result = Long.valueOf(part1).compareTo(Long.valueOf(part2));
             } else {
                 result = part1.compareTo(part2);
             }

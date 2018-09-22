@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ public class URLHelper {
 
         if (connection instanceof HttpURLConnection) {
             final HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-            int responseCode;
+            final int responseCode;
 
             try {
                 responseCode = httpURLConnection.getResponseCode();
@@ -64,7 +64,7 @@ public class URLHelper {
             if (IntStream.of(HttpURLConnection.HTTP_MOVED_PERM,
                     HttpURLConnection.HTTP_MOVED_TEMP,
                     HttpURLConnection.HTTP_SEE_OTHER,
-                    HttpURLConnection.HTTP_NOT_MODIFIED).filter(i -> i == responseCode).findAny().isPresent()) {
+                    HttpURLConnection.HTTP_NOT_MODIFIED).anyMatch(i -> i == responseCode)) {
                 // redirected
                 final String redirected = connection.getHeaderField("Location");
 

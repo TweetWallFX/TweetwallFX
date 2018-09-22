@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import org.tweetwallfx.controls.Wordle;
 public class TagTweets {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
-    private static final Logger STARTUP_LOGGER = LogManager.getLogger(STARTUP);
+    private static final Logger LOGGER = LogManager.getLogger(STARTUP);
 
     private Wordle wordle;
     private final BorderPane root;
@@ -57,23 +57,23 @@ public class TagTweets {
     }
 
     public void start() {
-        STARTUP_LOGGER.trace("TagTweets.start");
+        LOGGER.trace("TagTweets.start");
         hWordle.setAlignment(Pos.CENTER);
         hWordle.prefWidthProperty().bind(root.widthProperty());
         hWordle.prefHeightProperty().bind(root.heightProperty());
 
         root.setCenter(hWordle);
         String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-        STARTUP_LOGGER.trace("** 1. Creating Tag Cloud for " + searchText);
+        LOGGER.trace("** 1. Creating Tag Cloud for " + searchText);
 
-        STARTUP_LOGGER.trace("** create wordle");
+        LOGGER.trace("** create wordle");
 
         wordle = new Wordle();
         hWordle.getChildren().setAll(wordle);
         wordle.prefWidthProperty().bind(hWordle.widthProperty());
         wordle.prefHeightProperty().bind(hWordle.heightProperty());
 
-        STARTUP_LOGGER.trace("** create wordle done");
-        STARTUP_LOGGER.trace("** 2. Starting new Tweets search for " + searchText);
+        LOGGER.trace("** create wordle done");
+        LOGGER.trace("** 2. Starting new Tweets search for " + searchText);
     }
 }

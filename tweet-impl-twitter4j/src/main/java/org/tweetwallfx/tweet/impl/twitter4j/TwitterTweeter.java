@@ -149,7 +149,7 @@ public class TwitterTweeter extends Tweeter {
 
         private QueryResult queryResult;
         private Iterator<Status> statuses;
-        private static final Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
+        private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
         private int numberOfPages;
 
         public PagedIterator(final Query query, int numberOfPages) {
@@ -171,7 +171,7 @@ public class TwitterTweeter extends Tweeter {
                 final Twitter twitter = new TwitterFactory(configuration).getInstance();
 
                 try {
-                    startupLogger.trace("Querying next page: " + query);
+                    LOGGER.trace("Querying next page: " + query);
                     queryResult = twitter.search(query);
                     if (null != queryResult) {
                         LOGGER.info("RateLimit: " + queryResult.getRateLimitStatus().getRemaining() + "/" + queryResult.getRateLimitStatus().getLimit()
@@ -179,7 +179,7 @@ public class TwitterTweeter extends Tweeter {
                         statuses = queryResult.getTweets().iterator();
                     }
                 } catch (TwitterException ex) {
-                    startupLogger.trace("Querying next page failed: " + query, ex);
+                    LOGGER.trace("Querying next page failed: " + query, ex);
                     LOGGER.error("Error getting QueryResult for " + query, ex);
                     queryResult = null;
                     statuses = null;
