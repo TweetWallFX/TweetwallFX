@@ -57,7 +57,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
  */
 public final class StepEngine {
 
-    private static final Logger STARTUP_LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
     private static final Logger LOG = LogManager.getLogger(StepEngine.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("StepEngine");
     private volatile boolean terminated = false;
@@ -77,7 +77,7 @@ public final class StepEngine {
     });
 
     public StepEngine() {
-        STARTUP_LOGGER.info("create StepIterator");
+        LOGGER.info("create StepIterator");
         stepIterator = StepIterator.create();
         initDataProviders();
         //initialize every step with context
@@ -90,12 +90,12 @@ public final class StepEngine {
 
     private void initDataProviders() {
         final Set<Class<? extends DataProvider>> requiredDataProviders = stepIterator.getRequiredDataProviders();
-        STARTUP_LOGGER.info("init DataProviders");
+        LOGGER.info("init DataProviders");
 
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-        STARTUP_LOGGER.info("query: " + searchText);
+        LOGGER.info("query: " + searchText);
 
-        STARTUP_LOGGER.info("create DataProviders");
+        LOGGER.info("create DataProviders");
         final Map<String, StepEngineSettings.DataProviderSetting> dataProviderSettings = Configuration.getInstance()
                 .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
                 .getDataProviderSettings()
@@ -115,7 +115,7 @@ public final class StepEngine {
                 .collect(Collectors.toList());
 
         requiredDataProviders.stream()
-                .filter(rdpc -> !providers.stream().anyMatch(rdpc::isInstance))
+                .filter(rdpc -> providers.stream().noneMatch(rdpc::isInstance))
                 .findAny()
                 .ifPresent(rdpc -> {
                     throw new IllegalStateException("DataProvider '" + rdpc.getCanonicalName() + "' is required but no DataProvider.Factory was found creating it!");
@@ -131,7 +131,7 @@ public final class StepEngine {
                 .collect(Collectors.toList());
 
         if (!newTweetAwareProviders.isEmpty()) {
-            STARTUP_LOGGER.info("create TweetStream");
+            LOGGER.info("create TweetStream");
             final TweetFilterQuery query = new TweetFilterQuery()
                     .track(Pattern.compile(" [oO][rR] ").splitAsStream(searchText).toArray(n -> new String[n]));
             final TweetStream tweetStream = Tweeter.getInstance().createTweetStream(query);
@@ -145,7 +145,7 @@ public final class StepEngine {
                     .forEach(tweet -> historyAwareProviders.stream().forEach(hap -> hap.processHistoryTweet(tweet)));
         }
 
-        STARTUP_LOGGER.info("initDataProviders done");
+        LOGGER.info("initDataProviders done");
         providers.forEach(context::addDataProvider);
     }
 

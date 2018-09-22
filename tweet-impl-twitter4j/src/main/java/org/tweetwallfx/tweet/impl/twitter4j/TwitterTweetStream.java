@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ import twitter4j.conf.Configuration;
 
 final class TwitterTweetStream implements TweetStream {
 
-    private static final Logger log = LogManager.getLogger(TwitterTweetStream.class);
+    private static final Logger LOG = LogManager.getLogger(TwitterTweetStream.class);
     
     private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
 
@@ -55,9 +55,9 @@ final class TwitterTweetStream implements TweetStream {
     @Override
     public void onTweet(final Consumer<Tweet> tweetConsumer) {
         synchronized (this) {
-            log.info("Adding tweetConsumer: " + tweetConsumer);
+            LOG.info("Adding tweetConsumer: " + tweetConsumer);
             this.tweetConsumerList.add(tweetConsumer);
-            log.info("List of tweetConsumers is now: " + tweetConsumerList);
+            LOG.info("List of tweetConsumers is now: " + tweetConsumerList);
         }
     }
 
@@ -71,7 +71,7 @@ final class TwitterTweetStream implements TweetStream {
             @Override
             public void onStatus(Status status) {
                 synchronized (TwitterTweetStream.this) {
-                    log.info("redispatching new received tweet to " + tweetConsumerList);
+                    LOG.info("redispatching new received tweet to " + tweetConsumerList);
                     TwitterTweet twitterTweet = new TwitterTweet(status);
                     tweetConsumerList.stream().forEach(consumer -> consumer.accept(twitterTweet));
                 }

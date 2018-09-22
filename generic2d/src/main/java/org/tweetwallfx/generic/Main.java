@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import org.tweetwallfx.twod.TagTweets;
 public class Main extends Application {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
-    private static final Logger STARTUP_LOGGER = LogManager.getLogger(STARTUP);
+    private static final Logger LOGGER = LogManager.getLogger(STARTUP);
     private TagTweets tweetsTask;
 
     @Override
@@ -70,7 +70,7 @@ public class Main extends Application {
         LoggerContext context = LoggerContext.getContext(false);
         org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
         spa.start();
-        LoggerConfig slc = config.getLoggerConfig(STARTUP_LOGGER.getName());
+        LoggerConfig slc = config.getLoggerConfig(LOGGER.getName());
         slc.setLevel(Level.TRACE);
         slc.addAppender(spa, Level.TRACE, null);
 

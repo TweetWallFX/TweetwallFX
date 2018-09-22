@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,16 +38,11 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author sven
- */
 public final class WordleLayout {
     
-    private static final Logger log = LogManager.getLogger(WordleLayout.class);
-    
-    private static final double dRadius = 5.0;    
-    private static final int dDeg = 10;
+    private static final Logger LOG = LogManager.getLogger(WordleLayout.class);
+    private static final double RADIUS = 5.0;    
+    private static final int DEG = 10;
     
     private final Random rand = new Random();    
     
@@ -144,7 +139,7 @@ public final class WordleLayout {
                 int startDeg = rand.nextInt(360);
                 double prev_x = -1;
                 double prev_y = -1;
-                for (int deg = startDeg; deg < startDeg + 360; deg += dDeg) {
+                for (int deg = startDeg; deg < startDeg + 360; deg += DEG) {
                     double rad = ((double) deg / Math.PI) * 180.0;
                     center = center.add(radius * Math.cos(rad), radius * Math.sin(rad));
                     if (prev_x == center.getX() && prev_y == center.getY()) {
@@ -163,7 +158,7 @@ public final class WordleLayout {
                         useable = false;
                     }
                     if (useable) {
-                        useable = !Arrays.stream(configuration.blockedAreaBounds).filter(bb -> mayBe.intersects(bb)).findAny().isPresent();
+                        useable = !Arrays.stream(configuration.blockedAreaBounds).anyMatch(mayBe::intersects);
                     }
                     if (useable) {
                         for (int prev = 0; prev < boundsList.size(); ++prev) {
@@ -182,7 +177,7 @@ public final class WordleLayout {
                         break;
                     }
                 }
-                radius += dRadius;
+                radius += RADIUS;
             }
         }
 
@@ -213,8 +208,8 @@ public final class WordleLayout {
             this.layoutBounds = layoutBounds;
             this.minWeight = words.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
             this.maxWeight = words.stream().map(Word::getWeight).max(Comparator.naturalOrder()).get();
-            log.info("MaxWeight: " + maxWeight);
-            log.info("MiWeight: " + minWeight);
+            LOG.info("MaxWeight: " + maxWeight);
+            LOG.info("MiWeight: " + minWeight);
         }
         
         public void setBlockedAreaBounds(Bounds ... blockedAreaBounds) {
