@@ -32,7 +32,7 @@ buildscript {
 
     dependencies {
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: versionSpotbugs
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '3.+'
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: versionGradleInfoPlugin
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
@@ -62,7 +62,7 @@ subprojects {
 
         dependencies {
             testCompile group: 'junit', name: 'junit', version: versionJUnit
-            testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
+            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
         }
 
         jar {
