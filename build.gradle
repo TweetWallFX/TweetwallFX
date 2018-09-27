@@ -35,7 +35,7 @@ buildscript {
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: versionGradleInfoPlugin
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
-        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.14.0'
+        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
         gradleApi()
     }
