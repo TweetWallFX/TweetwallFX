@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    compile group: 'javax.cache', name: 'cache-api', version: '1.0.0'
+    compile group: 'javax.cache', name: 'cache-api', version: versionCacheApi
     compile group: 'org.ehcache', name: 'ehcache', version: '3.3.0'
     runtime group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: versionLog4j
 
