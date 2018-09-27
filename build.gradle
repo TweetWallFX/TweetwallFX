@@ -32,7 +32,7 @@ buildscript {
 
     dependencies {
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.3'
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '3.+'
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: versionGradleInfoPlugin
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.14.0'
