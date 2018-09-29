@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-apply plugin: 'groovy'
+apply plugin: 'java'
 
 dependencies {
     compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
