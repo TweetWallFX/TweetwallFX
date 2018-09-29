@@ -37,8 +37,8 @@ buildscript {
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
+        classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
-        gradleApi()
     }
 }
 
@@ -54,6 +54,7 @@ subprojects {
         apply plugin: 'jacoco'
         apply plugin: 'eclipse'
         apply plugin: 'nebula.info'
+        apply plugin: "net.ltgt.errorprone"
 
         group = 'org.tweetwallfx'
         version = '1.0'
@@ -63,6 +64,7 @@ subprojects {
         }
 
         dependencies {
+            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
             testCompile group: 'junit', name: 'junit', version: versionJUnit
             testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
         }

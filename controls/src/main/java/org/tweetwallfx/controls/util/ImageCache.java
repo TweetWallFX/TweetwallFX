@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,8 @@ package org.tweetwallfx.controls.util;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -38,12 +40,13 @@ public class ImageCache {
 
     private final int maxSize;
     private final Map<String, Reference<Image>> cache = new HashMap<>();
-    private final LinkedList<String> lru = new LinkedList<>();
+    private final Deque<String> lru;
     private final ImageCreator creator;
 
     public ImageCache(final ImageCreator creator, int maxSize) {
         this.creator = creator;
         this.maxSize = maxSize;
+        lru = new ArrayDeque<>(maxSize + 1);
     }
 
     public ImageCache(final ImageCreator creator) {
