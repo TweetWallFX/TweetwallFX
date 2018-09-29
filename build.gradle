@@ -37,10 +37,12 @@ buildscript {
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '3.+'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
+        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
         gradleApi()
     }
 }
 
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'build-dashboard'
 apply plugin: 'org.sonarqube'
 
@@ -93,6 +95,21 @@ subprojects {
         tasks.withType(JavaExec) {
             jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
             jvmArgs '--add-modules java.xml.bind'
+        }
+
+        dependencyUpdates {
+            revision = 'release'
+            resolutionStrategy {
+                componentSelection { rules ->
+                    rules.all { /*ComponentSelection*/ selection ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
+                        }) {
+                            selection.reject('Release candidate')
+                        }
+                    }
+                }
+            }
         }
     }
 }
