@@ -36,7 +36,7 @@ buildscript {
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: versionJGit
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
-        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.6.2'
+        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: versionSonarqubeGradlePlugin
         classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
     }
