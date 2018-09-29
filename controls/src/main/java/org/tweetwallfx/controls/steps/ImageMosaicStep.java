@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -128,12 +127,12 @@ public class ImageMosaicStep implements Step {
     }
 
     private Transition createMosaicTransition(final List<ImageStore> imageStores) {
-        SequentialTransition fadeIn = new SequentialTransition();
-        List<FadeTransition> allFadeIns = new ArrayList<>();
+        final SequentialTransition fadeIn = new SequentialTransition();
+        final List<FadeTransition> allFadeIns = new ArrayList<>();
+        final double width = pane.getWidth() / 6.0 - 10;
+        final double height = pane.getHeight() / 5.0 - 8;
+        final List<ImageStore> distillingList = new ArrayList<>(imageStores);
 
-        double width = pane.getWidth() / 6.0 - 10;
-        double height = pane.getHeight() / 5.0 - 8;
-        List<ImageStore> distillingList = new LinkedList<>(imageStores);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 int index = RANDOM.nextInt(distillingList.size());

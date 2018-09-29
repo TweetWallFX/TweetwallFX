@@ -151,7 +151,8 @@ public final class Configuration {
 
     private static Map<String, Object> readConfiguration(final InputStream input, final String dataSourceIdentification) {
         try {
-            final Map<String, Object> result = cast(JsonDataConverter.convertFromInputStream(input, Map.class));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> result = JsonDataConverter.convertFromInputStream(input, Map.class);
 
             convertConfigData(result);
 
@@ -229,7 +230,7 @@ public final class Configuration {
      * contain a value for the requested {@code param}
      */
     public <T> T getConfigTyped(final String param, final Class<T> paramClass) {
-        return cast(getConfig(param));
+        return paramClass.cast(getConfig(param));
     }
 
     /**
@@ -249,7 +250,7 @@ public final class Configuration {
      * @return the value of the requested entry
      */
     public <T> T getConfigTyped(final String param, final Class<T> paramClass, final T defaultValue) {
-        return cast(getConfig(param, defaultValue));
+        return paramClass.cast(getConfig(param, defaultValue));
     }
 
     /**
@@ -291,11 +292,6 @@ public final class Configuration {
         ));
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> T cast(final Object obj) {
-        return (T) obj;
-    }
-
     private static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
         Objects.requireNonNull(next, "Parameter next must not be null!");
 
@@ -323,7 +319,11 @@ public final class Configuration {
             return next;
         } else if (Map.class.isInstance(previous)
                 && Map.class.isInstance(next)) {
-            return mergeMap(cast(previous), cast(next));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> previousMap = (Map<String, Object>) previous;
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> nextMap = (Map<String, Object>) next;
+            return mergeMap(previousMap, nextMap);
         } else {
             throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
         }
