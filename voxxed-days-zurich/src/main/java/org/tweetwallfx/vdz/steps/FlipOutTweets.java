@@ -25,19 +25,17 @@ package org.tweetwallfx.vdz.steps;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
-import org.tweetwallfx.controls.transition.FlipOutXTransition;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.transition.FlipOutXTransition;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * TweetStream Flip Out Animation Step

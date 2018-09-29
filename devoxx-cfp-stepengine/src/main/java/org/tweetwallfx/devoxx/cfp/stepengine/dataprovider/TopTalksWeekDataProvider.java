@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * DataProvider Implementation for Top Talks Week

@@ -27,12 +27,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 import org.tweetwallfx.controls.transition.FlipOutXTransition;
 import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksWeekDataProvider;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * Devox 2017 Schedule Flip Out Animation Step

@@ -37,7 +37,8 @@ import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 

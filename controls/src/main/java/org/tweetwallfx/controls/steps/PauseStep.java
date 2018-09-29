@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,10 @@ package org.tweetwallfx.controls.steps;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import static org.tweetwall.util.ToString.*;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * @author Sven Reimers

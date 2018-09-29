@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.dataprovider;
+package org.tweetwallfx.stepengine.api;
 
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**

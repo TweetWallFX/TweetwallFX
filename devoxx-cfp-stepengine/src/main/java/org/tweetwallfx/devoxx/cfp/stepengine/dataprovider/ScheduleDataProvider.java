@@ -36,8 +36,8 @@ import java.util.TimeZone;
 import org.tweetwall.devoxx.api.cfp.client.CFPClient;
 import org.tweetwall.devoxx.api.cfp.client.Schedule;
 import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * DataProvider Implementation for Schedule Data

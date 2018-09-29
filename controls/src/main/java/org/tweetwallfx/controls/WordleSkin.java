@@ -39,7 +39,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.controls.stepengine.StepEngine;
+import org.tweetwallfx.stepengine.api.StepEngine;
 
 public class WordleSkin extends SkinBase<Wordle> {
 

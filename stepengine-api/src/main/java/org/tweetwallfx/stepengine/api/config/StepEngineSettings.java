@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.stepengine.config;
+package org.tweetwallfx.stepengine.api.config;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,9 +30,6 @@ import org.tweetwall.util.ConfigurableObjectBase;
 import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.config.ConnectionSettings;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
