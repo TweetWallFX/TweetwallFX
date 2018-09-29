@@ -96,6 +96,21 @@ subprojects {
             jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
             jvmArgs '--add-modules java.xml.bind'
         }
+
+        dependencyUpdates {
+            revision = 'release'
+            resolutionStrategy {
+                componentSelection { rules ->
+                    rules.all { /*ComponentSelection*/ selection ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
+                        }) {
+                            selection.reject('Release candidate')
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
