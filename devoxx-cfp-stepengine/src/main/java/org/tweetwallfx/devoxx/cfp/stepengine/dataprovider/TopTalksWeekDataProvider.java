@@ -71,11 +71,6 @@ public final class TopTalksWeekDataProvider implements DataProvider {
         return votedTalks;
     }
 
-    @Override
-    public String getName() {
-        return "Devoxx-CFP-TopTalksWeek";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override

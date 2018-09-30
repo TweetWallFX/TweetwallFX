@@ -76,11 +76,6 @@ public final class TopTalksTodayDataProvider implements DataProvider {
         return votedTalks;
     }
 
-    @Override
-    public String getName() {
-        return "Devoxx-CFP-TopTalksToday";
-    }
-
     /**
      * Implementation of {@link DataProvider.Factory} as Service implementation
      * creating {@link TopTalksTodayDataProvider}.

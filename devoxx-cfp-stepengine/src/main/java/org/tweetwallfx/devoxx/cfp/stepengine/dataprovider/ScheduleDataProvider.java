@@ -73,11 +73,6 @@ public class ScheduleDataProvider implements DataProvider {
         return SessionData.from(scheduleSlots, liveOffset);
     }
 
-    @Override
-    public String getName() {
-        return "ScheduleDataProvider";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override

@@ -83,11 +83,4 @@ public interface DataProvider {
          */
         void processNewTweet(final Tweet tweet);
     }
-
-    /**
-     * Returns the name of this {@link DataProvider}.
-     *
-     * @return the name of this {@link DataProvider}
-     */
-    String getName();
 }
