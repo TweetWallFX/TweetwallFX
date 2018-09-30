@@ -41,7 +41,7 @@
                 "stepClassName": "org.tweetwallfx.controls.steps.CloudToTweetStep"
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.PauseStep",
+                "stepClassName": "org.tweetwallfx.stepengine.steps.PauseStep",
                 "config": {
                     "amount": 5,
                     "unit": "SECONDS"
