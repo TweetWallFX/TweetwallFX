@@ -1,8 +1,8 @@
 org.tweetwallfx.controls.steps.AddTweetToCloudStep$Factory
 org.tweetwallfx.controls.steps.CloudFadeOutStep$Factory
-org.tweetwallfx.controls.steps.CloudToCloudStep$Factory
+org.tweetwallfx.controls.steps.CloudToCloudStep$FactoryImpl
 org.tweetwallfx.controls.steps.CloudToTweetStep$Factory
-org.tweetwallfx.controls.steps.FadeInCloudStep$Factory
+org.tweetwallfx.controls.steps.FadeInCloudStep$FactoryImpl
 org.tweetwallfx.controls.steps.ImageMosaicStep$Factory
-org.tweetwallfx.controls.steps.TweetToCloudStep$Factory
-org.tweetwallfx.controls.steps.UpdateCloudStep$Factory
+org.tweetwallfx.controls.steps.TweetToCloudStep$FactoryImpl
+org.tweetwallfx.controls.steps.UpdateCloudStep$FactoryImpl

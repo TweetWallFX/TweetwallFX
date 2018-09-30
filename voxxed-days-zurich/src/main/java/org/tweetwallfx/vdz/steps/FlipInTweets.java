@@ -51,12 +51,8 @@ import org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider;
 
 /**
  * TweetStream Flip In Animation Step
- *
- * @author Sven Reimers
  */
 public class FlipInTweets implements Step {
-
-    private static final int MAX_TWEETS = 7;
 
     protected FlipInTweets() {
         // prevent external instantiation
@@ -197,7 +193,7 @@ public class FlipInTweets implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link FlipInTweets}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public FlipInTweets create(final StepEngineSettings.StepDefinition stepDefinition) {
