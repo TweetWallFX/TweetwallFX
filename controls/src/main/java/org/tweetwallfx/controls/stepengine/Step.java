@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,10 @@ import org.tweetwallfx.controls.dataprovider.DataProvider;
 import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 public interface Step {
 
     default void initStep(final MachineContext context) {
+        // by default do nothing
     }
 
     default boolean shouldSkip(final MachineContext context) {
@@ -43,19 +41,17 @@ public interface Step {
     }
 
     default void prepareStep(final MachineContext context) {
+        // by default do nothing
     }
 
     void doStep(final MachineContext context);
 
     default void leaveStep(final MachineContext context) {
+        // by default do nothing
     }
 
     default Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
-    }
-
-    default String getName() {
-        return getClass().getName();
     }
 
     default boolean requiresPlatformThread() {
