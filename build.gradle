@@ -42,81 +42,21 @@ buildscript {
     }
 }
 
-apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'build-dashboard'
 apply plugin: 'org.sonarqube'
 
-subprojects {
-    if (childProjects.isEmpty()) {
-        apply plugin: 'java'
-        apply plugin: 'idea'
-        apply plugin: 'com.github.spotbugs'
-        apply plugin: 'jacoco'
-        apply plugin: 'eclipse'
-        apply plugin: 'nebula.info'
-        apply plugin: "net.ltgt.errorprone"
-
-        group = 'org.tweetwallfx'
-        version = '1.0'
-
-        repositories {
-            jcenter()
-        }
-
-        dependencies {
-            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-            testCompile group: 'junit', name: 'junit', version: versionJUnit
-            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
-        }
-
-        jar {
-            manifest.attributes provider: 'gradle'
-        }
-
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << '-Xlint:all'
-            options.compilerArgs << '-Werror'
-            options.compilerArgs << '-proc:none'
-        }
-
-        spotbugs {
-            ignoreFailures = false
-        }
-
-        tasks.withType(com.github.spotbugs.SpotBugsTask) {
-            // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
-            def sourceSetName = (name - 'spotbugs').uncapitalize()
-            dependsOn( sourceSets[sourceSetName].classesTaskName)
-
-            reports {
-                xml.enabled = false
-                html.enabled = true
-            }
-        }
-
-        tasks.withType(JavaExec) {
-            jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
-            jvmArgs '--add-modules java.xml.bind'
-        }
-
-        dependencyUpdates {
-            revision = 'release'
-            resolutionStrategy {
-                componentSelection { rules ->
-                    rules.all { /*ComponentSelection*/ selection ->
-                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
-                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
-                        }) {
-                            selection.reject('Release candidate')
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+// applying Versions plugin
+apply plugin: 'com.github.ben-manes.versions'
 
 allprojects {
+    group = 'org.tweetwallfx'
+    version = '1.0'
+
+    repositories {
+        jcenter()
+    }
+
+    // configuring Spotless
     apply plugin: "com.diffplug.gradle.spotless"
 
     spotless {
@@ -138,6 +78,77 @@ allprojects {
 
     afterEvaluate {
         check.dependsOn(spotlessCheck)
+    }
+
+    // now configuring for projects that coontain code not just structuring the project
+    if (childProjects.isEmpty()) {
+        // configuring standard java project
+        apply plugin: 'java'
+        apply plugin: 'idea'
+        apply plugin: 'jacoco'
+        apply plugin: 'eclipse'
+        apply plugin: 'nebula.info'
+
+        dependencies {
+            testCompile group: 'junit', name: 'junit', version: versionJUnit
+            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+        }
+
+        jar {
+            manifest.attributes provider: 'gradle'
+        }
+
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << '-Xlint:all'
+            options.compilerArgs << '-Werror'
+            options.compilerArgs << '-proc:none'
+        }
+
+        tasks.withType(JavaExec) {
+            jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
+            jvmArgs '--add-modules java.xml.bind'
+        }
+
+        // configuring Errorprone
+        apply plugin: "net.ltgt.errorprone"
+
+        dependencies {
+            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+        }
+
+        // configuring Spotbugs
+        apply plugin: 'com.github.spotbugs'
+
+        spotbugs {
+            ignoreFailures = false
+        }
+
+        tasks.withType(com.github.spotbugs.SpotBugsTask) {
+            // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
+            def sourceSetName = (name - 'spotbugs').uncapitalize()
+            dependsOn( sourceSets[sourceSetName].classesTaskName)
+
+            reports {
+                xml.enabled = false
+                html.enabled = true
+            }
+        }
+
+        // configuring Versions plugin
+        dependencyUpdates {
+            revision = 'release'
+            resolutionStrategy {
+                componentSelection { rules ->
+                    rules.all { /*ComponentSelection*/ selection ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
+                        }) {
+                            selection.reject('Release candidate')
+                        }
+                    }
+                }
+            }
+        }
     }
 
     plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
