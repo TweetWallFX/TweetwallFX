@@ -102,7 +102,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             protected Optional<ImageStore> call() throws Exception {
                 if (cache.hasCachedMedia(mediaId)) {
                     return cache.getCachedMedia(mediaId).map(cm -> new ImageStore(
-                            tweet,
                             new Image(cm.getInputStream()),
                             date.toInstant(),
                             mediaId));
