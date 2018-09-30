@@ -10,7 +10,7 @@
                 "stepClassName": "org.tweetwallfx.controls.steps.FadeInCloudStep"
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.NextTweetStep"
+                "stepClassName": "org.tweetwallfx.stepengine.steps.NextTweetStep"
             },
             {
                 "stepClassName": "org.tweetwallfx.controls.steps.AddTweetToCloudStep"
