@@ -29,7 +29,8 @@ import static org.tweetwall.util.ToString.*;
 
 /**
  * A Schedule is a list of time slots for a specific day. Each slot is either a
- * {@link ScheduleSlotBreak break slot} or a {@link Talk talk slot}.
+ * {@link ScheduleSlot} with a {@link ScheduleSlot#getBreak() break slot} or a
+ * {@link ScheduleSlot} with a {@link ScheduleSlot#getTalk() talk slot}.
  */
 public class Schedule {
 

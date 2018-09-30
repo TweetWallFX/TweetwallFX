@@ -24,7 +24,7 @@
 package org.tweetwallfx.tweet.api.entry;
 
 /**
- * Type enum for Media ENtries in a tweet.
+ * Type enum for Media Entries in a tweet.
  */
 public enum MediaTweetEntryType {
 
@@ -36,6 +36,8 @@ public enum MediaTweetEntryType {
      * Determines if the MediaTweetEntry is of the same type as this
      * MediaTweetEntryType;
      *
+     * @param mte MediaTweetEntry checked against
+     * 
      * @return {@code true} in case the entries type is the same as this
      */
     public boolean isType(final MediaTweetEntry mte) {
