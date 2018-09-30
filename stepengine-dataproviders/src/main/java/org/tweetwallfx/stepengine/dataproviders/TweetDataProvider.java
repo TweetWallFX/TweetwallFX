@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.dataprovider;
+package org.tweetwallfx.stepengine.dataproviders;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -98,7 +98,11 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         return tweet;
     }
 
-    public static class Factory implements DataProvider.Factory {
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link TweetDataProvider}.
+     */
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public TweetDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

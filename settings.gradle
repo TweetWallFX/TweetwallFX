@@ -30,6 +30,8 @@ include ':controls'
 project(":controls").name = "TweetWallFX-Controls"
 include ':stepengine-api'
 project(":stepengine-api").name = "TweetWallFX-StepEngine-API"
+include ':stepengine-dataproviders'
+project(":stepengine-dataproviders").name = "TweetWallFX-StepEngine-DataProviders"
 include ':stepengine-steps'
 project(":stepengine-steps").name = "TweetWallFX-StepEngine-Steps"
 include ':tweet-api'
