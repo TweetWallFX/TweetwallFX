@@ -110,7 +110,7 @@ public final class CFPClientSettings {
 
     /**
      * Service implementation converting the configuration data of the root key
-     * {@link TweetwallSettings#CONFIG_KEY} into {@link TweetwallSettings}.
+     * {@link CFPClientSettings#CONFIG_KEY} into {@link CFPClientSettings}.
      */
     public static class Converter implements ConfigurationConverter {
 
