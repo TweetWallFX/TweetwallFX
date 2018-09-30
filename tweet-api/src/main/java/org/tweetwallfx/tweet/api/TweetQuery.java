@@ -294,7 +294,7 @@ public final class TweetQuery {
         return this;
     }
 
-    public static enum ResultType {
+    public enum ResultType {
 
         /**
          * popular: return only the most popular results in the response.

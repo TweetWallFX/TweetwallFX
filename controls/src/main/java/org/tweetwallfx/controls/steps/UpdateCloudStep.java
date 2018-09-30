@@ -48,9 +48,6 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 public class UpdateCloudStep implements Step {
 
     private UpdateCloudStep() {
@@ -83,7 +80,7 @@ public class UpdateCloudStep implements Step {
         }
         limitedWords.sort(Comparator.reverseOrder());
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(), layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
@@ -171,7 +168,7 @@ public class UpdateCloudStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link UpdateCloudStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public UpdateCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
