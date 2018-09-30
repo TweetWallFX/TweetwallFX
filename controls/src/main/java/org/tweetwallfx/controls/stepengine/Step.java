@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,33 +31,87 @@ import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
 
 /**
- * @author Jörg Michelberger
+ * A Step in the {@link StepEngine}. It represents an amount of work being done
+ * that may optionally take a very specific amount of time.
  */
 public interface Step {
 
+    /**
+     * Initiates this {@link Step} prior to being included in the
+     * {@link StepEngine}. This method called only after instantiation by the
+     * {@link StepEngine}.
+     *
+     * @param context the MachineContext
+     */
     default void initStep(final MachineContext context) {
     }
 
+    /**
+     * Determines if this {@link Step} should be skipped in order to not be
+     * processed in the current iteration of the {@link StepEngine}.
+     *
+     * By Default this method returns {@code false}.
+     *
+     * @param context the MachineContext
+     *
+     * @return a boolean flag indicating whether this {@link Step} should be
+     * skipped in the current {@link StepEngine} iteration
+     */
     default boolean shouldSkip(final MachineContext context) {
         return false;
     }
 
-    default void prepareStep(final MachineContext context) {
-    }
-
+    /**
+     * Performs this {@link Step}s action.
+     *
+     * @param context the MachineContext
+     */
     void doStep(final MachineContext context);
 
-    default void leaveStep(final MachineContext context) {
-    }
-
+    /**
+     * Determines the preffered duration this Step is to run.
+     *
+     * No minimal step duration is signaled by {@link Duration#ZERO}. Upon
+     * returning from
+     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * the {@link Step} is processed immidiatly.
+     *
+     * In case of a positive {@link Duration} the {@link StepEngine} ensures
+     * that the next {@link Step} is processed only after at least the returned
+     * {@link Duration} has expired and the
+     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * has returned.
+     *
+     * By Default this method returns {@link Duration#ZERO}.
+     *
+     * @param context the MachineContext
+     *
+     * @return the minimum {@link Duration} this step is to be processed
+     */
     default Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
     }
 
+    /**
+     * Returns the name of this {@link Step}.
+     *
+     * @return the name of this {@link Step}
+     */
     default String getName() {
         return getClass().getName();
     }
 
+    /**
+     * Declares that the
+     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * call is to be performed on the FX Platform thread.
+     *
+     * By Default this method returns {@code true}.
+     *
+     * @return the flag indicating if
+     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * is to be called on the FX Platform thread
+     */
     default boolean requiresPlatformThread() {
         return true;
     }
