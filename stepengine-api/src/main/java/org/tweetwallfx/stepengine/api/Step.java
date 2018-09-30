@@ -73,13 +73,13 @@ public interface Step {
      *
      * No minimal step duration is signaled by {@link Duration#ZERO}. Upon
      * returning from
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * the {@link Step} is processed immidiatly.
      *
      * In case of a positive {@link Duration} the {@link StepEngine} ensures
      * that the next {@link Step} is processed only after at least the returned
      * {@link Duration} has expired and the
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * has returned.
      *
      * By Default this method returns {@link Duration#ZERO}.
@@ -94,13 +94,13 @@ public interface Step {
 
     /**
      * Declares that the
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * call is to be performed on the FX Platform thread.
      *
      * By Default this method returns {@code true}.
      *
      * @return the flag indicating if
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * is to be called on the FX Platform thread
      */
     default boolean requiresPlatformThread() {

@@ -30,6 +30,9 @@ import org.tweetwall.util.ConfigurableObjectBase;
 import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.config.ConnectionSettings;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
