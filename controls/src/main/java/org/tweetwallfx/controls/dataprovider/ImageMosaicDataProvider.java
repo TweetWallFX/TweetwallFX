@@ -33,19 +33,14 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.tweet.api.Tweet;
-
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
-/**
- * @author Sven Reimers
- */
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
@@ -106,7 +101,11 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             @Override
             protected Optional<ImageStore> call() throws Exception {
                 if (cache.hasCachedMedia(mediaId)) {
-                    return Optional.empty();
+                    return cache.getCachedMedia(mediaId).map(cm -> new ImageStore(
+                            tweet,
+                            new Image(cm.getInputStream()),
+                            date.toInstant(),
+                            mediaId));
                 }
                 try (InputStream in = new URL(url).openStream()) {
                     CachedMedia image = new CachedMedia(in);
