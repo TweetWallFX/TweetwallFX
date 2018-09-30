@@ -34,6 +34,8 @@ include ':stepengine-dataproviders'
 project(":stepengine-dataproviders").name = "TweetWallFX-StepEngine-DataProviders"
 include ':stepengine-steps'
 project(":stepengine-steps").name = "TweetWallFX-StepEngine-Steps"
+include ':transitions'
+project(":transitions").name = "TweetWallFX-Transitions"
 include ':tweet-api'
 project(":tweet-api").name = "TweetWallFX-Tweet-API"
 include ':tweet-stepengine'

@@ -109,24 +109,22 @@ public class CloudToTweetStep implements Step {
                 Text textNode = wordleSkin.word2TextMap.remove(word);
                 wordleSkin.tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
-                FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
-                ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(wordleSkin.getTweetFontSize());
-                moveTransitions.add(ft);
+                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
+                        .fromSize(textNode.getFont().getSize())
+                        .toSize(wordleSkin.getTweetFontSize()));
 
                 Bounds bounds = tweetLayout.getWordLayoutInfo().stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
 
-                LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-                lt.setFromX(textNode.getLayoutX());
-                lt.setFromY(textNode.getLayoutY());
                 tweetLineOffset = tweetLayout.tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
                 Point2D twPoint = tweetLayout.layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
-                lt.setToX(twPoint.getX());
-                lt.setToY(twPoint.getY());
                 if (twPoint.getY() > lowerLeft.getY()) {
                     lowerLeft = lowerLeft.add(0, twPoint.getY() - lowerLeft.getY());
                 }
-                moveTransitions.add(lt);
+                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                        .fromX(textNode.getLayoutX())
+                        .fromY(textNode.getLayoutY())
+                        .toX(twPoint.getX())
+                        .toY(twPoint.getY()));
             } else {
                 Text textNode = wordNodeFactory.createTextNode(word.getText());
 

@@ -26,34 +26,31 @@ import javafx.animation.Transition;
 import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class BlurTransition extends Transition {
-    
-    private double startRadius;
-    private double targetRadius;
-    private final GaussianBlur blur;
 
-    public BlurTransition(Duration duration, GaussianBlur blur) {
+    private final GaussianBlur blur;
+    private double startRadius = Double.NaN;
+    private double targetRadius = Double.NaN;
+
+    public BlurTransition(final Duration duration, final GaussianBlur blur) {
         setCycleDuration(duration);
         this.blur = blur;
     }
 
-    public void setFromRadius(double startRadius) {
+    public BlurTransition fromRadius(final double startRadius) {
         this.startRadius = startRadius;
+        return this;
     }
 
-    public void setToRadius(double targetRadius) {
+    public BlurTransition toRadius(final double targetRadius) {
         this.targetRadius = targetRadius;
+        return this;
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startRadius)) {
             blur.setRadius(startRadius + frac * (targetRadius - startRadius));
         }
     }
-    
 }

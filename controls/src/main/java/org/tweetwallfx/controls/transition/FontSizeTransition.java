@@ -28,34 +28,31 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class FontSizeTransition extends Transition {
-    
-    private final Text node;
-    private double startSize;
-    private double toSize;
 
-    public FontSizeTransition(Duration duration, Text node) {
+    private final Text node;
+    private double startSize = Double.NaN;
+    private double toSize = Double.NaN;
+
+    public FontSizeTransition(final Duration duration, final Text node) {
         setCycleDuration(duration);
         this.node = node;
     }
 
-    public void setFromSize(double startSize) {
+    public FontSizeTransition fromSize(final double startSize) {
         this.startSize = startSize;
+        return this;
     }
 
-    public void setToSize(double toSize) {
+    public FontSizeTransition toSize(final double toSize) {
         this.toSize = toSize;
+        return this;
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startSize)) {
             node.setFont(Font.font(node.getFont().getFamily(), startSize + frac * (toSize - startSize)));
         }
     }
-    
 }

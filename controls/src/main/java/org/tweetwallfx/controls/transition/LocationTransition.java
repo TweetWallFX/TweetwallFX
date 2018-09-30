@@ -26,47 +26,47 @@ import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class LocationTransition extends Transition {
-    
-    private final Node node;
-    private double startX;
-    private double startY;
-    private double targetY;
-    private double targetX;
 
-    public LocationTransition(Duration duration, Node node) {
+    private final Node node;
+    private double startX = Double.NaN;
+    private double startY = Double.NaN;
+    private double targetX = Double.NaN;
+    private double targetY = Double.NaN;
+
+    public LocationTransition(final Duration duration, final Node node) {
         setCycleDuration(duration);
         this.node = node;
     }
 
-    public void setFromX(double startX) {
+    public LocationTransition fromX(final double startX) {
         this.startX = startX;
+        return this;
     }
 
-    public void setFromY(double startY) {
+    public LocationTransition fromY(final double startY) {
         this.startY = startY;
+        return this;
     }
 
-    public void setToX(double targetX) {
+    public LocationTransition toX(final double targetX) {
         this.targetX = targetX;
+        return this;
     }
 
-    public void setToY(double targetY) {
+    public LocationTransition toY(final double targetY) {
         this.targetY = targetY;
+        return this;
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startX)) {
             node.setLayoutX(startX + frac * (targetX - startX));
         }
+
         if (!Double.isNaN(startY)) {
             node.setLayoutY(startY + frac * (targetY - startY));
         }
     }
-    
 }

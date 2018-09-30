@@ -115,12 +115,11 @@ public class CloudToCloudStep implements Step {
             cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
             Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
 
-            LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-            lt.setFromX(textNode.getLayoutX());
-            lt.setFromY(textNode.getLayoutY());
-            lt.setToX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-            lt.setToY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-            moveTransitions.add(lt);
+            moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                    .fromX(textNode.getLayoutX())
+                    .fromY(textNode.getLayoutY())
+                    .toX(bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                    .toY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
         });
 
         ParallelTransition moves = new ParallelTransition();

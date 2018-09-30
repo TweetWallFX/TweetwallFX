@@ -27,39 +27,39 @@ import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class SizeTransition extends Transition {
-    
+
     private final DoubleProperty widthProperty;
     private final DoubleProperty heightProperty;
-    private double startWidth;
-    private double startHeight;
-    private double targetHeight;
-    private double targetWidth;
+    private double startWidth = Double.NaN;
+    private double startHeight = Double.NaN;
+    private double targetHeight = Double.NaN;
+    private double targetWidth = Double.NaN;
 
-    public SizeTransition(Duration duration, DoubleProperty widthProperty, DoubleProperty heightProperty) {
+    public SizeTransition(final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty) {
         setCycleDuration(duration);
         this.widthProperty = widthProperty;
         this.heightProperty = heightProperty;
     }
 
-    public void setFromWidth(double startWidth) {
+    public SizeTransition fromWidth(final double startWidth) {
         this.startWidth = startWidth;
+        return this;
     }
 
-    public void setFromHeight(double startHeight) {
+    public SizeTransition fromHeight(final double startHeight) {
         this.startHeight = startHeight;
+        return this;
     }
 
-    public void setToWidth(double targetWidth) {
+    public SizeTransition toWidth(final double targetWidth) {
         this.targetWidth = targetWidth;
+        return this;
     }
 
-    public void setToHeight(double targetHeight) {
+    public SizeTransition toHeight(final double targetHeight) {
         this.targetHeight = targetHeight;
+        return this;
     }
 
     @Override
@@ -67,9 +67,9 @@ public final class SizeTransition extends Transition {
         if (!Double.isNaN(startWidth)) {
             widthProperty.setValue(startWidth + frac * (targetWidth - startWidth));
         }
+
         if (!Double.isNaN(startHeight)) {
             heightProperty.setValue(startHeight + frac * (targetHeight - startHeight));
         }
     }
-    
 }
