@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.dataprovider;
+package org.tweetwallfx.stepengine.api;
 
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**
@@ -40,7 +40,7 @@ public interface DataProvider {
 
         /**
          * Returns the class of the Provider this factory will create via
-         * {@link #create(org.tweetwallfx.controls.stepengine.config.StepEngineSettings.DataProviderSetting)}.
+         * {@link #create(org.tweetwallfx.stepengine.api.config.StepEngineSettings.DataProviderSetting)}.
          *
          * @return the class of the Provider this factory will create
          */

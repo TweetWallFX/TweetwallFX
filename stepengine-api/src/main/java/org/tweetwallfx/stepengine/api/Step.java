@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.stepengine;
+package org.tweetwallfx.stepengine.api;
 
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
-import org.tweetwallfx.controls.dataprovider.DataProvider;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * A Step in the {@link StepEngine}. It represents an amount of work being done
@@ -74,13 +73,13 @@ public interface Step {
      *
      * No minimal step duration is signaled by {@link Duration#ZERO}. Upon
      * returning from
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * the {@link Step} is processed immidiatly.
      *
      * In case of a positive {@link Duration} the {@link StepEngine} ensures
      * that the next {@link Step} is processed only after at least the returned
      * {@link Duration} has expired and the
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * has returned.
      *
      * By Default this method returns {@link Duration#ZERO}.
@@ -95,13 +94,13 @@ public interface Step {
 
     /**
      * Declares that the
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * call is to be performed on the FX Platform thread.
      *
      * By Default this method returns {@code true}.
      *
      * @return the flag indicating if
-     * {@link #doStep(org.tweetwallfx.controls.stepengine.StepEngine.MachineContext)}
+     * {@link #doStep(org.tweetwallfx.stepengine.api.StepEngine.MachineContext)}
      * is to be called on the FX Platform thread
      */
     default boolean requiresPlatformThread() {

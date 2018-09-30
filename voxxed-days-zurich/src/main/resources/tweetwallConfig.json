@@ -22,7 +22,7 @@
                 "stepClassName": "org.tweetwallfx.vdz.steps.ShowSchedule"
             },
             {
-                "stepClassName": "org.tweetwallfx.controls.steps.PauseStep",
+                "stepClassName": "org.tweetwallfx.stepengine.steps.PauseStep",
                 "config": {
                     "amount": 1,
                     "unit": "SECONDS"

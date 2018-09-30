@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.steps;
+package org.tweetwallfx.stepengine.steps;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import org.tweetwallfx.controls.stepengine.Step;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
 import static org.tweetwall.util.ToString.*;
-import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Sven Reimers
- */
 public class PauseStep implements Step {
 
     private final Duration pause;
@@ -61,7 +58,7 @@ public class PauseStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link PauseStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
