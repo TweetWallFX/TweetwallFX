@@ -129,11 +129,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         imageLoader.execute(task);
     }
 
-    @Override
-    public String getName() {
-        return "MosaicDataProvider";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override

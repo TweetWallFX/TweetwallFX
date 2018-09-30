@@ -87,11 +87,6 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
     }
 
-    @Override
-    public String getName() {
-        return "TagCloud";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override

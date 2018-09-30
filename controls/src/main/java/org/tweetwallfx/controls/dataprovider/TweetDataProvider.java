@@ -97,11 +97,6 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         return tweet;
     }
 
-    @Override
-    public String getName() {
-        return "Tweet";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override
