@@ -21,19 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.steps;
+package org.tweetwallfx.stepengine.steps;
 
 import java.util.Arrays;
 import java.util.Collection;
-import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
 
-/**
- * @author Sven Reimers
- */
 public class NextTweetStep implements Step {
 
     private NextTweetStep() {
@@ -50,7 +47,7 @@ public class NextTweetStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link NextTweetStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public NextTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {
