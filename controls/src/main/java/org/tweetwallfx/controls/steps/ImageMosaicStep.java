@@ -44,14 +44,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
-import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
 import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.controls.transition.SizeTransition;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider.ImageStore;
 
 public class ImageMosaicStep implements Step {
 

@@ -23,5 +23,9 @@
  */
 
 dependencies {
+    compile group: 'javax.cache', name: 'cache-api', version: versionCacheApi
+    compile group: 'org.ehcache', name: 'ehcache', version: versionEHCache
+    runtime group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: versionLog4j
+
     compile project(':TweetWallFX-StepEngine-API')
 }

@@ -18,7 +18,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.tweetwallfx.controls.dataprovider;
+package org.tweetwallfx.stepengine.dataproviders;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -37,6 +37,9 @@ import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static org.tweetwall.util.ToString.createToString;
+import static org.tweetwall.util.ToString.map;
+import org.tweetwallfx.stepengine.dataproviders.MediaCache.CachedMedia;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -45,7 +48,6 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
-    private final MediaCache cache;
     private final Executor imageLoader = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(r);
         t.setName("Image-Downloader");
@@ -53,9 +55,10 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         return t;
     });
     private final List<ImageStore> images = new CopyOnWriteArrayList<>();
+    private final Config config;
 
-    private ImageMosaicDataProvider() {
-        cache = MediaCache.INSTANCE;
+    private ImageMosaicDataProvider(final Config config) {
+        this.config = config;
     }
 
     @Override
@@ -66,7 +69,9 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     @Override
     public void processHistoryTweet(final Tweet tweet) {
         LOG.info("new Tweet received");
-        if (null == tweet.getMediaEntries() || tweet.isRetweet() || tweet.getUser().getFollowersCount() < 25) {
+        if (null == tweet.getMediaEntries()
+                || (tweet.isRetweet() && !config.isIncludeRetweets())
+                || tweet.getUser().getFollowersCount() < 25) {
             return;
         }
         Arrays.stream(tweet.getMediaEntries())
@@ -101,15 +106,15 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
             protected Optional<ImageStore> call() throws Exception {
-                if (cache.hasCachedMedia(mediaId)) {
-                    return cache.getCachedMedia(mediaId).map(cm -> new ImageStore(
+                if (MediaCache.hasCachedMedia(mediaId)) {
+                    return MediaCache.getCachedMedia(mediaId).map(cm -> new ImageStore(
                             new Image(cm.getInputStream()),
                             date.toInstant(),
                             mediaId));
                 }
                 try (InputStream in = new URL(url).openStream()) {
                     CachedMedia image = new CachedMedia(in);
-                    cache.putCachedMedia(mediaId, image);
+                    MediaCache.putCachedMedia(mediaId, image);
                     return Optional.of(new ImageStore(
                             new Image(image.getInputStream()),
                             date.toInstant(),
@@ -120,7 +125,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
         task.setOnSucceeded((event) -> {
             task.getValue().ifPresent(images::add);
-            if (40 < images.size()) {
+            if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 ImageStore removeLast = images.remove(images.size() - 1);
             }
@@ -129,16 +134,46 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         imageLoader.execute(task);
     }
 
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public ImageMosaicDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
-            return new ImageMosaicDataProvider();
+            return new ImageMosaicDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
         @Override
         public Class<ImageMosaicDataProvider> getDataProviderClass() {
             return ImageMosaicDataProvider.class;
+        }
+    }
+
+    public static class Config {
+
+        private boolean includeRetweets = false;
+        private int maxCacheSize = 40;
+
+        public boolean isIncludeRetweets() {
+            return includeRetweets;
+        }
+
+        public void setIncludeRetweets(final boolean includeRetweets) {
+            this.includeRetweets = includeRetweets;
+        }
+
+        public int getMaxCacheSize() {
+            return maxCacheSize;
+        }
+
+        public void setMaxCacheSize(final int maxCacheSize) {
+            this.maxCacheSize = maxCacheSize;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "includeRetweets", isIncludeRetweets(),
+                    "maxCacheSize", getMaxCacheSize()
+            )) + " extends " + super.toString();
         }
     }
 
