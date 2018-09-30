@@ -156,11 +156,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public String getName() {
-        return "TweetStream";
-    }
-
     public static class Factory implements DataProvider.Factory {
 
         @Override

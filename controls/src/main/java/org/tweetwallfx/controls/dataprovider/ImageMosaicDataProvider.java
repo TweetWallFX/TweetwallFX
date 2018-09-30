@@ -33,19 +33,14 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.tweet.api.Tweet;
-
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.stepengine.config.StepEngineSettings;
+import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
-/**
- * @author Sven Reimers
- */
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
@@ -93,7 +88,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
                         default:
                             throw new RuntimeException("Illegal value");
                     }
-                    addImage(tweet, me.getId(), url, tweet.getCreatedAt());
+                    addImage(me.getId(), url, tweet.getCreatedAt());
                 });
     }
 
@@ -101,18 +96,24 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    private void addImage(final Tweet tweet, final long mediaId, final String url, final Date date) {
+    private void addImage(final long mediaId, final String url, final Date date) {
         Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
             protected Optional<ImageStore> call() throws Exception {
                 if (cache.hasCachedMedia(mediaId)) {
-                    return Optional.empty();
+                    return cache.getCachedMedia(mediaId).map(cm -> new ImageStore(
+                            tweet,
+                            new Image(cm.getInputStream()),
+                            date.toInstant(),
+                            mediaId));
                 }
                 try (InputStream in = new URL(url).openStream()) {
                     CachedMedia image = new CachedMedia(in);
                     cache.putCachedMedia(mediaId, image);
-                    return Optional.of(new ImageStore(tweet, new Image(image.getInputStream()),
-                            date.toInstant(), mediaId));
+                    return Optional.of(new ImageStore(
+                            new Image(image.getInputStream()),
+                            date.toInstant(),
+                            mediaId));
                 }
             }
         };
@@ -126,11 +127,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         });
 
         imageLoader.execute(task);
-    }
-
-    @Override
-    public String getName() {
-        return "MosaicDataProvider";
     }
 
     public static class Factory implements DataProvider.Factory {
@@ -148,13 +144,11 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
     public static class ImageStore {
 
-        private final Tweet tweet;
         private final Image image;
         private final Instant instant;
         private final long mediaId;
 
-        public ImageStore(final Tweet tweet, final Image image, final Instant instant, final long mediaId) {
-            this.tweet = tweet;
+        public ImageStore(final Image image, final Instant instant, final long mediaId) {
             this.image = image;
             this.instant = instant;
             this.mediaId = mediaId;
@@ -162,10 +156,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
         public Instant getInstant() {
             return instant;
-        }
-
-        public Tweet getTweet() {
-            return tweet;
         }
 
         public Image getImage() {
@@ -179,7 +169,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         @Override
         public int hashCode() {
             int hash = 5;
-            hash = 97 * hash + Objects.hashCode(this.tweet);
             hash = 97 * hash + Objects.hashCode(this.image);
             hash = 97 * hash + Objects.hashCode(this.instant);
             hash = 97 * hash + (int) (this.mediaId ^ (this.mediaId >>> 32));
@@ -198,7 +187,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             boolean result = true;
 
             result &= this.mediaId == other.mediaId;
-            result &= Objects.equals(this.tweet, other.tweet);
             result &= Objects.equals(this.image, other.image);
             result &= Objects.equals(this.instant, other.instant);
 

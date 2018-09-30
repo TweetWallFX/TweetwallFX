@@ -44,6 +44,7 @@ public interface Step {
      * @param context the MachineContext
      */
     default void initStep(final MachineContext context) {
+        // by default do nothing
     }
 
     /**
@@ -90,15 +91,6 @@ public interface Step {
      */
     default Duration preferredStepDuration(final MachineContext context) {
         return Duration.ZERO;
-    }
-
-    /**
-     * Returns the name of this {@link Step}.
-     *
-     * @return the name of this {@link Step}
-     */
-    default String getName() {
-        return getClass().getName();
     }
 
     /**
