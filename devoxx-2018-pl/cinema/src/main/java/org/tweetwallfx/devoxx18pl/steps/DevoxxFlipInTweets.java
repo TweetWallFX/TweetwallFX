@@ -41,11 +41,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.transition.FlipInXTransition;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.transitions.FlipInXTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider;
 

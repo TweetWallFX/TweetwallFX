@@ -52,13 +52,13 @@ import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.transition.FontSizeTransition;
-import org.tweetwallfx.controls.transition.LocationTransition;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
+import org.tweetwallfx.transitions.FontSizeTransition;
+import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 
 /**
