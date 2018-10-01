@@ -74,8 +74,13 @@ public abstract class CFPClientTestBase {
     }
 
     private static boolean isCfpReachable() {
+        final boolean testingLive = Boolean.getBoolean("org.tweetwallfx.tests.executeCFPClientLiveTests");
+        System.out.println(String.format(
+                "Test of CFP Client against live system is %s.",
+                testingLive ? "enabled" : "disabled"));
+
         try {
-            return Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
+            return testingLive && Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
                     .target(Configuration.getInstance().getConfigTyped(
                             CFPClientSettings.CONFIG_KEY,
                             CFPClientSettings.class).getBaseUri())

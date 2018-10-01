@@ -68,6 +68,7 @@ allprojects {
                 '**/*.asc',
                 '**/*.json',
                 '**/*.md',
+                '**/*.properties',
                 '**/.gitignore'
 
             trimTrailingWhitespace()
@@ -156,6 +157,10 @@ allprojects {
             compile group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
             testCompile group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
         }
+    }
+
+    tasks.withType(org.gradle.api.tasks.testing.Test) {
+        systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
     }
 }
 
