@@ -213,15 +213,11 @@ public class ImageMosaicStep implements Step {
         double targetheight = realHeight * scaleFactor;
 
         final SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty())
-                .fromWidth(randomView.getLayoutBounds().getWidth())
-                .fromHeight(randomView.getLayoutBounds().getHeight())
-                .toWidth(targetWidth)
-                .toHeight(targetheight);
+                .withWidth(randomView.getLayoutBounds().getWidth(), targetWidth)
+                .withHeight(randomView.getLayoutBounds().getHeight(), targetheight);
         final LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView)
-                .fromX(randomView.getLayoutX())
-                .fromY(randomView.getLayoutY())
-                .toX(pane.getWidth() / 2 - targetWidth / 2)
-                .toY(pane.getHeight() / 2 - targetheight / 2);
+                .withX(randomView.getLayoutX(), pane.getWidth() / 2 - targetWidth / 2)
+                .withY(randomView.getLayoutY(), pane.getHeight() / 2 - targetheight / 2);
         secondParallelTransition.getChildren().addAll(trans, zoomBox);
 
         SequentialTransition seqT = new SequentialTransition();
@@ -260,15 +256,11 @@ public class ImageMosaicStep implements Step {
         double height = pane.getHeight() / 5.0 - 8;
 
         final SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty())
-                .fromWidth(randomView.getLayoutBounds().getWidth())
-                .fromHeight(randomView.getLayoutBounds().getHeight())
-                .toWidth(width)
-                .toHeight(height);
+                .withWidth(randomView.getLayoutBounds().getWidth(), width)
+                .withHeight(randomView.getLayoutBounds().getHeight(), height);
         final LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView)
-                .fromX(randomView.getLayoutX())
-                .fromY(randomView.getLayoutY())
-                .toX(bounds[column][row].getMinX())
-                .toY(bounds[column][row].getMinY());
+                .withX(randomView.getLayoutX(), bounds[column][row].getMinX())
+                .withY(randomView.getLayoutY(), bounds[column][row].getMinY());
         secondParallelTransition.getChildren().addAll(trans, zoomBox);
 
         SequentialTransition seqT = new SequentialTransition();

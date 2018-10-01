@@ -29,22 +29,29 @@ import javafx.util.Duration;
 public final class BlurTransition extends Transition {
 
     private final GaussianBlur blur;
-    private double startRadius = Double.NaN;
-    private double targetRadius = Double.NaN;
+    private final double startRadius;
+    private final double targetRadius;
 
-    public BlurTransition(final Duration duration, final GaussianBlur blur) {
+    private BlurTransition(
+            final Duration duration,
+            final GaussianBlur blur,
+            double startRadius,
+            double targetRadius) {
         setCycleDuration(duration);
         this.blur = blur;
-    }
-
-    public BlurTransition fromRadius(final double startRadius) {
         this.startRadius = startRadius;
-        return this;
+        this.targetRadius = targetRadius;
     }
 
-    public BlurTransition toRadius(final double targetRadius) {
-        this.targetRadius = targetRadius;
-        return this;
+    public BlurTransition(
+            final Duration duration,
+            final GaussianBlur blur) {
+        this(duration, blur,
+                Double.NaN, Double.NaN);
+    }
+
+    public BlurTransition withRadius(final double startRadius, final double targetRadius) {
+        return new BlurTransition(getCycleDuration(), blur, startRadius, targetRadius);
     }
 
     @Override

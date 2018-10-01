@@ -31,22 +31,27 @@ import javafx.util.Duration;
 public final class FontSizeTransition extends Transition {
 
     private final Text node;
-    private double startSize = Double.NaN;
-    private double toSize = Double.NaN;
+    private final double startSize;
+    private final double toSize;
 
-    public FontSizeTransition(final Duration duration, final Text node) {
+    public FontSizeTransition(
+            final Duration duration, final Text node,
+            final double startSize, final double toSize) {
         setCycleDuration(duration);
         this.node = node;
-    }
-
-    public FontSizeTransition fromSize(final double startSize) {
         this.startSize = startSize;
-        return this;
+        this.toSize = toSize;
     }
 
-    public FontSizeTransition toSize(final double toSize) {
-        this.toSize = toSize;
-        return this;
+    public FontSizeTransition(
+            final Duration duration, final Text node) {
+        this(duration, node, Double.NaN, Double.NaN);
+    }
+
+    public FontSizeTransition withSize(final double startSize, final double toSize) {
+        return new FontSizeTransition(
+                getCycleDuration(), node,
+                startSize, toSize);
     }
 
     @Override

@@ -31,39 +31,42 @@ public final class SizeTransition extends Transition {
 
     private final DoubleProperty widthProperty;
     private final DoubleProperty heightProperty;
-    private double startWidth = Double.NaN;
-    private double startHeight = Double.NaN;
-    private double targetHeight = Double.NaN;
-    private double targetWidth = Double.NaN;
+    private final double startHeight;
+    private final double startWidth;
+    private final double targetHeight;
+    private final double targetWidth;
 
-    public SizeTransition(final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty) {
+    private SizeTransition(
+            final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty,
+            final double startHeight, final double startWidth,
+            final double targetHeight, final double targetWidth) {
         setCycleDuration(duration);
         this.widthProperty = widthProperty;
         this.heightProperty = heightProperty;
-    }
-
-    public SizeTransition fromWidth(final double startWidth) {
-        this.startWidth = startWidth;
-        return this;
-    }
-
-    public SizeTransition fromHeight(final double startHeight) {
         this.startHeight = startHeight;
-        return this;
-    }
-
-    public SizeTransition toWidth(final double targetWidth) {
-        this.targetWidth = targetWidth;
-        return this;
-    }
-
-    public SizeTransition toHeight(final double targetHeight) {
+        this.startWidth = startWidth;
         this.targetHeight = targetHeight;
-        return this;
+        this.targetWidth = targetWidth;
+    }
+
+    public SizeTransition(
+            final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty) {
+        this(duration, widthProperty, heightProperty,
+                Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+    }
+
+    public SizeTransition withWidth(final double startWidth, final double targetWidth) {
+        return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
+                this.startHeight, startWidth, this.targetHeight, targetWidth);
+    }
+
+    public SizeTransition withHeight(final double startHeight, final double targetHeight) {
+        return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
+                startHeight, this.startWidth, targetHeight, this.targetWidth);
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startWidth)) {
             widthProperty.setValue(startWidth + frac * (targetWidth - startWidth));
         }

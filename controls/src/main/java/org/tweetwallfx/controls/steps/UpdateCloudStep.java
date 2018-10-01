@@ -128,10 +128,8 @@ public class UpdateCloudStep implements Step {
             Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
 
             moveTransitions.add(new LocationTransition(defaultDuration, textNode)
-                    .fromX(textNode.getLayoutX())
-                    .fromY(textNode.getLayoutY())
-                    .toX(bounds.getMinX() + layoutBounds.getWidth() / 2d)
-                    .toY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
+                    .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                    .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
         });
 
         ParallelTransition moves = new ParallelTransition();

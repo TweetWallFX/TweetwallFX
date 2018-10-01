@@ -29,34 +29,39 @@ import javafx.util.Duration;
 public final class LocationTransition extends Transition {
 
     private final Node node;
-    private double startX = Double.NaN;
-    private double startY = Double.NaN;
-    private double targetX = Double.NaN;
-    private double targetY = Double.NaN;
+    private final double startX;
+    private final double startY;
+    private final double targetX;
+    private final double targetY;
 
-    public LocationTransition(final Duration duration, final Node node) {
+    public LocationTransition(
+            final Duration duration, final Node node,
+            final double startX, final double startY,
+            final double targetX, final double targetY) {
         setCycleDuration(duration);
         this.node = node;
-    }
-
-    public LocationTransition fromX(final double startX) {
         this.startX = startX;
-        return this;
-    }
-
-    public LocationTransition fromY(final double startY) {
         this.startY = startY;
-        return this;
-    }
-
-    public LocationTransition toX(final double targetX) {
         this.targetX = targetX;
-        return this;
+        this.targetY = targetY;
     }
 
-    public LocationTransition toY(final double targetY) {
-        this.targetY = targetY;
-        return this;
+    public LocationTransition(
+            final Duration duration, final Node node) {
+        this(duration, node,
+                Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+    }
+
+    public LocationTransition withX(final double startX, final double targetX) {
+        return new LocationTransition(
+                getCycleDuration(), this.node,
+                startX, this.startY, targetX, this.targetY);
+    }
+
+    public LocationTransition withY(final double startY, final double targetY) {
+        return new LocationTransition(
+                getCycleDuration(), this.node,
+                this.startX, startY, this.targetX, targetY);
     }
 
     @Override

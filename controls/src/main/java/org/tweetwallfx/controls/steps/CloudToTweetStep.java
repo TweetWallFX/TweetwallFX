@@ -110,8 +110,7 @@ public class CloudToTweetStep implements Step {
                 wordleSkin.tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
                 moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
-                        .fromSize(textNode.getFont().getSize())
-                        .toSize(wordleSkin.getTweetFontSize()));
+                        .withSize(textNode.getFont().getSize(), wordleSkin.getTweetFontSize()));
 
                 Bounds bounds = tweetLayout.getWordLayoutInfo().stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
 
@@ -121,10 +120,8 @@ public class CloudToTweetStep implements Step {
                     lowerLeft = lowerLeft.add(0, twPoint.getY() - lowerLeft.getY());
                 }
                 moveTransitions.add(new LocationTransition(defaultDuration, textNode)
-                        .fromX(textNode.getLayoutX())
-                        .fromY(textNode.getLayoutY())
-                        .toX(twPoint.getX())
-                        .toY(twPoint.getY()));
+                        .withX(textNode.getLayoutX(), twPoint.getX())
+                        .withY(textNode.getLayoutY(), twPoint.getY()));
             } else {
                 Text textNode = wordNodeFactory.createTextNode(word.getText());
 
