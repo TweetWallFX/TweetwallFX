@@ -120,17 +120,13 @@ public class UpdateCloudStep implements Step {
 
         LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
-
             Text textNode = wordleSkin.word2TextMap.get(word);
             cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
             Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
 
-            LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-            lt.setFromX(textNode.getLayoutX());
-            lt.setFromY(textNode.getLayoutY());
-            lt.setToX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-            lt.setToY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-            moveTransitions.add(lt);
+            moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                    .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                    .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
         });
 
         ParallelTransition moves = new ParallelTransition();

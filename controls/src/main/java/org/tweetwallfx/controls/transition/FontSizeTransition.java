@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,34 +28,36 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class FontSizeTransition extends Transition {
-    
-    private final Text node;
-    private double startSize;
-    private double toSize;
 
-    public FontSizeTransition(Duration duration, Text node) {
+    private final Text node;
+    private final double startSize;
+    private final double toSize;
+
+    public FontSizeTransition(
+            final Duration duration, final Text node,
+            final double startSize, final double toSize) {
         setCycleDuration(duration);
         this.node = node;
-    }
-
-    public void setFromSize(double startSize) {
         this.startSize = startSize;
-    }
-
-    public void setToSize(double toSize) {
         this.toSize = toSize;
     }
 
+    public FontSizeTransition(
+            final Duration duration, final Text node) {
+        this(duration, node, Double.NaN, Double.NaN);
+    }
+
+    public FontSizeTransition withSize(final double startSize, final double toSize) {
+        return new FontSizeTransition(
+                getCycleDuration(), node,
+                startSize, toSize);
+    }
+
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startSize)) {
             node.setFont(Font.font(node.getFont().getFamily(), startSize + frac * (toSize - startSize)));
         }
     }
-    
 }
