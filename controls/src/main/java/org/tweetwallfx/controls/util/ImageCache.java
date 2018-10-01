@@ -28,7 +28,6 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import javafx.scene.image.Image;
 import static org.tweetwallfx.controls.util.URLHelper.*;

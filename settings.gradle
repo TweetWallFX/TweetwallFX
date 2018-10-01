@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2018 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,8 @@ include ':stepengine-dataproviders'
 project(":stepengine-dataproviders").name = "TweetWallFX-StepEngine-DataProviders"
 include ':stepengine-steps'
 project(":stepengine-steps").name = "TweetWallFX-StepEngine-Steps"
+include ':transitions'
+project(":transitions").name = "TweetWallFX-Transitions"
 include ':tweet-api'
 project(":tweet-api").name = "TweetWallFX-Tweet-API"
 include ':tweet-stepengine'

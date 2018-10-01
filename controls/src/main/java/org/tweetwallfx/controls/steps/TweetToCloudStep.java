@@ -99,18 +99,11 @@ public class TweetToCloudStep implements Step {
                 Text textNode = optionalTweetWord.get().textNode;
 
                 wordleSkin.word2TextMap.put(word, textNode);
-                LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-
-                lt.setFromX(textNode.getLayoutX());
-                lt.setFromY(textNode.getLayoutY());
-                lt.setToX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-                lt.setToY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-                moveTransitions.add(lt);
-
-                FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
-                ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(cloudWordleLayout.getFontSizeForWeight(word.getWeight()));
-                moveTransitions.add(ft);
+                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                        .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                        .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
+                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
+                        .withSize(textNode.getFont().getSize(), cloudWordleLayout.getFontSizeForWeight(word.getWeight())));
 
             } else {
                 Text textNode = cloudWordleLayout.createTextNode(word);
