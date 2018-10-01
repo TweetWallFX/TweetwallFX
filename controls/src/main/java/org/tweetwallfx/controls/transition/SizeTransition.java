@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,49 +27,52 @@ import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class SizeTransition extends Transition {
-    
+
     private final DoubleProperty widthProperty;
     private final DoubleProperty heightProperty;
-    private double startWidth;
-    private double startHeight;
-    private double targetHeight;
-    private double targetWidth;
+    private final double startHeight;
+    private final double startWidth;
+    private final double targetHeight;
+    private final double targetWidth;
 
-    public SizeTransition(Duration duration, DoubleProperty widthProperty, DoubleProperty heightProperty) {
+    private SizeTransition(
+            final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty,
+            final double startHeight, final double startWidth,
+            final double targetHeight, final double targetWidth) {
         setCycleDuration(duration);
         this.widthProperty = widthProperty;
         this.heightProperty = heightProperty;
-    }
-
-    public void setFromWidth(double startWidth) {
-        this.startWidth = startWidth;
-    }
-
-    public void setFromHeight(double startHeight) {
         this.startHeight = startHeight;
-    }
-
-    public void setToWidth(double targetWidth) {
+        this.startWidth = startWidth;
+        this.targetHeight = targetHeight;
         this.targetWidth = targetWidth;
     }
 
-    public void setToHeight(double targetHeight) {
-        this.targetHeight = targetHeight;
+    public SizeTransition(
+            final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty) {
+        this(duration, widthProperty, heightProperty,
+                Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+    }
+
+    public SizeTransition withWidth(final double startWidth, final double targetWidth) {
+        return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
+                this.startHeight, startWidth, this.targetHeight, targetWidth);
+    }
+
+    public SizeTransition withHeight(final double startHeight, final double targetHeight) {
+        return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
+                startHeight, this.startWidth, targetHeight, this.targetWidth);
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startWidth)) {
             widthProperty.setValue(startWidth + frac * (targetWidth - startWidth));
         }
+
         if (!Double.isNaN(startHeight)) {
             heightProperty.setValue(startHeight + frac * (targetHeight - startHeight));
         }
     }
-    
 }

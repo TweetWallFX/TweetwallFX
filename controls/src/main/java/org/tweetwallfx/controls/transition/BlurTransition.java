@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2014-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,34 +26,38 @@ import javafx.animation.Transition;
 import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 
-/**
- *
- * @author sven
- */
 public final class BlurTransition extends Transition {
-    
-    private double startRadius;
-    private double targetRadius;
-    private final GaussianBlur blur;
 
-    public BlurTransition(Duration duration, GaussianBlur blur) {
+    private final GaussianBlur blur;
+    private final double startRadius;
+    private final double targetRadius;
+
+    private BlurTransition(
+            final Duration duration,
+            final GaussianBlur blur,
+            double startRadius,
+            double targetRadius) {
         setCycleDuration(duration);
         this.blur = blur;
-    }
-
-    public void setFromRadius(double startRadius) {
         this.startRadius = startRadius;
-    }
-
-    public void setToRadius(double targetRadius) {
         this.targetRadius = targetRadius;
     }
 
+    public BlurTransition(
+            final Duration duration,
+            final GaussianBlur blur) {
+        this(duration, blur,
+                Double.NaN, Double.NaN);
+    }
+
+    public BlurTransition withRadius(final double startRadius, final double targetRadius) {
+        return new BlurTransition(getCycleDuration(), blur, startRadius, targetRadius);
+    }
+
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         if (!Double.isNaN(startRadius)) {
             blur.setRadius(startRadius + frac * (targetRadius - startRadius));
         }
     }
-    
 }

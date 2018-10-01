@@ -28,12 +28,14 @@ import org.tweetwallfx.controls.util.ImageCache;
 
 /**
  * Utility to provide a simple api to get the cached speaker image
- *
- * @author Sven Reimers
  */
 public final class SpeakerImageProvider {
 
     private static final ImageCache PROFILE_IMAGE_CACHE = new ImageCache(new ImageCache.ProfileImageCreator());
+
+    private SpeakerImageProvider() {
+        // prevent instantiation
+    }
 
     public static Image getSpeakerImage(final String url) {
         return PROFILE_IMAGE_CACHE.get(url);

@@ -101,7 +101,7 @@ public final class StepEngineSettings {
      * Service implementation converting the configuration data of the root key
      * {@link ConnectionSettings#CONFIG_KEY} into {@link ConnectionSettings}.
      */
-    public final static class Converter implements ConfigurationConverter {
+    public static final class Converter implements ConfigurationConverter {
 
         @Override
         public String getResponsibleKey() {
@@ -156,7 +156,7 @@ public final class StepEngineSettings {
      * {@link DataProvider} instance (identified via
      * {@link #getDataProviderClassName()}.
      */
-    public static class DataProviderSetting extends ConfigurableObjectBase {
+    public static final class DataProviderSetting extends ConfigurableObjectBase {
 
         private String dataProviderClassName;
 

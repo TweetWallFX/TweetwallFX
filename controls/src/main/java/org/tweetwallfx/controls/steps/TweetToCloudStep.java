@@ -50,9 +50,6 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 public class TweetToCloudStep implements Step {
 
     private TweetToCloudStep() {
@@ -78,7 +75,7 @@ public class TweetToCloudStep implements Step {
 
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(), layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
@@ -98,22 +95,15 @@ public class TweetToCloudStep implements Step {
             Bounds bounds = entry.getValue();
             Optional<TweetLayout.TweetWordNode> optionalTweetWord = wordleSkin.tweetWordList.stream().filter(tweetWord -> tweetWord.tweetWord.text.trim().equals(word.getText())).findFirst();
             if (optionalTweetWord.isPresent()) {
-                boolean removed = wordleSkin.tweetWordList.remove(optionalTweetWord.get());
+                wordleSkin.tweetWordList.remove(optionalTweetWord.get());
                 Text textNode = optionalTweetWord.get().textNode;
 
                 wordleSkin.word2TextMap.put(word, textNode);
-                LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-
-                lt.setFromX(textNode.getLayoutX());
-                lt.setFromY(textNode.getLayoutY());
-                lt.setToX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-                lt.setToY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-                moveTransitions.add(lt);
-
-                FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
-                ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(cloudWordleLayout.getFontSizeForWeight(word.getWeight()));
-                moveTransitions.add(ft);
+                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                        .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                        .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
+                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
+                        .withSize(textNode.getFont().getSize(), cloudWordleLayout.getFontSizeForWeight(word.getWeight())));
 
             } else {
                 Text textNode = cloudWordleLayout.createTextNode(word);
@@ -175,7 +165,7 @@ public class TweetToCloudStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link TweetToCloudStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public TweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {

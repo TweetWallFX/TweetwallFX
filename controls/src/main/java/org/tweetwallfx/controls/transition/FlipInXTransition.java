@@ -37,73 +37,70 @@ import javafx.util.Duration;
 
 /**
  * Flip In around X-axis animation.
- * 
+ *
  * Heavily inspired by canned animations from Jasper Potts.
- * 
+ *
  * Port of FlipInX from Animate.css http://daneden.me/animate by Dan Eden
- * 
+ *
  * @author Sven Reimers
  */
-public class FlipInXTransition extends Transition {
+public final class FlipInXTransition extends Transition {
 
     private static final Interpolator EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
     private Camera oldCamera;
     private final Node node;
     private final Timeline timeline;
-    
+
     /**
      * Create new FlipInXTransition
-     * 
+     *
      * @param node The node to affect
      */
     public FlipInXTransition(final Node node) {
         this.node = node;
         this.node.setOpacity(0);
         timeline = new Timeline(
-                    new KeyFrame(Duration.millis(0), 
+                new KeyFrame(Duration.millis(0),
                         new KeyValue(node.rotateProperty(), -90, EASE),
                         new KeyValue(node.opacityProperty(), 0, EASE)
-                    ),
-                    new KeyFrame(Duration.millis(400), 
+                ),
+                new KeyFrame(Duration.millis(400),
                         new KeyValue(node.rotateProperty(), 10, EASE)
-                    ),
-                    new KeyFrame(Duration.millis(700), 
+                ),
+                new KeyFrame(Duration.millis(700),
                         new KeyValue(node.rotateProperty(), -10, EASE)
-                    ),
-                    new KeyFrame(Duration.millis(1000), 
+                ),
+                new KeyFrame(Duration.millis(1000),
                         new KeyValue(node.rotateProperty(), 0, EASE),
                         new KeyValue(node.opacityProperty(), 1, EASE)
-                    )
-            );
+                )
+        );
         setCycleDuration(Duration.seconds(2));
         setDelay(Duration.seconds(0.2));
         statusProperty().addListener((ObservableValue<? extends Status> ov, Status t, Status newStatus) -> {
-            switch(newStatus) {
-                case RUNNING:
-                    starting();
-                    break;
-                default:
-                    stopping();
-                    break;
+            if (Status.RUNNING == newStatus) {
+                starting();
+            } else {
+                stopping();
             }
         });
-        
     }
 
-    protected void starting() {
+    private void starting() {
         node.setRotationAxis(Rotate.X_AXIS);
         oldCamera = node.getScene().getCamera();
         node.getScene().setCamera(new PerspectiveCamera());
     }
 
-    protected void stopping() {
+    private void stopping() {
         node.setRotate(0);
         node.setRotationAxis(Rotate.Z_AXIS);
         node.getScene().setCamera(oldCamera);
     }
 
     @Override
-    protected void interpolate(double frac) {
+    protected void interpolate(final double frac) {
         timeline.playFrom(Duration.seconds(frac));
-        timeline.stop();    }
+        timeline.stop();
+    }
 }
