@@ -1,11 +1,32 @@
-package org.tweetwallfx.threed.billboard;
-
+/*
+ * The MIT License
+ *
+ * Copyright 2015-2018 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 /**
  * Timer.java
- * 
-* Copyright (c) 2011-2014, JFXtras All rights reserved.
- * 
-* Redistribution and use in source and binary forms, with or without
+ *
+ * Copyright (c) 2011-2014, JFXtras All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met: *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer. * Redistributions in binary
@@ -14,8 +35,8 @@ package org.tweetwallfx.threed.billboard;
  * with the distribution. * Neither the name of the organization nor the names
  * of its contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
@@ -26,6 +47,8 @@ package org.tweetwallfx.threed.billboard;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.tweetwallfx.threed.billboard;
+
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -43,10 +66,10 @@ import javafx.util.Duration;
 
 /**
  * A timer class in the spirit of java.swing.Timer but using JavaFX properties.
- * 
-* @author Tom Eugelink
- * 
-*/
+ *
+ * @author Tom Eugelink
+ *
+ */
 /**
  * Added more properties for keeping track of time Time is is nanoTime
  *
@@ -69,9 +92,9 @@ public class FXTimer {
     private static long frame = 0;
 
     public long now = 0;
-    public long updateLength  = 0;
-    public long lastLoopTime  = 0;
-    public long lastFpsTime  = 0;
+    public long updateLength = 0;
+    public long lastLoopTime = 0;
+    public long lastFpsTime = 0;
     public float delta;
 
     private Runnable runnable;

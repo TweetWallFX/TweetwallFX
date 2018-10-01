@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2018 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */package org.tweetwallfx.controls.transition;
+ */
+package org.tweetwallfx.controls.transition;
 
 import javafx.animation.Transition;
 import javafx.scene.Node;
