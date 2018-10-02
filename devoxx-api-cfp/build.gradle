@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    compile group: 'javax', name: 'javaee-api', version: versionJavaEEAPI
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
     compile project(':TweetWallFX-Utility')
 
