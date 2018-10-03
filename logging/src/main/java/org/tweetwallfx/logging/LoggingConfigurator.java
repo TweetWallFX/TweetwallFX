@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.config;
+package org.tweetwallfx.logging;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
