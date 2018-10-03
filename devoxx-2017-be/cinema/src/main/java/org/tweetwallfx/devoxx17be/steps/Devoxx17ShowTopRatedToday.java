@@ -41,7 +41,6 @@ import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.transition.FlipInXTransition;
 import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.VotedTalk;
@@ -49,6 +48,7 @@ import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.transitions.FlipInXTransition;
 
 /**
  * Devox 2017 Show Top Rated Talks Today (Flip In) Animation Step

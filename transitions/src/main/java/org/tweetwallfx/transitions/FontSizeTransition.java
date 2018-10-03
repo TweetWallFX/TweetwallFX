@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.controls.transition;
+package org.tweetwallfx.transitions;
 
 import javafx.animation.Transition;
 import javafx.scene.text.Font;
