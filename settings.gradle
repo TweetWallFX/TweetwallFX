@@ -28,6 +28,8 @@ include ':config'
 project(":config").name = "TweetWallFX-Configuration"
 include ':controls'
 project(":controls").name = "TweetWallFX-Controls"
+include ':logging'
+project(":logging").name = "TweetWallFX-Logging"
 include ':stepengine-api'
 project(":stepengine-api").name = "TweetWallFX-StepEngine-API"
 include ':stepengine-dataproviders'
