@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,13 +34,15 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static org.tweetwall.util.ToString.createToString;
 import static org.tweetwall.util.ToString.map;
-import org.tweetwallfx.stepengine.dataproviders.MediaCache.CachedMedia;
+import org.tweetwallfx.cache.URLContent;
+import org.tweetwallfx.cache.URLContentCache;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -71,12 +71,13 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
     @Override
     public void processHistoryTweet(final Tweet tweet) {
-        LOG.info("new Tweet received");
+        LOG.info("new Tweet received: {}", tweet.getId());
         if (null == tweet.getMediaEntries()
                 || (tweet.isRetweet() && !config.isIncludeRetweets())
                 || tweet.getUser().getFollowersCount() < 25) {
             return;
         }
+        LOG.debug("processing new Tweet: {}", tweet.getId());
         Arrays.stream(tweet.getMediaEntries())
                 .filter(MediaTweetEntryType.photo::isType)
                 .forEach(me -> {
@@ -97,7 +98,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
                         default:
                             throw new RuntimeException("Illegal value");
                     }
-                    addImage(me.getId(), url, tweet.getCreatedAt());
+                    addImage(url, tweet.getCreatedAt());
                 });
     }
 
@@ -105,23 +106,23 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    private void addImage(final long mediaId, final String url, final Date date) {
+    private void addImage(final String url, final Date date) {
         Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
             @Override
             protected Optional<ImageStore> call() throws Exception {
-                if (MediaCache.hasCachedMedia(mediaId)) {
-                    return MediaCache.getCachedMedia(mediaId).map(cm -> new ImageStore(
-                            new Image(cm.getInputStream()),
-                            date.toInstant(),
-                            mediaId));
-                }
-                try (InputStream in = new URL(url).openStream()) {
-                    CachedMedia image = new CachedMedia(in);
-                    MediaCache.putCachedMedia(mediaId, image);
-                    return Optional.of(new ImageStore(
-                            new Image(image.getInputStream()),
-                            date.toInstant(),
-                            mediaId));
+                LOG.debug("Getting content for URL: {}", url);
+                final Optional<URLContent> cachedContent = URLContentCache.getCachedContent(url);
+                final Function<URLContent, ImageStore> iStoreFunction = urlc
+                        -> new ImageStore(
+                                new Image(urlc.getInputStream()),
+                                date.toInstant());
+
+                if (cachedContent.isPresent()) {
+                    return cachedContent.map(iStoreFunction);
+                } else {
+                    final URLContent urlc = new URLContent(url);
+                    URLContentCache.putCachedContent(url, urlc);
+                    return Optional.of(iStoreFunction.apply(urlc));
                 }
             }
         };
@@ -132,6 +133,9 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(images.size() - 1);
             }
+        });
+        task.setOnFailed((event) -> {
+            LOG.error("Failed to load image from " + url, task.getException());
         });
 
         imageLoader.execute(task);
@@ -184,12 +188,10 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
         private final Image image;
         private final Instant instant;
-        private final long mediaId;
 
-        public ImageStore(final Image image, final Instant instant, final long mediaId) {
+        public ImageStore(final Image image, final Instant instant) {
             this.image = image;
             this.instant = instant;
-            this.mediaId = mediaId;
         }
 
         public Instant getInstant() {
@@ -200,16 +202,11 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             return image;
         }
 
-        public long getMediaId() {
-            return mediaId;
-        }
-
         @Override
         public int hashCode() {
             int hash = 5;
             hash = 97 * hash + Objects.hashCode(this.image);
             hash = 97 * hash + Objects.hashCode(this.instant);
-            hash = 97 * hash + (int) (this.mediaId ^ (this.mediaId >>> 32));
             return hash;
         }
 
@@ -224,7 +221,6 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             final ImageStore other = (ImageStore) obj;
             boolean result = true;
 
-            result &= this.mediaId == other.mediaId;
             result &= Objects.equals(this.image, other.image);
             result &= Objects.equals(this.instant, other.instant);
 

@@ -24,6 +24,8 @@
 
 rootProject.name='TweetWallFX'
 
+include ':cache'
+project(":cache").name = "TweetWallFX-Cache"
 include ':config'
 project(":config").name = "TweetWallFX-Configuration"
 include ':controls'
