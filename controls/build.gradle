@@ -24,6 +24,6 @@
 
 dependencies {
     compile project(':TweetWallFX-Core')
-    compile project(':TweetWallFX-StepEngine-DataProviders')
+    compile project(':TweetWallFX-StepEngine-Steps')
     compile project(':TweetWallFX-Transitions')
 }
