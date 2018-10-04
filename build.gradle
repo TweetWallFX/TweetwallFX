@@ -61,15 +61,18 @@ allprojects {
 
     spotless {
         format 'textBasedFiles', {
-            target \
-                '**/*.gradle',
-                '**/*.asciidoc',
-                '**/*.adoc',
-                '**/*.asc',
-                '**/*.json',
-                '**/*.md',
-                '**/*.properties',
-                '**/.gitignore'
+            target fileTree(project.rootDir) {
+                include '**/*.gradle'
+                include '**/*.asciidoc'
+                include '**/*.adoc'
+                include '**/*.asc'
+                include '**/*.json'
+                include '**/*.md'
+                include '**/*.properties'
+                include '**/.gitignore'
+                exclude '**/.gradle/**'
+                exclude '**/build/**'
+            }
 
             trimTrailingWhitespace()
             indentWithSpaces(4)
