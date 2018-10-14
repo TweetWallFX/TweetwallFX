@@ -31,13 +31,17 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.net.URL;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class URLContent implements Externalizable {
 
+    private static final Logger LOG = LogManager.getLogger(URLContent.class);
     private static final long serialVersionUID = 1L;
     private byte[] data;
 
     public URLContent(final InputStream in) throws IOException {
+        LOG.debug("Loading content from: {}", in);
         data = readFully(in);
     }
 
