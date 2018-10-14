@@ -184,7 +184,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         }
     }
 
-    public static class ImageStore {
+    public static final class ImageStore {
 
         private final Image image;
         private final Instant instant;

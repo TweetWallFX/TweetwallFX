@@ -29,7 +29,7 @@ import java.util.Objects;
  *
  * @author sven
  */
-public class Word implements Comparable<Word> {
+public final class Word implements Comparable<Word> {
 
     private final String text;
     private double weight;
