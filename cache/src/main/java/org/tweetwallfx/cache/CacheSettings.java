@@ -91,6 +91,7 @@ public class CacheSettings {
         private String keyType = null;
         private String valueType = null;
         private CacheExpiry expiry = null;
+        private int contentLoaderThreads;
         private List<CacheResource> cacheResources = Collections.emptyList();
 
         public String getKeyType() {
@@ -115,6 +116,14 @@ public class CacheSettings {
 
         public void setExpiry(final CacheExpiry expiry) {
             this.expiry = expiry;
+        }
+
+        public int getContentLoaderThreads() {
+            return contentLoaderThreads;
+        }
+
+        public void setContentLoaderThreads(int contentLoaderThreads) {
+            this.contentLoaderThreads = contentLoaderThreads;
         }
 
         public List<CacheResource> getCacheResources() {
