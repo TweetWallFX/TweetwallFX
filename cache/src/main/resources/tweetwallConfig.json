@@ -4,6 +4,7 @@
             "urlContent": {
                 "keyType": "java.lang.String",
                 "valueType": "org.tweetwallfx.cache.URLContent",
+                "contentLoaderThreads": 1,
                 "expiry": {
                     "type": "TIME_TO_IDLE",
                     "amount": 14,
