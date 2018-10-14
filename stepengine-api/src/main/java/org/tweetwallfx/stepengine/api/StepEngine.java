@@ -165,7 +165,7 @@ public final class StepEngine {
             StepEngine.this.proceed();
         }
 
-        public void addDataProvider(final DataProvider dataProvider) {
+        void addDataProvider(final DataProvider dataProvider) {
             dataProviders.add(Objects.requireNonNull(
                     dataProvider,
                     "Parameter dataProvider must not be null!"));

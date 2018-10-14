@@ -74,11 +74,11 @@ class StepIterator {
         steps.forEach(consumer);
     }
 
-    public Set<Class<? extends DataProvider>> getRequiredDataProviders() {
+    Set<Class<? extends DataProvider>> getRequiredDataProviders() {
         return requiredDataProviders;
     }
 
-    public Step next() {
+    Step next() {
         if (stepIndex == steps.size()) {
             //loop
             stepIndex = 0;
