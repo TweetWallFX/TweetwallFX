@@ -55,7 +55,7 @@ public final class CacheManagerProvider {
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
-    private static final Collection<String> LISTENERS_ADDE_TO_CACHES = new HashSet<>(4);
+    private static final Collection<String> LISTENERS_ADDED_TO_CACHES = new HashSet<>(4);
     private static final Logger LOG = LogManager.getLogger(CacheManagerProvider.class);
     private static final org.ehcache.CacheManager CACHE_MANAGER = createCacheManager();
 
@@ -66,7 +66,9 @@ public final class CacheManagerProvider {
     public static <K, V> Cache<K, V> getCache(final String alias, final Class<K> keyClass, final Class<V> valueClass) {
         final Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
 
-        if (LISTENERS_ADDE_TO_CACHES.add(alias)) {
+        if (null == cache) {
+            throw new IllegalArgumentException("No cache named '" + alias + "' exists!");
+        } else if (LISTENERS_ADDED_TO_CACHES.add(alias)) {
             cache.getRuntimeConfiguration().registerCacheEventListener(
                     event -> LOG.debug("Cache({}) @ Key '{}'- {}", alias, event.getKey(), event.getType()),
                     EventOrdering.UNORDERED,
