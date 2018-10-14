@@ -139,8 +139,9 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     public List<Tweet> getTweets() {
+        tweetListLock.readLock().lock();
+
         try {
-            tweetListLock.readLock().lock();
             return new ArrayList<>(this.tweets);
         } finally {
             tweetListLock.readLock().unlock();

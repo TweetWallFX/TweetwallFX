@@ -39,7 +39,7 @@ public class CloudWordNodeFactory extends AbstractWordNodeFactory {
     }
 
     double getFontSize(double weight, double minWeight, double maxWeight) {
-        double a = (configuration.font.getSize() - configuration.maxFontSize) / (Math.log(minWeight / maxWeight));
+        double a = (configuration.font.getSize() - configuration.maxFontSize) / Math.log(minWeight / maxWeight);
         double b = configuration.font.getSize() - a * Math.log(minWeight);
         return a * Math.log(weight) + b;
     }
