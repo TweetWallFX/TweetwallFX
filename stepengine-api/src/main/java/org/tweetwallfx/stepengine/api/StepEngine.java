@@ -33,9 +33,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Phaser;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,17 +58,11 @@ public final class StepEngine {
     private static final Logger LOG = LogManager.getLogger(StepEngine.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("StepEngine");
     private volatile boolean terminated = false;
-    private final Lock lock = new ReentrantLock();
-    private final Condition condition = lock.newCondition();
+    private final Phaser asyncProceed = new Phaser(2);
     private final StepIterator stepIterator;
     private final MachineContext context = new MachineContext();
     private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(THREAD_GROUP, r, "engine");
-        t.setDaemon(true);
-        return t;
-    });
-    private final ExecutorService auxiliaryExecutor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(THREAD_GROUP, r, "auxiliary");
         t.setDaemon(true);
         return t;
     });
@@ -187,23 +179,14 @@ public final class StepEngine {
     }
 
     private void proceed() {
-        if (Platform.isFxApplicationThread()) {
-            auxiliaryExecutor.execute(() -> proceed());
-        } else {
-            lock.lock();
-            try {
-                condition.signalAll();
-            } finally {
-                lock.unlock();
-            }
-        }
+        asyncProceed.arrive();
     }
 
     private void process() {
         while (!terminated) {
             LOG.info("process to next step ");
 
-            long start = System.currentTimeMillis();
+            final long start = System.currentTimeMillis();
 
             Step step = stepIterator.next();
             while (step.shouldSkip(context)) {
@@ -211,33 +194,29 @@ public final class StepEngine {
                 step = stepIterator.next();
             }
             final Step stepToExecute = step;
-            Duration duration = step.preferredStepDuration(context);
+            final Duration duration = step.preferredStepDuration(context);
+
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
-            lock.lock();
-            try {
-                if (stepToExecute.requiresPlatformThread()) {
-                    Platform.runLater(() -> stepToExecute.doStep(context));
-                } else {
-                    stepToExecute.doStep(context);
-                }
-                long stop = System.currentTimeMillis();
-                long doStateDuration = stop - start;
-                long delay = duration.toMillis() - doStateDuration;
-                if (delay > 0) {
-                    try {
-                        LOG.info("sleep({}ms) for step {}", delay, step.getClass().getSimpleName());
-                        Thread.sleep(delay);
-                    } catch (InterruptedException ex) {
-                        LOG.error("Sleeping for {} interrupted!", delay, ex);
-                    }
-                }
-                LOG.info("wait for step {} to finish!", step.getClass().getSimpleName());
-                condition.await();
-            } catch (InterruptedException ex) {
-                LOG.error("Waiting interrupted!", ex);
-            } finally {
-                lock.unlock();
+            if (stepToExecute.requiresPlatformThread()) {
+                Platform.runLater(() -> stepToExecute.doStep(context));
+            } else {
+                stepToExecute.doStep(context);
             }
+
+            final long stop = System.currentTimeMillis();
+            final long doStateDuration = stop - start;
+            final long delay = duration.toMillis() - doStateDuration;
+            if (delay > 0) {
+                try {
+                    LOG.info("sleep({} ms) for step {}", delay, step.getClass().getSimpleName());
+                    Thread.sleep(delay);
+                } catch (InterruptedException ex) {
+                    LOG.error("Sleeping for {} interrupted!", delay, ex);
+                }
+            }
+
+            // wait for proceed being called
+            asyncProceed.arriveAndAwaitAdvance();
         }
     }
 }
