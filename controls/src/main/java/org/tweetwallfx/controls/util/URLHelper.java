@@ -133,7 +133,7 @@ public class URLHelper {
     }
 
     private static <T, R> Function<T, R> wrapFunction(final ExceptionalFunction<T, R> exceptionalFunction) {
-        return t -> exceptionalFunction.apply(t);
+        return exceptionalFunction::apply;
     }
 
     private static interface ExceptionalFunction<T, R> extends Function<T, R> {

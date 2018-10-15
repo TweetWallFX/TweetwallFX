@@ -65,7 +65,7 @@ final class TwitterTweet implements Tweet {
             hashtagTweetEntries = NIL_HTES;
         } else {
             hashtagTweetEntries = Arrays.stream(hashtagEntities)
-                    .map(he -> new TwitterHashtagTweetEntry(he))
+                    .map(TwitterHashtagTweetEntry::new)
                     .toArray(c -> new HashtagTweetEntry[c]);
         }
 
@@ -75,7 +75,7 @@ final class TwitterTweet implements Tweet {
             mediaTweetEntries = NIL_MTES;
         } else {
             mediaTweetEntries = Arrays.stream(mediaEntities)
-                    .map(me -> new TwitterMediaTweetEntry(me))
+                    .map(TwitterMediaTweetEntry::new)
                     .toArray(c -> new MediaTweetEntry[c]);
         }
 
@@ -85,7 +85,7 @@ final class TwitterTweet implements Tweet {
             symbolTweetEntries = NIL_STES;
         } else {
             symbolTweetEntries = Arrays.stream(symbolEntities)
-                    .map(se -> new TwitterSymbolTweetEntry(se))
+                    .map(TwitterSymbolTweetEntry::new)
                     .toArray(c -> new SymbolTweetEntry[c]);
         }
 
@@ -95,7 +95,7 @@ final class TwitterTweet implements Tweet {
             urlTweetTweetEntries = NIL_UTES;
         } else {
             urlTweetTweetEntries = Arrays.stream(urlEntities)
-                    .map(ue -> new TwitterUrlTweetEntry(ue))
+                    .map(TwitterUrlTweetEntry::new)
                     .toArray(c -> new UrlTweetEntry[c]);
         }
 
@@ -105,7 +105,7 @@ final class TwitterTweet implements Tweet {
             userMentionTweetEntries = NIL_UMTES;
         } else {
             userMentionTweetEntries = Arrays.stream(userMentionEntities)
-                    .map(ume -> new TwitterUserMentionTweetEntry(ume))
+                    .map(TwitterUserMentionTweetEntry::new)
                     .toArray(c -> new UserMentionTweetEntry[c]);
         }
 
