@@ -38,6 +38,7 @@ public final class URLContent implements Externalizable {
 
     private static final Logger LOG = LogManager.getLogger(URLContent.class);
     private static final long serialVersionUID = 1L;
+    private static final byte[] NO_DATA = new byte[0];
     private byte[] data;
 
     public URLContent(final InputStream in) throws IOException {
@@ -50,7 +51,7 @@ public final class URLContent implements Externalizable {
     }
 
     public URLContent() {
-        data = new byte[0];
+        data = NO_DATA;
     }
 
     private static byte[] readFully(final InputStream in) throws IOException {
@@ -79,10 +80,6 @@ public final class URLContent implements Externalizable {
     public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
         final int size = in.readInt();
         data = new byte[size];
-        final int read = in.read(data);
-
-        if (read != size) {
-            throw new IOException("Unexpected amount of data read. Expected " + size + ", got " + read);
-        }
+        in.readFully(data);
     }
 }
