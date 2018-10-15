@@ -144,33 +144,22 @@ public class WordleSkin extends SkinBase<Wordle> {
         //assign style
         stackPane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
 
-        pane.heightProperty().addListener((observable) -> {
-            updateLogoPosition();
-        });
+        pane.heightProperty().addListener(observable
+                -> updateLogoPosition());
+        pane.widthProperty().addListener(observable
+                -> updateLogoPosition());
+        getSkinnable().logoProperty().addListener((obs, oldValue, newValue)
+                -> updateLogo(newValue));
 
-        pane.widthProperty().addListener((observable) -> {
-            updateLogoPosition();
-        });
+        pane.heightProperty().addListener(observable
+                -> updateSecondLogoPosition());
+        pane.widthProperty().addListener(observable
+                -> updateSecondLogoPosition());
+        getSkinnable().secondLogoProperty().addListener((obs, oldValue, newValue)
+                -> updateSecondLogo(newValue));
 
-        getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
-            updateLogo(newValue);
-        });
-
-        pane.heightProperty().addListener((observable) -> {
-            updateSecondLogoPosition();
-        });
-
-        pane.widthProperty().addListener((observable) -> {
-            updateSecondLogoPosition();
-        });
-
-        getSkinnable().secondLogoProperty().addListener((obs, oldValue, newValue) -> {
-            updateSecondLogo(newValue);
-        });
-
-        getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue) -> {
-            updateBackgroundGraphic(newValue);
-        });
+        getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue)
+                -> updateBackgroundGraphic(newValue));
 
         updateBackgroundGraphic(getSkinnable().backgroundGraphicProperty().getValue());
         updateLogo(getSkinnable().logoProperty().getValue());

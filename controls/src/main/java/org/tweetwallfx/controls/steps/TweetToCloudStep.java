@@ -122,9 +122,8 @@ public class TweetToCloudStep implements Step {
         wordleSkin.tweetWordList.forEach(tweetWord -> {
             FadeTransition ft = new FadeTransition(defaultDuration, tweetWord.textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(tweetWord.textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(tweetWord.textNode));
             fadeOutTransitions.add(ft);
         });
 
@@ -134,18 +133,16 @@ public class TweetToCloudStep implements Step {
             Node infoBoxNode = wordleSkin.getInfoBox();
             FadeTransition ft = new FadeTransition(defaultDuration, infoBoxNode);
             ft.setToValue(0);
-            ft.setOnFinished(event -> {
-                wordleSkin.getPane().getChildren().remove(infoBoxNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(infoBoxNode));
             fadeOutTransitions.add(ft);
         }
         if (null != wordleSkin.getMediaBox()) {
             Node mediaBoxNode = wordleSkin.getMediaBox();
             FadeTransition ft = new FadeTransition(defaultDuration, mediaBoxNode);
             ft.setToValue(0);
-            ft.setOnFinished(event -> {
-                wordleSkin.getPane().getChildren().remove(mediaBoxNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(mediaBoxNode));
             fadeOutTransitions.add(ft);
         }
 
