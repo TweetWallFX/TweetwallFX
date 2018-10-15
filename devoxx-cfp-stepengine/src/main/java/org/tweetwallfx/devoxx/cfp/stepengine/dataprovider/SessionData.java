@@ -69,7 +69,7 @@ public class SessionData {
         List<SessionData> sessionData = slots.stream()
                 .filter(slot -> null != slot.getTalk())
                 .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now.plusMinutes(10)))
-                .collect(Collectors.groupingBy(slot -> slot.getRoomId()))
+                .collect(Collectors.groupingBy(ScheduleSlot::getRoomId))
                 .entrySet().stream()
                 .map(entry -> entry.getValue().stream().findFirst())
                 .map(optional -> optional.orElse(null))

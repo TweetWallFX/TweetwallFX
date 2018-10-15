@@ -76,7 +76,9 @@ public class UpdateCloudStep implements Step {
         double minWeight = limitedWords.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
 
         if (null != additionalTagCloudWords) {
-            additionalTagCloudWords.stream().map(word -> new Word(word.getText(), minWeight)).forEach(word -> limitedWords.add(word));
+            additionalTagCloudWords.stream()
+                    .map(word -> new Word(word.getText(), minWeight))
+                    .forEach(limitedWords::add);
         }
         limitedWords.sort(Comparator.reverseOrder());
 
@@ -115,7 +117,9 @@ public class UpdateCloudStep implements Step {
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         morph.getChildren().add(fadeOuts);
 
-        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(wordleSkin.word2TextMap::containsKey)
+                .collect(Collectors.toList());
 
         LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {

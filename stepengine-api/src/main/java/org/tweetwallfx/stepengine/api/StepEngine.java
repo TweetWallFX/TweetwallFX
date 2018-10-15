@@ -175,7 +175,7 @@ public final class StepEngine {
     }
 
     public void go() {
-        engineExecutor.execute(() -> process());
+        engineExecutor.execute(this::process);
     }
 
     private void proceed() {

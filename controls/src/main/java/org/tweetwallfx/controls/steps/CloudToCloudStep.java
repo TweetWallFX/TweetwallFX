@@ -103,7 +103,9 @@ public class CloudToCloudStep implements Step {
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         morph.getChildren().add(fadeOuts);
 
-        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(wordleSkin.word2TextMap::containsKey)
+                .collect(Collectors.toList());
 
         existingWords.forEach(word -> {
 
