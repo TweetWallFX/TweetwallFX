@@ -30,19 +30,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.function.Function;
-import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static org.tweetwall.util.ToString.createToString;
 import static org.tweetwall.util.ToString.map;
-import org.tweetwallfx.cache.URLContent;
-import org.tweetwallfx.cache.URLContentCache;
+import org.tweetwallfx.cache.URLContentCacheBase;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -51,12 +45,6 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
-    private final Executor imageLoader = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r);
-        t.setName("Image-Downloader");
-        t.setDaemon(true);
-        return t;
-    });
     private final List<ImageStore> images = new CopyOnWriteArrayList<>();
     private final Config config;
 
@@ -96,7 +84,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
                             url = me.getMediaUrl() + ":large";
                             break;
                         default:
-                            throw new RuntimeException("Illegal value");
+                            throw new IllegalArgumentException("Illegal value");
                     }
                     addImage(url, tweet.getCreatedAt());
                 });
@@ -107,38 +95,13 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     }
 
     private void addImage(final String url, final Date date) {
-        Task<Optional<ImageStore>> task = new Task<Optional<ImageStore>>() {
-            @Override
-            protected Optional<ImageStore> call() throws Exception {
-                LOG.debug("Getting content for URL: {}", url);
-                final Optional<URLContent> cachedContent = URLContentCache.getCachedContent(url);
-                final Function<URLContent, ImageStore> iStoreFunction = urlc
-                        -> new ImageStore(
-                                new Image(urlc.getInputStream()),
-                                date.toInstant());
-
-                if (cachedContent.isPresent()) {
-                    return cachedContent.map(iStoreFunction);
-                } else {
-                    final URLContent urlc = new URLContent(url);
-                    URLContentCache.putCachedContent(url, urlc);
-                    return Optional.of(iStoreFunction.apply(urlc));
-                }
-            }
-        };
-
-        task.setOnSucceeded((event) -> {
-            task.getValue().ifPresent(images::add);
+        URLContentCacheBase.getDefault().getCachedOrLoad(url, urlc -> {
+            images.add(new ImageStore(new Image(urlc.getInputStream()), date.toInstant()));
             if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(images.size() - 1);
             }
         });
-        task.setOnFailed((event) -> {
-            LOG.error("Failed to load image from " + url, task.getException());
-        });
-
-        imageLoader.execute(task);
     }
 
     public static class FactoryImpl implements DataProvider.Factory {
