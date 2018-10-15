@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,7 +60,7 @@ public class ImageMosaicStep implements Step {
         // prevent external instantiation
     }
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new SecureRandom();
     private final ImageView[][] rects = new ImageView[6][5];
     private final Bounds[][] bounds = new Bounds[6][5];
     private final Set<Integer> highlightedIndexes = new HashSet<>();

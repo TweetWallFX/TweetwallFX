@@ -23,9 +23,11 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import java.security.SecureRandom;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +43,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
 
     private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 50;
-
+    private final Random rand = new SecureRandom();
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
     private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
@@ -81,7 +83,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
             }
             nextTweet = lastTweetCollection.stream()
                     .filter(t -> !history.contains(t.getId()))
-                    .skip((long) (Math.random() * (HISTORY_SIZE - history.size())))
+                    .skip(rand.nextInt(HISTORY_SIZE - history.size()))
                     .findFirst()
                     .orElse(null);
         }

@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -45,8 +46,7 @@ public final class WordleLayout {
     private static final double RADIUS = 5.0;
     private static final int DEG = 10;
 
-    private final Random rand = new Random();
-
+    private final Random rand = new SecureRandom();
     private final Map<Word, Bounds> wordLayoutMap;
     private final Configuration configuration;
     private final CloudWordNodeFactory wordNodeFactory;
