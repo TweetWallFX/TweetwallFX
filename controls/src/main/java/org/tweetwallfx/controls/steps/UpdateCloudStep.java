@@ -106,9 +106,8 @@ public class UpdateCloudStep implements Step {
 
             FadeTransition ft = new FadeTransition(defaultDuration, textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(textNode));
             fadeOutTransitions.add(ft);
         });
 

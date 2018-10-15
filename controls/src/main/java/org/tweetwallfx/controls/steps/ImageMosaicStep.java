@@ -75,9 +75,8 @@ public class ImageMosaicStep implements Step {
             context.proceed();
         } else {
             Transition createMosaicTransition = createMosaicTransition(dataProvider.getImages());
-            createMosaicTransition.setOnFinished((ActionEvent event) -> {
-                executeAnimations(context);
-            });
+            createMosaicTransition.setOnFinished(event
+                    -> executeAnimations(context));
 
             createMosaicTransition.play();
         }
@@ -111,7 +110,7 @@ public class ImageMosaicStep implements Step {
                             cleanup.getChildren().addAll(ft);
                         }
                     }
-                    cleanup.setOnFinished((cleanUpDown) -> {
+                    cleanup.setOnFinished(cleanUpDown -> {
                         for (int i = 0; i < 6; i++) {
                             for (int j = 0; j < 5; j++) {
                                 pane.getChildren().remove(rects[i][j]);
@@ -266,9 +265,8 @@ public class ImageMosaicStep implements Step {
         SequentialTransition seqT = new SequentialTransition();
         seqT.getChildren().addAll(secondParallelTransition, firstParallelTransition);
 
-        secondParallelTransition.setOnFinished((event) -> {
-            randomView.setEffect(null);
-        });
+        secondParallelTransition.setOnFinished(event
+                -> randomView.setEffect(null));
 
         return seqT;
     }

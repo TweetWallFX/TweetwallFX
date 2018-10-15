@@ -148,9 +148,8 @@ public class CloudToTweetStep implements Step {
             Text textNode = entry.getValue();
             FadeTransition ft = new FadeTransition(defaultDuration, textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(textNode));
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
