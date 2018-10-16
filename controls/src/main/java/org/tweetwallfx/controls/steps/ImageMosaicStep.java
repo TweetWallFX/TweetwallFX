@@ -92,12 +92,12 @@ public class ImageMosaicStep implements Step {
         ImageWallAnimationTransition highlightAndZoomTransition
                 = createHighlightAndZoomTransition();
         highlightAndZoomTransition.transition.play();
-        highlightAndZoomTransition.transition.setOnFinished((event1) -> {
+        highlightAndZoomTransition.transition.setOnFinished(event1 -> {
             Transition revert
                     = createReverseHighlightAndZoomTransition(highlightAndZoomTransition.column, highlightAndZoomTransition.row);
             revert.setDelay(Duration.seconds(3));
             revert.play();
-            revert.setOnFinished((ActionEvent event) -> {
+            revert.setOnFinished(event -> {
                 count++;
                 if (count < 3) {
                     executeAnimations(context);
@@ -223,7 +223,7 @@ public class ImageMosaicStep implements Step {
         SequentialTransition seqT = new SequentialTransition();
         seqT.getChildren().addAll(firstParallelTransition, secondParallelTransition);
 
-        firstParallelTransition.setOnFinished((event) -> {
+        firstParallelTransition.setOnFinished(event -> {
 //            DropShadow ds = new DropShadow();
 //            ds.setOffsetY(10.0);
 //            ds.setOffsetX(10.0);

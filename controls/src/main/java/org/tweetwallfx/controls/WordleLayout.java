@@ -26,7 +26,7 @@ package org.tweetwallfx.controls;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,16 +132,16 @@ public final class WordleLayout {
                     doFinish = true;
                 }
                 int startDeg = rand.nextInt(360);
-                double prev_x = -1;
-                double prev_y = -1;
+                double prevX = -1;
+                double prevY = -1;
                 for (int deg = startDeg; deg < startDeg + 360; deg += DEG) {
                     double rad = ((double) deg / Math.PI) * 180.0;
                     center = center.add(radius * Math.cos(rad), radius * Math.sin(rad));
-                    if (prev_x == center.getX() && prev_y == center.getY()) {
+                    if (prevX == center.getX() && prevY == center.getY()) {
                         continue;
                     }
-                    prev_x = center.getX();
-                    prev_y = center.getY();
+                    prevX = center.getX();
+                    prevY = center.getY();
                     Bounds mayBe = new BoundingBox(center.getX() - width / 2d,
                             center.getY() - height / 2d, width, height);
                     boolean useable = true;
@@ -192,8 +192,10 @@ public final class WordleLayout {
             this.font = font;
             this.maxFontSize = maxFontSize;
             this.layoutBounds = layoutBounds;
-            this.minWeight = words.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
-            this.maxWeight = words.stream().map(Word::getWeight).max(Comparator.naturalOrder()).get();
+
+            final DoubleSummaryStatistics weightSummary = words.stream().mapToDouble(Word::getWeight).summaryStatistics();
+            this.minWeight = weightSummary.getMin();
+            this.maxWeight = weightSummary.getMax();
             LOG.info("MaxWeight: " + maxWeight);
             LOG.info("MiWeight: " + minWeight);
         }

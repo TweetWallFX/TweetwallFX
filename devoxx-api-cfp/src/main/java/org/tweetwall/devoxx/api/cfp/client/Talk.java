@@ -205,7 +205,9 @@ public class Talk extends ObjectWithLinksBase {
         if (hasCompleteInformation()) {
             return Optional.of(this);
         } else {
-            return readOptionalFrom(getLinkStream(Link.Type.TALK).findAny().get().getHref(), Talk.class);
+            return getLinkStream(Link.Type.TALK)
+                    .findAny()
+                    .flatMap(link -> readOptionalFrom(link.getHref(), Talk.class));
         }
     }
 

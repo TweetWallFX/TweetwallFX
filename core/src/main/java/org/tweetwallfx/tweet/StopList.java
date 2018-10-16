@@ -124,7 +124,7 @@ public final class StopList {
 
     private static Set<String> readStopListResource(String resourceName) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
-            return reader.lines().map(String::trim).filter((s) -> !s.isEmpty()).collect(Collectors.toSet());
+            return reader.lines().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
         } catch (IOException e) {
             LOG.error("Unable to load stoplist resource: " + resourceName, e);
         }

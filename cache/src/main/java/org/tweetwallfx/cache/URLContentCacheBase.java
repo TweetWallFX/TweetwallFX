@@ -132,12 +132,10 @@ public abstract class URLContentCacheBase {
             }
         };
 
-        task.setOnSucceeded(event -> {
-            contentConsumer.accept(task.getValue());
-        });
-        task.setOnFailed(event -> {
-            LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException());
-        });
+        task.setOnSucceeded(event
+                -> contentConsumer.accept(task.getValue()));
+        task.setOnFailed(event
+                -> LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException()));
         contentLoader.execute(task);
     }
 
@@ -203,7 +201,8 @@ public abstract class URLContentCacheBase {
                 contentConsumer.accept(task.getValue());
             }
         });
-        task.setOnFailed(event -> LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException()));
+        task.setOnFailed(event
+                -> LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException()));
         contentLoader.execute(task);
     }
 
