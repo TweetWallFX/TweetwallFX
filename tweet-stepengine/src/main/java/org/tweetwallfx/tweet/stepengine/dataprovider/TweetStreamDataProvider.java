@@ -157,7 +157,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .collect(Collectors.toList());
     }
 
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public TweetStreamDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

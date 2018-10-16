@@ -101,7 +101,7 @@ public class CloudToTweetStep implements Step {
 
         Duration defaultDuration = Duration.seconds(1.5);
 
-        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
+        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Config(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
 
         tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
             Word word = new Word(tweetWord.text.trim(), -2);
@@ -348,7 +348,7 @@ public class CloudToTweetStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link CloudToTweetStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public CloudToTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {

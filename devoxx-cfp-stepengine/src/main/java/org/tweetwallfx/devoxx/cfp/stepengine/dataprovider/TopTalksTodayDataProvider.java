@@ -80,7 +80,7 @@ public final class TopTalksTodayDataProvider implements DataProvider {
      * Implementation of {@link DataProvider.Factory} as Service implementation
      * creating {@link TopTalksTodayDataProvider}.
      */
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public TopTalksTodayDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

@@ -1,7 +1,7 @@
-org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleToday$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleWeek$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17ShowSchedule$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedToday$Factory
-org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedWeek$Factory
+org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleToday$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleWeek$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutTweets$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17ShowSchedule$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedToday$FactoryImpl
+org.tweetwallfx.devoxx17be.steps.Devoxx17ShowTopRatedWeek$FactoryImpl

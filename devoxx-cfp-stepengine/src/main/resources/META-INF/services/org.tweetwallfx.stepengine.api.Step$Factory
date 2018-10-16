@@ -1,3 +1,3 @@
-org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateScheduleResults$Factory
-org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateVotingResults$Factory
+org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateScheduleResults$FactoryImpl
+org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateVotingResults$FactoryImpl
 

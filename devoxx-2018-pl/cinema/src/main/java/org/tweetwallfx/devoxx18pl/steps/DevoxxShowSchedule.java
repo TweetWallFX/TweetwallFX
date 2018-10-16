@@ -123,7 +123,7 @@ public class DevoxxShowSchedule extends DevoxxFlipInTweets {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link DevoxxShowSchedule}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public DevoxxShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {

@@ -135,7 +135,7 @@ public class Devoxx17ShowTopRatedToday implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link Devoxx17ShowTopRatedToday}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public Devoxx17ShowTopRatedToday create(final StepEngineSettings.StepDefinition stepDefinition) {

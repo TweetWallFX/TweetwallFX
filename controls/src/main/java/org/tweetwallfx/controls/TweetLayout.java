@@ -43,7 +43,7 @@ public class TweetLayout {
 
     private TweetLayout(Configuration configuration) {
         this.configuration = configuration;
-        wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(configuration.font, configuration.tweetFontSize));
+        wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Config(configuration.font, configuration.tweetFontSize));
         tweetWords = recalcTweetLayout();
     }
 

@@ -86,7 +86,7 @@ public class DevoxxFlipOutTweets implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link DevoxxFlipOutTweets}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public DevoxxFlipOutTweets create(final StepEngineSettings.StepDefinition stepDefinition) {

@@ -79,7 +79,7 @@ public class CloudFadeOutStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link CloudFadeOutStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
