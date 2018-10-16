@@ -64,7 +64,6 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
 
     @Override
     public void processHistoryTweet(final Tweet tweet) {
-        LOG.info("new Tweet received: {}", tweet.getId());
         processTweet(tweet);
     }
 
