@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.stepengine.dataproviders;
 
-apply plugin: 'java-library'
+import org.tweetwallfx.cache.URLContentCacheBase;
 
-dependencies {
-    api project(':TweetWallFX-StepEngine-API')
-    api project(':TweetWallFX-Cache')
+/**
+ * Cache used to provide the avatar image of a {@link User}.
+ */
+public final class ProfileImageCache extends URLContentCacheBase {
+
+    /**
+     * Cache instance.
+     */
+    public static final ProfileImageCache INSTANCE = new ProfileImageCache();
+
+    private ProfileImageCache() {
+        super("profileImage");
+    }
 }

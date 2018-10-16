@@ -82,8 +82,9 @@ public class Devoxx17ShowTopRatedWeek implements Step {
                 int row = 0;
 
                 Iterator<VotedTalk> iterator = dataProvider.getFilteredSessionData().iterator();
+                final SpeakerImageProvider speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
                 while (iterator.hasNext()) {
-                    Node node = createTalkNode(iterator.next());
+                    Node node = createTalkNode(iterator.next(), speakerImageProvider);
                     grid.getChildren().add(node);
                     GridPane.setColumnIndex(node, col);
                     GridPane.setRowIndex(node, row);
@@ -100,7 +101,9 @@ public class Devoxx17ShowTopRatedWeek implements Step {
         flipIns.play();
     }
 
-    private Node createTalkNode(VotedTalk votingResultTalk) {
+    private Node createTalkNode(
+            final VotedTalk votingResultTalk,
+            final SpeakerImageProvider speakerImageProvider) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/ratedTalk.fxml"));
             Text title = (Text) session.lookup("#title");
@@ -112,7 +115,7 @@ public class Devoxx17ShowTopRatedWeek implements Step {
             Label voteCount = (Label) session.lookup("#voteCount");
             voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
             ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
-            speakerImage.setImage(SpeakerImageProvider.getSpeakerImage(votingResultTalk.speakerAvatar));
+            speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
             speakerImage.setFitHeight(64);
             speakerImage.setFitWidth(64);
             Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());

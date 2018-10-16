@@ -39,7 +39,7 @@ public class VotedTalk {
     public final int ratingTotalVotes;
     public final String proposalId;
     public final String proposalTitle;
-    public final String speakerAvatar;
+    public final Speaker speaker;
 
     public VotedTalk(final VotingResultTalk talk) {
         this(talk.getProposalsSpeakers(),
@@ -55,10 +55,9 @@ public class VotedTalk {
         this.ratingTotalVotes = ratingTotalVotes;
         this.proposalId = proposalId;
         this.proposalTitle = proposalTitle;
-        this.speakerAvatar = CFPClient.getClient()
+        this.speaker = CFPClient.getClient()
                 .getTalk(System.getProperty("org.tweetwallfx.scheduledata.proposal", proposalId))
                 .flatMap(talk -> talk.getSpeakers().get(0).getSpeaker())
-                .map(Speaker::getAvatarURL)
                 .orElse(null);
     }
 }

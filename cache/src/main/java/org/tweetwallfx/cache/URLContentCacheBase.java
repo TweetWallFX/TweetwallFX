@@ -24,6 +24,7 @@
 package org.tweetwallfx.cache;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -31,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -90,9 +92,10 @@ public abstract class URLContentCacheBase {
      * @return an {@link Optional} containing the current cache content for the
      * {code urlString}
      */
-    public final Optional<URLContent> getCachedContent(final String urlString) {
+    public final Optional<Supplier<InputStream>> getCachedContent(final String urlString) {
         LOG.debug("{}: Getting Content for '{}'", cacheName, urlString);
-        return Optional.ofNullable(urlContentCache.get(urlString));
+        return Optional.ofNullable(urlContentCache.get(urlString))
+                .map(urlc -> () -> urlc.getInputStream());
     }
 
     /**
@@ -102,13 +105,14 @@ public abstract class URLContentCacheBase {
      *
      * @param urlString the string of the URL content to get
      *
-     * @return an URLContent in case content was loaded or {@code null}
+     * @return a Supplier of InputStream in case content was loaded or
+     * {@code null}
      */
-    public final URLContent getCachedOrLoad(final String urlString) {
+    public final Supplier<InputStream> getCachedOrLoad(final String urlString) {
         try {
             return getCachedOrLoadSync(urlString);
         } catch (IOException ex) {
-            LOG.error(cacheName + ": Failed to load content from " + urlString, ex);
+            LOG.error("{}: Failed to load content from {}", cacheName, urlString, ex);
             return null;
         }
     }
@@ -122,26 +126,24 @@ public abstract class URLContentCacheBase {
      *
      * @param contentConsumer the Consumer processing the content
      */
-    public final void getCachedOrLoad(final String urlString, final Consumer<URLContent> contentConsumer) {
+    public final void getCachedOrLoad(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
         Objects.requireNonNull(contentConsumer, "contentConsumer must not be null");
-        final Task<URLContent> task = new Task<URLContent>() {
+        final Task<Supplier<InputStream>> task = new Task<Supplier<InputStream>>() {
 
             @Override
-            protected URLContent call() throws Exception {
+            protected Supplier<InputStream> call() throws Exception {
                 return getCachedOrLoadSync(urlString);
             }
         };
 
-        task.setOnSucceeded(event -> {
-            contentConsumer.accept(task.getValue());
-        });
-        task.setOnFailed(event -> {
-            LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException());
-        });
+        task.setOnSucceeded(event
+                -> contentConsumer.accept(task.getValue()));
+        task.setOnFailed(event
+                -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
         contentLoader.execute(task);
     }
 
-    private URLContent getCachedOrLoadSync(final String urlString) throws IOException {
+    private Supplier<InputStream> getCachedOrLoadSync(final String urlString) throws IOException {
         URLContent urlc = urlContentCache.get(urlString);
 
         if (null == urlc) {
@@ -149,7 +151,7 @@ public abstract class URLContentCacheBase {
             putCachedContent(urlString, urlc);
         }
 
-        return urlc;
+        return urlc::getInputStream;
     }
 
     /**
@@ -159,7 +161,15 @@ public abstract class URLContentCacheBase {
      *
      * @param content the content to cache
      */
-    public final void putCachedContent(final String urlString, final URLContent content) {
+    public final void putCachedContent(final String urlString, final InputStream content) {
+        try {
+            putCachedContent(urlString, new URLContent(content));
+        } catch (IOException ex) {
+            LOG.error("{}: Failed to read content from InputStream for {}", cacheName, urlString, ex);
+        }
+    }
+
+    private void putCachedContent(final String urlString, final URLContent content) {
         LOG.debug("{}: Setting Content for '{}'", cacheName, urlString);
         urlContentCache.put(urlString, content);
     }
@@ -183,11 +193,11 @@ public abstract class URLContentCacheBase {
      *
      * @param contentConsumer the Consumer processing the content
      */
-    public final void putCachedContent(final String urlString, final Consumer<URLContent> contentConsumer) {
+    public final void putCachedContent(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
         putCachedContentAsync(urlString, contentConsumer);
     }
 
-    private void putCachedContentAsync(final String urlString, final Consumer<URLContent> contentConsumer) {
+    private void putCachedContentAsync(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
         final Task<URLContent> task = new Task<URLContent>() {
 
             @Override
@@ -200,10 +210,10 @@ public abstract class URLContentCacheBase {
             putCachedContent(urlString, task.getValue());
 
             if (null != contentConsumer) {
-                contentConsumer.accept(task.getValue());
+                contentConsumer.accept(() -> task.getValue().getInputStream());
             }
         });
-        task.setOnFailed(event -> LOG.error(cacheName + ": Failed to load content from " + urlString, task.getException()));
+        task.setOnFailed(event -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
         contentLoader.execute(task);
     }
 

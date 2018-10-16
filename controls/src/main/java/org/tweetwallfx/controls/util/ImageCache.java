@@ -32,9 +32,6 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import static org.tweetwallfx.controls.util.URLHelper.*;
 
-/**
- * @author Sven Reimers
- */
 public class ImageCache {
 
     private final int maxSize;
@@ -82,14 +79,6 @@ public class ImageCache {
         @Override
         public Image create(final String url) {
             return new Image(resolve(url));
-        }
-    }
-
-    public static class ProfileImageCreator implements ImageCreator {
-
-        @Override
-        public Image create(final String url) {
-            return new Image(resolve(url), 64, 64, true, false);
         }
     }
 }

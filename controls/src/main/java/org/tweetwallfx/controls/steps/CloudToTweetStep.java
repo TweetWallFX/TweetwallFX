@@ -57,6 +57,7 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
 import org.tweetwallfx.transitions.FontSizeTransition;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -155,7 +156,7 @@ public class CloudToTweetStep implements Step {
         wordleSkin.word2TextMap.clear();
 
         // layout image and meta data first
-        Pane infoBox = createInfoBox(wordleSkin, displayTweet);
+        Pane infoBox = createInfoBox(wordleSkin, context, displayTweet);
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data
@@ -243,10 +244,13 @@ public class CloudToTweetStep implements Step {
         }
     }
 
-    private Pane createInfoBox(final WordleSkin wordleSkin, final Tweet displayTweet) {
+    private Pane createInfoBox(
+            final WordleSkin wordleSkin,
+            final MachineContext context,
+            final Tweet displayTweet) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
-        Image profileImage = wordleSkin.getProfileImageCache().get(originalTweet.getUser().getProfileImageUrl());
+        Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImage(originalTweet.getUser());
         ImageView imageView = new ImageView(profileImage);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
@@ -362,7 +366,9 @@ public class CloudToTweetStep implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TweetDataProvider.class);
+            return Arrays.asList(
+                    TweetDataProvider.class,
+                    TweetUserProfileImageDataProvider.class);
         }
     }
 }
