@@ -45,6 +45,7 @@ import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
 import org.tweetwallfx.transitions.FlipInXTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider;
@@ -99,7 +100,7 @@ public class Devoxx17FlipInTweets implements Step {
 
         List<Tweet> tweets = dataProvider.getTweets();
         for (int i = 0; i < Math.min(tweets.size(), 4); i++) {
-            HBox tweet = createSingleTweetDisplay(tweets.get(i), wordleSkin, maxWidth[i]);
+            HBox tweet = createSingleTweetDisplay(tweets.get(i), context, maxWidth[i]);
             tweet.setMaxWidth(maxWidth[i] + 64 + 10);
             tweet.getStyleClass().add("tweetDisplay");
             transitions.add(new FlipInXTransition(tweet));
@@ -129,13 +130,16 @@ public class Devoxx17FlipInTweets implements Step {
         return vbox;
     }
 
-    private HBox createSingleTweetDisplay(final Tweet displayTweet, final WordleSkin wordleSkin, final double maxWidth) {
+    private HBox createSingleTweetDisplay(
+            final Tweet displayTweet,
+            final MachineContext context,
+            final double maxWidth) {
         String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
         Text text = new Text(textWithoutMediaUrls.replaceAll("[\n\r]", "|"));
         text.setCache(true);
         text.setCacheHint(CacheHint.SPEED);
         text.getStyleClass().add("tweetText");
-        Image profileImage = wordleSkin.getProfileImageCache().get(displayTweet.getUser().getBiggerProfileImageUrl());
+        Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImageBig(displayTweet.getUser());
         ImageView profileImageView = new ImageView(profileImage);
         profileImageView.setSmooth(true);
         profileImageView.setCacheHint(CacheHint.QUALITY);

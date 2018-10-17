@@ -95,8 +95,8 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     }
 
     private void addImage(final String url, final Date date) {
-        URLContentCacheBase.getDefault().getCachedOrLoad(url, urlc -> {
-            images.add(new ImageStore(new Image(urlc.getInputStream()), date.toInstant()));
+        URLContentCacheBase.getDefault().getCachedOrLoad(url, supplier -> {
+            images.add(new ImageStore(new Image(supplier.get()), date.toInstant()));
             if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(images.size() - 1);

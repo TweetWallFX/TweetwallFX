@@ -82,8 +82,9 @@ public class DevoxxShowTopRatedToday implements Step {
                 int row = 0;
 
                 Iterator<VotedTalk> iterator = dataProvider.getFilteredSessionData().iterator();
+                final SpeakerImageProvider speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
                 while (iterator.hasNext()) {
-                    Node node = createTalkNode(iterator.next());
+                    Node node = createTalkNode(iterator.next(), speakerImageProvider);
                     grid.getChildren().add(node);
                     GridPane.setColumnIndex(node, col);
                     GridPane.setRowIndex(node, row);
@@ -100,7 +101,9 @@ public class DevoxxShowTopRatedToday implements Step {
         flipIns.play();
     }
 
-    private Node createTalkNode(VotedTalk votingResultTalk) {
+    private Node createTalkNode(
+            final VotedTalk votingResultTalk,
+            final SpeakerImageProvider speakerImageProvider) {
         try {
             Node session = FXMLLoader.<Node>load(this.getClass().getResource("/ratedTalk.fxml"));
             Text title = (Text) session.lookup("#title");
@@ -118,7 +121,7 @@ public class DevoxxShowTopRatedToday implements Step {
             clip.setArcWidth(20);
             clip.setArcHeight(20);
             speakerImage.setClip(clip);
-            speakerImage.setImage(SpeakerImageProvider.getSpeakerImage(votingResultTalk.speakerAvatar));
+            speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
             return session;
         } catch (IOException ex) {
             LOGGER.error(ex);

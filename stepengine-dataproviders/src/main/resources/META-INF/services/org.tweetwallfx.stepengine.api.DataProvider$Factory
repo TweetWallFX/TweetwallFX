@@ -1,2 +1,3 @@
 org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider$FactoryImpl
 org.tweetwallfx.stepengine.dataproviders.TweetDataProvider$FactoryImpl
+org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider$FactoryImpl

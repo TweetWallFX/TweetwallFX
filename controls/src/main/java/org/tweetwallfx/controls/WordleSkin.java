@@ -65,7 +65,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
     private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
-    private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
 
     public ImageView getSecondLogo() {
         return secondLogo;
@@ -77,10 +76,6 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     public ImageCache getMediaImageCache() {
         return mediaImageCache;
-    }
-
-    public ImageCache getProfileImageCache() {
-        return profileImageCache;
     }
 
     public Pane getPane() {
