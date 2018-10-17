@@ -56,7 +56,9 @@ import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.PhotoImageMediaEntryDataProvider;
 import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
 import org.tweetwallfx.transitions.FontSizeTransition;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -151,13 +153,13 @@ public class CloudToTweetStep implements Step {
         wordleSkin.word2TextMap.clear();
 
         // layout image and meta data first
-        Pane infoBox = createInfoBox(wordleSkin, displayTweet, lowerLeft);
+        Pane infoBox = createInfoBox(wordleSkin, context, displayTweet, lowerLeft);
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data
         fadeInTransitions.add(addFadeTransition(defaultDuration, infoBox, 0, 1));
 
-        Pane mediaBox = createMediaBox(wordleSkin, displayTweet);
+        Pane mediaBox = createMediaBox(wordleSkin, context, displayTweet);
         wordleSkin.setMediaBox(mediaBox);
         if (null != mediaBox) {
             wordleSkin.getPane().getChildren().add(mediaBox);
@@ -184,7 +186,10 @@ public class CloudToTweetStep implements Step {
         return ft;
     }
 
-    private Pane createMediaBox(final WordleSkin wordleSkin, final Tweet displayTweet) {
+    private Pane createMediaBox(
+            final WordleSkin wordleSkin,
+            final MachineContext context,
+            final Tweet displayTweet) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
         if (originalTweet.getMediaEntries().length > 0) {
@@ -214,9 +219,11 @@ public class CloudToTweetStep implements Step {
             mediaBox.maxWidthProperty().bind(mediaBox.minWidthProperty());
             mediaBox.maxHeightProperty().bind(mediaBox.minHeightProperty());
 
-            int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            final int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            final PhotoImageMediaEntryDataProvider pimedp = context.getDataProvider(PhotoImageMediaEntryDataProvider.class);
+
             for (int i = 0; i < imageCount; i++) {
-                Image mediaImage = wordleSkin.getMediaImageCache().get(originalTweet.getMediaEntries()[i].getMediaUrl());
+                Image mediaImage = pimedp.getImage(originalTweet.getMediaEntries()[i]);
                 ImageView mediaView = new ImageView(mediaImage);
                 mediaView.setPreserveRatio(true);
                 mediaView.setCache(true);
@@ -239,10 +246,14 @@ public class CloudToTweetStep implements Step {
         }
     }
 
-    private Pane createInfoBox(final WordleSkin wordleSkin, final Tweet displayTweet, final Point2D lowerLeft) {
+    private Pane createInfoBox(
+            final WordleSkin wordleSkin,
+            final MachineContext context,
+            final Tweet displayTweet,
+            final Point2D lowerLeft) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
-        Image profileImage = wordleSkin.getProfileImageCache().get(originalTweet.getUser().getProfileImageUrl());
+        Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImage(originalTweet.getUser());
         ImageView imageView = new ImageView(profileImage);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
@@ -358,7 +369,10 @@ public class CloudToTweetStep implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TweetDataProvider.class);
+            return Arrays.asList(
+                    TweetDataProvider.class,
+                    PhotoImageMediaEntryDataProvider.class,
+                    TweetUserProfileImageDataProvider.class);
         }
     }
 }

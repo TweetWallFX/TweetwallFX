@@ -36,10 +36,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static org.tweetwall.util.ToString.createToString;
 import static org.tweetwall.util.ToString.map;
-import org.tweetwallfx.cache.URLContentCacheBase;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
@@ -68,35 +68,16 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         LOG.debug("processing new Tweet: {}", tweet.getId());
         Arrays.stream(tweet.getMediaEntries())
                 .filter(MediaTweetEntryType.photo::isType)
-                .forEach(me -> {
-                    String url;
-                    switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder()).get()) {
-                        case 0:
-                            url = me.getMediaUrl() + ":thumb";
-                            break;
-                        case 1:
-                            url = me.getMediaUrl() + ":small";
-                            break;
-                        case 2:
-                            url = me.getMediaUrl() + ":medium";
-                            break;
-                        case 3:
-                            url = me.getMediaUrl() + ":large";
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Illegal value");
-                    }
-                    addImage(url, tweet.getCreatedAt());
-                });
+                .forEach(mte -> addImage(mte, tweet.getCreatedAt()));
     }
 
     public List<ImageStore> getImages() {
         return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    private void addImage(final String url, final Date date) {
-        URLContentCacheBase.getDefault().getCachedOrLoad(url, urlc -> {
-            images.add(new ImageStore(new Image(urlc.getInputStream()), date.toInstant()));
+    private void addImage(final MediaTweetEntry mte, final Date date) {
+        PhotoImageCache.INSTANCE.getCachedOrLoad(mte, supplier -> {
+            images.add(new ImageStore(new Image(supplier.get()), date.toInstant()));
             if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(images.size() - 1);

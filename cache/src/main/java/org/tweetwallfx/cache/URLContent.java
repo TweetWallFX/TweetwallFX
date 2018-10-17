@@ -34,7 +34,7 @@ import java.net.URL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class URLContent implements Externalizable {
+final class URLContent implements Externalizable {
 
     private static final Logger LOG = LogManager.getLogger(URLContent.class);
     private static final long serialVersionUID = 1L;

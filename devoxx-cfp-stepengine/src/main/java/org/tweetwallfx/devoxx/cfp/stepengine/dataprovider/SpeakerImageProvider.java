@@ -23,21 +23,72 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
+import java.io.InputStream;
+import java.util.Objects;
+import java.util.function.Supplier;
 import javafx.scene.image.Image;
-import org.tweetwallfx.controls.util.ImageCache;
+import org.tweetwall.devoxx.api.cfp.client.CFPClient;
+import org.tweetwall.devoxx.api.cfp.client.Speaker;
+import org.tweetwall.devoxx.api.cfp.client.SpeakerReference;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.ProfileImageCache;
 
 /**
- * Utility to provide a simple api to get the cached speaker image
+ * Utility to provide a simple api to get the cached speaker image.
  */
-public final class SpeakerImageProvider {
-
-    private static final ImageCache PROFILE_IMAGE_CACHE = new ImageCache(new ImageCache.ProfileImageCreator());
+public final class SpeakerImageProvider implements DataProvider {
 
     private SpeakerImageProvider() {
         // prevent instantiation
     }
 
-    public static Image getSpeakerImage(final String url) {
-        return PROFILE_IMAGE_CACHE.get(url);
+    public Image getSpeakerImage(final Speaker speaker) {
+        return getSpeakerImage(speaker.getAvatarURL());
+    }
+
+    public Image getSpeakerImage(final SpeakerReference speakerReference) {
+        return getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
+    }
+
+    private Image getSpeakerImage(final String avatarURL) {
+        final Supplier<InputStream> supplier = ProfileImageCache.INSTANCE.getCachedOrLoad(avatarURL);
+
+        if (null == supplier) {
+            // use stand-in for non-loadable
+            return null; // TODO: fix with https://github.com/TweetWallFX/TweetwallFX/issues/310
+        } else {
+            return new Image(supplier.get());
+        }
+    }
+
+    public void updateSpeakerImages() {
+        CFPClient.getClient()
+                .getSpeakers()
+                .stream()
+                .map(Speaker::getAvatarURL)
+                .filter(Objects::nonNull)
+                .forEach(urlString -> ProfileImageCache.INSTANCE.getCachedOrLoad(urlString, this::handleURLContent));
+    }
+
+    private void handleURLContent(final Supplier<InputStream> urlc) {
+        // do nothing
+    }
+
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link SpeakerImageProvider}.
+     */
+    public static class FactoryImpl implements DataProvider.Factory {
+
+        @Override
+        public SpeakerImageProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
+            return new SpeakerImageProvider();
+        }
+
+        @Override
+        public Class<SpeakerImageProvider> getDataProviderClass() {
+            return SpeakerImageProvider.class;
+        }
     }
 }

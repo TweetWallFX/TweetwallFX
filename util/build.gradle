@@ -26,6 +26,6 @@ apply plugin: 'java'
 dependencies {
     compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
 
-    runtime group: 'org.eclipse', name: 'yasson', version: versionJasson
+    runtime group: 'org.eclipse', name: 'yasson', version: versionYasson
     runtime group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
 }
