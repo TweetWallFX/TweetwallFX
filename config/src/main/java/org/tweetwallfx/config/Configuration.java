@@ -121,7 +121,7 @@ public final class Configuration {
                 }
             }
         } catch (final IOException ioe) {
-            throw new RuntimeException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
+            throw new IllegalStateException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
         }
 
         return result;
@@ -144,7 +144,7 @@ public final class Configuration {
                     try (InputStream is = Files.newInputStream(p)) {
                         return readConfiguration(is, "File '" + p.toString() + "'");
                     } catch (IOException ioe) {
-                        throw new RuntimeException("Error loading configuration data from " + p, ioe);
+                        throw new IllegalStateException("Error loading configuration data from " + p, ioe);
                     }
                 });
     }
@@ -158,7 +158,7 @@ public final class Configuration {
 
             return result;
         } catch (final Throwable t) {
-            throw new RuntimeException(dataSourceIdentification + " either does not contain a valid JSONObject or has an invalid structure!", t);
+            throw new IllegalStateException(dataSourceIdentification + " either does not contain a valid JSONObject or has an invalid structure!", t);
         }
     }
 

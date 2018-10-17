@@ -117,7 +117,7 @@ public class Devoxx17ShowSchedule implements Step {
             return session;
         } catch (IOException ex) {
             LOGGER.error(ex);
-            throw new RuntimeException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 

@@ -104,7 +104,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                             url = me.getMediaUrl() + ":large";
                             break;
                         default:
-                            throw new RuntimeException("Illegal value");
+                            throw new IllegalArgumentException("Illegal value");
                     }
                     latestTweetedImage = new Image(url);
                 });
