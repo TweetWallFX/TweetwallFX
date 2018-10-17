@@ -27,7 +27,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +41,7 @@ import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.PhotoImageCache;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
@@ -87,27 +87,10 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         Arrays.stream(tweet.getMediaEntries())
                 .filter(MediaTweetEntryType.photo::isType)
                 .findFirst()
-                .ifPresent(me -> {
-                    String url;
-                    switch (me.getSizes().keySet().stream().max(Comparator.naturalOrder())
-                            .get()) {
-                        case 0:
-                            url = me.getMediaUrl() + ":thumb";
-                            break;
-                        case 1:
-                            url = me.getMediaUrl() + ":small";
-                            break;
-                        case 2:
-                            url = me.getMediaUrl() + ":medium";
-                            break;
-                        case 3:
-                            url = me.getMediaUrl() + ":large";
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Illegal value");
-                    }
-                    latestTweetedImage = new Image(url);
-                });
+                .ifPresent(mte
+                        -> PhotoImageCache.INSTANCE.getCachedOrLoad(
+                        mte,
+                        sis -> latestTweetedImage = new Image(sis.get())));
     }
 
     private void addTweet(final Tweet tweet) {
