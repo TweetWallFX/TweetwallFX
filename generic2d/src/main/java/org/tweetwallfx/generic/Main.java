@@ -47,7 +47,6 @@ public class Main extends Application {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
     private static final Logger LOGGER = LogManager.getLogger(STARTUP);
-    private TagTweets tweetsTask;
 
     @Override
     public void start(Stage primaryStage) {
@@ -80,7 +79,7 @@ public class Main extends Application {
         statusLineText.textProperty().bind(spa.stringProperty());
         statusLineHost.getChildren().add(statusLineText);
 
-        tweetsTask = new TagTweets(borderPane);
+        final TagTweets tweetsTask = new TagTweets(borderPane);
         Platform.runLater(tweetsTask::start);
 
         scene.setOnKeyTyped((KeyEvent event) -> {

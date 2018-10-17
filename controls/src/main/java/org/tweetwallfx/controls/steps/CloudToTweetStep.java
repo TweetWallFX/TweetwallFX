@@ -71,10 +71,6 @@ public class CloudToTweetStep implements Step {
         // prevent external instantiation
     }
 
-    //TODO: push this attributes into doStep!
-    private Point2D lowerLeft;  //OMG, how can this be piped through a lambda?
-    private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
-
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
@@ -97,14 +93,14 @@ public class CloudToTweetStep implements Step {
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
 
-        lowerLeft = new Point2D(minPosTweetText.getX(), minPosTweetText.getY());
-        tweetLineOffset = new Point2D(0, 0);
+        Point2D lowerLeft = new Point2D(minPosTweetText.getX(), minPosTweetText.getY());
+        Point2D tweetLineOffset = new Point2D(0, 0);
 
         Duration defaultDuration = Duration.seconds(1.5);
 
         TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
 
-        tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
+        for (TweetLayout.TweetWord tweetWord : tweetLayout.getWordLayoutInfo()) {
             Word word = new Word(tweetWord.text.trim(), -2);
             if (wordleSkin.word2TextMap.containsKey(word)) {
                 Text textNode = wordleSkin.word2TextMap.remove(word);
@@ -142,7 +138,7 @@ public class CloudToTweetStep implements Step {
                 wordleSkin.getPane().getChildren().add(textNode);
                 fadeInTransitions.add(addFadeTransition(defaultDuration, textNode, 0, 1));
             }
-        });
+        }
 
         // kill the remaining words from the cloud
         wordleSkin.word2TextMap.entrySet().forEach(entry -> {
@@ -156,7 +152,7 @@ public class CloudToTweetStep implements Step {
         wordleSkin.word2TextMap.clear();
 
         // layout image and meta data first
-        Pane infoBox = createInfoBox(wordleSkin, context, displayTweet);
+        Pane infoBox = createInfoBox(wordleSkin, context, displayTweet, lowerLeft);
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data
@@ -247,7 +243,8 @@ public class CloudToTweetStep implements Step {
     private Pane createInfoBox(
             final WordleSkin wordleSkin,
             final MachineContext context,
-            final Tweet displayTweet) {
+            final Tweet displayTweet,
+            final Point2D lowerLeft) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
         Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImage(originalTweet.getUser());

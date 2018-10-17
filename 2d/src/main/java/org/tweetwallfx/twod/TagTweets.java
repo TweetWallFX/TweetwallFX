@@ -48,7 +48,6 @@ public class TagTweets {
     private static final String STARTUP = "org.tweetwallfx.startup";
     private static final Logger LOGGER = LogManager.getLogger(STARTUP);
 
-    private Wordle wordle;
     private final BorderPane root;
     private final HBox hWordle = new HBox();
 
@@ -68,7 +67,7 @@ public class TagTweets {
 
         LOGGER.trace("** create wordle");
 
-        wordle = new Wordle();
+        final Wordle wordle = new Wordle();
         hWordle.getChildren().setAll(wordle);
         wordle.prefWidthProperty().bind(hWordle.widthProperty());
         wordle.prefHeightProperty().bind(hWordle.heightProperty());

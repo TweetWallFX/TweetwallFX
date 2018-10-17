@@ -95,12 +95,12 @@ public class TweetQueryTest {
 
     @Test
     public void queryFilterLinks() {
-        assertEquals("Filter:Links", TweetQuery.queryFilterLinks());
+        assertEquals("Filter:Links", TweetQuery.QUERY_FILTER_LINKS);
     }
 
     @Test
     public void queryFilterMedia() {
-        assertEquals("Filter:media", TweetQuery.queryFilterMedia());
+        assertEquals("Filter:media", TweetQuery.QUERY_FILTER_MEDIA);
     }
 
     @Test

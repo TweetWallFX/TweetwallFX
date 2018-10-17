@@ -73,7 +73,7 @@ public class UpdateCloudStep implements Step {
         List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
         List<Word> additionalTagCloudWords = context.getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
 
-        double minWeight = limitedWords.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
+        double minWeight = limitedWords.stream().mapToDouble(Word::getWeight).min().orElse(-2d);
 
         if (null != additionalTagCloudWords) {
             additionalTagCloudWords.stream()

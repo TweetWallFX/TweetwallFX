@@ -213,7 +213,8 @@ public abstract class URLContentCacheBase {
                 contentConsumer.accept(() -> task.getValue().getInputStream());
             }
         });
-        task.setOnFailed(event -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
+        task.setOnFailed(event
+                -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
         contentLoader.execute(task);
     }
 
