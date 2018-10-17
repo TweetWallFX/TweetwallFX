@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 
 public final class TweetQuery {
 
+    public static final String QUERY_FILTER_MEDIA = "Filter:media";
+    public static final String QUERY_FILTER_LINKS = "Filter:Links";
     private String query = null;
     private String lang = null;
     private String locale = null;
@@ -413,13 +415,5 @@ public final class TweetQuery {
         return Optional.ofNullable(to)
                 .map(s -> "to:" + to)
                 .orElse(null);
-    }
-
-    public static String queryFilterMedia() {
-        return "Filter:media";
-    }
-
-    public static String queryFilterLinks() {
-        return "Filter:Links";
     }
 }

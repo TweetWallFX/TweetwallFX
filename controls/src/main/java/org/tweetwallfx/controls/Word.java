@@ -25,16 +25,12 @@ package org.tweetwallfx.controls;
 
 import java.util.Objects;
 
-/**
- *
- * @author sven
- */
 public final class Word implements Comparable<Word> {
 
     private final String text;
-    private double weight;
+    private final double weight;
 
-    public Word(String text, double weight) {
+    public Word(final String text, final double weight) {
         this.text = text;
         this.weight = weight;
     }
@@ -44,16 +40,12 @@ public final class Word implements Comparable<Word> {
     }
 
     @Override
-    public int compareTo(Word o) {
-        return Double.compare(weight,o.weight);
+    public int compareTo(final Word o) {
+        return Double.compare(weight, o.weight);
     }
 
     public double getWeight() {
         return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
     }
 
     @Override
@@ -68,15 +60,10 @@ public final class Word implements Comparable<Word> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
+        } else {
+            return this.text.equalsIgnoreCase(((Word) obj).text);
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Word other = (Word) obj;
-        
-        return this.text.equalsIgnoreCase(other.text);
     }
-
 }
