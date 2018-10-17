@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls;
 
-import org.tweetwallfx.controls.util.ImageCache;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +63,6 @@ public class WordleSkin extends SkinBase<Wordle> {
     private final int tweetFontSize;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
-    private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
 
     public ImageView getSecondLogo() {
         return secondLogo;
@@ -72,10 +70,6 @@ public class WordleSkin extends SkinBase<Wordle> {
 
     public ImageView getLogo() {
         return logo;
-    }
-
-    public ImageCache getMediaImageCache() {
-        return mediaImageCache;
     }
 
     public Pane getPane() {
