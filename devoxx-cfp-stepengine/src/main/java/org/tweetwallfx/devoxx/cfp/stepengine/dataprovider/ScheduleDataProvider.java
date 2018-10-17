@@ -73,7 +73,7 @@ public class ScheduleDataProvider implements DataProvider {
         return SessionData.from(scheduleSlots, liveOffset);
     }
 
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public DataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

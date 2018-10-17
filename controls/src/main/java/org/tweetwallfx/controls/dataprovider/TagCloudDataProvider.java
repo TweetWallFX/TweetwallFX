@@ -88,7 +88,7 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
     }
 
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

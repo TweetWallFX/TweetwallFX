@@ -27,14 +27,14 @@ import javafx.scene.text.Font;
 
 public class CloudWordNodeFactory extends AbstractWordNodeFactory {
 
-    private final Configuration configuration;
+    private final Config configuration;
 
-    private CloudWordNodeFactory(Configuration configuration) {
+    private CloudWordNodeFactory(Config configuration) {
         super(configuration);
         this.configuration = configuration;
     }
 
-    static CloudWordNodeFactory createFactory(Configuration configuration) {
+    static CloudWordNodeFactory createFactory(Config configuration) {
         return new CloudWordNodeFactory(configuration);
     }
 
@@ -44,11 +44,11 @@ public class CloudWordNodeFactory extends AbstractWordNodeFactory {
         return a * Math.log(weight) + b;
     }
 
-    static class Configuration extends AbstractWordNodeFactory.Configuration {
+    static class Config extends AbstractWordNodeFactory.Configuration {
 
         private final double maxFontSize;
 
-        Configuration(final Font font, final double maxFontSize) {
+        Config(final Font font, final double maxFontSize) {
             super(font);
             this.maxFontSize = maxFontSize;
         }

@@ -289,7 +289,7 @@ public class ImageMosaicStep implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link ImageMosaicStep}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public ImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {

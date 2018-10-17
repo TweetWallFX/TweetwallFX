@@ -124,7 +124,7 @@ public class ShowSchedule extends FlipInTweets {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link ShowSchedule}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public ShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {

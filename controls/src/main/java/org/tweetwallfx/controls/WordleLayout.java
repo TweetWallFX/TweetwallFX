@@ -54,7 +54,7 @@ public final class WordleLayout {
 
     private WordleLayout(Configuration configuration, WordleLayout initialLayoutSolution) {
         this.configuration = configuration;
-        this.wordNodeFactory = CloudWordNodeFactory.createFactory(new CloudWordNodeFactory.Configuration(configuration.font, configuration.maxFontSize));
+        this.wordNodeFactory = CloudWordNodeFactory.createFactory(new CloudWordNodeFactory.Config(configuration.font, configuration.maxFontSize));
         this.initialLayoutSolution = initialLayoutSolution;
         this.wordLayoutMap = calcTagLayout();
     }

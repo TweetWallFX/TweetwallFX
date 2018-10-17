@@ -68,7 +68,7 @@ public class Devoxx17FlipOutScheduleToday implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link Devoxx17FlipOutScheduleToday}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public Devoxx17FlipOutScheduleToday create(final StepEngineSettings.StepDefinition stepDefinition) {

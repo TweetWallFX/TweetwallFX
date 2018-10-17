@@ -71,7 +71,7 @@ public final class TopTalksWeekDataProvider implements DataProvider {
         return votedTalks;
     }
 
-    public static class Factory implements DataProvider.Factory {
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
         public TopTalksWeekDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

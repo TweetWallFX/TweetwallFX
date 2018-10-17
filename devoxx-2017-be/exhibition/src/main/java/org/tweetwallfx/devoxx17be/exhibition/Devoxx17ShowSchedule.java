@@ -130,7 +130,7 @@ public class Devoxx17ShowSchedule implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link Devoxx17ShowSchedule}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public Devoxx17ShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {

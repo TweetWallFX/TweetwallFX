@@ -169,7 +169,7 @@ public class DevoxxFlipInTweets implements Step {
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link DevoxxFlipInTweets}.
      */
-    public static final class Factory implements Step.Factory {
+    public static final class FactoryImpl implements Step.Factory {
 
         @Override
         public DevoxxFlipInTweets create(final StepEngineSettings.StepDefinition stepDefinition) {
