@@ -22,88 +22,89 @@
  * THE SOFTWARE.
  */
 
-rootProject.name='TweetWallFX'
+rootProject.name='tweetwallfx'
 
 include ':cache'
-project(":cache").name = "TweetWallFX-Cache"
+project(":cache").name = "tweetwallfx-cache"
 include ':config'
-project(":config").name = "TweetWallFX-Configuration"
+project(":config").name = "tweetwallfx-configuration"
 include ':controls'
-project(":controls").name = "TweetWallFX-Controls"
+project(":controls").name = "tweetwallfx-controls"
 include ':logging'
-project(":logging").name = "TweetWallFX-Logging"
+project(":logging").name = "tweetwallfx-logging"
 include ':stepengine-api'
-project(":stepengine-api").name = "TweetWallFX-StepEngine-API"
+project(":stepengine-api").name = "tweetwallfx-stepengine-api"
 include ':stepengine-dataproviders'
-project(":stepengine-dataproviders").name = "TweetWallFX-StepEngine-DataProviders"
+project(":stepengine-dataproviders").name = "tweetwallfx-stepengine-dataproviders"
 include ':stepengine-steps'
-project(":stepengine-steps").name = "TweetWallFX-StepEngine-Steps"
+project(":stepengine-steps").name = "tweetwallfx-stepengine-steps"
 include ':transitions'
-project(":transitions").name = "TweetWallFX-Transitions"
+project(":transitions").name = "tweetwallfx-transitions"
 include ':tweet-api'
-project(":tweet-api").name = "TweetWallFX-Tweet-API"
+project(":tweet-api").name = "tweetwallfx-tweet-api"
 include ':tweet-stepengine'
-project(":tweet-stepengine").name = "TweetWallFX-Tweet-StepEngine"
+project(":tweet-stepengine").name = "tweetwallfx-tweet-stepengine"
 include ':tweet-impl-twitter4j'
-project(":tweet-impl-twitter4j").name = "TweetWallFX-Tweet-Impl-Twitter4J"
+project(":tweet-impl-twitter4j").name = "tweetwallfx-tweet-impl-twitter4j"
 include ':tweet-impl-twitter4j-oauth'
-project(":tweet-impl-twitter4j-oauth").name = "TweetWallFX-Tweet-Impl-Twitter4J-OAuth"
+project(":tweet-impl-twitter4j-oauth").name = "tweetwallfx-tweet-impl-twitter4j-oauth"
 include ':core'
-project(":core").name = "TweetWallFX-Core"
+project(":core").name = "tweetwallfx-core"
 include ':2d'
-project(":2d").name = "TweetWallFX-2D"
+project(":2d").name = "tweetwallfx-2d"
 include ':util'
-project(":util").name = "TweetWallFX-Utility"
+project(":util").name = "tweetwallfx-utility"
 
 include ':devoxx'
-project(":devoxx").name = "TweetWallFX-Devoxx"
+project(":devoxx").name = "tweetwallfx-devoxx"
 include ':devoxx-2015'
-project(":devoxx-2015").name = "TweetWallFX-Devoxx-2015"
+project(":devoxx-2015").name = "tweetwallfx-devoxx-2015"
 include ':devoxx-api-cfp'
-project(":devoxx-api-cfp").name = "TweetWallFX-Devoxx-API-CFP"
+project(":devoxx-api-cfp").name = "tweetwallfx-devoxx-api-cfp"
 include ':devoxx-cfp-stepengine'
-project(":devoxx-cfp-stepengine").name = "TweetWallFX-Devoxx-CFP-StepEngine"
+project(":devoxx-cfp-stepengine").name = "tweetwallfx-devoxx-cfp-stepengine"
 include ':devoxx-cfp-impl'
-project(":devoxx-cfp-impl").name = "TweetWallFX-Devoxx-CFP-Impl"
+project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
 include ':devoxx-cfp-test'
-project(":devoxx-cfp-test").name = "TweetWallFX-Devoxx-CFP-Test"
+project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
 include ':devoxx-2016'
-project(":devoxx-2016").name = "TweetWallFX-Devoxx-2016"
+project(":devoxx-2016").name = "tweetwallfx-devoxx-2016"
 include ':devoxx-2017-fr'
-project(':devoxx-2017-fr').name = 'TweetWallFX-Devoxx-2017-FR'
+project(':devoxx-2017-fr').name = 'tweetwallfx-devoxx-2017-fr'
 include ':devoxx-2017-us'
-project(':devoxx-2017-us').name = 'TweetWallFX-Devoxx-2017-US'
+project(':devoxx-2017-us').name = 'tweetwallfx-devoxx-2017-us'
 include ':devoxx-2017-be'
-include ':devoxx-2017-be:cfp-impl'
-project(':devoxx-2017-be:cfp-impl').name = 'CFP-Implementation-2017-BE'
-include ':devoxx-2017-be:exhibition'
-project(':devoxx-2017-be:exhibition').name = 'Exhibition'
-include ':devoxx-2017-be:cinema'
-project(':devoxx-2017-be:cinema').name = 'Cinema'
-//project(':devoxx-2017-be').name = 'TweetWallFX-Devoxx-2017-BE'
+project(':devoxx-2017-be').name = 'tweetwallfx-devoxx-2017-be'
+include ':tweetwallfx-devoxx-2017-be:cfp-impl'
+project(':tweetwallfx-devoxx-2017-be:cfp-impl').name = 'tweetwallfx-devoxx-2017-be-cfp-impl'
+include ':tweetwallfx-devoxx-2017-be:exhibition'
+project(':tweetwallfx-devoxx-2017-be:exhibition').name = 'tweetwallfx-devoxx-2017-be-exhibition'
+include ':tweetwallfx-devoxx-2017-be:cinema'
+project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be-cinema'
 include ':devoxx-2018-pl'
-include ':devoxx-2018-pl:cfp-impl'
-project(':devoxx-2018-pl:cfp-impl').name = 'CFP-Implementation-2018-PL'
-include ':devoxx-2018-pl:exhibition'
-project(':devoxx-2018-pl:exhibition').name = 'Exhibition'
-include ':devoxx-2018-pl:cinema'
-project(':devoxx-2018-pl:cinema').name = 'Cinema'
+project(':devoxx-2018-pl').name = 'tweetwallfx-devoxx-2018-pl'
+include ':tweetwallfx-devoxx-2018-pl:cfp-impl'
+project(':tweetwallfx-devoxx-2018-pl:cfp-impl').name = 'tweetwallfx-devoxx-2018-pl-cfp-impl'
+include ':tweetwallfx-devoxx-2018-pl:exhibition'
+project(':tweetwallfx-devoxx-2018-pl:exhibition').name = 'tweetwallfx-devoxx-2018-pl-exhibition'
+include ':tweetwallfx-devoxx-2018-pl:cinema'
+project(':tweetwallfx-devoxx-2018-pl:cinema').name = 'tweetwallfx-devoxx-2018-pl-cinema'
 
 include ':netbeans'
-project(":netbeans").name = "TweetWallFX-NetBeans"
+project(":netbeans").name = "tweetwallfx-netbeans"
 include ':javaone'
-project(":javaone").name = "TweetWallFX-JavaOne"
+project(":javaone").name = "tweetwallfx-javaone"
 include ':generic2d'
-project(":generic2d").name = "TweetWallFX-Generic2D"
+project(":generic2d").name = "tweetwallfx-generic2d"
 
 include ':voxxed-days-zurich'
-project(":voxxed-days-zurich").name = "TweetWallFX-Voxxed-Days-Zurich"
+project(":voxxed-days-zurich").name = "tweetwallfx-voxxed-days-zurich"
 
 
 // disabled subproject for future reference
 //include ':3d'
-//project(':3d').name = 'TweetWallFX-3D'
+//project(':3d').name = 'tweetwallfx-3d'
 //include ':embeddable'
-//project(':embeddable').name = 'TweetWallFX-Embeddable'
+//project(':embeddable').name = 'tweetwallfx-embeddable'
 //include ':embeddabletest'
-//project(':embeddabletest').name = 'TweetWallFX-EmbeddableTest'
+//project(':embeddabletest').name = 'tweetwallfx-embeddabletest'

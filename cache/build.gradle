@@ -26,7 +26,7 @@ apply plugin: 'java-library'
 
 dependencies {
     api group: 'javax.cache', name: 'cache-api', version: versionCacheApi
-    api project(':TweetWallFX-Configuration')
+    api project(':tweetwallfx-configuration')
 
     implementation group: 'org.ehcache', name: 'ehcache', version: versionEHCache
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: versionLog4j

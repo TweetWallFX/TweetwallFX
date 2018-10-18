@@ -38,12 +38,12 @@ task('debug', dependsOn: 'classes', type: JavaExec) {
 }
 
 dependencies {
-    compile project(':TweetWallFX-Devoxx-API-CFP')
-    compile project(':TweetWallFX-Devoxx-CFP-StepEngine')
-    compile project(':TweetWallFX-Generic2D')
-    compile project(':TweetWallFX-Tweet-Impl-Twitter4J')
-    compile project(':TweetWallFX-Tweet-StepEngine')
+    compile project(':tweetwallfx-devoxx-api-cfp')
+    compile project(':tweetwallfx-devoxx-cfp-stepengine')
+    compile project(':tweetwallfx-generic2d')
+    compile project(':tweetwallfx-tweet-impl-twitter4j')
+    compile project(':tweetwallfx-tweet-stepengine')
 
-    runtime project(":devoxx-2017-be:CFP-Implementation-2017-BE")
+    runtime project(":tweetwallfx-devoxx-2017-be:tweetwallfx-devoxx-2017-be-cfp-impl")
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
 }

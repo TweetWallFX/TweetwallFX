@@ -22,5 +22,5 @@
  * THE SOFTWARE.
  */
 dependencies {
-    compile project(':TweetWallFX-Configuration')
+    compile project(':tweetwallfx-configuration')
 }

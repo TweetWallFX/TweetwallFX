@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    compile project(':TweetWallFX-Core')
-    compile project(':TweetWallFX-StepEngine-Steps')
-    compile project(':TweetWallFX-Transitions')
+    compile project(':tweetwallfx-core')
+    compile project(':tweetwallfx-stepengine-steps')
+    compile project(':tweetwallfx-transitions')
 }

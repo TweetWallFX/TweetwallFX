@@ -23,5 +23,5 @@
  */
 
 dependencies {
-    compile project(':TweetWallFX-Tweet-API')
+    compile project(':tweetwallfx-tweet-api')
 }
