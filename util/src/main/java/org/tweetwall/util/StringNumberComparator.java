@@ -26,6 +26,7 @@ package org.tweetwall.util;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * String Comparator comparing the string based on its parts.
@@ -98,7 +99,11 @@ public final class StringNumberComparator implements Comparator<String> {
 
         @Override
         public String next() {
-            boolean isDigit = Character.isDigit(string.charAt(index));
+            if (!hasNext()) {
+                throw new NoSuchElementException("End of string was reached");
+            }
+            
+            final boolean isDigit = Character.isDigit(string.charAt(index));
             int partIndexEnd = index + 1;
 
             while (partIndexEnd < string.length()) {
