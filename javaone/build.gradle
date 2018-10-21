@@ -38,3 +38,5 @@ dependencies {
     compile project(':tweetwallfx-generic2d')
     compile project(':tweetwallfx-tweet-impl-twitter4j')
 }
+
+bintrayUpload.enabled = false

@@ -52,3 +52,5 @@ dependencies {
 
     testCompile project(':tweetwallfx-devoxx-cfp-test')
 }
+
+bintrayUpload.enabled = false

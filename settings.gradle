@@ -23,6 +23,7 @@
  */
 
 rootProject.name='tweetwallfx'
+enableFeaturePreview('STABLE_PUBLISHING')
 
 include ':cache'
 project(":cache").name = "tweetwallfx-cache"

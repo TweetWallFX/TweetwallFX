@@ -47,3 +47,5 @@ dependencies {
     runtime project(":tweetwallfx-devoxx-2017-be:tweetwallfx-devoxx-2017-be-cfp-impl")
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
 }
+
+bintrayUpload.enabled = false
