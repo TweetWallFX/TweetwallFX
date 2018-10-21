@@ -25,8 +25,8 @@
 dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
 
-    runtime project(':TweetWallFX-Devoxx-CFP-Impl')
+    runtime project(':tweetwallfx-devoxx-cfp-impl')
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
 
-    testCompile project(':TweetWallFX-Devoxx-CFP-Test')
+    testCompile project(':tweetwallfx-devoxx-cfp-test')
 }

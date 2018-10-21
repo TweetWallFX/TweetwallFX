@@ -22,6 +22,6 @@
  * THE SOFTWARE.
  */
 dependencies {
-    compile project(':TweetWallFX-Devoxx-CFP-Impl')
+    compile project(':tweetwallfx-devoxx-cfp-impl')
     compile group: 'junit', name: 'junit', version: versionJUnit
 }

@@ -23,5 +23,5 @@
  */
 
 dependencies {
-    compile project(':TweetWallFX-StepEngine-DataProviders')
+    compile project(':tweetwallfx-stepengine-dataproviders')
 }

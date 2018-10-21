@@ -25,7 +25,7 @@
 dependencies {
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
-    compile project(':TweetWallFX-Utility')
+    compile project(':tweetwallfx-utility')
 
     runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
     runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey

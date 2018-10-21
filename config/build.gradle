@@ -25,8 +25,8 @@
 apply plugin: 'java-library'
 
 dependencies {
-    api project(':TweetWallFX-Logging')
-    api project(':TweetWallFX-Utility')
+    api project(':tweetwallfx-logging')
+    api project(':tweetwallfx-utility')
 }
 
 test {
