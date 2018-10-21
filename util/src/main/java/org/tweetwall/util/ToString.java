@@ -39,6 +39,8 @@ import java.util.stream.StreamSupport;
  */
 public class ToString {
 
+    private static final String NEW_ENTRY_DELIM = ",\n    ";
+
     private ToString() {
         // prevent instantiation
     }
@@ -260,6 +262,25 @@ public class ToString {
 
     /**
      * Creates a readable String for use in implementations of
+     * {@link Object#toString()} methods also adding the super objects toString
+     * value.
+     *
+     * @param object the object for which the String shall be created
+     *
+     * @param parameters the parameters to list in the created String
+     *
+     * @param superToString the toString value of the objects super
+     * implementation
+     *
+     * @return the created String
+     */
+    public static String createToString(final Object object, final Map<String, Object> parameters, final String superToString) {
+        return createToString(object, parameters)
+                + (null == superToString ? "" : " extends " + superToString);
+    }
+
+    /**
+     * Creates a readable String for use in implementations of
      * {@link Object#toString()} methods.
      *
      * @param object the object for which the String shall be created
@@ -275,7 +296,7 @@ public class ToString {
                 .map(Collection::stream)
                 .map(s -> s
                 .map(e -> e.getKey() + ": " + getValueToString(e.getValue()))
-                .collect(Collectors.joining(",\n    ", " {\n    ", "\n}")))
+                .collect(Collectors.joining(NEW_ENTRY_DELIM, " {\n    ", "\n}")))
                 .orElse("");
     }
 
@@ -297,7 +318,7 @@ public class ToString {
             return map.entrySet()
                     .stream()
                     .map(e -> getValueToString(e.getKey()) + ": " + getValueToString(e.getValue()))
-                    .collect(Collectors.joining(",\n    ", "{\n    ", "\n}"));
+                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "{\n    ", "\n}"));
         } else if (object instanceof Iterable) {
             @SuppressWarnings("unchecked")
             final Iterable<?> iterable = (Iterable<?>) object;
@@ -308,7 +329,7 @@ public class ToString {
 
             return StreamSupport.stream(iterable.spliterator(), false)
                     .map(ToString::getValueToString)
-                    .collect(Collectors.joining(",\n    ", "[\n    ", "\n]"));
+                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
         } else if (object.getClass().isArray()) {
             @SuppressWarnings("unchecked")
             final Object[] array = (Object[]) object;
@@ -319,7 +340,7 @@ public class ToString {
 
             return Arrays.stream(array)
                     .map(ToString::getValueToString)
-                    .collect(Collectors.joining(",\n    ", "[\n    ", "\n]"));
+                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
         } else {
             return String.valueOf(object);
         }

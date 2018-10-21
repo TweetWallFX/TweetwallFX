@@ -94,7 +94,7 @@ public final class StepEngineSettings {
         return createToString(this, map(
                 "dataProviderSettings", getDataProviderSettings(),
                 "steps", getSteps()
-        )) + " extends " + super.toString();
+        ), super.toString());
     }
 
     /**
@@ -146,7 +146,7 @@ public final class StepEngineSettings {
             return createToString(this, map(
                     "stepClassName", getStepClassName(),
                     "config", getConfig()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 
@@ -184,7 +184,7 @@ public final class StepEngineSettings {
             return createToString(this, map(
                     "dataProviderClassName", getDataProviderClassName(),
                     "config", getConfig()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 }

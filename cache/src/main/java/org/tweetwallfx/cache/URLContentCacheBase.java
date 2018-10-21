@@ -44,6 +44,7 @@ import org.tweetwallfx.config.Configuration;
  */
 public abstract class URLContentCacheBase {
 
+    private static final String MESSAGE_LOAD_FAILED = "{}: Failed to load content from {}";
     private static final Logger LOG = LogManager.getLogger(URLContentCacheBase.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("URLContentCache");
     private final String cacheName;
@@ -95,7 +96,7 @@ public abstract class URLContentCacheBase {
     public final Optional<Supplier<InputStream>> getCachedContent(final String urlString) {
         LOG.debug("{}: Getting Content for '{}'", cacheName, urlString);
         return Optional.ofNullable(urlContentCache.get(urlString))
-                .map(urlc -> () -> urlc.getInputStream());
+                .map(urlc -> urlc::getInputStream);
     }
 
     /**
@@ -112,7 +113,7 @@ public abstract class URLContentCacheBase {
         try {
             return getCachedOrLoadSync(urlString);
         } catch (IOException ex) {
-            LOG.error("{}: Failed to load content from {}", cacheName, urlString, ex);
+            LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ex);
             return null;
         }
     }
@@ -139,7 +140,7 @@ public abstract class URLContentCacheBase {
         task.setOnSucceeded(event
                 -> contentConsumer.accept(task.getValue()));
         task.setOnFailed(event
-                -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
+                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
         contentLoader.execute(task);
     }
 
@@ -214,7 +215,7 @@ public abstract class URLContentCacheBase {
             }
         });
         task.setOnFailed(event
-                -> LOG.error("{}: Failed to load content from {}", cacheName, urlString, task.getException()));
+                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
         contentLoader.execute(task);
     }
 

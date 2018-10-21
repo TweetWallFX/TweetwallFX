@@ -66,14 +66,14 @@ public class CacheSettings {
         return createToString(this, map(
                 "persistenceDirectoryName", getPersistenceDirectoryName(),
                 "caches", getCaches()
-        )) + " extends " + super.toString();
+        ), super.toString());
     }
 
     /**
      * Service implementation converting the configuration data of the root key
      * {@link ConnectionSettings#CONFIG_KEY} into {@link ConnectionSettings}.
      */
-    public final static class Converter implements ConfigurationConverter {
+    public static final class Converter implements ConfigurationConverter {
 
         @Override
         public String getResponsibleKey() {
@@ -141,7 +141,7 @@ public class CacheSettings {
                     "valueType", getValueType(),
                     "expiry", getExpiry(),
                     "cacheResources", getCacheResources()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 
@@ -185,11 +185,11 @@ public class CacheSettings {
                     "type", getType(),
                     "amount", getAmount(),
                     "unit", getUnit()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 
-    public static enum CacheExpiryType {
+    public enum CacheExpiryType {
 
         NONE,
         TIME_TO_IDLE,
@@ -232,11 +232,11 @@ public class CacheSettings {
                     "type", getType(),
                     "amount", getAmount(),
                     "unit", getUnit()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 
-    public static enum CacheResourceType {
+    public enum CacheResourceType {
 
         DISK,
         HEAP,
