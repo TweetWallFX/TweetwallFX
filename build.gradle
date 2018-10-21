@@ -52,7 +52,10 @@ apply plugin: 'com.github.ben-manes.versions'
 
 ext {
     releaseDate = new Date()
-    bintrayEnabled = ('false' != System.getenv('TRAVIS_PULL_REQUEST'))
+    bintrayEnabled = \
+        ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
+        hasProperty('BINTRAY_USER') &&
+        hasProperty('BINTRAY_KEY')
 }
 
 allprojects {
