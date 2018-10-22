@@ -71,7 +71,7 @@ public class CacheSettings {
 
     /**
      * Service implementation converting the configuration data of the root key
-     * {@link ConnectionSettings#CONFIG_KEY} into {@link ConnectionSettings}.
+     * {@link CacheSettings#CONFIG_KEY} into {@link CacheSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
 

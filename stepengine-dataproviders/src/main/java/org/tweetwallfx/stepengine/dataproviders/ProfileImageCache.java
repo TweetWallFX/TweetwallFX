@@ -26,7 +26,7 @@ package org.tweetwallfx.stepengine.dataproviders;
 import org.tweetwallfx.cache.URLContentCacheBase;
 
 /**
- * Cache used to provide the avatar image of a {@link User}.
+ * Cache used to provide the avatar image of a User.
  */
 public final class ProfileImageCache extends URLContentCacheBase {
 
