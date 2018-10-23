@@ -42,8 +42,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwall.util.JsonDataConverter;
-import static org.tweetwall.util.ToString.*;
+import org.tweetwallfx.util.JsonDataConverter;
+import static org.tweetwallfx.util.ToString.*;
 
 /**
  * Configuration store of data enabling influence into the configuration of the

@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.ehcache.config.units.MemoryUnit;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwall.util.ToString.*;
+import static org.tweetwallfx.util.ToString.*;
 
 public class CacheSettings {
 

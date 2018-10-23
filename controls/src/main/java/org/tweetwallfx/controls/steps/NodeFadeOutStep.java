@@ -25,12 +25,13 @@ package org.tweetwallfx.controls.steps;
 
 import java.util.Objects;
 import javafx.scene.Node;
-import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.FlipOutXTransition;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * Configrable step that fades out a {@link Node} lookup up via its

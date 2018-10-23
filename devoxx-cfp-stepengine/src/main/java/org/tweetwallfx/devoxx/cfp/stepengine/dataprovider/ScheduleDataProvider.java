@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
-import org.tweetwall.devoxx.api.cfp.client.Schedule;
-import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
+import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
+import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
+import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 

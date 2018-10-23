@@ -30,8 +30,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
-import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
+import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
+import org.tweetwallfx.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
@@ -55,8 +55,8 @@ public final class TopTalksTodayDataProvider implements DataProvider {
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
                 .getVotingResultsDaily(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName))
-                .map(org.tweetwall.devoxx.api.cfp.client.VotingResults::getResult)
-                .map(org.tweetwall.devoxx.api.cfp.client.VotingResult::getTalks)
+                .map(org.tweetwallfx.devoxx.api.cfp.client.VotingResults::getResult)
+                .map(org.tweetwallfx.devoxx.api.cfp.client.VotingResult::getTalks)
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
                 .sorted(Comparator

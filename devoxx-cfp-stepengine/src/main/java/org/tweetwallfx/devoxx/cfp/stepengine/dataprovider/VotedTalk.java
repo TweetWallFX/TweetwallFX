@@ -23,9 +23,9 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
-import org.tweetwall.devoxx.api.cfp.client.Speaker;
-import org.tweetwall.devoxx.api.cfp.client.VotingResultTalk;
+import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
+import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
+import org.tweetwallfx.devoxx.api.cfp.client.VotingResultTalk;
 
 /**
  * Simple Wrapper for accessing VotedTalk informations.

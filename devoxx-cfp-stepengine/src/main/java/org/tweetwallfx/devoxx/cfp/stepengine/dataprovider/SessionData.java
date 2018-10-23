@@ -28,10 +28,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.tweetwall.devoxx.api.cfp.client.Schedule;
-import org.tweetwall.devoxx.api.cfp.client.ScheduleSlot;
-import org.tweetwall.devoxx.api.cfp.client.SpeakerReference;
-import org.tweetwall.util.StringNumberComparator;
+import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
+import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
+import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
+import org.tweetwallfx.util.StringNumberComparator;
 
 /**
  * Seesion Data Pojo Helper class

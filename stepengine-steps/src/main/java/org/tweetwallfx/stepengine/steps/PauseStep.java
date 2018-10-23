@@ -26,10 +26,11 @@ package org.tweetwallfx.stepengine.steps;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 public class PauseStep implements Step {
 
