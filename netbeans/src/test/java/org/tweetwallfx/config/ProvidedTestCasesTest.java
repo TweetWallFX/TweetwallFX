@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,36 @@
  */
 package org.tweetwallfx.config;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import org.tweetwallfx.stepengine.api.DataProvider;
-import org.tweetwallfx.stepengine.api.Step;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.tweetwallfx.util.testcase.RunnableTestCase;
 
-/**
- * Testing if META-INF.services are loadable.
- */
-public class ServicesLoadableTest {
+@RunWith(Parameterized.class)
+public class ProvidedTestCasesTest {
 
     @Rule
     public TestName testName = new TestName();
+
+    @Parameterized.Parameter(0)
+    public RunnableTestCase rtc;
+
+    @Parameterized.Parameters(name = "{0}")
+    public static List<Object[]> parameters() {
+        return StreamSupport.stream(ServiceLoader.load(RunnableTestCase.class).spliterator(), false)
+                .sorted(Comparator.comparing(rtc -> rtc.getClass().getCanonicalName()))
+                .map(rtc -> new Object[]{rtc})
+                .collect(Collectors.toList());
+    }
 
     @Before
     public void before() {
@@ -51,16 +65,7 @@ public class ServicesLoadableTest {
     }
 
     @Test
-    public void loadStepFactory() {
-        for (Step.Factory factory : ServiceLoader.load(Step.Factory.class)) {
-            System.out.println("loaded " + factory.getClass());
-        }
-    }
-
-    @Test
-    public void loadDataProviderFactory() {
-        for (DataProvider.Factory factory : ServiceLoader.load(DataProvider.Factory.class)) {
-            System.out.println("loaded " + factory.getClass());
-        }
+    public void checkTestCase() throws Exception {
+        rtc.execute();
     }
 }
