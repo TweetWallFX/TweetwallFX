@@ -68,8 +68,6 @@ include ':devoxx-cfp-impl'
 project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
 include ':devoxx-cfp-test'
 project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
-include ':devoxx-2016'
-project(":devoxx-2016").name = "tweetwallfx-devoxx-2016"
 include ':devoxx-2017-fr'
 project(':devoxx-2017-fr').name = 'tweetwallfx-devoxx-2017-fr'
 include ':devoxx-2017-us'
