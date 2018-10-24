@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,37 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.config;
-
-import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+package org.tweetwallfx.util.testcase;
 
 /**
- * Testing if Configuration is safely retrievable.
+ * A {@link Runnable} Testcase of a Configuration feature.
  */
-public class ConfigurationLoadableTest {
+public interface RunnableTestCase {
 
-    @Rule
-    public TestName testName = new TestName();
-
-    @Test
-    public void testConfigurationLoadable() {
-        final Configuration conf = Configuration.getInstance();
-        System.out.println(conf);
-        Assertions.assertThat(conf).as("conf is not null").isNotNull();
-    }
-
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
-    }
-
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
-    }
+    /**
+     * Performs the actual test. May cause an exception to be thrown.
+     *
+     * @throws Exception
+     */
+    void execute() throws Exception;
 }
