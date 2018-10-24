@@ -24,7 +24,7 @@
 package org.tweetwallfx.config;
 
 import java.util.Objects;
-import static org.tweetwall.util.ToString.*;
+import static org.tweetwallfx.util.ToString.*;
 
 /**
  * POJO for reading Settings concerning the Tweetwall itself.

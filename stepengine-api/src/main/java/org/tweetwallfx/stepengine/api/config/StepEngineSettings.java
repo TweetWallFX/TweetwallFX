@@ -26,13 +26,14 @@ package org.tweetwallfx.stepengine.api.config;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.tweetwall.util.ConfigurableObjectBase;
-import static org.tweetwall.util.ToString.*;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
+import org.tweetwallfx.util.ConfigurableObjectBase;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.

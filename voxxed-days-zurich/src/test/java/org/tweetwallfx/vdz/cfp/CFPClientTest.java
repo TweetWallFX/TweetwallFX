@@ -23,7 +23,7 @@
  */
 package org.tweetwallfx.vdz.cfp;
 
-import org.tweetwall.devoxx.cfp.test.CFPClientTestBase;
+import org.tweetwallfx.devoxx.cfp.test.CFPClientTestBase;
 
 public class CFPClientTest extends CFPClientTestBase {
 

@@ -30,8 +30,8 @@ import java.time.OffsetTime;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.tweetwall.devoxx.api.cfp.client.Schedule;
-import org.tweetwall.util.JsonDataConverter;
+import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
+import org.tweetwallfx.util.JsonDataConverter;
 
 /**
  * Tests for Session Data Filtering

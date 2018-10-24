@@ -29,14 +29,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 import javafx.scene.image.Image;
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
-import org.tweetwall.devoxx.api.cfp.client.Speaker;
-import org.tweetwall.devoxx.api.cfp.client.SpeakerReference;
-import static org.tweetwall.util.ToString.createToString;
-import static org.tweetwall.util.ToString.map;
+import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
+import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
+import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.ProfileImageCache;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * Utility to provide a simple api to get the cached speaker image.
