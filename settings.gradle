@@ -56,8 +56,6 @@ project(":2d").name = "tweetwallfx-2d"
 include ':util'
 project(":util").name = "tweetwallfx-utility"
 
-include ':devoxx'
-project(":devoxx").name = "tweetwallfx-devoxx"
 include ':devoxx-2015'
 project(":devoxx-2015").name = "tweetwallfx-devoxx-2015"
 include ':devoxx-api-cfp'
