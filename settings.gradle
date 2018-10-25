@@ -77,8 +77,6 @@ project(':tweetwallfx-devoxx-2017-be:exhibition').name = 'tweetwallfx-devoxx-201
 include ':tweetwallfx-devoxx-2017-be:cinema'
 project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be-cinema'
 
-include ':javaone'
-project(":javaone").name = "tweetwallfx-javaone"
 include ':generic2d'
 project(":generic2d").name = "tweetwallfx-generic2d"
 
