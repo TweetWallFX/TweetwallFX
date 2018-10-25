@@ -56,8 +56,6 @@ project(":2d").name = "tweetwallfx-2d"
 include ':util'
 project(":util").name = "tweetwallfx-utility"
 
-include ':devoxx'
-project(":devoxx").name = "tweetwallfx-devoxx"
 include ':devoxx-2015'
 project(":devoxx-2015").name = "tweetwallfx-devoxx-2015"
 include ':devoxx-api-cfp'
@@ -68,10 +66,7 @@ include ':devoxx-cfp-impl'
 project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
 include ':devoxx-cfp-test'
 project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
-include ':devoxx-2016'
-project(":devoxx-2016").name = "tweetwallfx-devoxx-2016"
-include ':devoxx-2017-us'
-project(':devoxx-2017-us').name = 'tweetwallfx-devoxx-2017-us'
+
 include ':devoxx-2017-be'
 project(':devoxx-2017-be').name = 'tweetwallfx-devoxx-2017-be'
 include ':tweetwallfx-devoxx-2017-be:cfp-impl'
@@ -80,19 +75,7 @@ include ':tweetwallfx-devoxx-2017-be:exhibition'
 project(':tweetwallfx-devoxx-2017-be:exhibition').name = 'tweetwallfx-devoxx-2017-be-exhibition'
 include ':tweetwallfx-devoxx-2017-be:cinema'
 project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be-cinema'
-include ':devoxx-2018-pl'
-project(':devoxx-2018-pl').name = 'tweetwallfx-devoxx-2018-pl'
-include ':tweetwallfx-devoxx-2018-pl:cfp-impl'
-project(':tweetwallfx-devoxx-2018-pl:cfp-impl').name = 'tweetwallfx-devoxx-2018-pl-cfp-impl'
-include ':tweetwallfx-devoxx-2018-pl:exhibition'
-project(':tweetwallfx-devoxx-2018-pl:exhibition').name = 'tweetwallfx-devoxx-2018-pl-exhibition'
-include ':tweetwallfx-devoxx-2018-pl:cinema'
-project(':tweetwallfx-devoxx-2018-pl:cinema').name = 'tweetwallfx-devoxx-2018-pl-cinema'
 
-include ':netbeans'
-project(":netbeans").name = "tweetwallfx-netbeans"
-include ':javaone'
-project(":javaone").name = "tweetwallfx-javaone"
 include ':generic2d'
 project(":generic2d").name = "tweetwallfx-generic2d"
 

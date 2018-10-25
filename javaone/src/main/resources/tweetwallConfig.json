@@ -1,7 +1,0 @@
-{
-    "tweetwall" : {
-        "query" : "#javaone",
-        "title" : "The JavaFX Tweetwall for JavaOne!",
-        "stylesheetResource" : "javaone.css"
-    }
-}
