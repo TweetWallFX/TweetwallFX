@@ -254,7 +254,6 @@ task createFolders(description: 'Creates the folders for the projects and source
     }
 }
 
-task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
 task ('runDevoxx2015', dependsOn: ':TweetWallFX-Devoxx-2015:run')
 task ('runDevoxx2017US', dependsOn: ':TweetWallFX-Devoxx-2017-US:run')
 task ('runDevoxx2017FR', dependsOn: ':TweetWallFX-Devoxx-2017-FR:run')
