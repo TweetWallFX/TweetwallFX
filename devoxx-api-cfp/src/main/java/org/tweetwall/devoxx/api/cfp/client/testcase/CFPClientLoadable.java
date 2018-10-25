@@ -24,7 +24,7 @@
 package org.tweetwall.devoxx.api.cfp.client.testcase;
 
 import java.util.ServiceLoader;
-import org.tweetwall.devoxx.api.cfp.client.CFPClient;
+import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
 /**
