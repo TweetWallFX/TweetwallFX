@@ -254,13 +254,7 @@ task createFolders(description: 'Creates the folders for the projects and source
     }
 }
 
-task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
-task ('runDevoxx2017US', dependsOn: ':TweetWallFX-Devoxx-2017-US:run')
 task ('runDevoxx2017FR', dependsOn: ':TweetWallFX-Devoxx-2017-FR:run')
 task ('runDevoxx2017BE-Exhibition', dependsOn: ':devoxx-2017-be:Exhibition:run')
 task ('runDevoxx2017BE-Cinema', dependsOn: ':devoxx-2017-be:Cinema:run')
-task ('runDevoxx2018PL-Exhibition', dependsOn: ':devoxx-2018-pl:Exhibition:run')
-task ('runDevoxx2018PL-Cinema', dependsOn: ':devoxx-2018-pl:Cinema:run')
-task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
-task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')
 task ('runVDZ', dependsOn: ':TweetWallFX-Voxxed-Days-Zurich:run')
