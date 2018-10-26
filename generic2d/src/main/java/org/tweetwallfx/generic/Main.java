@@ -46,6 +46,7 @@ import org.tweetwallfx.twod.TagTweets;
 public class Main extends Application {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
+    private static final Logger LOG = LogManager.getLogger(Main.class);
     private static final Logger LOGGER = LogManager.getLogger(STARTUP);
 
     @Override
@@ -101,7 +102,7 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        System.out.println("closing...");
+        LOG.info("closing...");
         Tweeter.getInstance().shutdown();
     }
 

@@ -24,19 +24,23 @@
 package org.tweetwall.devoxx.api.cfp.client.testcase;
 
 import java.util.ServiceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
 /**
- * Testcase checking that all registered {@link CFPClient}
- * instances are loadable.
+ * Testcase checking that all registered {@link CFPClient} instances are
+ * loadable.
  */
 public class CFPClientLoadable implements RunnableTestCase {
+
+    private static final Logger LOG = LogManager.getLogger(CFPClientLoadable.class);
 
     @Override
     public void execute() throws Exception {
         for (final CFPClient o : ServiceLoader.load(CFPClient.class)) {
-            System.out.println("loaded " + o.getClass());
+            LOG.info("loaded " + o.getClass());
         }
     }
 }

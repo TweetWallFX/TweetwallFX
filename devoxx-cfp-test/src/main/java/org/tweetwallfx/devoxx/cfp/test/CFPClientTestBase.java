@@ -34,6 +34,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Assume;
@@ -53,12 +54,12 @@ import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwallfx.devoxx.api.cfp.client.Talk;
 import org.tweetwallfx.devoxx.api.cfp.client.Tracks;
-import org.tweetwallfx.devoxx.api.cfp.client.VotingResults;
 import org.tweetwallfx.devoxx.cfp.impl.CFPClientSettings;
 import org.tweetwallfx.devoxx.cfp.impl.ConfigurableCFPClientImpl;
 
 public abstract class CFPClientTestBase {
 
+    private static final Logger LOG = LogManager.getLogger(CFPClientTestBase.class);
     private static final boolean CFP_REACHABLE = isCfpReachable();
 
     @Rule
@@ -75,9 +76,7 @@ public abstract class CFPClientTestBase {
 
     private static boolean isCfpReachable() {
         final boolean testingLive = Boolean.getBoolean("org.tweetwallfx.tests.executeCFPClientLiveTests");
-        System.out.println(String.format(
-                "Test of CFP Client against live system is %s.",
-                testingLive ? "enabled" : "disabled"));
+        LOG.info("Test of CFP Client against live system is {}.", testingLive ? "enabled" : "disabled");
 
         try {
             return testingLive && Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
@@ -104,27 +103,34 @@ public abstract class CFPClientTestBase {
 
     @Before
     public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
+        LOG.info("#################### START: {} ####################", testName.getMethodName());
     }
 
     @After
     public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
+        LOG.info("####################   END: {} ####################", testName.getMethodName());
     }
 
     private static void ignoreIfServerUnreachable() {
         if (!CFP_REACHABLE) {
-            System.out.println("CFP Server is unreachable");
+            LOG.info("CFP Server is unreachable");
             Assume.assumeTrue(false);
         }
     }
 
     private CFPClient getCFPClient() {
         final CFPClient client = CFPClient.getClient();
-        System.out.println("client: " + client);
+        LOG.info("client: " + client);
         assertNotNull(client);
 
         return client;
+    }
+
+    private Talk getConfiguredTalk() {
+        final Talk talk = getCFPClient().getTalk(talkId)
+                .orElseThrow(() -> new IllegalStateException("Talk unretrievable"));
+        LOG.info("talk: {}", talk);
+        return talk;
     }
 
     @Test
@@ -139,14 +145,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Events> eventsOptional = client.getEvents();
-        System.out.println("eventsOptional: " + eventsOptional);
-        assertTrue(eventsOptional.isPresent());
-
-        final Events events = eventsOptional
-                .get();
-        System.out.println("events: " + events);
-        assertNotNull(events);
+        final Events events = client.getEvents()
+                .orElseThrow(() -> new IllegalStateException("Events unretrievable"));
+        LOG.info("events: {}", events);
     }
 
     @Test
@@ -154,14 +155,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Event> eventOptional = client.getEvent();
-        System.out.println("eventOptional: " + eventOptional);
-        assertTrue(eventOptional.isPresent());
-
-        final Event event = eventOptional
-                .get();
-        System.out.println("event: " + event);
-        assertNotNull(event);
+        final Event event = client.getEvent()
+                .orElseThrow(() -> new IllegalStateException("Event unretrievable"));
+        LOG.info("event: {}", event);
     }
 
     @Test
@@ -169,14 +165,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<ProposalTypes> proposalTypesOptional = client.getProposalTypes();
-        System.out.println("proposalTypesOptional: " + proposalTypesOptional);
-        assertTrue(proposalTypesOptional.isPresent());
-
-        final ProposalTypes proposalTypes = proposalTypesOptional
-                .get();
-        System.out.println("proposalTypes: " + proposalTypes);
-        assertNotNull(proposalTypes);
+        final ProposalTypes proposalTypes = client.getProposalTypes()
+                .orElseThrow(() -> new IllegalStateException("ProposalTypes unretrievable"));
+        LOG.info("proposalTypes: {}", proposalTypes);
     }
 
     @Test
@@ -184,14 +175,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Rooms> roomsOptional = client.getRooms();
-        System.out.println("roomsOptional: " + roomsOptional);
-        assertTrue(roomsOptional.isPresent());
-
-        final Rooms rooms = roomsOptional
-                .get();
-        System.out.println("rooms: " + rooms);
-        assertNotNull(rooms);
+        final Rooms rooms = client.getRooms()
+                .orElseThrow(() -> new IllegalStateException("Rooms unretrievable"));
+        LOG.info("rooms: {}", rooms);
     }
 
     @Test
@@ -199,14 +185,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Schedules> schedulesOptional = client.getSchedules();
-        System.out.println("schedulesOptional: " + schedulesOptional);
-        assertTrue(schedulesOptional.isPresent());
-
-        final Schedules schedules = schedulesOptional
-                .get();
-        System.out.println("schedules: " + schedules);
-        assertNotNull(schedules);
+        final Schedules schedules = client.getSchedules()
+                .orElseThrow(() -> new IllegalStateException("Schedules unretrievable"));
+        LOG.info("schedules: {}", schedules);
         assertTrue(schedules.getSchedules().count() > 0);
     }
 
@@ -215,14 +196,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Schedule> scheduleOptional = client.getSchedule(getConferenceDay());
-        System.out.println("scheduleOptional: " + scheduleOptional);
-        assertTrue(scheduleOptional.isPresent());
-
-        final Schedule schedule = scheduleOptional
-                .get();
-        System.out.println("schedule: " + schedule);
-        assertNotNull(schedule);
+        final Schedule schedule = client.getSchedule(getConferenceDay())
+                .orElseThrow(() -> new IllegalStateException("Schedule unretrievable"));
+        LOG.info("schedule: {}", schedule);
         assertFalse(schedule.getSlots().isEmpty());
     }
 
@@ -231,14 +207,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Schedule> scheduleOptional = client.getSchedule(getConferenceDay(), getConferenceRoom());
-        System.out.println("scheduleOptional: " + scheduleOptional);
-        assertTrue(scheduleOptional.isPresent());
-
-        final Schedule schedule = scheduleOptional
-                .get();
-        System.out.println("schedule: " + schedule);
-        assertNotNull(schedule);
+        final Schedule schedule = client.getSchedule(getConferenceDay(), getConferenceRoom())
+                .orElseThrow(() -> new IllegalStateException("Schedule unretrievable"));
+        LOG.info("schedule: {}", schedule);
         assertFalse(schedule.getSlots().isEmpty());
     }
 
@@ -248,8 +219,8 @@ public abstract class CFPClientTestBase {
         final CFPClient client = getCFPClient();
 
         final List<Speaker> speakers = client.getSpeakers();
-        System.out.println("speakers: " + convertCollectionForToString(speakers));
         assertNotNull(speakers);
+        LOG.info("speakers: {}", convertCollectionForToString(speakers));
     }
 
     @Test
@@ -260,22 +231,18 @@ public abstract class CFPClientTestBase {
         final List<Speaker> speakers = client.getSpeakers();
         assertNotNull(speakers);
 
-        final Optional<Speaker> speakerOptional = speakers
+        final Speaker speaker = speakers
                 .stream()
-                .findAny();
-        System.out.println("speakerOptional: " + speakerOptional);
-        assertTrue(speakerOptional.isPresent());
-        assertFalse(speakerOptional.get().hasCompleteInformation());
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("No Speaker found"));
+        LOG.info("speaker: {}", speaker);
+        assertFalse(speaker.hasCompleteInformation());
 
-        final Optional<Speaker> speakerOptionalReload = speakerOptional
-                .flatMap(Speaker::reload);
-        System.out.println("speakerOptionalReload: " + speakerOptionalReload);
-        assertTrue(speakerOptionalReload.isPresent());
-        assertTrue(speakerOptionalReload.get().hasCompleteInformation());
-
-        Speaker speaker = speakerOptionalReload.get();
-        System.out.println("speaker: " + speaker);
-        assertNotNull(speaker);
+        final Speaker speakerReload = speaker
+                .reload()
+                .orElseThrow(() -> new IllegalStateException("Speaker reload failed"));
+        LOG.info("speakerReload: {}", speakerReload);
+        assertTrue(speakerReload.hasCompleteInformation());
     }
 
     @Test
@@ -283,18 +250,13 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Speaker> speakerOptional = client.getSpeakers().stream().findFirst()
+        final Speaker speaker = client.getSpeakers().stream().findFirst()
                 .map(Speaker::getUuid)
-                .flatMap(client::getSpeaker);
-        System.out.println("speakerOptional: " + speakerOptional);
-        assertTrue(speakerOptional.isPresent());
-
-        final Speaker speaker = speakerOptional
-                .get();
-        System.out.println("speaker: " + speaker);
-        assertNotNull(speaker);
+                .flatMap(client::getSpeaker)
+                .orElseThrow(() -> new IllegalStateException("Speaker unretrievable"));
+        LOG.info("speaker: {}", speaker);
         assertTrue(speaker.hasCompleteInformation());
-        assertSame(speaker, speaker.reload().get());
+        assertEquals(Optional.of(speaker), speaker.reload());
     }
 
     @Test
@@ -302,16 +264,11 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Speaker> speakerOptional = client.getSpeakers().stream().findFirst()
-                .map(Speaker::getUuid)
-                .flatMap(client::getSpeaker);
-        System.out.println("speakerOptional: " + speakerOptional);
-        assertTrue(speakerOptional.isPresent());
+        final Speaker speaker = client.getSpeakers().stream()
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("No Speaker found"));
+        LOG.info("speaker: {}", speaker);
 
-        final Speaker speaker = speakerOptional
-                .get();
-        System.out.println("speaker: " + speaker);
-        assertNotNull(speaker);
         assertTrue(speaker.hasCompleteInformation());
         assertNotNull(speaker.getAcceptedTalks());
         assertFalse(speaker.getAcceptedTalks().isEmpty());
@@ -319,32 +276,19 @@ public abstract class CFPClientTestBase {
         final Talk incompleteTalk = speaker.getAcceptedTalks().get(0);
         assertNotNull(incompleteTalk);
         assertFalse(incompleteTalk.hasCompleteInformation());
-        System.out.println("incompleteTalk: " + incompleteTalk);
+        LOG.info("incompleteTalk: {}", incompleteTalk);
 
-        final Optional<Talk> incompleteTalkOptionalReload = incompleteTalk.reload();
-        System.out.println("incompleteTalkOptionalReload: " + incompleteTalkOptionalReload);
-        assertTrue(incompleteTalkOptionalReload.isPresent());
-        assertTrue(incompleteTalkOptionalReload.get().hasCompleteInformation());
-
-        final Talk completeTalk = incompleteTalkOptionalReload.get();
-        assertNotNull(completeTalk);
+        final Talk completeTalk = incompleteTalk.reload()
+                .orElseThrow(() -> new IllegalStateException("Talk reload failed"));
+        LOG.info("completeTalk: {}", completeTalk);
         assertTrue(completeTalk.hasCompleteInformation());
-        System.out.println("completeTalk: " + completeTalk);
     }
 
     @Test
     public void talkCanGetSpeakers() {
         ignoreIfServerUnreachable();
-        final CFPClient client = getCFPClient();
 
-        final Optional<Talk> talkOptional = client.getTalk(talkId);
-        System.out.println("talkOptional: " + talkOptional);
-        assertTrue(talkOptional.isPresent());
-
-        final Talk talk = talkOptional
-                .get();
-        System.out.println("talk: " + talk);
-        assertNotNull(talk);
+        final Talk talk = getConfiguredTalk();
         assertTrue(talk.hasCompleteInformation());
 
         final Set<Speaker> speakers = talk
@@ -354,36 +298,23 @@ public abstract class CFPClientTestBase {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
+        assertFalse("Talk has Speakers", talk.getSpeakers().isEmpty());
         assertSame(talk.getSpeakers().size(), speakers.size());
 
-        final Optional<Speaker> speakerOptional = speakers
-                .stream()
-                .findAny();
-        System.out.println("speakerOptional: " + speakerOptional);
-        assertTrue(speakerOptional.isPresent());
-        assertTrue(speakerOptional.get().hasCompleteInformation());
-
-        Speaker speaker = speakerOptional
-                .get();
-        System.out.println("speaker: " + speaker);
-        assertNotNull(speaker);
+        final Speaker speaker = speakers.stream()
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Speaker unretrievable"));
+        LOG.info("speaker: {}", speaker);
+        assertTrue(speaker.hasCompleteInformation());
     }
 
     @Test
     public void talkIsRetrievable() {
         ignoreIfServerUnreachable();
-        final CFPClient client = getCFPClient();
 
-        final Optional<Talk> talkOptional = client.getTalk(talkId);
-        System.out.println("talkOptional: " + talkOptional);
-        assertTrue(talkOptional.isPresent());
-
-        final Talk talk = talkOptional
-                .get();
-        System.out.println("talk: " + talk);
-        assertNotNull(talk);
+        final Talk talk = getConfiguredTalk();
         assertTrue(talk.hasCompleteInformation());
-        assertSame(talk, talk.reload().get());
+        assertEquals(Optional.of(talk), talk.reload());
     }
 
     @Test
@@ -391,14 +322,9 @@ public abstract class CFPClientTestBase {
         ignoreIfServerUnreachable();
         final CFPClient client = getCFPClient();
 
-        final Optional<Tracks> tracksOptional = client.getTracks();
-        System.out.println("tracksOptional: " + tracksOptional);
-        assertTrue(tracksOptional.isPresent());
-
-        final Tracks tracks = tracksOptional
-                .get();
-        System.out.println("tracks: " + tracks);
-        assertNotNull(tracks);
+        final Tracks tracks = client.getTracks()
+                .orElseThrow(() -> new IllegalStateException("Tracks unretrievable"));
+        LOG.info("tracks: {}", tracks);
     }
 
     @Test
@@ -407,9 +333,8 @@ public abstract class CFPClientTestBase {
         final CFPClient client = getCFPClient();
         Assume.assumeTrue(client.canGetVotingResults());
 
-        final Optional<VotingResults> votingResults = client.getVotingResultsOverall();
-        System.out.println("votingResults: " + votingResults);
-        assertNotNull(votingResults);
+        client.getVotingResultsOverall()
+                .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
     }
 
     @Test
@@ -418,9 +343,8 @@ public abstract class CFPClientTestBase {
         final CFPClient client = getCFPClient();
         Assume.assumeTrue(client.canGetVotingResults());
 
-        final Optional<VotingResults> votingResults = client.getVotingResultsDaily(getConferenceDay());
-        System.out.println("votingResults: " + votingResults);
-        assertNotNull(votingResults);
+        client.getVotingResultsDaily(getConferenceDay())
+                .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
     }
 
     private static String convertCollectionForToString(final Collection<?> collection) {

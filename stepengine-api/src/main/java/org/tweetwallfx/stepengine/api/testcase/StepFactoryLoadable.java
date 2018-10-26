@@ -24,6 +24,8 @@
 package org.tweetwallfx.stepengine.api.testcase;
 
 import java.util.ServiceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 import org.tweetwallfx.stepengine.api.Step;
 
@@ -33,10 +35,12 @@ import org.tweetwallfx.stepengine.api.Step;
  */
 public class StepFactoryLoadable implements RunnableTestCase {
 
+    private static final Logger LOG = LogManager.getLogger(StepFactoryLoadable.class);
+
     @Override
     public void execute() throws Exception {
         for (final Step.Factory o : ServiceLoader.load(Step.Factory.class)) {
-            System.out.println("loaded " + o.getClass());
+            LOG.info("loaded " + o.getClass());
         }
     }
 }

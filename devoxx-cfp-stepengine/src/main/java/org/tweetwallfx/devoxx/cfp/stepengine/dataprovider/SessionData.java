@@ -28,6 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
@@ -38,6 +40,7 @@ import org.tweetwallfx.util.StringNumberComparator;
  */
 public class SessionData {
 
+    private static final Logger LOG = LogManager.getLogger(SessionData.class);
     private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup)
             .reversed()
             .thenComparing(SessionData::getRoom, StringNumberComparator.INSTANCE);
@@ -80,7 +83,7 @@ public class SessionData {
         if (min.isPresent()) {
             sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).collect(Collectors.toList());
         }
-        System.out.println("Possible Next Sessions (" + sessionData.size() + "):\n " + sessionData);
+        LOG.info("Possible Next Sessions ({}):\n {}", sessionData.size(), sessionData);
         return sessionData;
     }
 

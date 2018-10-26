@@ -154,7 +154,7 @@ public final class StepEngine {
         }
 
         public void proceed() {
-            StepEngine.this.proceed();
+            asyncProceed.arrive();
         }
 
         void addDataProvider(final DataProvider dataProvider) {
@@ -176,10 +176,6 @@ public final class StepEngine {
 
     public void go() {
         engineExecutor.execute(this::process);
-    }
-
-    private void proceed() {
-        asyncProceed.arrive();
     }
 
     private void process() {
@@ -212,6 +208,7 @@ public final class StepEngine {
                     Thread.sleep(delay);
                 } catch (InterruptedException ex) {
                     LOG.error("Sleeping for {} interrupted!", delay, ex);
+                    Thread.currentThread().interrupt();
                 }
             }
 
