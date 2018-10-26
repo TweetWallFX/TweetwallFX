@@ -31,7 +31,7 @@ public interface RunnableTestCase {
     /**
      * Performs the actual test. May cause an exception to be thrown.
      *
-     * @throws Exception an exception that might be caused in te test casae
+     * @throws Exception an exception that might be caused in the test casae
      */
     void execute() throws Exception;
 }
