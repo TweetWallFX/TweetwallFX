@@ -125,6 +125,10 @@ allprojects {
             jvmArgs '--add-modules java.xml.bind'
         }
 
+        check {
+            dependsOn 'javadoc'
+        }
+
         // configuring Errorprone
         apply plugin: "net.ltgt.errorprone"
 
