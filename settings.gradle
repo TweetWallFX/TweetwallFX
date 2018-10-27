@@ -31,6 +31,8 @@ include ':config'
 project(":config").name = "tweetwallfx-configuration"
 include ':controls'
 project(":controls").name = "tweetwallfx-controls"
+include ':filterchain'
+project(":filterchain").name = "tweetwallfx-filterchain"
 include ':logging'
 project(":logging").name = "tweetwallfx-logging"
 include ':stepengine-api'
