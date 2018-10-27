@@ -77,9 +77,6 @@ project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be
 include ':generic2d'
 project(":generic2d").name = "tweetwallfx-generic2d"
 
-include ':voxxed-days-zurich'
-project(":voxxed-days-zurich").name = "tweetwallfx-voxxed-days-zurich"
-
 
 // disabled subproject for future reference
 //include ':3d'
