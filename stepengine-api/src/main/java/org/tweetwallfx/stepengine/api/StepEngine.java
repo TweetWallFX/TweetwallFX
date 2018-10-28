@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -63,6 +65,11 @@ public final class StepEngine {
     private final MachineContext context = new MachineContext();
     private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(THREAD_GROUP, r, "engine");
+        t.setDaemon(true);
+        return t;
+    });
+    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(THREAD_GROUP, r, "schedule");
         t.setDaemon(true);
         return t;
     });
@@ -99,9 +106,10 @@ public final class StepEngine {
                         }));
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
                 .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
-                .map(dpf -> dpf.create(dataProviderSettings.getOrDefault(
-                dpf.getDataProviderClass().getName(),
-                new StepEngineSettings.DataProviderSetting())))
+                .map(dpf
+                        -> dpf.create(dataProviderSettings.getOrDefault(
+                        dpf.getDataProviderClass().getName(),
+                        new StepEngineSettings.DataProviderSetting())))
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
 
@@ -120,6 +128,10 @@ public final class StepEngine {
                 .filter(DataProvider.HistoryAware.class::isInstance)
                 .map(DataProvider.HistoryAware.class::cast)
                 .collect(Collectors.toList());
+        providers.stream()
+                .filter(DataProvider.Scheduled.class::isInstance)
+                .map(DataProvider.Scheduled.class::cast)
+                .forEach(this::initScheduledDataProvider);
 
         if (!newTweetAwareProviders.isEmpty()) {
             LOGGER.info("create TweetStream");
@@ -138,6 +150,23 @@ public final class StepEngine {
 
         LOGGER.info("initDataProviders done");
         providers.forEach(context::addDataProvider);
+    }
+
+    @SuppressWarnings("FutureReturnValueIgnored")
+    private void initScheduledDataProvider(final DataProvider.Scheduled scheduled) {
+        LOGGER.info("initializing Scheduled: {}", scheduled);
+        final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
+
+        try {
+            if (DataProvider.ScheduleType.FIXED_DELAY == sc.getScheduleType()) {
+                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            } else {
+                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            }
+        } catch (final RuntimeException re) {
+            LOGGER.fatal("failed to initializing Scheduled: {}", scheduled, re);
+            throw re;
+        }
     }
 
     public final class MachineContext {

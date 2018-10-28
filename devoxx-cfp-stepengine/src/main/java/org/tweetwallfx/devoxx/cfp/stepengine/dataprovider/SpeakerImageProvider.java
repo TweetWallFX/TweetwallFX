@@ -41,7 +41,7 @@ import static org.tweetwallfx.util.ToString.map;
 /**
  * Utility to provide a simple api to get the cached speaker image.
  */
-public final class SpeakerImageProvider implements DataProvider {
+public final class SpeakerImageProvider implements DataProvider, DataProvider.Scheduled {
 
     private final Config config;
 
@@ -79,7 +79,13 @@ public final class SpeakerImageProvider implements DataProvider {
         }
     }
 
-    public void updateSpeakerImages() {
+    @Override
+    public ScheduledConfig getScheduleConfig() {
+        return config;
+    }
+
+    @Override
+    public void run() {
         CFPClient.getClient()
                 .getSpeakers()
                 .stream()
@@ -112,10 +118,24 @@ public final class SpeakerImageProvider implements DataProvider {
         }
     }
 
-    public static class Config {
+    public static class Config implements ScheduledConfig {
 
         private String noImageResource = "icons/user1-256x256.png";
         private Map<String, String> urlReplacements = Collections.emptyMap();
+        /**
+         * The type of scheduling to perform. Defaults to
+         * {@link ScheduleType#FIXED_RATE}.
+         */
+        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
+        /**
+         * Delay until the first execution in seconds. Defaults to {@code 0L}.
+         */
+        private long initialDelay = 0L;
+        /**
+         * Fixed rate of / delay between consecutive executions in seconds.
+         * Defaults to {@code 1800L}.
+         */
+        private long scheduleDuration = 30 * 60L;
 
         public String getNoImageResource() {
             return noImageResource;
@@ -136,8 +156,38 @@ public final class SpeakerImageProvider implements DataProvider {
         }
 
         @Override
+        public ScheduleType getScheduleType() {
+            return scheduleType;
+        }
+
+        public void setScheduleType(final ScheduleType scheduleType) {
+            this.scheduleType = scheduleType;
+        }
+
+        @Override
+        public long getInitialDelay() {
+            return initialDelay;
+        }
+
+        public void setInitialDelay(final long initialDelay) {
+            this.initialDelay = initialDelay;
+        }
+
+        @Override
+        public long getScheduleDuration() {
+            return scheduleDuration;
+        }
+
+        public void setScheduleDuration(final long scheduleDuration) {
+            this.scheduleDuration = scheduleDuration;
+        }
+
+        @Override
         public String toString() {
             return createToString(this, map(
+                    "scheduleType", getScheduleType(),
+                    "initialDelay", getInitialDelay(),
+                    "scheduleDuration", getScheduleDuration(),
                     "noImageResource", getNoImageResource(),
                     "urlReplacements", getUrlReplacements()
             )) + " extends " + super.toString();

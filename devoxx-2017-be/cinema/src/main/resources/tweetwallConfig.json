@@ -10,13 +10,6 @@
     "stepEngine": {
         "steps": [
             {
-                "stepClassName": "org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateScheduleResults",
-                "config": {
-                    "initialOffset": 5,
-                    "updateInteval": 15
-                }
-            },
-            {
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17ShowSchedule"
             },
             {
@@ -24,9 +17,6 @@
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipInTweets"
-            },
-            {
-                "stepClassName": "org.tweetwallfx.devoxx.cfp.stepengine.steps.UpdateVotingResults"
             },
             {
                 "stepClassName": "org.tweetwallfx.devoxx17be.steps.Devoxx17FlipOutScheduleToday"
@@ -66,6 +56,13 @@
             }
         ],
         "dataProviderSettings": [
+            {
+                "dataProviderClassName": "org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider",
+                "config": {
+                    "initialDelay": 300,
+                    "scheduleDuration": 900
+                }
+            },
             {
                 "dataProviderClassName": "org.tweetwallfx.tweet.stepengine.dataprovider.TweetStreamDataProvider",
                 "config": {

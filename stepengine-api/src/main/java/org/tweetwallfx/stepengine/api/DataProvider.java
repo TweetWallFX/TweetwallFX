@@ -83,4 +83,67 @@ public interface DataProvider {
          */
         void processNewTweet(final Tweet tweet);
     }
+
+    /**
+     * Interface for a {@link DataProvider} supposed to be executed
+     * periodically. The definition of the periodic execution is taken from
+     * {@link #getScheduleConfig()} via {@link ScheduledConfig}.
+     */
+    interface Scheduled extends Runnable {
+
+        /**
+         * Returns the configuration defining the periodic scheduled execution.
+         *
+         * @return the configuration defining the periodic scheduled execution
+         */
+        ScheduledConfig getScheduleConfig();
+    }
+
+    /**
+     * Configuration for a scheduled execution. All values in seconds.
+     */
+    interface ScheduledConfig {
+
+        /**
+         * Returns the type of scheduling to be performed for this
+         * {@link Scheduled}.
+         *
+         * @return the type of scheduling
+         */
+        ScheduleType getScheduleType();
+
+        /**
+         * Returns the number of seconds before the first execution of the
+         * {@link Scheduled}.
+         *
+         * @return the number of seconds before the first execution
+         */
+        long getInitialDelay();
+
+        /**
+         * Returns the number of seconds for either delay/fixed rate between
+         * executions of the {@link Scheduled}.
+         *
+         * @return the number of seconds for either delay/fixed rate between
+         * executions
+         */
+        long getScheduleDuration();
+    }
+
+    /**
+     * Type of scheduling.
+     */
+    enum ScheduleType {
+
+        /**
+         * Scheduling is to be done at a fixed rate. I.e. via
+         * {@link java.util.concurrent.ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)}.
+         */
+        FIXED_RATE,
+        /**
+         * Scheduling is to be done with a fixed delay. I.e. via
+         * {@link java.util.concurrent.ScheduledExecutorService#scheduleWithFixedDelay(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)}.
+         */
+        FIXED_DELAY;
+    }
 }
