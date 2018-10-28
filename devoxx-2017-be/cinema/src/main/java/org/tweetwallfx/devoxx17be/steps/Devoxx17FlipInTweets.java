@@ -183,7 +183,10 @@ public class Devoxx17FlipInTweets implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TweetStreamDataProvider.class);
+            return Arrays.asList(
+                    TweetStreamDataProvider.class,
+                    TweetUserProfileImageDataProvider.class
+            );
         }
     }
 }
