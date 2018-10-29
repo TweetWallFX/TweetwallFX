@@ -54,8 +54,8 @@ ext {
     releaseDate = new Date()
     bintrayEnabled = \
         ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
-        hasProperty('BINTRAY_USER') &&
-        hasProperty('BINTRAY_KEY')
+        null != findProperty('BINTRAY_USER') &&
+        null != findProperty('BINTRAY_KEY')
 }
 
 allprojects {
