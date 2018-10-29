@@ -34,7 +34,7 @@ import org.tweetwallfx.tweet.api.User;
  * {@link User} {@link User#getFollowersCount()}.
  *
  * In case {@link User#getFollowersCount()} is less than the amount configured
- * in {@link Config#get} it is terminally rejected with {@link Result#REJECTED}.
+ * in {@link Config#getCount()} it is terminally rejected with {@link Result#REJECTED}.
  * Otherwise it is evaluated as {@link Result#NOTHING_DEFINITE}.
  */
 public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {

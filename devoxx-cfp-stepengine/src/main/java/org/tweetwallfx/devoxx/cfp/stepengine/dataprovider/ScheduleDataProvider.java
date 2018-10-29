@@ -38,19 +38,28 @@ import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * DataProvider Implementation for Schedule Data
  */
-public class ScheduleDataProvider implements DataProvider {
+public class ScheduleDataProvider implements DataProvider, DataProvider.Scheduled {
 
     private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
+    private final Config config;
 
-    private ScheduleDataProvider() {
-        // prevent instantiation
+    private ScheduleDataProvider(final Config config) {
+        this.config = config;
     }
 
-    public void updateSchedule() {
+    @Override
+    public ScheduledConfig getScheduleConfig() {
+        return config;
+    }
+
+    @Override
+    public void run() {
         CFPClient.getClient()
                 .getSchedule(Optional
                         .ofNullable(System.getProperty("org.tweetwallfx.scheduledata.day"))
@@ -77,12 +86,69 @@ public class ScheduleDataProvider implements DataProvider {
 
         @Override
         public DataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
-            return new ScheduleDataProvider();
+            return new ScheduleDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
         @Override
         public Class<ScheduleDataProvider> getDataProviderClass() {
             return ScheduleDataProvider.class;
+        }
+    }
+
+    /**
+     * POJO used to configure {@link TopTalksWeekDataProvider}.
+     */
+    public static class Config implements ScheduledConfig {
+
+        /**
+         * The type of scheduling to perform. Defaults to
+         * {@link ScheduleType#FIXED_RATE}.
+         */
+        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
+        /**
+         * Delay until the first execution in seconds. Defaults to {@code 300L}.
+         */
+        private long initialDelay = 5 * 60L;
+        /**
+         * Fixed rate of / delay between consecutive executions in seconds.
+         * Defaults to {@code 300L}.
+         */
+        private long scheduleDuration = 5 * 60L;
+
+        @Override
+        public ScheduleType getScheduleType() {
+            return scheduleType;
+        }
+
+        public void setScheduleType(final ScheduleType scheduleType) {
+            this.scheduleType = scheduleType;
+        }
+
+        @Override
+        public long getInitialDelay() {
+            return initialDelay;
+        }
+
+        public void setInitialDelay(final long initialDelay) {
+            this.initialDelay = initialDelay;
+        }
+
+        @Override
+        public long getScheduleDuration() {
+            return scheduleDuration;
+        }
+
+        public void setScheduleDuration(final long scheduleDuration) {
+            this.scheduleDuration = scheduleDuration;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "scheduleType", getScheduleType(),
+                    "initialDelay", getInitialDelay(),
+                    "scheduleDuration", getScheduleDuration()
+            )) + " extends " + super.toString();
         }
     }
 }
