@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-dependencies {
-    compile project(':tweetwallfx-filterchain')
+package org.tweetwallfx.filterchain.testcase;
+
+import java.util.ServiceLoader;
+import org.tweetwallfx.filterchain.FilterStep;
+import org.tweetwallfx.util.testcase.RunnableTestCase;
+
+/**
+ * Testcase checking that all registered {@link FilterStep.Factory} instances
+ * are loadable.
+ */
+public class FilterStepFactoryLoadable implements RunnableTestCase {
+
+    @Override
+    public void execute() throws Exception {
+        for (final FilterStep.Factory o : ServiceLoader.load(FilterStep.Factory.class)) {
+            System.out.println("loaded " + o.getClass());
+        }
+    }
 }
