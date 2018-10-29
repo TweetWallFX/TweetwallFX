@@ -152,7 +152,10 @@ public class Devoxx17ShowTopRatedToday implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TopTalksTodayDataProvider.class);
+            return Arrays.asList(
+                    TopTalksTodayDataProvider.class,
+                    SpeakerImageProvider.class
+            );
         }
     }
 }

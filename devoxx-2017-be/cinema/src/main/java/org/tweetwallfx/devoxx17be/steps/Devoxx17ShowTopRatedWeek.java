@@ -152,7 +152,10 @@ public class Devoxx17ShowTopRatedWeek implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
-            return Arrays.asList(TopTalksWeekDataProvider.class);
+            return Arrays.asList(
+                    TopTalksWeekDataProvider.class,
+                    SpeakerImageProvider.class
+            );
         }
     }
 }

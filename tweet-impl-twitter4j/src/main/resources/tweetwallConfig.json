@@ -1,0 +1,10 @@
+{
+    "filterchains": {
+        "chains": {
+            "twitter": {
+                "domainObjectClassName": "org.tweetwallfx.tweet.api.Tweet",
+                "defaultResult": true
+            }
+        }
+    }
+}
