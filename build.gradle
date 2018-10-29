@@ -254,5 +254,5 @@ task createFolders(description: 'Creates the folders for the projects and source
     }
 }
 
-task ('runDevoxx2017BE-Exhibition', dependsOn: ':devoxx-2017-be:Exhibition:run')
-task ('runDevoxx2017BE-Cinema', dependsOn: ':devoxx-2017-be:Cinema:run')
+task ('runDevoxx2017BE-Exhibition', dependsOn: ':tweetwallfx-devoxx-2017-be:tweetwallfx-devoxx-2017-be-cinema:run')
+task ('runDevoxx2017BE-Cinema', dependsOn: ':tweetwallfx-devoxx-2017-be:tweetwallfx-devoxx-2017-be-exhibition:run')
