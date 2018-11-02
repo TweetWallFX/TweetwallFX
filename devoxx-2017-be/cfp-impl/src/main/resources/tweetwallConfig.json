@@ -1,7 +1,0 @@
-{
-    "devoxxCFP": {
-        "baseUri": "https://cfp.devoxx.be/api",
-        "eventId": "DVBE17",
-        "votingResultsUri": "https://cfp.devoxx.be/api/voting/v1/top/talks"
-    }
-}
