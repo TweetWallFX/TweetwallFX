@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.devoxx.api.cfp.client.testcase;
+package org.tweetwallfx.devoxx.api.cfp.client.testcase;
 
 import java.util.ServiceLoader;
 import org.apache.logging.log4j.LogManager;
