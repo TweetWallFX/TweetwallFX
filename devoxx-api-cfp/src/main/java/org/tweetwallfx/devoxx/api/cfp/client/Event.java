@@ -50,9 +50,11 @@ public class Event extends ObjectWithLinksBase {
     private String localisation;
 
     /**
-     * S list of Locale
+     * A list of Locale
      */
     private List<String> locale;
+
+    private Link link;
 
     /**
      * A list of dates the event is heldd
@@ -75,6 +77,14 @@ public class Event extends ObjectWithLinksBase {
 
     public void setLabel(final String label) {
         this.label = label;
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public void setLink(final Link link) {
+        this.link = link;
     }
 
     public String getLocalisation() {
@@ -122,6 +132,7 @@ public class Event extends ObjectWithLinksBase {
                 mapEntry("label", getLabel()),
                 mapEntry("localisation", getLocalisation()),
                 mapEntry("locale", getLocale()),
+                mapEntry("link", getLink()),
                 mapEntry("days", getDays()),
                 mapEntry("proposalTypesId", getProposalTypesId())
         )) + " extends " + super.toString();
