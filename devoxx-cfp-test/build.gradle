@@ -24,4 +24,5 @@
 dependencies {
     compile project(':tweetwallfx-devoxx-cfp-impl')
     compile group: 'junit', name: 'junit', version: versionJUnit
+    compile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
 }

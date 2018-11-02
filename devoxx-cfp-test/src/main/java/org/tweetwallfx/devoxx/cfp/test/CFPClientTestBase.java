@@ -23,8 +23,13 @@
  */
 package org.tweetwallfx.devoxx.cfp.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -35,10 +40,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -269,11 +276,19 @@ public abstract class CFPClientTestBase {
                 .orElseThrow(() -> new IllegalStateException("No Speaker found"));
         LOG.info("speaker: {}", speaker);
 
-        assertTrue(speaker.hasCompleteInformation());
+        assertFalse(speaker.hasCompleteInformation());
         assertNotNull(speaker.getAcceptedTalks());
-        assertFalse(speaker.getAcceptedTalks().isEmpty());
+        assertTrue(speaker.getAcceptedTalks().isEmpty());
 
-        final Talk incompleteTalk = speaker.getAcceptedTalks().get(0);
+        final Speaker speakerReload = speaker
+                .reload()
+                .orElseThrow(() -> new IllegalStateException("Speaker reload failed"));
+        LOG.info("speakerReload: {}", speakerReload);
+        assertTrue(speakerReload.hasCompleteInformation());
+        assertNotNull(speakerReload.getAcceptedTalks());
+        assertFalse(speakerReload.getAcceptedTalks().isEmpty());
+
+        final Talk incompleteTalk = speakerReload.getAcceptedTalks().get(0);
         assertNotNull(incompleteTalk);
         assertFalse(incompleteTalk.hasCompleteInformation());
         LOG.info("incompleteTalk: {}", incompleteTalk);
@@ -347,6 +362,28 @@ public abstract class CFPClientTestBase {
                 .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
     }
 
+    @Test
+    @Ignore
+    public void speakerAvatarsAreLoadable() {
+        ignoreIfServerUnreachable();
+        final CFPClient client = getCFPClient();
+
+        final Map<Boolean, List<Speaker>> avatarsLoadable = client.getSpeakers().stream().collect(Collectors.partitioningBy(speaker -> {
+            System.out.println("Checking avator for " + speaker.getFirstName() + ' ' + speaker.getLastName() + " at '" + speaker.getAvatarURL() + "'");
+            try (final InputStream is = new URL(speaker.getAvatarURL()).openStream()) {
+                System.out.println("Succeeded");
+                return null != is;
+            } catch (final IOException ioe) {
+                System.out.println("Succeeded");
+                System.out.println("Failed loading for: " + speaker);
+                ioe.printStackTrace(System.out);
+                return false;
+            }
+        }));
+        
+        assertThat("Some avatar images are not loadable", avatarsLoadable.get(false), CoreMatchers.equalTo(new ArrayList<>()));
+    }
+
     private static String convertCollectionForToString(final Collection<?> collection) {
         if (null == collection) {
             return null;
@@ -355,10 +392,10 @@ public abstract class CFPClientTestBase {
         return collection
                 .stream()
                 .map(Object::toString)
-                .map(s -> s.replaceAll("\n", "\n        "))
+                .map(s -> s.replaceAll("\n", "\n    "))
                 .collect(Collectors.joining(
-                        ",\n        ",
-                        "[\n        ",
-                        "\n    ]"));
+                        ",\n    ",
+                        "[\n    ",
+                        "\n]"));
     }
 }

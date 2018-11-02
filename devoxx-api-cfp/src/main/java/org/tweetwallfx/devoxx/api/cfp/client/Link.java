@@ -25,6 +25,8 @@ package org.tweetwallfx.devoxx.api.cfp.client;
 
 import java.util.Objects;
 import java.util.stream.Stream;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * The "Link" profile object is a Devoxx BE object that defines a relationship
@@ -48,6 +50,11 @@ public class Link {
      * Title is the link title.
      */
     private String title;
+    
+    /**
+     * UUID of the link.
+     */
+    private String uuid;
 
     public String getHref() {
         return href;
@@ -77,14 +84,23 @@ public class Link {
         return Type.getType(this);
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
-        return "Link{"
-                + "\n    href=" + getHref()
-                + "\n    rel=" + getRel()
-                + "\n    title=" + getTitle()
-                + "\n    type=" + getType()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                    "href", getHref(),
+                    "rel", getRel(),
+                    "title", getTitle(),
+                    "type", getType(),
+                    "uuid", getUuid()
+            )) + " extends " + super.toString();
     }
 
     public enum Type {
