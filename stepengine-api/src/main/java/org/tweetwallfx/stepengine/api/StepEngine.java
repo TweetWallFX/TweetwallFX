@@ -24,7 +24,7 @@
 package org.tweetwallfx.stepengine.api;
 
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +41,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
@@ -172,7 +175,8 @@ public final class StepEngine {
     public final class MachineContext {
 
         private final Map<String, Object> properties = new HashMap<>();
-        private final List<DataProvider> dataProviders = new ArrayList<>();
+        private final ObservableList<DataProvider> dataProviders = FXCollections.<DataProvider>observableArrayList();
+        private final FilteredList<DataProvider> filteredDataProviders = dataProviders.filtered(null);
 
         public Object get(final String key) {
             return properties.get(key);
@@ -194,12 +198,18 @@ public final class StepEngine {
 
         @SuppressWarnings("unchecked")
         public <T extends DataProvider> T getDataProvider(final Class<T> klazz) {
-            return dataProviders
+            return filteredDataProviders
                     .stream()
                     .filter(klazz::isInstance)
                     .map(klazz::cast)
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' has not been registered."));
+                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' is currently not been available."));
+        }
+
+        private void restrictAvailableDataProviders(final Collection<Class<? extends DataProvider>> dataProviderClasses) {
+            LOG.info("restricting available DataProviders to {}", dataProviderClasses);
+            filteredDataProviders.setPredicate(d -> dataProviderClasses.contains(d.getClass()));
+            filteredDataProviders.forEach(dp -> LOG.info("DataProvider available after restriction: {}", dp));
         }
     }
 
@@ -222,6 +232,8 @@ public final class StepEngine {
             final Duration duration = step.preferredStepDuration(context);
 
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
+            context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(stepToExecute));
+            
             if (stepToExecute.requiresPlatformThread()) {
                 Platform.runLater(() -> stepToExecute.doStep(context));
             } else {
