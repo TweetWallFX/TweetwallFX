@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,71 +29,216 @@ buildscript {
         }
         jcenter()
     }
-    
+
     dependencies {
-        classpath group: 'cz.kubacki.gradle.plugins', name: 'gradle-nbm-plugin', version: '1.17.0', {
-            // Workaround for bad transitive dependencies
-            exclude group:'org.slf4j', module:'slf4j-simple'
-            exclude group:'org.gradle', module:'gradle-tooling-api' // was version 2.7 
-        }
-        classpath group: 'gradle.plugin.com.github.spotbugs', name: 'gradlePlugin', version: '1.6.0'
-        gradleApi()
+        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
+        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
+        classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: versionGradleInfoPlugin
+        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
+        classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: versionSpotbugs
+        classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin
+        // VCS dependency required by plugin 'gradle-info-plugin'
+        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: versionJGit
+        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: versionSonarqubeGradlePlugin
     }
 }
 
 apply plugin: 'build-dashboard'
+apply plugin: 'org.sonarqube'
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'com.github.spotbugs'
-    apply plugin: 'jacoco'
-    apply plugin: 'eclipse'
-    
+// applying Versions plugin
+apply plugin: 'com.github.ben-manes.versions'
+
+ext {
+    releaseDate = new Date()
+    bintrayEnabled = \
+        ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
+        null != findProperty('BINTRAY_USER') &&
+        null != findProperty('BINTRAY_KEY')
+}
+
+allprojects {
     group = 'org.tweetwallfx'
-    version = '1.0'
-    
+    version = currentVersion
+    description = 'JavaFX based Tweetwall'
+
     repositories {
         jcenter()
     }
-    
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: versionJUnit
-    }
-    
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
 
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << '-Xlint:all'
-        options.compilerArgs << '-Werror'
-        options.compilerArgs << '-proc:none'
-    }
-    
-    spotbugs {
-        ignoreFailures = false
-    }
+    // configuring Spotless
+    apply plugin: "com.diffplug.gradle.spotless"
 
-    tasks.withType(com.github.spotbugs.SpotBugsTask) {
-        
-        // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
-        def sourceSetName = (name - 'spotbugs').uncapitalize()
-        dependsOn( sourceSets[sourceSetName].classesTaskName)
-            
-        reports {
-            xml.enabled = false
-            html.enabled = true
+    spotless {
+        format 'textBasedFiles', {
+            target fileTree(project.rootDir) {
+                include '**/*.gradle'
+                include '**/*.asciidoc'
+                include '**/*.adoc'
+                include '**/*.asc'
+                include '**/*.json'
+                include '**/*.md'
+                include '**/*.properties'
+                include '**/.gitignore'
+                exclude '**/.gradle/**'
+                exclude '**/build/**'
+            }
+
+            trimTrailingWhitespace()
+            indentWithSpaces(4)
+            endWithNewline()
         }
     }
-    
-    tasks.withType(JavaExec) {
-        jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
-        jvmArgs '--add-modules java.xml.bind'
+
+    afterEvaluate {
+        check.dependsOn(spotlessCheck)
+    }
+
+    // now configuring for projects that coontain code not just structuring the project
+    if (childProjects.isEmpty()) {
+        // configuring standard java project
+        apply plugin: 'java'
+        apply plugin: 'idea'
+        apply plugin: 'jacoco'
+        apply plugin: 'eclipse'
+        apply plugin: 'nebula.info'
+        apply plugin: 'maven-publish'
+
+        dependencies {
+            testCompile group: 'junit', name: 'junit', version: versionJUnit
+            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+        }
+
+        jar {
+            manifest.attributes provider: 'gradle'
+        }
+
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << '-Xlint:all'
+            options.compilerArgs << '-Werror'
+            options.compilerArgs << '-proc:none'
+        }
+
+        tasks.withType(JavaExec) {
+            jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
+            jvmArgs '--add-modules java.xml.bind'
+        }
+
+        check {
+            dependsOn 'javadoc'
+        }
+
+        // configuring Errorprone
+        apply plugin: "net.ltgt.errorprone"
+
+        dependencies {
+            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+        }
+
+        // configuring Spotbugs
+        apply plugin: 'com.github.spotbugs'
+
+        spotbugs {
+            ignoreFailures = false
+        }
+
+        tasks.withType(com.github.spotbugs.SpotBugsTask) {
+            // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
+            def sourceSetName = (name - 'spotbugs').uncapitalize()
+            dependsOn( sourceSets[sourceSetName].classesTaskName)
+
+            reports {
+                xml.enabled = false
+                html.enabled = true
+            }
+        }
+
+        // configuring Versions plugin
+        dependencyUpdates {
+            revision = 'release'
+            resolutionStrategy {
+                componentSelection { rules ->
+                    rules.all { /*ComponentSelection*/ selection ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
+                        }) {
+                            selection.reject('Release candidate')
+                        }
+                    }
+                }
+            }
+        }
+
+        apply plugin: 'nebula.maven-publish'
+        apply plugin: 'nebula.javadoc-jar'
+        apply plugin: 'nebula.source-jar'
+        apply plugin: 'nebula.publish-verification'
+
+        // configuring Bintray Upload
+        apply plugin: 'com.jfrog.bintray'
+        bintray {
+            user = findProperty('BINTRAY_USER') // null if not found
+            key = findProperty('BINTRAY_KEY') // null if not found
+
+            dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
+            publish = false //[Default: false] Whether version should be auto published after an upload
+            override = project.version.endsWith('-SNAPSHOT') //[Default: false] Whether to override version artifacts already published
+
+            publications = ['nebula']
+
+            pkg {
+                repo = 'maven'
+                name = rootProject.group
+                userOrg = 'tweetwallfx-team'
+                desc = project.description
+
+                websiteUrl = 'https://github.com/TweetWallFX/TweetwallFX'
+                issueTrackerUrl = 'https://github.com/TweetWallFX/TweetwallFX/issues'
+                vcsUrl = 'https://github.com/TweetWallFX/TweetwallFX.git'
+
+                licenses = ['MIT']
+
+                labels = ['tweetwall', 'javafx']
+                publicDownloadNumbers = false
+                //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+
+                githubRepo = 'TweetWallFX/TweetwallFX' //Optional Github repository
+                githubReleaseNotesFile = 'README.adoc'      //Optional Github readme file
+
+                version {
+                    name = project.version
+                    desc = "Tweetwall FX ${project.version}"
+                    released = releaseDate
+                    vcsTag = project.version
+                    //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+
+                    //Optional configuration for Maven Central sync of the version
+                    mavenCentralSync {
+                        sync = false //[Default: true] Determines whether to sync the version to Maven Central.
+                        // user = 'userToken' //OSS user token: mandatory
+                        // password = 'paasword' //OSS user password: mandatory
+                        // close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+                    }
+                }
+            }
+        }
+
+        bintrayUpload.enabled = bintrayEnabled
+        bintrayPublish.enabled = bintrayEnabled
+    }
+
+    plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
+        dependencies {
+            compile group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
+            testCompile group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
+        }
+    }
+
+    tasks.withType(org.gradle.api.tasks.testing.Test) {
+        systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
     }
 }
-
-description = 'TweetWallFX'
 
 task createFolders(description: 'Creates the folders for the projects and sourceSets should they not exist.') doLast {
     rootProject.allprojects.each {p ->
@@ -101,7 +246,7 @@ task createFolders(description: 'Creates the folders for the projects and source
             println 'Creating project folder: ' + p.getProjectDir()
             p.getProjectDir().mkdirs()
         }
-        
+
         if (p.hasProperty('sourceSets')) {
             p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
                 if (!srcDir.isDirectory()) {
@@ -112,11 +257,3 @@ task createFolders(description: 'Creates the folders for the projects and source
         }
     }
 }
-
-task ('runDevoxx', dependsOn: ':TweetWallFX-Devoxx:run')
-task ('runDevoxx2015', dependsOn: ':TweetWallFX-Devoxx-2015:run')
-task ('runDevoxx2017US', dependsOn: ':TweetWallFX-Devoxx-2017-US:run')
-task ('runDevoxx2017FR', dependsOn: ':TweetWallFX-Devoxx-2017-FR:run')
-task ('runDevoxx2017BE-Exhibition', dependsOn: ':TweetWallFX-Devoxx-2017-BE:Exhibition:run')
-task ('runJavaOne', dependsOn: ':TweetWallFX-JavaOne:run')
-task ('runNetBeans', dependsOn: ':TweetWallFX-NetBeans:run')

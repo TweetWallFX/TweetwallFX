@@ -1,27 +1,63 @@
+////
+
+    The MIT License
+
+    Copyright 2017-2018 TweetWallFX
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+
+////
+
 = JavaFX based TweetWall
 :project-full-path: TweetWallFX/TweetwallFX
 :github-branch: master
 
 image:https://img.shields.io/badge/license-MIT-blue.svg["MIT License", link="https://github.com/{project-full-path}/blob/{github-branch}/LICENSE"]
 image:https://img.shields.io/travis/{project-full-path}/{github-branch}.svg["Build Status", link="https://travis-ci.org/{project-full-path}"]
+image:https://api.bintray.com/packages/tweetwallfx-team/maven/org.tweetwallfx/images/download.svg[link="https://bintray.com/tweetwallfx-team/maven/org.tweetwallfx/_latestVersion"]
 
 ## Getting OAuth keys
 
-Create a new Application for TweetWall within https://apps.twitter.com[Twitter Apps site] signing in 
+Create a new Application for TweetWall within https://apps.twitter.com[Twitter Apps site] signing in
 with the twitter account that will be used to run the TweetWallFX. You have to enter at least the
 website of your company. After doing so generate a new access token under `Keys and Access Tokens`.
 
-Update the `config.properties` file with your OAuth values as follows:
+Update the `tweetwallConfig.json` file with your OAuth values as follows:
 
 [source,plain]
 ----
-tweetwall.twitter.query=#myevent OR #someothertag
-tweetwall.title=The JavaFX Tweetwall for my Event
-tweetwall.stylesheet=tweetwall.css
-tweetwall.twitter.oauth.consumerKey=v8SvGzboGrvU148cKs8PghI1v <1>
-tweetwall.twitter.oauth.consumerSecret=12w6vg612hgvoGk0iysMlLvKfh0ouMcVg00RWG8rV6jccZ8RUg <2>
-tweetwall.twitter.oauth.accessToken=12cF34j9-cF3cGz819x4j2iQ6Vgh4wqmLqksxHzRFt78D3WKiB <3>
-tweetwall.twitter.oauth.accessTokenSecret=2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG7Bz92x4 <4>
+{
+    "twitter" : {
+        "extendedMode" : true,
+        "oauth" : {
+            "consumerKey" : "v8SvGzboGrvU148cKs8PghI1v", <1>
+            "consumerSecret" : "12w6vg612hgvoGk0iysMlLvKfh0ouMcVg00RWG8rV6jccZ8RUg", <2>
+            "accessToken" : "12cF34j9-cF3cGz819x4j2iQ6Vgh4wqmLqksxHzRFt78D3WKiB", <3>
+            "accessTokenSecret" : "2DghUiSB5hdg7jFbNKHqx5xRkXNZhnzZtICUPG7Bz92x4" <4>
+        }
+    },
+    "tweetwall" : {
+        "query" : "#myevent OR #someothertag",
+        "title" : "The JavaFX Tweetwall for my Event",
+        "stylesheetResource" : "tweetwall.css"
+    }
+}
 ----
 <1> The Consumer Key (API Key)
 <2> The Consumer Secret (API Secret)

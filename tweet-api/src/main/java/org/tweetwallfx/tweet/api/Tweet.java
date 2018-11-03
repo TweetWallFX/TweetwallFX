@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -82,11 +82,8 @@ public interface Tweet extends BasicEntry {
                     .ifPresent(textExtractor::getTextWithout);
         }
 
-        Arrays.stream(getUrlEntries())
-                .filter(ue -> ue.getExpandedURL().contains("twitter.com"))
-                .filter(ue -> ue.getExpandedURL().endsWith(Long.toString(getId())))
-                .findAny()
-                .ifPresent(textExtractor::getTextWithout);
+        textExtractor.getTextWithout(UrlTweetEntry.class);
+        textExtractor.getTextWithout(MediaTweetEntry.class);
 
         return textExtractor;
     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,12 @@
  */
 
 dependencies {
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.+'
-    compile group: 'javax', name: 'javaee-api', version: '8.0'
-        
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
+    compile project(':tweetwallfx-utility')
+
+    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
     runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
+    runtime group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versionJersey
     runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,12 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -34,7 +36,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.event.ActionEvent;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.CacheHint;
@@ -43,16 +44,22 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider;
-import org.tweetwallfx.controls.dataprovider.ImageMosaicDataProvider.ImageStore;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine;
-import org.tweetwallfx.controls.transition.LocationTransition;
-import org.tweetwallfx.controls.transition.SizeTransition;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider.ImageStore;
+import org.tweetwallfx.transitions.LocationTransition;
+import org.tweetwallfx.transitions.SizeTransition;
 
-public class ImageMosaicStep extends AbstractStep {
+public class ImageMosaicStep implements Step {
 
-    private static final Random RANDOM = new Random();
+    private ImageMosaicStep() {
+        // prevent external instantiation
+    }
+
+    private static final Random RANDOM = new SecureRandom();
     private final ImageView[][] rects = new ImageView[6][5];
     private final Bounds[][] bounds = new Bounds[6][5];
     private final Set<Integer> highlightedIndexes = new HashSet<>();
@@ -60,37 +67,36 @@ public class ImageMosaicStep extends AbstractStep {
     private int count = 0;
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        ImageMosaicDataProvider dataProvider = wordleSkin.getSkinnable().getDataProvider(ImageMosaicDataProvider.class);
+        ImageMosaicDataProvider dataProvider = context.getDataProvider(ImageMosaicDataProvider.class);
         pane = wordleSkin.getPane();
         if (dataProvider.getImages().size() < 35) {
             context.proceed();
         } else {
             Transition createMosaicTransition = createMosaicTransition(dataProvider.getImages());
-            createMosaicTransition.setOnFinished((ActionEvent event) -> {
-                executeAnimations(context);
-            });
+            createMosaicTransition.setOnFinished(event
+                    -> executeAnimations(context));
 
             createMosaicTransition.play();
         }
     }
 
     @Override
-    public long preferredStepDuration(StepEngine.MachineContext context) {
-        return 1000;
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
+        return java.time.Duration.ofSeconds(1);
     }
 
-    private void executeAnimations(StepEngine.MachineContext context) {
+    private void executeAnimations(final MachineContext context) {
         ImageWallAnimationTransition highlightAndZoomTransition
                 = createHighlightAndZoomTransition();
         highlightAndZoomTransition.transition.play();
-        highlightAndZoomTransition.transition.setOnFinished((event1) -> {
+        highlightAndZoomTransition.transition.setOnFinished(event1 -> {
             Transition revert
                     = createReverseHighlightAndZoomTransition(highlightAndZoomTransition.column, highlightAndZoomTransition.row);
             revert.setDelay(Duration.seconds(3));
             revert.play();
-            revert.setOnFinished((ActionEvent event) -> {
+            revert.setOnFinished(event -> {
                 count++;
                 if (count < 3) {
                     executeAnimations(context);
@@ -104,7 +110,7 @@ public class ImageMosaicStep extends AbstractStep {
                             cleanup.getChildren().addAll(ft);
                         }
                     }
-                    cleanup.setOnFinished((cleanUpDown) -> {
+                    cleanup.setOnFinished(cleanUpDown -> {
                         for (int i = 0; i < 6; i++) {
                             for (int j = 0; j < 5; j++) {
                                 pane.getChildren().remove(rects[i][j]);
@@ -119,13 +125,13 @@ public class ImageMosaicStep extends AbstractStep {
         });
     }
 
-    private Transition createMosaicTransition(List<ImageStore> imageStores) {
-        SequentialTransition fadeIn = new SequentialTransition();
-        List<FadeTransition> allFadeIns = new ArrayList<>();
+    private Transition createMosaicTransition(final List<ImageStore> imageStores) {
+        final SequentialTransition fadeIn = new SequentialTransition();
+        final List<FadeTransition> allFadeIns = new ArrayList<>();
+        final double width = pane.getWidth() / 6.0 - 10;
+        final double height = pane.getHeight() / 5.0 - 8;
+        final List<ImageStore> distillingList = new ArrayList<>(imageStores);
 
-        double width = pane.getWidth() / 6.0 - 10;
-        double height = pane.getHeight() / 5.0 - 8;
-        List<ImageStore> distillingList = new LinkedList<>(imageStores);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 5; j++) {
                 int index = RANDOM.nextInt(distillingList.size());
@@ -194,9 +200,6 @@ public class ImageMosaicStep extends AbstractStep {
             }
         }
 
-        LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView);
-        SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty());
-
         double maxWidth = pane.getWidth() * 0.8;
         double maxHeight = pane.getHeight() * 0.8;
 
@@ -208,20 +211,18 @@ public class ImageMosaicStep extends AbstractStep {
         double targetWidth = realWidth * scaleFactor;
         double targetheight = realHeight * scaleFactor;
 
-        zoomBox.setFromWidth(randomView.getLayoutBounds().getWidth());
-        zoomBox.setFromHeight(randomView.getLayoutBounds().getHeight());
-        zoomBox.setToWidth(targetWidth);
-        zoomBox.setToHeight(targetheight);
-        trans.setFromX(randomView.getLayoutX());
-        trans.setFromY(randomView.getLayoutY());
-        trans.setToX(pane.getWidth() / 2 - targetWidth / 2);
-        trans.setToY(pane.getHeight() / 2 - targetheight / 2);
+        final SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty())
+                .withWidth(randomView.getLayoutBounds().getWidth(), targetWidth)
+                .withHeight(randomView.getLayoutBounds().getHeight(), targetheight);
+        final LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView)
+                .withX(randomView.getLayoutX(), pane.getWidth() / 2 - targetWidth / 2)
+                .withY(randomView.getLayoutY(), pane.getHeight() / 2 - targetheight / 2);
         secondParallelTransition.getChildren().addAll(trans, zoomBox);
 
         SequentialTransition seqT = new SequentialTransition();
         seqT.getChildren().addAll(firstParallelTransition, secondParallelTransition);
 
-        firstParallelTransition.setOnFinished((event) -> {
+        firstParallelTransition.setOnFinished(event -> {
 //            DropShadow ds = new DropShadow();
 //            ds.setOffsetY(10.0);
 //            ds.setOffsetX(10.0);
@@ -232,7 +233,7 @@ public class ImageMosaicStep extends AbstractStep {
         return new ImageWallAnimationTransition(seqT, column, row);
     }
 
-    private Transition createReverseHighlightAndZoomTransition(int column, int row) {
+    private Transition createReverseHighlightAndZoomTransition(final int column, final int row) {
         ImageView randomView = rects[column][row];
         randomView.toFront();
         ParallelTransition firstParallelTransition = new ParallelTransition();
@@ -250,46 +251,58 @@ public class ImageMosaicStep extends AbstractStep {
             }
         }
 
-        LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView);
-        SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty());
-
         double width = pane.getWidth() / 6.0 - 10;
         double height = pane.getHeight() / 5.0 - 8;
 
-        zoomBox.setFromWidth(randomView.getLayoutBounds().getWidth());
-        zoomBox.setFromHeight(randomView.getLayoutBounds().getHeight());
-        zoomBox.setToWidth(width);
-        zoomBox.setToHeight(height);
-
-        trans.setFromX(randomView.getLayoutX());
-        trans.setFromY(randomView.getLayoutY());
-        trans.setToX(bounds[column][row].getMinX());
-        trans.setToY(bounds[column][row].getMinY());
+        final SizeTransition zoomBox = new SizeTransition(Duration.seconds(2.5), randomView.fitWidthProperty(), randomView.fitHeightProperty())
+                .withWidth(randomView.getLayoutBounds().getWidth(), width)
+                .withHeight(randomView.getLayoutBounds().getHeight(), height);
+        final LocationTransition trans = new LocationTransition(Duration.seconds(2.5), randomView)
+                .withX(randomView.getLayoutX(), bounds[column][row].getMinX())
+                .withY(randomView.getLayoutY(), bounds[column][row].getMinY());
         secondParallelTransition.getChildren().addAll(trans, zoomBox);
 
         SequentialTransition seqT = new SequentialTransition();
         seqT.getChildren().addAll(secondParallelTransition, firstParallelTransition);
 
-        secondParallelTransition.setOnFinished((event) -> {
-            randomView.setEffect(null);
-        });
+        secondParallelTransition.setOnFinished(event
+                -> randomView.setEffect(null));
 
         return seqT;
     }
 
-    private void cleanup() {
-    }
-
     private static class ImageWallAnimationTransition {
 
-        final Transition transition;
-        final int column;
-        final int row;
+        private final Transition transition;
+        private final int column;
+        private final int row;
 
-        public ImageWallAnimationTransition(Transition transition, int column, int row) {
+        public ImageWallAnimationTransition(final Transition transition, final int column, final int row) {
             this.transition = transition;
             this.column = column;
             this.row = row;
+        }
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link ImageMosaicStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public ImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new ImageMosaicStep();
+        }
+
+        @Override
+        public Class<ImageMosaicStep> getStepClass() {
+            return ImageMosaicStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(ImageMosaicDataProvider.class);
         }
     }
 }

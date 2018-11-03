@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,12 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.tweetwallfx.controls.TweetLayout;
-import org.tweetwallfx.controls.TweetWordNodeFactory;
-import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.transition.FontSizeTransition;
-import org.tweetwallfx.controls.transition.LocationTransition;
-import org.tweetwallfx.tweet.api.Tweet;
-
-//import org.tweetwallfx.controls.Wordle;
 import de.jensd.fx.glyphs.GlyphsStack;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -59,27 +48,40 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.tweetwallfx.controls.TweetLayout;
+import org.tweetwallfx.controls.TweetWordNodeFactory;
+import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.PhotoImageMediaEntryDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
+import org.tweetwallfx.transitions.FontSizeTransition;
+import org.tweetwallfx.transitions.LocationTransition;
+import org.tweetwallfx.tweet.api.Tweet;
 
 /**
- *
  * @author Jörg Michelberger
  */
-public class CloudToTweetStep extends AbstractStep {
+public class CloudToTweetStep implements Step {
 
-    //TODO: push this attributes into doStep!
-    private Point2D lowerLeft;  //OMG, how can this be piped through a lambda?
-    private Point2D tweetLineOffset;  //OMG, how can this be piped through a lambda?
-
-    @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    private CloudToTweetStep() {
+        // prevent external instantiation
     }
 
     @Override
-    public void doStep(MachineContext context) {
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
+    }
+
+    @Override
+    public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        Tweet displayTweet = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
+        Tweet displayTweet = context.getDataProvider(TweetDataProvider.class).getTweet();
         Tweet originalTweet = getOriginalTweet(displayTweet);
 
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - wordleSkin.getLogo().getImage().getHeight()) / 4d);
@@ -92,37 +94,32 @@ public class CloudToTweetStep extends AbstractStep {
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
 
-        lowerLeft = new Point2D(minPosTweetText.getX(), minPosTweetText.getY());
-        tweetLineOffset = new Point2D(0, 0);
+        Point2D lowerLeft = new Point2D(minPosTweetText.getX(), minPosTweetText.getY());
+        Point2D tweetLineOffset = new Point2D(0, 0);
 
         Duration defaultDuration = Duration.seconds(1.5);
 
-        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
+        TweetWordNodeFactory wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Config(wordleSkin.getFont(), wordleSkin.getTweetFontSize()));
 
-        tweetLayout.getWordLayoutInfo().stream().forEach(tweetWord -> {
+        for (TweetLayout.TweetWord tweetWord : tweetLayout.getWordLayoutInfo()) {
             Word word = new Word(tweetWord.text.trim(), -2);
             if (wordleSkin.word2TextMap.containsKey(word)) {
                 Text textNode = wordleSkin.word2TextMap.remove(word);
                 wordleSkin.tweetWordList.add(new TweetLayout.TweetWordNode(tweetWord, textNode));
 
-                FontSizeTransition ft = new FontSizeTransition(defaultDuration, textNode);
-                ft.setFromSize(textNode.getFont().getSize());
-                ft.setToSize(wordleSkin.getTweetFontSize());
-                moveTransitions.add(ft);
+                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
+                        .withSize(textNode.getFont().getSize(), wordleSkin.getTweetFontSize()));
 
                 Bounds bounds = tweetLayout.getWordLayoutInfo().stream().filter(tw -> tw.text.trim().equals(word.getText())).findFirst().get().bounds;
 
-                LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-                lt.setFromX(textNode.getLayoutX());
-                lt.setFromY(textNode.getLayoutY());
                 tweetLineOffset = tweetLayout.tweetWordLineOffset(bounds, lowerLeft, width, tweetLineOffset);
                 Point2D twPoint = tweetLayout.layoutTweetWord(bounds, minPosTweetText, tweetLineOffset);
-                lt.setToX(twPoint.getX());
-                lt.setToY(twPoint.getY());
                 if (twPoint.getY() > lowerLeft.getY()) {
                     lowerLeft = lowerLeft.add(0, twPoint.getY() - lowerLeft.getY());
                 }
-                moveTransitions.add(lt);
+                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                        .withX(textNode.getLayoutX(), twPoint.getX())
+                        .withY(textNode.getLayoutY(), twPoint.getY()));
             } else {
                 Text textNode = wordNodeFactory.createTextNode(word.getText());
 
@@ -142,28 +139,27 @@ public class CloudToTweetStep extends AbstractStep {
                 wordleSkin.getPane().getChildren().add(textNode);
                 fadeInTransitions.add(addFadeTransition(defaultDuration, textNode, 0, 1));
             }
-        });
+        }
 
         // kill the remaining words from the cloud
         wordleSkin.word2TextMap.entrySet().forEach(entry -> {
             Text textNode = entry.getValue();
             FadeTransition ft = new FadeTransition(defaultDuration, textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(textNode));
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
 
         // layout image and meta data first
-        Pane infoBox = createInfoBox(wordleSkin, displayTweet);
+        Pane infoBox = createInfoBox(wordleSkin, context, displayTweet, lowerLeft);
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data
         fadeInTransitions.add(addFadeTransition(defaultDuration, infoBox, 0, 1));
 
-        Pane mediaBox = createMediaBox(wordleSkin, displayTweet);
+        Pane mediaBox = createMediaBox(wordleSkin, context, displayTweet);
         wordleSkin.setMediaBox(mediaBox);
         if (null != mediaBox) {
             wordleSkin.getPane().getChildren().add(mediaBox);
@@ -190,7 +186,10 @@ public class CloudToTweetStep extends AbstractStep {
         return ft;
     }
 
-    private Pane createMediaBox(final WordleSkin wordleSkin, final Tweet displayTweet) {
+    private Pane createMediaBox(
+            final WordleSkin wordleSkin,
+            final MachineContext context,
+            final Tweet displayTweet) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
         if (originalTweet.getMediaEntries().length > 0) {
@@ -220,9 +219,11 @@ public class CloudToTweetStep extends AbstractStep {
             mediaBox.maxWidthProperty().bind(mediaBox.minWidthProperty());
             mediaBox.maxHeightProperty().bind(mediaBox.minHeightProperty());
 
-            int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            final int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            final PhotoImageMediaEntryDataProvider pimedp = context.getDataProvider(PhotoImageMediaEntryDataProvider.class);
+
             for (int i = 0; i < imageCount; i++) {
-                Image mediaImage = wordleSkin.getMediaImageCache().get(originalTweet.getMediaEntries()[i].getMediaUrl());
+                Image mediaImage = pimedp.getImage(originalTweet.getMediaEntries()[i]);
                 ImageView mediaView = new ImageView(mediaImage);
                 mediaView.setPreserveRatio(true);
                 mediaView.setCache(true);
@@ -245,10 +246,14 @@ public class CloudToTweetStep extends AbstractStep {
         }
     }
 
-    private Pane createInfoBox(final WordleSkin wordleSkin, final Tweet displayTweet) {
+    private Pane createInfoBox(
+            final WordleSkin wordleSkin,
+            final MachineContext context,
+            final Tweet displayTweet,
+            final Point2D lowerLeft) {
         final Tweet originalTweet = getOriginalTweet(displayTweet);
 
-        Image profileImage = wordleSkin.getProfileImageCache().get(originalTweet.getUser().getProfileImageUrl());
+        Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImage(originalTweet.getUser());
         ImageView imageView = new ImageView(profileImage);
         Rectangle clip = new Rectangle(64, 64);
         clip.setArcWidth(10);
@@ -344,5 +349,30 @@ public class CloudToTweetStep extends AbstractStep {
         }
 
         return originalTweet;
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudToTweetStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public CloudToTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new CloudToTweetStep();
+        }
+
+        @Override
+        public Class<CloudToTweetStep> getStepClass() {
+            return CloudToTweetStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(
+                    TweetDataProvider.class,
+                    PhotoImageMediaEntryDataProvider.class,
+                    TweetUserProfileImageDataProvider.class);
+        }
     }
 }

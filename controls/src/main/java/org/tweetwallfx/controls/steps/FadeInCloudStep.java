@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,9 @@
  */
 package org.tweetwallfx.controls.steps;
 
-//import org.tweetwallfx.controls.Wordle;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,38 +40,37 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- *
- * @author Jörg Michelberger
- */
-public class FadeInCloudStep extends AbstractStep {
+public class FadeInCloudStep implements Step {
 
-    @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    private FadeInCloudStep() {
+        // prevent external instantiation
     }
 
     @Override
-    public void doStep(MachineContext context) {
-//        context.getWordle().setLayoutMode(Wordle.LayoutMode.TWEET);
-        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
-//        Wordle wordle = (Wordle)context.get("Wordle");
-        
-        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
+    }
+
+    @Override
+    public void doStep(final MachineContext context) {
+        List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
 
         if (sortedWords.isEmpty()) {
             return;
         }
 
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
         limitedWords.sort(Comparator.reverseOrder());
- 
+
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(),layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
@@ -97,7 +97,7 @@ public class FadeInCloudStep extends AbstractStep {
             ft.setToValue(1);
             fadeInTransitions.add(ft);
         });
-        
+
         ParallelTransition fadeOuts = new ParallelTransition();
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         ParallelTransition moves = new ParallelTransition();
@@ -108,5 +108,27 @@ public class FadeInCloudStep extends AbstractStep {
 
         morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link FadeInCloudStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public FadeInCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new FadeInCloudStep();
+        }
+
+        @Override
+        public Class<FadeInCloudStep> getStepClass() {
+            return FadeInCloudStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TagCloudDataProvider.class);
+        }
     }
 }

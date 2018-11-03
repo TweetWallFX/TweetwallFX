@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,6 @@ public final class TweetFilterQuery {
     private int count = 0;
     private long[] follow = null;
     private String[] track = null;
-    private double[][] locations = null;
     private String[] language = null;
     private String filterLevel = null;
 
@@ -79,21 +78,6 @@ public final class TweetFilterQuery {
 
     public String[] getTrack() {
         return copy(track);
-    }
-
-    /**
-     * Sets locations.
-     *
-     * @param locations Specifies the locations to track. 2D array
-     * @return this instance
-     */
-    public TweetFilterQuery locations(double[][] locations) {
-        this.locations = copy(locations);
-        return this;
-    }
-
-    public double[][] getLocations() {
-        return copy(locations);
     }
 
     /**
@@ -160,7 +144,6 @@ public final class TweetFilterQuery {
                 + "count=" + count
                 + ", follow=" + Arrays.toString(follow)
                 + ", track=" + Arrays.toString(track)
-                + ", locations=" + (locations == null ? null : Arrays.asList(locations))
                 + ", language=" + Arrays.toString(language)
                 + ", filter_level=" + filterLevel
                 + '}';
@@ -172,21 +155,5 @@ public final class TweetFilterQuery {
 
     private static long[] copy(final long[] ts) {
         return null == ts ? null : Arrays.copyOf(ts, ts.length);
-    }
-
-    private static double[] copy(final double[] ts) {
-        return null == ts ? null : Arrays.copyOf(ts, ts.length);
-    }
-
-    private static double[][] copy(final double[][] tss) {
-        if (null == tss) {
-            return null;
-        } else {
-            final double[][] res = new double[tss.length][];
-            for (int i = 0; i < tss.length; i++) {
-                res[i] = copy(tss[i]);
-            }
-            return res;
-        }
     }
 }

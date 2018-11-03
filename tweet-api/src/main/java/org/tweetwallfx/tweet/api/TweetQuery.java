@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,15 @@
  */
 package org.tweetwallfx.tweet.api;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class TweetQuery {
 
+    public static final String QUERY_FILTER_MEDIA = "Filter:media";
+    public static final String QUERY_FILTER_LINKS = "Filter:Links";
     private String query = null;
     private String lang = null;
     private String locale = null;
@@ -34,7 +39,6 @@ public final class TweetQuery {
     private Integer count = null;
     private String since = null;
     private Long sinceId = null;
-//    private String geocode = null;
     private String until = null;
     private ResultType resultType = null;
 
@@ -48,22 +52,29 @@ public final class TweetQuery {
     }
 
     /**
-     * Sets the query string
+     * Sets the query string. All query conditions are AND connected.
      *
-     * @param query the query string
+     * @param queryConditions the query string
      */
-    public void setQuery(String query) {
-        this.query = query;
+    public void setQuery(final String... queryConditions) {
+        this.query = Arrays.stream(queryConditions)
+                .filter(s -> null != s && !s.isEmpty())
+                .collect(Collectors.collectingAndThen(
+                        Collectors.joining(" "),
+                        s -> s.isEmpty() ? null : s));
     }
 
     /**
      * Sets the query string
      *
-     * @param query the query string
+     * @param queryConditions the query conditions
+     *
      * @return the instance
+     *
+     * @see #setQuery(java.lang.String...) for more details
      */
-    public TweetQuery query(String query) {
-        setQuery(query);
+    public TweetQuery query(final String... queryConditions) {
+        setQuery(queryConditions);
         return this;
     }
 
@@ -254,48 +265,6 @@ public final class TweetQuery {
         return this;
     }
 
-//    /**
-//     * Returns the specified geocode
-//     *
-//     * @return geocode
-//     */
-//    public String getGeocode() {
-//        return geocode;
-//    }
-//
-//    public static enum Unit {
-//
-//        mi, km
-//    }
-//
-//    /**
-//     * returns tweets by users located within a given radius of the given
-//     * latitude/longitude, where the user's location is taken from their Twitter
-//     * profile
-//     *
-//     * @param location geo location
-//     * @param radius radius
-//     * @param unit either of {@link Unit}
-//     */
-//    public void setGeoCode(GeoLocation location, double radius, Unit unit) {
-//        this.geocode = location.getLatitude() + "," + location.getLongitude() + "," + radius + unit.name();
-//    }
-//
-//    /**
-//     * returns tweets by users located within a given radius of the given
-//     * latitude/longitude, where the user's location is taken from their Twitter
-//     * profile
-//     *
-//     * @param location geo location
-//     * @param radius radius
-//     * @param unit either of {@link Unit}
-//     * @return the instance
-//     */
-//    public TweetQuery geoCode(GeoLocation location, double radius, Unit unit) {
-//        setGeoCode(location, radius, unit);
-//        return this;
-//    }
-
     /**
      * Returns until
      *
@@ -327,7 +296,7 @@ public final class TweetQuery {
         return this;
     }
 
-    public static enum ResultType {
+    public enum ResultType {
 
         /**
          * popular: return only the most popular results in the response.
@@ -386,7 +355,6 @@ public final class TweetQuery {
         return Objects.equals(count, query1.count)
                 && Objects.equals(maxId, query1.maxId)
                 && Objects.equals(sinceId, query1.sinceId)
-//                && Objects.equals(geocode, query1.geocode)
                 && Objects.equals(lang, query1.lang)
                 && Objects.equals(locale, query1.locale)
                 && Objects.equals(query, query1.query)
@@ -405,7 +373,6 @@ public final class TweetQuery {
         result = 31 * result + Objects.hashCode(count);
         result = 31 * result + Objects.hashCode(since);
         result = 31 * result + Objects.hashCode(sinceId);
-//        result = 31 * result + Objects.hashCode(geocode);
         result = 31 * result + Objects.hashCode(until);
         result = 31 * result + Objects.hashCode(resultType);
         return result;
@@ -421,9 +388,32 @@ public final class TweetQuery {
                 + ", count=" + count
                 + ", since='" + since + '\''
                 + ", sinceId=" + sinceId
-//                + ", geocode='" + geocode + '\''
                 + ", until='" + until + '\''
                 + ", resultType='" + resultType + '\''
                 + '}';
+    }
+
+    public static String queryOR(final String... conditions) {
+        return Arrays.stream(conditions)
+                .filter(s -> null != s && !s.isEmpty())
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        l -> l.isEmpty()
+                        ? null
+                        : 1 == l.size()
+                        ? l.get(0)
+                        : l.stream().collect(Collectors.joining(" OR ", "( ", " )"))));
+    }
+
+    public static String queryFrom(final String from) {
+        return Optional.ofNullable(from)
+                .map(s -> "from:" + from)
+                .orElse(null);
+    }
+
+    public static String queryTo(final String to) {
+        return Optional.ofNullable(to)
+                .map(s -> "to:" + to)
+                .orElse(null);
     }
 }

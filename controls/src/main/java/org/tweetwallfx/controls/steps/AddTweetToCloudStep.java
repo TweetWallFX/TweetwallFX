@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,54 +23,78 @@
  */
 package org.tweetwallfx.controls.steps;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.dataprovider.TweetDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class AddTweetToCloudStep extends AbstractStep {
+public class AddTweetToCloudStep implements Step {
 
-    private static final Logger log = LogManager.getLogger(AddTweetToCloudStep.class);
-    
-    @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 0;
+    private static final Logger LOGGER = LogManager.getLogger(AddTweetToCloudStep.class);
+
+    private AddTweetToCloudStep() {
+        // prevent external instantiation
     }
 
     @Override
-    public void doStep(MachineContext context) {
-        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        Tweet tweetInfo = wordleSkin.getSkinnable().getDataProvider(TweetDataProvider.class).getTweet();
+    public void doStep(final MachineContext context) {
+        Tweet tweetInfo = context.getDataProvider(TweetDataProvider.class).getTweet();
         String text = tweetInfo.getTextWithout(UrlTweetEntry.class)
                 .getTextWithout(MediaTweetEntry.class)
                 .getTextWithout(UserMentionTweetEntry.class)
-                .get();
+                .get()
+                .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
+                .replaceAll("['“”‘’\"()]", " ");
         Set<Word> tweetWords = StopList.WORD_SPLIT.splitAsStream(text)
                 .map(StopList::trimTail) //no bad word tails
                 .filter(l -> l.length() > 2) //longer than 2 characters
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
-//                .filter(StopList::notIn) //not in stoplist
+                //                .filter(StopList::notIn) //not in stoplist
                 .map(l -> new Word(l, 0.1)) //convert to Word
                 .collect(Collectors.toSet());                   //collect
-        List<Word> words = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
+        List<Word> words = context.getDataProvider(TagCloudDataProvider.class).getWords();
         tweetWords.removeAll(words);
-        
-        log.info("Adding words to cloud dataset for rendering: " + tweetWords); 
 
-        wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
-        
+        LOGGER.info("Adding words to cloud dataset for rendering: " + tweetWords);
+
+        context.getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         context.proceed();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link AddTweetToCloudStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new AddTweetToCloudStep();
+        }
+
+        @Override
+        public Class<AddTweetToCloudStep> getStepClass() {
+            return AddTweetToCloudStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TweetDataProvider.class, TagCloudDataProvider.class);
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,25 +33,20 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.tweetwallfx.tweet.api.Tweet;
 
-/**
- *
- * @author sven
- */
 public class TweetLayout {
 
     private final Pattern pattern = Pattern.compile("\\s+");
-    
+
     private final Configuration configuration;
     private final TweetWordNodeFactory wordNodeFactory;
     private final List<TweetWord> tweetWords;
-    
+
     private TweetLayout(Configuration configuration) {
         this.configuration = configuration;
-        wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Configuration(configuration.font, configuration.tweetFontSize));
+        wordNodeFactory = TweetWordNodeFactory.createFactory(new TweetWordNodeFactory.Config(configuration.font, configuration.tweetFontSize));
         tweetWords = recalcTweetLayout();
     }
-    
-    
+
     public List<TweetWord> getWordLayoutInfo() {
         return tweetWords;
     }
@@ -69,46 +64,43 @@ public class TweetLayout {
         double y = upperLeft.getY() + targetBounds.getMinY() + lineOffset.getY();
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         return new Point2D(x, y);
-    }    
-    
-    
+    }
+
     private void fontSizeAdaption(Text text, double fontSize) {
         text.setFont(Font.font(text.getFont().getFamily(), fontSize));
-    }      
-    
+    }
+
     private List<TweetWord> recalcTweetLayout() {
         TextFlow flow = new TextFlow();
         flow.setMaxWidth(300);
-        pattern.splitAsStream(configuration.tweet.getText())
+        pattern.splitAsStream(configuration.tweet.getDisplayEnhancedText())
                 .forEach(w -> {
-                    
                     Text textWord = wordNodeFactory.createTextNode(w.concat(" "));
                     fontSizeAdaption(textWord, configuration.tweetFontSize);
-                    textWord.getStyleClass().setAll("tag");                    
+                    textWord.getStyleClass().setAll("tag");
                     flow.getChildren().add(textWord);
                 });
         flow.requestLayout();
         return flow.getChildren().stream().map(node -> new TweetWord(node.getBoundsInParent(), ((Text) node).getText())).collect(Collectors.toList());
-    }    
-    
+    }
+
     public static TweetLayout createTweetLayout(Configuration configuration) {
-        return new TweetLayout(configuration);        
-    } 
-    
+        return new TweetLayout(configuration);
+    }
+
     public static class Configuration {
 
         private final Tweet tweet;
         private final Font font;
         private final double tweetFontSize;
-        
+
         public Configuration(Tweet tweet, Font font, double tweetFontSize) {
             this.tweet = tweet;
             this.font = font;
             this.tweetFontSize = tweetFontSize;
         }
-        
     }
-    
+
     public static class TweetWord {
 
         public final Bounds bounds;
@@ -123,7 +115,6 @@ public class TweetLayout {
         public String toString() {
             return "TweetWord{" + "text=" + text + ", bounds=" + bounds + '}';
         }
-
     }
 
     public static class TweetWordNode {
@@ -135,8 +126,5 @@ public class TweetLayout {
             this.tweetWord = tweetWord;
             this.textNode = textNode;
         }
-
     }
-    
-    
 }

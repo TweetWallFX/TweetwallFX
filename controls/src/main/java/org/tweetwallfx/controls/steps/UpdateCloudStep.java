@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@
 package org.tweetwallfx.controls.steps;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,56 +42,57 @@ import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
-import org.tweetwallfx.controls.transition.LocationTransition;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.transitions.LocationTransition;
 
-/**
- *
- * @author Jörg Michelberger
- */
-public class UpdateCloudStep extends AbstractStep {
-    
-    private static final Logger log = LogManager.getLogger(UpdateCloudStep.class);            
+public class UpdateCloudStep implements Step {
+
+    private UpdateCloudStep() {
+        // prevent external instantiation
+    }
+
+    private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
 
     @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 5000;
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
+        return java.time.Duration.ofSeconds(5);
     }
 
     @Override
-    public void doStep(MachineContext context) {
-//        pane.setStyle("-fx-border-width: 1px; -fx-border-color: red;");
-        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
-//        Wordle wordle = (Wordle)context.get("Wordle");
-
-        List<Word> sortedWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getWords();
+    public void doStep(final MachineContext context) {
+        List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
         if (sortedWords.isEmpty()) {
             return;
         }
 
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
         List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
-        List<Word> additionalTagCloudWords = wordleSkin.getSkinnable().getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
-        
-        double minWeight = limitedWords.stream().map(Word::getWeight).min(Comparator.naturalOrder()).get();
-        
+        List<Word> additionalTagCloudWords = context.getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
+
+        double minWeight = limitedWords.stream().mapToDouble(Word::getWeight).min().orElse(-2d);
+
         if (null != additionalTagCloudWords) {
-            additionalTagCloudWords.stream().map(word -> new Word(word.getText(), minWeight)).forEach(word -> limitedWords.add(word));
+            additionalTagCloudWords.stream()
+                    .map(word -> new Word(word.getText(), minWeight))
+                    .forEach(limitedWords::add);
         }
         limitedWords.sort(Comparator.reverseOrder());
 
-        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMin(), wordleSkin.getFontSizeMax(), layoutBounds);
+        WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getLogo().getBoundsInParent());
         }
         if (null != wordleSkin.getSecondLogo()) {
             configuration.setBlockedAreaBounds(wordleSkin.getSecondLogo().getBoundsInParent());
         }
-        
+
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
         List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());
-        
+
         Duration defaultDuration = Duration.seconds(1.5);
 
         SequentialTransition morph = new SequentialTransition();
@@ -97,17 +100,16 @@ public class UpdateCloudStep extends AbstractStep {
         List<Transition> fadeOutTransitions = new ArrayList<>();
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
-        
-        log.info("Unused words in cloud: " + unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));        
-        
+
+        LOGGER.info("Unused words in cloud: " + unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+
         unusedWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.remove(word);
 
             FadeTransition ft = new FadeTransition(defaultDuration, textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(textNode));
             fadeOutTransitions.add(ft);
         });
 
@@ -115,21 +117,19 @@ public class UpdateCloudStep extends AbstractStep {
         fadeOuts.getChildren().addAll(fadeOutTransitions);
         morph.getChildren().add(fadeOuts);
 
-        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(wordleSkin.word2TextMap::containsKey)
+                .collect(Collectors.toList());
 
-        log.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
-
             Text textNode = wordleSkin.word2TextMap.get(word);
             cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
             Bounds bounds = cloudWordleLayout.getWordLayoutInfo().get(word);
 
-            LocationTransition lt = new LocationTransition(defaultDuration, textNode);
-            lt.setFromX(textNode.getLayoutX());
-            lt.setFromY(textNode.getLayoutY());
-            lt.setToX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-            lt.setToY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-            moveTransitions.add(lt);
+            moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                    .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                    .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
         });
 
         ParallelTransition moves = new ParallelTransition();
@@ -139,7 +139,7 @@ public class UpdateCloudStep extends AbstractStep {
         List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
 
         List<Text> newTextNodes = new ArrayList<>();
-        log.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         newWords.forEach(word -> {
             Text textNode = cloudWordleLayout.createTextNode(word);
             wordleSkin.word2TextMap.put(word, textNode);
@@ -154,12 +154,34 @@ public class UpdateCloudStep extends AbstractStep {
             fadeInTransitions.add(ft);
         });
         wordleSkin.getPane().getChildren().addAll(newTextNodes);
-        
+
         ParallelTransition fadeIns = new ParallelTransition();
         fadeIns.getChildren().addAll(fadeInTransitions);
         morph.getChildren().add(fadeIns);
-        
-        morph.setOnFinished(e -> context.proceed());        
+
+        morph.setOnFinished(e -> context.proceed());
         morph.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link UpdateCloudStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public UpdateCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new UpdateCloudStep();
+        }
+
+        @Override
+        public Class<UpdateCloudStep> getStepClass() {
+            return UpdateCloudStep.class;
+        }
+
+        @Override
+        public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
+            return Arrays.asList(TagCloudDataProvider.class);
+        }
     }
 }

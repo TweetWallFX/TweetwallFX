@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -15,7 +15,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -23,15 +23,12 @@
  */
 package org.tweetwallfx.controls;
 
-import org.tweetwallfx.controls.util.ImageCache;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.ImageView;
@@ -41,19 +38,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.controls.stepengine.StepEngine;
-import org.tweetwallfx.controls.stepengine.StepIterator;
+import org.tweetwallfx.stepengine.api.StepEngine;
 
-/**
- * @author sven
- */
 public class WordleSkin extends SkinBase<Wordle> {
-    private static final Logger startupLogger = LogManager.getLogger("org.tweetwallfx.startup");
-    private static final Logger log = LogManager.getLogger(WordleSkin.class);
-    
+
+    private static final Logger LOG = LogManager.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOGGER = LogManager.getLogger(WordleSkin.class);
     public final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
-    public  final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
+    public final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
     private final Pane pane;
     private final Pane stackPane;
     private Pane infoBox;
@@ -64,27 +57,19 @@ public class WordleSkin extends SkinBase<Wordle> {
     private ImageView logo;
     private ImageView secondLogo;
     private ImageView backgroundImage;
-    private Font font;
-    private int fontSizeMin;
-    private int fontSizeMax;
-    private int tweetFontSize;
+    private final Font font;
+    private final int fontSizeMin;
+    private final int fontSizeMax;
+    private final int tweetFontSize;
     private final Boolean favIconsVisible;
     private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
-    private final ImageCache mediaImageCache = new ImageCache(new ImageCache.DefaultImageCreator());
-    private final ImageCache profileImageCache = new ImageCache(new ImageCache.ProfileImageCreator());
-    public ImageView getSecondLogo(){
+
+    public ImageView getSecondLogo() {
         return secondLogo;
     }
+
     public ImageView getLogo() {
         return logo;
-    }
-
-    public ImageCache getMediaImageCache() {
-        return mediaImageCache;
-    }
-
-    public ImageCache getProfileImageCache() {
-        return profileImageCache;
     }
 
     public Pane getPane() {
@@ -118,23 +103,23 @@ public class WordleSkin extends SkinBase<Wordle> {
     public DateFormat getDf() {
         return df;
     }
-    
+
     public Font getFont() {
         return font;
     }
-    
+
     public int getFontSizeMin() {
         return fontSizeMin;
     }
-    
+
     public int getFontSizeMax() {
         return fontSizeMax;
     }
-    
+
     public int getTweetFontSize() {
         return tweetFontSize;
     }
-    
+
     public WordleSkin(Wordle wordle) {
         super(wordle);
         //create panes
@@ -147,34 +132,23 @@ public class WordleSkin extends SkinBase<Wordle> {
         this.getChildren().add(stackPane);
         //assign style
         stackPane.getStylesheets().add(this.getClass().getResource("wordle.css").toExternalForm());
-        
-        pane.heightProperty().addListener((observable) -> {
-            updateLogoPosition();
-        });
 
-        pane.widthProperty().addListener((observable) -> {
-            updateLogoPosition();
-        });
-        
-        getSkinnable().logoProperty().addListener((obs, oldValue, newValue) -> {
-            updateLogo(newValue);
-        });
-        
-        pane.heightProperty().addListener((observable) -> {
-            updateSecondLogoPosition();
-        });
+        pane.heightProperty().addListener(observable
+                -> updateLogoPosition());
+        pane.widthProperty().addListener(observable
+                -> updateLogoPosition());
+        getSkinnable().logoProperty().addListener((obs, oldValue, newValue)
+                -> updateLogo(newValue));
 
-        pane.widthProperty().addListener((observable) -> {
-            updateSecondLogoPosition();
-        });
-        
-        getSkinnable().secondLogoProperty().addListener((obs, oldValue, newValue) -> {
-            updateSecondLogo(newValue);
-        });
-        
-        getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue) -> {
-            updateBackgroundGraphic(newValue);
-        });
+        pane.heightProperty().addListener(observable
+                -> updateSecondLogoPosition());
+        pane.widthProperty().addListener(observable
+                -> updateSecondLogoPosition());
+        getSkinnable().secondLogoProperty().addListener((obs, oldValue, newValue)
+                -> updateSecondLogo(newValue));
+
+        getSkinnable().backgroundGraphicProperty().addListener((obs, oldValue, newValue)
+                -> updateBackgroundGraphic(newValue));
 
         updateBackgroundGraphic(getSkinnable().backgroundGraphicProperty().getValue());
         updateLogo(getSkinnable().logoProperty().getValue());
@@ -193,43 +167,43 @@ public class WordleSkin extends SkinBase<Wordle> {
         if (null != logo) {
             pane.getChildren().remove(logo);
             logo = null;
-        }   
-        log.trace("Logo: " + newLogo);
+        }
+        LOGGER.trace("Logo: " + newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             logo = new ImageView(newLogo);
-            logo.getStyleClass().add("logo");            
+            logo.getStyleClass().add("logo");
             pane.getChildren().add(logo);
             updateLogoPosition();
         }
     }
-    
+
     private void updateLogoPosition() {
-        log.trace("Updating logo position");
+        LOGGER.trace("Updating logo position");
         if (null != logo) {
             logo.setLayoutX(0);
             logo.setLayoutY(pane.getHeight() - logo.getImage().getHeight());
         }
     }
-    
+
     private void updateSecondLogo(final String newLogo) {
         if (null != secondLogo) {
             pane.getChildren().remove(secondLogo);
             secondLogo = null;
-        }   
-        log.trace("SecondLogo: " + newLogo);
+        }
+        LOGGER.trace("SecondLogo: " + newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             secondLogo = new ImageView(newLogo);
-            secondLogo.getStyleClass().add("secondlogo");            
+            secondLogo.getStyleClass().add("secondlogo");
             pane.getChildren().add(secondLogo);
             updateSecondLogoPosition();
         }
     }
-    
+
     private void updateSecondLogoPosition() {
-        log.trace("Updating secondLogo position");
+        LOGGER.trace("Updating secondLogo position");
         if (null != secondLogo) {
-            secondLogo.setLayoutX(pane.getWidth() - (secondLogo.getImage().getWidth()*0.8));
-            secondLogo.setLayoutY(pane.getHeight() - (secondLogo.getImage().getHeight()*0.8));
+            secondLogo.setLayoutX(pane.getWidth() - (secondLogo.getImage().getWidth() * 0.8));
+            secondLogo.setLayoutY(pane.getHeight() - (secondLogo.getImage().getHeight() * 0.8));
         }
     }
 
@@ -242,48 +216,34 @@ public class WordleSkin extends SkinBase<Wordle> {
             backgroundImage = new ImageView(newBackgroundGraphic) {
                 @Override
                 public double minHeight(double width) {
-                    return 10; 
+                    return 10;
                 }
 
                 @Override
                 public double minWidth(double height) {
                     return 10;
                 }
-                
+
             };
 
             backgroundImage.getStyleClass().add("bg-image");
-            backgroundImage.yProperty().bind(Bindings.divide(Bindings.subtract(stackPane.heightProperty(), backgroundImage.fitHeightProperty()),0.5));
+            backgroundImage.yProperty().bind(Bindings.divide(Bindings.subtract(stackPane.heightProperty(), backgroundImage.fitHeightProperty()), 0.5));
             backgroundImage.fitWidthProperty().bind(stackPane.widthProperty());
             backgroundImage.fitHeightProperty().bind(stackPane.heightProperty());
             backgroundImage.setPreserveRatio(true);
             backgroundImage.setCache(true);
             backgroundImage.setSmooth(true);
-            
+
             stackPane.getChildren().add(0, backgroundImage);
         }
     }
-    private final ExecutorService tickTockExecutor = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setName("TickTock");
-            t.setDaemon(true);
-            return t;
-        });
-    
-    public void prepareStepMachine() {
-        startupLogger.info("Prepare StepMachine");
-        StepIterator steps = StepIterator.ofDefaultConfiguration();
-        
-        StepEngine s = new StepEngine(steps);
-        s.getContext().put("WordleSkin", this);
-        
-        tickTockExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                s.go();
-            }
-        });
-        startupLogger.info("Prepare StepMachine done");        
-    }
 
+    private void prepareStepMachine() {
+        LOG.info("Prepare StepMachine");
+
+        final StepEngine s = new StepEngine();
+        s.getContext().put("WordleSkin", this);
+        LOG.info("Prepare StepMachine done");
+        s.go();
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2017 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,13 @@
  * THE SOFTWARE.
  */
 
+apply plugin: 'java-library'
+
 dependencies {
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
+    api project(':tweetwallfx-logging')
+    api project(':tweetwallfx-utility')
+}
+
+test {
+    systemProperty 'org.tweetwall.config.fileName', 'myCustomConfig.json'
 }

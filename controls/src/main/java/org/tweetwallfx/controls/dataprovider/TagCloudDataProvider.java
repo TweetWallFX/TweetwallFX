@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,44 +29,48 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryAware {
+public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
-    private final static int NUM_MAX_WORDS = 40;
-    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Comparator.comparingLong(Map.Entry::getValue);
-    
+    private static final int NUM_MAX_WORDS = 40;
+    private static final Comparator<Map.Entry<String, Long>> COMPARATOR = Map.Entry.comparingByValue();
+
     private List<Word> additionalTweetWords = null;
-    private Map<String, Long> tree = new TreeMap<>();
+    private final Map<String, Long> tree = new TreeMap<>();
 
-    
-    private TagCloudDataProvider(TweetStream tweetStream) {
-        tweetStream.onTweet(tweet -> processTweet(tweet));
+    private TagCloudDataProvider() {
+        // prevent external instantiation
     }
 
     @Override
-    public void processTweet(Tweet tweet) {
+    public void processNewTweet(final Tweet tweet) {
         updateTree(tweet);
     }
 
-    
-    public void setAdditionalTweetWords(List<Word> newWordList) {
+    @Override
+    public void processHistoryTweet(final Tweet tweet) {
+        updateTree(tweet);
+    }
+
+    public void setAdditionalTweetWords(final List<Word> newWordList) {
         this.additionalTweetWords = newWordList;
     }
-    
+
     public List<Word> getAdditionalTweetWords() {
         return this.additionalTweetWords;
     }
-    
+
     public List<Word> getWords() {
         return tree.entrySet().stream()
-                    .sorted(COMPARATOR.reversed())
-                    .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());        
+                .sorted(COMPARATOR.reversed())
+                .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());
     }
 
     private void updateTree(final Tweet tweet) {
@@ -75,30 +79,25 @@ public class TagCloudDataProvider implements DataProvider, DataProvider.HistoryA
                 .getTextWithout(UserMentionTweetEntry.class)
                 .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
-                .replaceAll("['\"()]", " "))
+                .replaceAll("['“”‘’\"()]", " "))
                 .filter(l -> l.length() > 2)
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
                 .map(StopList::removeEmojis)
-                .filter(StopList::notIn)                
-                .forEach(w -> 
-                    tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L)
-                );
+                .filter(StopList::notIn)
+                .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
     }
-    
-    
-    @Override
-    public String getName() {
-        return "TagCloud";
-    }
-    
-    public static class Factory implements DataProvider.Factory {
+
+    public static class FactoryImpl implements DataProvider.Factory {
 
         @Override
-        public TagCloudDataProvider create(TweetStream tweetStream) {
-            return new TagCloudDataProvider(tweetStream);
+        public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
+            return new TagCloudDataProvider();
         }
     
-    }    
-    
+        @Override
+        public Class<TagCloudDataProvider> getDataProviderClass() {
+            return TagCloudDataProvider.class;
+        }
+    }
 }

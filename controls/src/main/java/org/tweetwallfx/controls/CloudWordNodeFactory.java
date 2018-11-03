@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,42 +24,33 @@
 package org.tweetwallfx.controls;
 
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
-/**
- *
- * @author sven
- */
 public class CloudWordNodeFactory extends AbstractWordNodeFactory {
 
-    private Configuration configuration;
-    
-    private CloudWordNodeFactory(Configuration configuration) {
+    private final Config configuration;
+
+    private CloudWordNodeFactory(Config configuration) {
         super(configuration);
         this.configuration = configuration;
     }
 
-    static CloudWordNodeFactory createFactory(Configuration configuration) {
+    static CloudWordNodeFactory createFactory(Config configuration) {
         return new CloudWordNodeFactory(configuration);
-    }    
+    }
 
-    
     double getFontSize(double weight, double minWeight, double maxWeight) {
-        double a = (configuration.font.getSize() - configuration.maxFontSize) / (Math.log(minWeight / maxWeight));
+        double a = (configuration.font.getSize() - configuration.maxFontSize) / Math.log(minWeight / maxWeight);
         double b = configuration.font.getSize() - a * Math.log(minWeight);
         return a * Math.log(weight) + b;
-    }       
+    }
 
-    static class Configuration extends AbstractWordNodeFactory.Configuration{
+    static class Config extends AbstractWordNodeFactory.Configuration {
 
-        private final double minFontSize;
         private final double maxFontSize;
 
-        Configuration(Font font, double minFontSize, double maxFontSize) {
+        Config(final Font font, final double maxFontSize) {
             super(font);
-            this.minFontSize = minFontSize;
             this.maxFontSize = maxFontSize;
         }
     }
-    
 }

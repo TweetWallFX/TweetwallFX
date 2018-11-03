@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,12 +65,12 @@ public interface MediaTweetEntry extends TweetEntry {
     }
 
     /**
-     * Returns the media type ("photo", "video", "animated_gif").
+     * Returns the media type.
      *
-     * @return the media type ("photo", "video", "animated_gif").
+     * @return the media type
      */
-    String getType();
-    
+    MediaTweetEntryType getType();
+
     static Size createSize(final int width, final int height, final int resize) {
         return new MediaTweetEntrySize(width, height, resize);
     }

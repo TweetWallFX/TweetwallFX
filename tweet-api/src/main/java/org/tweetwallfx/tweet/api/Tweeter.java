@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,26 @@ package org.tweetwallfx.tweet.api;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 
 public abstract class Tweeter {
 
-    private static Tweeter INSTANCE;
-    private final ReadOnlyObjectWrapper<Exception> latestException = new ReadOnlyObjectWrapper<>(null);
+    private static Tweeter instance;
 
     public static final Tweeter getInstance() {
-        if (null == INSTANCE) {
+        if (null == instance) {
             synchronized (Tweeter.class) {
                 createInstance();
             }
         }
 
-        return INSTANCE;
+        return instance;
     }
 
     private static void createInstance() {
         final Iterator<Tweeter> itTweeter = ServiceLoader.load(Tweeter.class).iterator();
 
         if (itTweeter.hasNext()) {
-            INSTANCE = itTweeter.next();
+            instance = itTweeter.next();
         } else {
             throw new IllegalStateException("No implementation of Tweeter found!");
         }
@@ -58,21 +55,11 @@ public abstract class Tweeter {
 
     public abstract Tweet getTweet(final long tweetId);
 
+    public abstract User getUser(final String userId);
+
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 
     public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages);
-
-    public ReadOnlyObjectProperty<Exception> latestException() {
-        return latestException.getReadOnlyProperty();
-    }
-
-    public final Exception getLatestException() {
-        return latestException.get();
-    }
-
-    protected final void setLatestException(Exception newValue) {
-        latestException.set(newValue);
-    }
 
     public void createTweetStream() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

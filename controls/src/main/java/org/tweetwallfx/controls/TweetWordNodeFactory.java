@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2016 TweetWallFX
+ * Copyright 2015-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,14 +32,14 @@ import javafx.scene.text.Text;
  */
 public class TweetWordNodeFactory extends AbstractWordNodeFactory {
 
-    private Configuration configuration;
-    
-    private TweetWordNodeFactory(Configuration configuration) {
+    private final Config configuration;
+
+    private TweetWordNodeFactory(Config configuration) {
         super(configuration);
         this.configuration = configuration;
     }
 
-    public static TweetWordNodeFactory createFactory(Configuration configuration) {
+    public static TweetWordNodeFactory createFactory(Config configuration) {
         return new TweetWordNodeFactory(configuration);
     }
 
@@ -47,14 +47,13 @@ public class TweetWordNodeFactory extends AbstractWordNodeFactory {
         fontSizeAdaption(textNode, configuration.tweetFontSize);
     }
 
-    public static class Configuration extends AbstractWordNodeFactory.Configuration{
+    public static class Config extends AbstractWordNodeFactory.Configuration {
 
         private final double tweetFontSize;
 
-        public Configuration(Font font, double tweetFontSize) {
+        public Config(Font font, double tweetFontSize) {
             super(font);
             this.tweetFontSize = tweetFontSize;
         }
     }
-    
 }

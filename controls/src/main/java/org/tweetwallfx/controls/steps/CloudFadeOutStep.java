@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014-2015 TweetWallFX
+ * Copyright 2016-2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.controls.steps;
 
-//import org.tweetwallfx.controls.Wordle;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.FadeTransition;
@@ -32,25 +31,27 @@ import javafx.animation.Transition;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.controls.stepengine.AbstractStep;
-import org.tweetwallfx.controls.stepengine.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
- *
  * @author Jörg Michelberger
  */
-public class CloudFadeOutStep extends AbstractStep {
-    
-    @Override
-    public long preferredStepDuration(MachineContext context) {
-        return 2000;
+public class CloudFadeOutStep implements Step {
+
+    private CloudFadeOutStep() {
+        // prevent external instantiation
     }
 
     @Override
-    public void doStep(MachineContext context) {
-//        Logger startupLogger = Logger.getLogger("org.tweetwallfx.startup");
-        
-        WordleSkin wordleSkin = (WordleSkin)context.get("WordleSkin");
+    public java.time.Duration preferredStepDuration(final MachineContext context) {
+        return java.time.Duration.ofSeconds(2);
+    }
+
+    @Override
+    public void doStep(final MachineContext context) {
+        WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         List<Transition> fadeOutTransitions = new ArrayList<>();
 
@@ -61,17 +62,33 @@ public class CloudFadeOutStep extends AbstractStep {
             Text textNode = entry.getValue();
             FadeTransition ft = new FadeTransition(defaultDuration, textNode);
             ft.setToValue(0);
-            ft.setOnFinished((event) -> {
-                wordleSkin.getPane().getChildren().remove(textNode);
-            });
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(textNode));
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
-        
+
         ParallelTransition fadeLOuts = new ParallelTransition();
-        
+
         fadeLOuts.getChildren().addAll(fadeOutTransitions);
         fadeLOuts.setOnFinished(e -> context.proceed());
         fadeLOuts.play();
+    }
+
+    /**
+     * Implementation of {@link Step.Factory} as Service implementation creating
+     * {@link CloudFadeOutStep}.
+     */
+    public static final class FactoryImpl implements Step.Factory {
+
+        @Override
+        public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
+            return new CloudFadeOutStep();
+        }
+
+        @Override
+        public Class<CloudFadeOutStep> getStepClass() {
+            return CloudFadeOutStep.class;
+        }
     }
 }
