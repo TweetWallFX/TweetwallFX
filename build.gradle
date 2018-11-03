@@ -54,8 +54,8 @@ ext {
     releaseDate = new Date()
     bintrayEnabled = \
         ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
-        hasProperty('BINTRAY_USER') &&
-        hasProperty('BINTRAY_KEY')
+        null != findProperty('BINTRAY_USER') &&
+        null != findProperty('BINTRAY_KEY')
 }
 
 allprojects {
@@ -181,7 +181,7 @@ allprojects {
             user = findProperty('BINTRAY_USER') // null if not found
             key = findProperty('BINTRAY_KEY') // null if not found
 
-            dryRun = true //[Default: false] Whether to run this as dry-run, without deploying
+            dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
             publish = false //[Default: false] Whether version should be auto published after an upload
             override = project.version.endsWith('-SNAPSHOT') //[Default: false] Whether to override version artifacts already published
 
