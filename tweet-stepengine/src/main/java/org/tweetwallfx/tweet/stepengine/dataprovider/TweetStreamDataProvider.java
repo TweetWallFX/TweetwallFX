@@ -71,7 +71,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
         try {
-            history.forEach(this::addTweet);
+            history.forEach(this::appendTweet);
         } finally {
             tweetListLock.writeLock().unlock();
         }
@@ -80,7 +80,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     @Override
     public void processNewTweet(final Tweet tweet) {
         LOGGER.info("New tweet received");
-        addTweet(tweet);
+        prependTweet(tweet);
     }
 
     private void updateImage(final Tweet tweet) {
@@ -93,7 +93,16 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                         sis -> latestTweetedImage = new Image(sis.get())));
     }
 
-    private void addTweet(final Tweet tweet) {
+
+    private void appendTweet(final Tweet tweet) {
+        addTweet(tweet, false);
+    }    
+
+    private void prependTweet(final Tweet tweet) {
+        addTweet(tweet, true);
+    }    
+    
+    private void addTweet(final Tweet tweet, boolean prepend) {
         LOGGER.info("Add tweet {}", tweet.getId());
         if (tweet.getUser().getFollowersCount() > config.getMinFollowersCount()) {
             tweetListLock.writeLock().lock();
@@ -101,8 +110,12 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 final Tweet originalTweet = tweet.getOriginTweet();
                 
                 if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
-                    tweets.addFirst(originalTweet);
-                    updateImage(originalTweet);
+                    if (prepend) {
+                        tweets.addFirst(originalTweet);
+                        updateImage(originalTweet);
+                    } else {
+                        tweets.addLast(originalTweet);
+                    }
                 }
 
                 if (tweets.size() > config.getMaxTweets()) {
