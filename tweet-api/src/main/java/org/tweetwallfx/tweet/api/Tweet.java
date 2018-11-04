@@ -66,10 +66,9 @@ public interface Tweet extends BasicEntry {
      * in turn retweeted as Tweet C.
      *
      * <br>
-     * The following table describes which Tweet is returned when called on
-     * which Tweet.
-     *
      * <table>
+     * <caption>Table describing which Tweet is returned when called on which
+     * Tweet.</caption>
      * <thead>
      * <tr><td><b>Called on Tweet</b></td><td><b>Tweet returned</b></td></tr>
      * </thead>
@@ -94,10 +93,9 @@ public interface Tweet extends BasicEntry {
      * in turn retweeted as Tweet C.
      *
      * <br>
-     * The following table describes which Tweet is returned when called on
-     * which Tweet.
-     *
      * <table>
+     * <caption>Table describing which Tweet is returned when called on which
+     * Tweet.</caption>
      * <thead>
      * <tr><td><b>Called on Tweet</b></td><td><b>Tweet returned</b></td></tr>
      * </thead>
