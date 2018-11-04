@@ -82,7 +82,7 @@ public class CloudToTweetStep implements Step {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
         Tweet displayTweet = context.getDataProvider(TweetDataProvider.class).getTweet();
-        Tweet originalTweet = getOriginalTweet(displayTweet);
+        Tweet originalTweet = displayTweet.getOriginTweet();
 
         Point2D minPosTweetText = new Point2D(layoutBounds.getWidth() / 6d, (layoutBounds.getHeight() - wordleSkin.getLogo().getImage().getHeight()) / 4d);
 
@@ -190,7 +190,7 @@ public class CloudToTweetStep implements Step {
             final WordleSkin wordleSkin,
             final MachineContext context,
             final Tweet displayTweet) {
-        final Tweet originalTweet = getOriginalTweet(displayTweet);
+        final Tweet originalTweet = displayTweet.getOriginTweet();
 
         if (originalTweet.getMediaEntries().length > 0) {
             HBox mediaBox = new HBox(10);
@@ -251,7 +251,7 @@ public class CloudToTweetStep implements Step {
             final MachineContext context,
             final Tweet displayTweet,
             final Point2D lowerLeft) {
-        final Tweet originalTweet = getOriginalTweet(displayTweet);
+        final Tweet originalTweet = displayTweet.getOriginTweet();
 
         Image profileImage = context.getDataProvider(TweetUserProfileImageDataProvider.class).getImage(originalTweet.getUser());
         ImageView imageView = new ImageView(profileImage);
@@ -339,16 +339,6 @@ public class CloudToTweetStep implements Step {
         GridPane.setConstraints(thirdLineBox, 1, 2);
 
         return infoBox;
-    }
-
-    private Tweet getOriginalTweet(final Tweet tweet) {
-        Tweet originalTweet = tweet;
-
-        while (originalTweet.isRetweet()) {
-            originalTweet = originalTweet.getRetweetedTweet();
-        }
-
-        return originalTweet;
     }
 
     /**

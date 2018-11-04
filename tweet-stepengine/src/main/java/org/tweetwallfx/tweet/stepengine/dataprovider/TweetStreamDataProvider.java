@@ -98,16 +98,13 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         if (tweet.getUser().getFollowersCount() > config.getMinFollowersCount()) {
             tweetListLock.writeLock().lock();
             try {
-                if (tweet.isRetweet()) {
-                    Tweet originalTweet = tweet.getRetweetedTweet();
-                    if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
-                        tweets.addFirst(originalTweet);
-                        updateImage(originalTweet);
-                    }
-                } else {
-                    tweets.addFirst(tweet);
-                    updateImage(tweet);
+                final Tweet originalTweet = tweet.getOriginTweet();
+                
+                if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                    tweets.addFirst(originalTweet);
+                    updateImage(originalTweet);
                 }
+
                 if (tweets.size() > config.getMaxTweets()) {
                     tweets.removeLast();
                 }
@@ -161,9 +158,9 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         /**
          * The number of the tweets to request from query in order to fill up
          * {@link TweetStreamDataProvider} upon initialization. Defaults to
-         * {@code 25}.
+         * {@code 50}.
          */
-        private int historySize = 25;
+        private int historySize = 50;
 
         /**
          * The number of tweet to produce upon request via
