@@ -224,15 +224,16 @@ public final class StepEngine {
             final long start = System.currentTimeMillis();
 
             Step step = stepIterator.next();
+            context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             while (step.shouldSkip(context)) {
                 LOG.info("Skip step: {}", step.getClass().getSimpleName());
                 step = stepIterator.next();
+                context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             }
-            final Step stepToExecute = step;
+            final Step stepToExecute = step;            
             final Duration duration = step.preferredStepDuration(context);
 
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
-            context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(stepToExecute));
             
             if (stepToExecute.requiresPlatformThread()) {
                 Platform.runLater(() -> stepToExecute.doStep(context));
