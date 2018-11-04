@@ -59,10 +59,7 @@ public class FilterChain<T> {
                     FilterStep.Factory::getDomainObjectClass,
                     Collectors.toMap(
                             fsf -> fsf.getFilterStepClass().getCanonicalName(),
-                            Function.identity(),
-                            (fsf1, fsf2) -> {
-                                throw new IllegalArgumentException("At most one FilterStep.Factory entry may exist for a FilterStep (uncompliant FilterStep.Factory type: '" + fsf1.getFilterStepClass() + "').");
-                            })));
+                            Function.identity())));
     private final List<FilterStep<T>> filterSteps;
     private final boolean defaultResult;
 
