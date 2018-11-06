@@ -46,7 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class ScheduleDataProvider implements DataProvider, DataProvider.Scheduled {
 
-    private List<ScheduleSlot> scheduleSlots = Collections.emptyList();
+    private volatile List<ScheduleSlot> scheduleSlots = Collections.emptyList();
     private final Config config;
 
     private ScheduleDataProvider(final Config config) {
@@ -106,9 +106,9 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
          */
         private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
         /**
-         * Delay until the first execution in seconds. Defaults to {@code 300L}.
+         * Delay until the first execution in seconds. Defaults to {@code 0L}.
          */
-        private long initialDelay = 5 * 60L;
+        private long initialDelay = 0L;
         /**
          * Fixed rate of / delay between consecutive executions in seconds.
          * Defaults to {@code 300L}.
