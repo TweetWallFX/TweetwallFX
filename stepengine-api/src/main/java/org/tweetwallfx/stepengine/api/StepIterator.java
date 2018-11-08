@@ -101,13 +101,7 @@ class StepIterator {
                 .peek(sf -> LOGGER.info("Registering Step.Factory '{}' which creates the Step '{}'", sf, sf.getStepClass().getCanonicalName()))
                 .collect(Collectors.toMap(
                         sf -> sf.getStepClass().getCanonicalName(),
-                        Function.identity(),
-                        (sf1, sf2) -> {
-                            // ensure there are no conflicting Step.Factory instances creating a specific Step
-                            throw new IllegalArgumentException("At most one Step.Factory must be registered creating the Step: " + sf1
-                                    + "(" + sf1.getClass().getCanonicalName() + " and " + sf2.getClass().getCanonicalName() + ")");
-                        }
-                ));
+                        Function.identity()));
         private final List<Step> steps = new ArrayList<>();
         private final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders = new HashMap<>();
 

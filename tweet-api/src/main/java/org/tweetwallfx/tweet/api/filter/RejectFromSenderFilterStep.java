@@ -35,18 +35,18 @@ import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking the sending
- * {@link User} {@link User#getName()} and possibly accept them.
+ * {@link User} {@link User#getName()} and possibly reject them.
  *
  * In case {@link User#getName()} is one of the names configured in
- * {@link Config#getUserHandles()} it is terminally accepted with
- * {@link Result#ACCEPTED}. Otherwise it is evaluated as
+ * {@link Config#getUserHandles()} it is terminally rejected with
+ * {@link Result#REJECTED}. Otherwise it is evaluated as
  * {@link Result#NOTHING_DEFINITE}.
  */
-public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
+public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
 
     private final Config config;
 
-    private AcceptFromSenderFilterStep(final Config config) {
+    private RejectFromSenderFilterStep(final Config config) {
         this.config = config;
     }
 
@@ -56,7 +56,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
         do {
             if (config.getUserHandles().contains(t.getUser().getName())) {
-                return Result.ACCEPTED;
+                return Result.REJECTED;
             }
 
             t = t.getRetweetedTweet();
@@ -67,7 +67,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
     /**
      * Implementation of {@link FilterStep.Factory} creating
-     * {@link AcceptFromSenderFilterStep}.
+     * {@link RejectFromSenderFilterStep}.
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
@@ -77,18 +77,18 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
         }
 
         @Override
-        public Class<AcceptFromSenderFilterStep> getFilterStepClass() {
-            return AcceptFromSenderFilterStep.class;
+        public Class<RejectFromSenderFilterStep> getFilterStepClass() {
+            return RejectFromSenderFilterStep.class;
         }
 
         @Override
-        public AcceptFromSenderFilterStep create(final FilterChainSettings.FilterStepDefinition filterStepDefinition) {
-            return new AcceptFromSenderFilterStep(filterStepDefinition.getConfig(Config.class));
+        public RejectFromSenderFilterStep create(final FilterChainSettings.FilterStepDefinition filterStepDefinition) {
+            return new RejectFromSenderFilterStep(filterStepDefinition.getConfig(Config.class));
         }
     }
 
     /**
-     * POJO used to configure {@link AcceptFromSenderFilterStep}.
+     * POJO used to configure {@link RejectFromSenderFilterStep}.
      */
     public static final class Config {
 
@@ -97,10 +97,10 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
         /**
          * Returns the handles for the {@link User} for which any {@link Tweet}
-         * send by them is automatically accepted.
+         * send by them is automatically rejected.
          *
          * @return the handles for the {@link User} for which any {@link Tweet}
-         * send by them is automatically accepted
+         * send by them is automatically rejected
          */
         public Set<String> getUserHandles() {
             return userHandles;

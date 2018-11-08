@@ -58,13 +58,7 @@ public final class Configuration {
             .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
             .collect(Collectors.toMap(
                     ConfigurationConverter::getResponsibleKey,
-                    Function.identity(),
-                    (first, second) -> {
-                        // ensure there are no conflicting ConfigurationConverter registered for a specific key
-                        throw new IllegalArgumentException(String.format("At most one ConfigurationConverter may be registered to "
-                                + "convert configuration data of a specific key, but the following ConfigurationConverters are "
-                                + "registered for key '%s': [%s, %s]", first.getResponsibleKey(), first, second));
-                    }));
+                    Function.identity()));
     private static final Configuration INSTANCE = new Configuration();
     private final Map<String, Object> configurationData = new HashMap<>();
 

@@ -57,7 +57,58 @@ public interface Tweet extends BasicEntry {
 
     int getRetweetCount();
 
+    /**
+     * Returns the Tweet that has been retweeted. Concerns one level of
+     * retweeting only.
+     *
+     * <p>
+     * Considering the scenario that Tweet A was retweeted as Tweet B which was
+     * in turn retweeted as Tweet C.
+     *
+     * <br>
+     * <table>
+     * <caption>Table describing which Tweet is returned when called on which
+     * Tweet.</caption>
+     * <thead>
+     * <tr><td><b>Called on Tweet</b></td><td><b>Tweet returned</b></td></tr>
+     * </thead>
+     * <tbody>
+     * <tr><td>Tweet A</td><td>null</td></tr>
+     * <tr><td>Tweet B</td><td>Tweet A</td></tr>
+     * <tr><td>Tweet C</td><td>Tweet B</td></tr>
+     * </tbody>
+     * </table>
+     *
+     * @return the original Tweet or {@code null} if this is not a retweet.
+     */
     Tweet getRetweetedTweet();
+
+    /**
+     * Returns the Tweet that originated this Tweet. If this Tweet has not been
+     * a retweet it is returned directly. Otherwise retweeted Tweet is resolved
+     * and again evaluated until the evaluated Tweet is no longer a re-Tweet.
+     *
+     * <p>
+     * Considering the scenario that Tweet A was retweeted as Tweet B which was
+     * in turn retweeted as Tweet C.
+     *
+     * <br>
+     * <table>
+     * <caption>Table describing which Tweet is returned when called on which
+     * Tweet.</caption>
+     * <thead>
+     * <tr><td><b>Called on Tweet</b></td><td><b>Tweet returned</b></td></tr>
+     * </thead>
+     * <tbody>
+     * <tr><td>Tweet A</td><td>Tweet A</td></tr>
+     * <tr><td>Tweet B</td><td>Tweet A</td></tr>
+     * <tr><td>Tweet C</td><td>Tweet A</td></tr>
+     * </tbody>
+     * </table>
+     *
+     * @return the original Tweet or this Tweet if this Tweet is not a retweet.
+     */
+    Tweet getOriginTweet();
 
     String getText();
 

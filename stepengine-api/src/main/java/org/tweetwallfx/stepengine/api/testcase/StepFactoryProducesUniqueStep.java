@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright 2018 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,50 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwall.util
+package org.tweetwallfx.stepengine.api.testcase;
 
-import spock.lang.Specification
-import spock.lang.Unroll
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import org.tweetwallfx.util.testcase.RunnableTestCase;
+import org.tweetwallfx.stepengine.api.Step;
 
-@Unroll
-class StringNumberComparatorSpec extends Specification {
-    
-    def "#result == compare(#string1, #string2)"() {
-        expect:
-        result == StringNumberComparator.INSTANCE.compare(string1, string2)
-        
-        where:
-        [result, string1, string2] << [
-            [
-                0,
-                'A',
-                'A',
-            ],
-            [
-                0,
-                'Alpha',
-                'Alpha',
-            ],
-            [
-                -1,
-                'Alpha 0',
-                'Alpha 00',
-            ],
-            [
-                -1,
-                'Alpha 0',
-                'Alpha 0 ',
-            ],
-            [
-                1,
-                'Beta 20',
-                'Beta 2',
-            ],
-            [
-                1,
-                'Beta 00020',
-                'Beta 2',
-            ],
-        ]
+/**
+ * Testcase checking that no two registered {@link Step.Factory} instances
+ * produce the same Step instance.
+ */
+public class StepFactoryProducesUniqueStep implements RunnableTestCase {
+
+    @Override
+    public void execute() throws Exception {
+        StreamSupport.stream(ServiceLoader.load(Step.Factory.class).spliterator(), false)
+                .collect(Collectors.groupingBy(sf -> sf.getStepClass().getCanonicalName()))
+                .entrySet().stream()
+                .filter(e -> 1 != e.getValue().size())
+                .forEach(e -> {
+                    throw new IllegalArgumentException(String.format("At most one Step.Factory must be registered creating '%s'"
+                            + ", but the following are registered: %s!", e.getKey(), e.getValue()));
+                });
     }
 }

@@ -50,11 +50,15 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     }
 
     public Image getSpeakerImage(final Speaker speaker) {
-        return getSpeakerImage(speaker.getAvatarURL());
+        return null == speaker
+                ? getDefaultClasspathImage()
+                : getSpeakerImage(speaker.getAvatarURL());
     }
 
     public Image getSpeakerImage(final SpeakerReference speakerReference) {
-        return getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
+        return null == speakerReference
+                ? getDefaultClasspathImage()
+                : getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
     }
 
     private Image getSpeakerImage(final String avatarURL) {
@@ -62,21 +66,20 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
 
         if (null == supplier) {
             // avatar url is not in cache (url content was not loadable)
-            // look for configured replacement
             final String urlReplacement = config.getUrlReplacements().get(avatarURL);
-            Image image = null == urlReplacement
-                    ? null
+
+            return null == urlReplacement
+                    // use stand-in for non-loadable
+                    ? getDefaultClasspathImage()
+                    // look for configured replacement
                     : getSpeakerImage(urlReplacement);
-
-            if (null == image) {
-                // use stand-in for non-loadable
-                image = new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.getNoImageResource()));
-            }
-
-            return image;
         } else {
             return new Image(supplier.get());
         }
+    }
+
+    private Image getDefaultClasspathImage() {
+        return new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.getNoImageResource()));
     }
 
     @Override
@@ -120,7 +123,11 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
 
     public static class Config implements ScheduledConfig {
 
-        private String noImageResource = "icons/user1-256x256.png";
+        /**
+         * Classpath entry for usage in cases when no speaker image is
+         * available.
+         */
+        private String noImageResource = "icons/anonymous.jpg";
         private Map<String, String> urlReplacements = Collections.emptyMap();
         /**
          * The type of scheduling to perform. Defaults to
