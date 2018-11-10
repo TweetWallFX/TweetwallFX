@@ -182,10 +182,9 @@ public final class StepEngine {
             return properties.get(key);
         }
 
+        @SuppressWarnings("unchecked")
         public <T> T get(final String key, final Class<T> clazz) {
-            @SuppressWarnings("unchecked")
-            final T value = (T) properties.get(key);
-            return value;
+            return (T) properties.get(key);
         }
 
         public Object put(final String key, final Object value) {
