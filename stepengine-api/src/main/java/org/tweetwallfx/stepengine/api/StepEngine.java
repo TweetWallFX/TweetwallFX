@@ -182,6 +182,11 @@ public final class StepEngine {
             return properties.get(key);
         }
 
+        @SuppressWarnings("unchecked")
+        public <T> T get(final String key, final Class<T> clazz) {
+            return (T) properties.get(key);
+        }
+
         public Object put(final String key, final Object value) {
             return properties.put(key, value);
         }
@@ -230,11 +235,11 @@ public final class StepEngine {
                 step = stepIterator.next();
                 context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             }
-            final Step stepToExecute = step;            
+            final Step stepToExecute = step;
             final Duration duration = step.preferredStepDuration(context);
 
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
-            
+
             if (stepToExecute.requiresPlatformThread()) {
                 Platform.runLater(() -> stepToExecute.doStep(context));
             } else {
