@@ -98,7 +98,7 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
          *
          * @param count the new value
          */
-        public void setUserHandles(final Integer count) {
+        public void setCount(final Integer count) {
             Objects.requireNonNull(count, "count must not be null!");
             this.count = count;
         }
