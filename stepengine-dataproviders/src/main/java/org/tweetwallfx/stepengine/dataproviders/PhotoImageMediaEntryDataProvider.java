@@ -47,7 +47,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
     public Image getImage(final MediaTweetEntry mte) {
         return new Image(PhotoImageCache.INSTANCE
                 .getCached(mte)
-                .get());
+                .getInputStream());
     }
 
     @Override
