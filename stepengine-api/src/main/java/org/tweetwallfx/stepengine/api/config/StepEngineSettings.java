@@ -36,7 +36,7 @@ import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
 /**
- * POJO for reading Settings concerning the HTTP Connection itself.
+ * POJO for reading Settings concerning the {@link StepEngine}.
  */
 public final class StepEngineSettings {
 
