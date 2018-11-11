@@ -49,6 +49,7 @@ public class SessionData {
     public final List<String> speakers;
     public final String title;
     public final String beginTime;
+    public final String endTime;
     public final boolean isNotAllocated;
     public final String roomSetup;
 
@@ -59,6 +60,7 @@ public class SessionData {
         this.beginTime = slot.getFromTime();
         this.isNotAllocated = slot.isNotAllocated();
         this.roomSetup = slot.getRoomSetup();
+        this.endTime = slot.getToTime();
     }
 
     /**
