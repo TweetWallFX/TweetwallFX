@@ -90,7 +90,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .ifPresent(mte
                         -> PhotoImageCache.INSTANCE.getCachedOrLoad(
                         mte,
-                        sis -> latestTweetedImage = new Image(sis.get())));
+                        sis -> latestTweetedImage = new Image(sis.getInputStream())));
     }
 
 
