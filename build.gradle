@@ -129,11 +129,19 @@ allprojects {
             manifest.attributes provider: 'gradle'
         }
 
+        javadoc {
+            doFirst {
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                options.addStringOption('-module-path', additionalModules.asPath)
+                options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
+            }
+        }
+
         compileJava {
             doFirst {
                 def additionalModules = (configurations.javafx + configurations.jaxb)
                 options.compilerArgs = [
-                        '--module-path', (configurations.javafx + configurations.jaxb).asPath,
+                        '--module-path', additionalModules.asPath,
                         '--add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
                         '-Xlint:all', '-Werror', '-proc:none'
                 ]
@@ -150,7 +158,7 @@ allprojects {
         }
 
         check {
-//            dependsOn 'javadoc'
+            dependsOn 'javadoc'
         }
 
         // configuring Errorprone
