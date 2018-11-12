@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -192,6 +193,7 @@ public final class StepEngine {
         }
 
         public void proceed() {
+            LOG.info("Proceed called");
             asyncProceed.arrive();
         }
 
@@ -258,9 +260,15 @@ public final class StepEngine {
                     Thread.currentThread().interrupt();
                 }
             }
-
-            // wait for proceed being called
-            asyncProceed.arriveAndAwaitAdvance();
+            LOG.info("waiting (possible) for step to call proceed {}", step.getClass().getSimpleName());
+            try {
+                // wait for proceed being called
+                asyncProceed.awaitAdvanceInterruptibly(asyncProceed.arrive(), 30, TimeUnit.SECONDS);
+            } catch (InterruptedException ex) {
+                LOG.error("Await proceed interrupted", ex);
+            } catch (TimeoutException ex) {
+                LOG.error("Await proceed timed out", ex);
+            }
         }
     }
 }
