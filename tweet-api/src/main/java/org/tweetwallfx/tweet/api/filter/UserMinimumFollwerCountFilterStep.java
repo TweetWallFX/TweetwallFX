@@ -30,6 +30,8 @@ import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking the sending
@@ -109,6 +111,13 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
         public void setCount(final Integer count) {
             Objects.requireNonNull(count, "count must not be null!");
             this.count = count;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "count", getCount()
+            )) + " extends " + super.toString();
         }
     }
 }

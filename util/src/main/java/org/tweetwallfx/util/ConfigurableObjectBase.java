@@ -57,7 +57,7 @@ public abstract class ConfigurableObjectBase {
      *
      * @return the objects configuration data via a type safe object
      */
-    public final <T> T getConfig(final Class<T> typeClass) {
+    public <T> T getConfig(final Class<T> typeClass) {
         return JsonDataConverter.convertFromObject(getConfig(), typeClass);
     }
 
