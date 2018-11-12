@@ -34,6 +34,9 @@ public class Break {
     private String nameEN;
     private String nameFR;
     private Room room;
+    private String dayName;
+    private String startTime;
+    private String endTime;
 
     public String getId() {
         return id;
@@ -67,13 +70,38 @@ public class Break {
         this.room = room;
     }
 
+    public String getDayName() {
+        return dayName;
+    }
+
+    public void setDayName(final String dayName) {
+        this.dayName = dayName;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(final String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(final String endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return createToString(this, map(
                 "id", getId(),
                 "nameEN", getNameEN(),
                 "nameFR", getNameFR(),
-                "room", getRoom()
+                "room", getRoom(),
+                "dayName", getDayName()
         )) + " extends " + super.toString();
     }
 }

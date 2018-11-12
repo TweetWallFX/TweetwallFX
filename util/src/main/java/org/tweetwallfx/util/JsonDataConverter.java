@@ -54,7 +54,7 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromObject(final Object object, final Class<T> typeClass) {
-        return convertFromString(JSONB.toJson(object), typeClass);
+        return convertFromString(convertToString(object), typeClass);
     }
 
     /**
@@ -87,5 +87,16 @@ public class JsonDataConverter {
      */
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
         return JSONB.fromJson(jsonString, typeClass);
+    }
+
+    /**
+     * Converts the {@code object} parameter into a JSON String.
+     *
+     * @param object the object to convert
+     *
+     * @return the converted String
+     */
+    public static String convertToString(final Object object) {
+        return JSONB.toJson(object);
     }
 }

@@ -71,7 +71,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         List<Tweet> history = getLatestHistory();
         tweetListLock.writeLock().lock();
         try {
-            history.forEach(this::addTweet);
+            history.forEach(this::appendTweet);
         } finally {
             tweetListLock.writeLock().unlock();
         }
@@ -80,7 +80,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     @Override
     public void processNewTweet(final Tweet tweet) {
         LOGGER.info("New tweet received");
-        addTweet(tweet);
+        prependTweet(tweet);
     }
 
     private void updateImage(final Tweet tweet) {
@@ -90,24 +90,34 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .ifPresent(mte
                         -> PhotoImageCache.INSTANCE.getCachedOrLoad(
                         mte,
-                        sis -> latestTweetedImage = new Image(sis.get())));
+                        sis -> latestTweetedImage = new Image(sis.getInputStream())));
     }
 
-    private void addTweet(final Tweet tweet) {
+
+    private void appendTweet(final Tweet tweet) {
+        addTweet(tweet, false);
+    }    
+
+    private void prependTweet(final Tweet tweet) {
+        addTweet(tweet, true);
+    }    
+    
+    private void addTweet(final Tweet tweet, boolean prepend) {
         LOGGER.info("Add tweet {}", tweet.getId());
         if (tweet.getUser().getFollowersCount() > config.getMinFollowersCount()) {
             tweetListLock.writeLock().lock();
             try {
-                if (tweet.isRetweet()) {
-                    Tweet originalTweet = tweet.getRetweetedTweet();
-                    if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                final Tweet originalTweet = tweet.getOriginTweet();
+                
+                if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                    if (prepend) {
                         tweets.addFirst(originalTweet);
                         updateImage(originalTweet);
+                    } else {
+                        tweets.addLast(originalTweet);
                     }
-                } else {
-                    tweets.addFirst(tweet);
-                    updateImage(tweet);
                 }
+
                 if (tweets.size() > config.getMaxTweets()) {
                     tweets.removeLast();
                 }
@@ -161,9 +171,9 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         /**
          * The number of the tweets to request from query in order to fill up
          * {@link TweetStreamDataProvider} upon initialization. Defaults to
-         * {@code 25}.
+         * {@code 50}.
          */
-        private int historySize = 25;
+        private int historySize = 50;
 
         /**
          * The number of tweet to produce upon request via

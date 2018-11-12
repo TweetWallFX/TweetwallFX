@@ -24,14 +24,16 @@
 package org.tweetwallfx.stepengine.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
@@ -47,15 +49,19 @@ class StepIterator {
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
     private int stepIndex = 0;
     private final List<Step> steps;
-    private final Set<Class<? extends DataProvider>> requiredDataProviders;
+    private final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders;
 
-    private StepIterator(final List<Step> steps, final Set<Class<? extends DataProvider>> requiredDataProviders) {
+    private StepIterator(final List<Step> steps, final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders) {
         this.steps = new ArrayList<>(steps);
-        this.requiredDataProviders = Collections.unmodifiableSet(requiredDataProviders);
+        this.requiredDataProviders = Collections.unmodifiableMap(requiredDataProviders);
 
         if (steps.isEmpty()) {
             throw new IllegalArgumentException("StepIterator has no steps to iterate through!");
         }
+    }
+
+    Collection<Class<? extends DataProvider>> getRequiredDataProviders(final Step step) {
+        return requiredDataProviders.getOrDefault(step, Collections.emptyList());
     }
 
     static StepIterator create() {
@@ -74,7 +80,9 @@ class StepIterator {
     }
 
     Set<Class<? extends DataProvider>> getRequiredDataProviders() {
-        return requiredDataProviders;
+        return requiredDataProviders.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
     }
 
     Step next() {
@@ -88,40 +96,22 @@ class StepIterator {
 
     private static class Builder {
 
-        private static final Map<String, Step.Factory> FACTORIES;
-
-        static {
-            LOGGER.info("loading configurations data converters");
-            final Map<String, List<Step.Factory>> converters = StreamSupport
-                    .stream(ServiceLoader.load(Step.Factory.class).spliterator(), false)
-                    .peek(sf -> LOGGER.info("Registering Step.Factory '{}' which creates the Step '{}'", sf, sf.getStepClass().getCanonicalName()))
-                    .collect(Collectors.groupingBy(sf -> sf.getStepClass().getCanonicalName()));
-
-            // ensure there are no conflicting ConfigurationConverter registered for a specific key
-            converters.entrySet()
-                    .stream()
-                    .filter(e -> e.getValue().size() > 1)
-                    .findAny()
-                    .ifPresent(e -> {
-                        throw new IllegalArgumentException("At most one ConfigurationConverter may be registered to convert configuration data but the following ConfigurationConverters are registered: " + e.getValue());
-                    });
-
-            // only one element in the list. so use the one element in the list instead of the list
-            FACTORIES = converters.entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
-        }
-
+        private static final Map<String, Step.Factory> FACTORIES = StreamSupport
+                .stream(ServiceLoader.load(Step.Factory.class).spliterator(), false)
+                .peek(sf -> LOGGER.info("Registering Step.Factory '{}' which creates the Step '{}'", sf, sf.getStepClass().getCanonicalName()))
+                .collect(Collectors.toMap(
+                        sf -> sf.getStepClass().getCanonicalName(),
+                        Function.identity()));
         private final List<Step> steps = new ArrayList<>();
-        private final Set<Class<? extends DataProvider>> requiredDataProviders = new HashSet<>();
+        private final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders = new HashMap<>();
 
         private Builder addStep(final StepEngineSettings.StepDefinition stepDefinition) {
             final String stepClassName = stepDefinition.getStepClassName();
             final Step.Factory factory = FACTORIES.get(stepClassName);
 
             Objects.requireNonNull(factory, "Step.Factory creating '" + stepClassName + "' does not exist!");
-            requiredDataProviders.addAll(factory.getRequiredDataProviders(stepDefinition));
             final Step step = factory.create(stepDefinition);
+            requiredDataProviders.put(step, Collections.unmodifiableList(new ArrayList<>(factory.getRequiredDataProviders(stepDefinition))));
 
             Objects.requireNonNull(step, () -> "Step.Factory '" + factory + "' failed to create Step!");
             LOGGER.info("Step.Factory '{}' created '{}'", factory, step);

@@ -44,6 +44,11 @@ public class ProposalType {
      * The label of the ProposalType.
      */
     private String label;
+    
+    /**
+     * Duration in minutes.
+     */
+    private int duration;
 
     public String getId() {
         return id;
@@ -61,6 +66,14 @@ public class ProposalType {
         this.description = description;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final int duration) {
+        this.duration = duration;
+    }
+
     public String getLabel() {
         return label;
     }
@@ -74,6 +87,7 @@ public class ProposalType {
         return createToString(this, map(
                 "id", getId(),
                 "description", getDescription(),
+                "duration", getDuration(),
                 "label", getLabel()
         )) + " extends " + super.toString();
     }
