@@ -60,7 +60,7 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         do {
             LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
 
-            if (config.getUserHandles().contains(t.getUser().getName())) {
+            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
                 LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), tweet.getId());
                 return Result.REJECTED;
             }

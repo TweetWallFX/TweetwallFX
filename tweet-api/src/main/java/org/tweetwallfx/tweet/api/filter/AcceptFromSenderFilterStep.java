@@ -60,7 +60,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
         do {
             LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
 
-            if (config.getUserHandles().contains(t.getUser().getName())) {
+            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
                 LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is whitelisted -> ACCEPTED", t.getId(), tweet.getId());
                 return Result.ACCEPTED;
             }
