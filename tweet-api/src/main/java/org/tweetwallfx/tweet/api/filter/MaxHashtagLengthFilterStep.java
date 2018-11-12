@@ -125,7 +125,7 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
          *
          * @param maxLength the new value
          */
-        public void setUserHandles(final int maxLength) {
+        public void setMaxLength(final int maxLength) {
             this.maxLength = maxLength;
         }
 
