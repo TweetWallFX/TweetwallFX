@@ -241,9 +241,21 @@ public final class StepEngine {
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
 
             if (stepToExecute.requiresPlatformThread()) {
-                Platform.runLater(() -> stepToExecute.doStep(context));
+                Platform.runLater(() -> {
+                    try {
+                        stepToExecute.doStep(context);
+                    } catch (RuntimeException | Error e) {
+                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
+                        LOG.fatal("caused by", e);
+                    }
+                });
             } else {
-                stepToExecute.doStep(context);
+                    try {
+                        stepToExecute.doStep(context);
+                    } catch (RuntimeException | Error e) {
+                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
+                        LOG.fatal("caused by", e);
+                    }
             }
 
             final long stop = System.currentTimeMillis();
