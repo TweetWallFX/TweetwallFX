@@ -24,7 +24,7 @@
 package org.tweetwallfx.stepengine.api;
 
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +34,16 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
@@ -63,6 +68,11 @@ public final class StepEngine {
     private final MachineContext context = new MachineContext();
     private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread t = new Thread(THREAD_GROUP, r, "engine");
+        t.setDaemon(true);
+        return t;
+    });
+    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(THREAD_GROUP, r, "schedule");
         t.setDaemon(true);
         return t;
     });
@@ -99,9 +109,10 @@ public final class StepEngine {
                         }));
         final List<DataProvider> providers = StreamSupport.stream(ServiceLoader.load(DataProvider.Factory.class).spliterator(), false)
                 .filter(factory -> requiredDataProviders.contains(factory.getDataProviderClass()))
-                .map(dpf -> dpf.create(dataProviderSettings.getOrDefault(
-                dpf.getDataProviderClass().getName(),
-                new StepEngineSettings.DataProviderSetting())))
+                .map(dpf
+                        -> dpf.create(dataProviderSettings.getOrDefault(
+                        dpf.getDataProviderClass().getName(),
+                        new StepEngineSettings.DataProviderSetting())))
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
                 .collect(Collectors.toList());
 
@@ -120,6 +131,10 @@ public final class StepEngine {
                 .filter(DataProvider.HistoryAware.class::isInstance)
                 .map(DataProvider.HistoryAware.class::cast)
                 .collect(Collectors.toList());
+        providers.stream()
+                .filter(DataProvider.Scheduled.class::isInstance)
+                .map(DataProvider.Scheduled.class::cast)
+                .forEach(this::initScheduledDataProvider);
 
         if (!newTweetAwareProviders.isEmpty()) {
             LOGGER.info("create TweetStream");
@@ -140,13 +155,36 @@ public final class StepEngine {
         providers.forEach(context::addDataProvider);
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
+    private void initScheduledDataProvider(final DataProvider.Scheduled scheduled) {
+        LOGGER.info("initializing Scheduled: {}", scheduled);
+        final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
+
+        try {
+            if (DataProvider.ScheduleType.FIXED_DELAY == sc.getScheduleType()) {
+                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            } else {
+                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            }
+        } catch (final RuntimeException re) {
+            LOGGER.fatal("failed to initializing Scheduled: {}", scheduled, re);
+            throw re;
+        }
+    }
+
     public final class MachineContext {
 
         private final Map<String, Object> properties = new HashMap<>();
-        private final List<DataProvider> dataProviders = new ArrayList<>();
+        private final ObservableList<DataProvider> dataProviders = FXCollections.<DataProvider>observableArrayList();
+        private final FilteredList<DataProvider> filteredDataProviders = dataProviders.filtered(null);
 
         public Object get(final String key) {
             return properties.get(key);
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T get(final String key, final Class<T> clazz) {
+            return (T) properties.get(key);
         }
 
         public Object put(final String key, final Object value) {
@@ -165,12 +203,18 @@ public final class StepEngine {
 
         @SuppressWarnings("unchecked")
         public <T extends DataProvider> T getDataProvider(final Class<T> klazz) {
-            return dataProviders
+            return filteredDataProviders
                     .stream()
                     .filter(klazz::isInstance)
                     .map(klazz::cast)
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' has not been registered."));
+                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' is currently not been available."));
+        }
+
+        private void restrictAvailableDataProviders(final Collection<Class<? extends DataProvider>> dataProviderClasses) {
+            LOG.info("restricting available DataProviders to {}", dataProviderClasses);
+            filteredDataProviders.setPredicate(d -> dataProviderClasses.contains(d.getClass()));
+            filteredDataProviders.forEach(dp -> LOG.info("DataProvider available after restriction: {}", dp));
         }
     }
 
@@ -185,14 +229,17 @@ public final class StepEngine {
             final long start = System.currentTimeMillis();
 
             Step step = stepIterator.next();
+            context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             while (step.shouldSkip(context)) {
                 LOG.info("Skip step: {}", step.getClass().getSimpleName());
                 step = stepIterator.next();
+                context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             }
             final Step stepToExecute = step;
             final Duration duration = step.preferredStepDuration(context);
 
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
+
             if (stepToExecute.requiresPlatformThread()) {
                 Platform.runLater(() -> stepToExecute.doStep(context));
             } else {

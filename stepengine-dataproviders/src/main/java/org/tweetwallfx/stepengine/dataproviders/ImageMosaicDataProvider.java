@@ -34,6 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -45,7 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
-    private final List<ImageStore> images = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<ImageStore> images = new CopyOnWriteArrayList<>();
     private final Config config;
 
     private ImageMosaicDataProvider(final Config config) {
@@ -76,8 +77,10 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     }
 
     private void addImage(final MediaTweetEntry mte, final Date date) {
-        PhotoImageCache.INSTANCE.getCachedOrLoad(mte, supplier -> {
-            images.add(new ImageStore(new Image(supplier.get()), date.toInstant()));
+        PhotoImageCache.INSTANCE.getCachedOrLoad(mte, urlc -> {
+            if (images.addIfAbsent(new ImageStore(urlc, date.toInstant()))) {
+                LOG.info("Added ImageStore for mediaID: {}", mte.getId());
+            }
             if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(images.size() - 1);
@@ -131,11 +134,17 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     public static final class ImageStore {
 
         private final Image image;
+        private final String digest;
         private final Instant instant;
 
-        public ImageStore(final Image image, final Instant instant) {
-            this.image = image;
+        public ImageStore(final URLContent urlc, final Instant instant) {
+            this.digest = urlc.getDigest();
+            this.image = new Image(urlc.getInputStream());
             this.instant = instant;
+        }
+
+        public String getDigest() {
+            return digest;
         }
 
         public Instant getInstant() {
@@ -149,8 +158,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         @Override
         public int hashCode() {
             int hash = 5;
-            hash = 97 * hash + Objects.hashCode(this.image);
-            hash = 97 * hash + Objects.hashCode(this.instant);
+            hash = 97 * hash + Objects.hashCode(this.digest);
             return hash;
         }
 
@@ -165,8 +173,9 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             final ImageStore other = (ImageStore) obj;
             boolean result = true;
 
-            result &= Objects.equals(this.image, other.image);
-            result &= Objects.equals(this.instant, other.instant);
+            result &= Objects.nonNull(this.digest);
+            result &= Objects.nonNull(other.digest);
+            result &= Objects.equals(this.digest, other.digest);
 
             return result;
         }

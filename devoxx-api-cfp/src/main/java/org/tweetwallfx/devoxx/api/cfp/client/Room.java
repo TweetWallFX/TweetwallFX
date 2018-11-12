@@ -50,6 +50,11 @@ public class Room {
      */
     private Type setup;
 
+    /**
+     * The recording capabilityof the room.
+     */
+    private String recorded;
+
     public String getId() {
         return id;
     }
@@ -82,13 +87,22 @@ public class Room {
         this.setup = setup;
     }
 
+    public String getRecorded() {
+        return recorded;
+    }
+
+    public void setRecorded(final String recorded) {
+        this.recorded = recorded;
+    }
+
     @Override
     public String toString() {
         return createToString(this, map(
                 "id", getId(),
                 "name", getName(),
                 "capacity", getCapacity(),
-                "setup", getSetup()
+                "setup", getSetup(),
+                "recorded", getRecorded()
         )) + " extends " + super.toString();
     }
 

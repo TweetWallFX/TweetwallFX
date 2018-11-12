@@ -31,6 +31,8 @@ include ':config'
 project(":config").name = "tweetwallfx-configuration"
 include ':controls'
 project(":controls").name = "tweetwallfx-controls"
+include ':filterchain'
+project(":filterchain").name = "tweetwallfx-filterchain"
 include ':logging'
 project(":logging").name = "tweetwallfx-logging"
 include ':stepengine-api'
@@ -65,20 +67,8 @@ project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
 include ':devoxx-cfp-test'
 project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
 
-include ':devoxx-2017-be'
-project(':devoxx-2017-be').name = 'tweetwallfx-devoxx-2017-be'
-include ':tweetwallfx-devoxx-2017-be:cfp-impl'
-project(':tweetwallfx-devoxx-2017-be:cfp-impl').name = 'tweetwallfx-devoxx-2017-be-cfp-impl'
-include ':tweetwallfx-devoxx-2017-be:exhibition'
-project(':tweetwallfx-devoxx-2017-be:exhibition').name = 'tweetwallfx-devoxx-2017-be-exhibition'
-include ':tweetwallfx-devoxx-2017-be:cinema'
-project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be-cinema'
-
 include ':generic2d'
 project(":generic2d").name = "tweetwallfx-generic2d"
-
-include ':voxxed-days-zurich'
-project(":voxxed-days-zurich").name = "tweetwallfx-voxxed-days-zurich"
 
 
 // disabled subproject for future reference

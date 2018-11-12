@@ -160,6 +160,17 @@ final class TwitterTweet implements Tweet {
     }
 
     @Override
+    public Tweet getOriginTweet() {
+        Tweet rt = this;
+
+        while (rt.isRetweet()) {
+            rt = rt.getRetweetedTweet();
+        }
+
+        return rt;
+    }
+
+    @Override
     public String getText() {
         return status.getText();
     }

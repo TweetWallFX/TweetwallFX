@@ -24,6 +24,8 @@
 package org.tweetwallfx.controls.steps;
 
 import java.util.Objects;
+import java.util.Set;
+import javafx.animation.ParallelTransition;
 import javafx.scene.Node;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.stepengine.api.Step;
@@ -48,14 +50,18 @@ public class NodeFadeOutStep implements Step {
     @Override
     public void doStep(final StepEngine.MachineContext context) {
         final WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        final Node node = wordleSkin.getNode().lookup(config.getNodeSelector());
+        final Set<Node> nodes = wordleSkin.getNode().lookupAll(config.getNodeSelector());
 
-        final FlipOutXTransition flipOutXTransition = new FlipOutXTransition(node);
-        flipOutXTransition.setOnFinished(e -> {
-            wordleSkin.getPane().getChildren().remove(node);
+        final ParallelTransition fadeOutAll = new ParallelTransition();
+        nodes.forEach(node ->  {
+            fadeOutAll.getChildren().add(new FlipOutXTransition(node));
+         
+        });
+        fadeOutAll.setOnFinished(e -> {
+            wordleSkin.getPane().getChildren().removeAll(nodes);
             context.proceed();
         });
-        flipOutXTransition.play();
+        fadeOutAll.play();
     }
 
     @Override

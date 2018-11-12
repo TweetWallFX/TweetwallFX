@@ -23,11 +23,10 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.io.InputStream;
-import java.util.function.Supplier;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -46,7 +45,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
 
     public Image getImage(final User user) {
         return new Image(
-                ProfileImageCache.INSTANCE.getCachedOrLoad(user.getProfileImageUrl()).get(),
+                ProfileImageCache.INSTANCE.getCachedOrLoad(user.getProfileImageUrl()).getInputStream(),
                 config.getProfileWidth(),
                 config.getProfileHeight(),
                 config.isPreserveRation(),
@@ -55,7 +54,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
 
     public Image getImageBig(final User user) {
         return new Image(
-                ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl()).get(),
+                ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl()).getInputStream(),
                 config.getProfileWidth(),
                 config.getProfileHeight(),
                 config.isPreserveRation(),
@@ -92,7 +91,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl(), this::handleLoadedContent);
     }
 
-    private void handleLoadedContent(final Supplier<InputStream> cache) {
+    private void handleLoadedContent(final URLContent cache) {
         // do nothing
     }
 

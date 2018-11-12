@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.filterchain.FilterChain;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -48,12 +49,12 @@ import twitter4j.conf.Configuration;
 public class TwitterTweeter extends Tweeter {
 
     private static final Logger LOGGER = LogManager.getLogger(TwitterTweeter.class);
-
+    private static final FilterChain<Tweet> FILTER_CHAIN = FilterChain.createFilterChain(Tweet.class, "twitter");
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
 
     @Override
-    public TweetStream createTweetStream(TweetFilterQuery tweetFilterQuery) {
-        TwitterTweetStream twitterTweetStream = new TwitterTweetStream(tweetFilterQuery);
+    public TweetStream createTweetStream(final TweetFilterQuery tweetFilterQuery) {
+        TwitterTweetStream twitterTweetStream = new TwitterTweetStream(tweetFilterQuery, FILTER_CHAIN.asPredicate());
         streamCache.add(twitterTweetStream);
         return twitterTweetStream;
     }
@@ -93,14 +94,18 @@ public class TwitterTweeter extends Tweeter {
             return Stream.empty();
         }
 
-        return result.getTweets().stream().map(TwitterTweet::new);
+        return result.getTweets().stream()
+                .map(TwitterTweet::new)
+                .map(Tweet.class::cast)
+                .filter(FILTER_CHAIN.asPredicate());
     }
 
     @Override
     public Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages) {
         final Query query = getQuery(tweetQuery);
         final Iterable<Tweet> iterable = () -> new PagedIterator(query, numberOfPages);
-        return StreamSupport.stream(iterable.spliterator(), false);
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .filter(FILTER_CHAIN.asPredicate());
     }
 
     private static Query getQuery(final TweetQuery tweetQuery) {

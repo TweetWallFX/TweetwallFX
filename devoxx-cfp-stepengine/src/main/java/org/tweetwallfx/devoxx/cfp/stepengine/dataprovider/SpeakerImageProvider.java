@@ -23,12 +23,11 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 import javafx.scene.image.Image;
+import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
@@ -41,7 +40,7 @@ import static org.tweetwallfx.util.ToString.map;
 /**
  * Utility to provide a simple api to get the cached speaker image.
  */
-public final class SpeakerImageProvider implements DataProvider {
+public final class SpeakerImageProvider implements DataProvider, DataProvider.Scheduled {
 
     private final Config config;
 
@@ -50,36 +49,45 @@ public final class SpeakerImageProvider implements DataProvider {
     }
 
     public Image getSpeakerImage(final Speaker speaker) {
-        return getSpeakerImage(speaker.getAvatarURL());
+        return null == speaker
+                ? getDefaultClasspathImage()
+                : getSpeakerImage(speaker.getAvatarURL());
     }
 
     public Image getSpeakerImage(final SpeakerReference speakerReference) {
-        return getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
+        return null == speakerReference
+                ? getDefaultClasspathImage()
+                : getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
     }
 
     private Image getSpeakerImage(final String avatarURL) {
-        final Supplier<InputStream> supplier = ProfileImageCache.INSTANCE.getCachedOrLoad(avatarURL);
+        final URLContent urlc = ProfileImageCache.INSTANCE.getCachedOrLoad(avatarURL);
 
-        if (null == supplier) {
+        if (null == urlc) {
             // avatar url is not in cache (url content was not loadable)
-            // look for configured replacement
             final String urlReplacement = config.getUrlReplacements().get(avatarURL);
-            Image image = null == urlReplacement
-                    ? null
+
+            return null == urlReplacement
+                    // use stand-in for non-loadable
+                    ? getDefaultClasspathImage()
+                    // look for configured replacement
                     : getSpeakerImage(urlReplacement);
-
-            if (null == image) {
-                // use stand-in for non-loadable
-                image = new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.getNoImageResource()));
-            }
-
-            return image;
         } else {
-            return new Image(supplier.get());
+            return new Image(urlc.getInputStream());
         }
     }
 
-    public void updateSpeakerImages() {
+    private Image getDefaultClasspathImage() {
+        return new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.getNoImageResource()));
+    }
+
+    @Override
+    public ScheduledConfig getScheduleConfig() {
+        return config;
+    }
+
+    @Override
+    public void run() {
         CFPClient.getClient()
                 .getSpeakers()
                 .stream()
@@ -91,7 +99,7 @@ public final class SpeakerImageProvider implements DataProvider {
                 .forEach((k, v) -> ProfileImageCache.INSTANCE.putCachedContent(v, this::handleURLContent));
     }
 
-    private void handleURLContent(final Supplier<InputStream> urlc) {
+    private void handleURLContent(final URLContent urlc) {
         // do nothing
     }
 
@@ -112,10 +120,28 @@ public final class SpeakerImageProvider implements DataProvider {
         }
     }
 
-    public static class Config {
+    public static class Config implements ScheduledConfig {
 
-        private String noImageResource = "icons/user1-256x256.png";
+        /**
+         * Classpath entry for usage in cases when no speaker image is
+         * available.
+         */
+        private String noImageResource = "icons/anonymous.jpg";
         private Map<String, String> urlReplacements = Collections.emptyMap();
+        /**
+         * The type of scheduling to perform. Defaults to
+         * {@link ScheduleType#FIXED_RATE}.
+         */
+        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
+        /**
+         * Delay until the first execution in seconds. Defaults to {@code 0L}.
+         */
+        private long initialDelay = 0L;
+        /**
+         * Fixed rate of / delay between consecutive executions in seconds.
+         * Defaults to {@code 1800L}.
+         */
+        private long scheduleDuration = 30 * 60L;
 
         public String getNoImageResource() {
             return noImageResource;
@@ -136,8 +162,38 @@ public final class SpeakerImageProvider implements DataProvider {
         }
 
         @Override
+        public ScheduleType getScheduleType() {
+            return scheduleType;
+        }
+
+        public void setScheduleType(final ScheduleType scheduleType) {
+            this.scheduleType = scheduleType;
+        }
+
+        @Override
+        public long getInitialDelay() {
+            return initialDelay;
+        }
+
+        public void setInitialDelay(final long initialDelay) {
+            this.initialDelay = initialDelay;
+        }
+
+        @Override
+        public long getScheduleDuration() {
+            return scheduleDuration;
+        }
+
+        public void setScheduleDuration(final long scheduleDuration) {
+            this.scheduleDuration = scheduleDuration;
+        }
+
+        @Override
         public String toString() {
             return createToString(this, map(
+                    "scheduleType", getScheduleType(),
+                    "initialDelay", getInitialDelay(),
+                    "scheduleDuration", getScheduleDuration(),
                     "noImageResource", getNoImageResource(),
                     "urlReplacements", getUrlReplacements()
             )) + " extends " + super.toString();

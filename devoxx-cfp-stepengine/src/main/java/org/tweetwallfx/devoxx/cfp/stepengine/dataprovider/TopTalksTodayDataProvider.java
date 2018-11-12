@@ -34,23 +34,30 @@ import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * DataProvider Implementation for Top Talks Today
  *
  * @author Sven Reimers
  */
-public final class TopTalksTodayDataProvider implements DataProvider {
+public final class TopTalksTodayDataProvider implements DataProvider, DataProvider.Scheduled {
 
     private List<VotedTalk> votedTalks = Collections.emptyList();
     private final Config config;
 
     private TopTalksTodayDataProvider(final Config config) {
         this.config = config;
-        updateVotigResults();
     }
 
-    public void updateVotigResults() {
+    @Override
+    public ScheduledConfig getScheduleConfig() {
+        return config;
+    }
+
+    @Override
+    public void run() {
         String actualDayName = LocalDateTime.now().getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
@@ -96,12 +103,53 @@ public final class TopTalksTodayDataProvider implements DataProvider {
     /**
      * POJO used to configure {@link TopTalksTodayDataProvider}.
      */
-    public static class Config {
+    public static class Config implements ScheduledConfig {
 
         /**
          * The number of votes to produce at most. Defaults to {@code 5}.
          */
         private int nrVotes = 5;
+        /**
+         * The type of scheduling to perform. Defaults to
+         * {@link ScheduleType#FIXED_RATE}.
+         */
+        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
+        /**
+         * Delay until the first execution in seconds. Defaults to {@code 0L}.
+         */
+        private long initialDelay = 0L;
+        /**
+         * Fixed rate of / delay between consecutive executions in seconds.
+         * Defaults to {@code 300L}.
+         */
+        private long scheduleDuration = 300L;
+
+        @Override
+        public ScheduleType getScheduleType() {
+            return scheduleType;
+        }
+
+        public void setScheduleType(final ScheduleType scheduleType) {
+            this.scheduleType = scheduleType;
+        }
+
+        @Override
+        public long getInitialDelay() {
+            return initialDelay;
+        }
+
+        public void setInitialDelay(final long initialDelay) {
+            this.initialDelay = initialDelay;
+        }
+
+        @Override
+        public long getScheduleDuration() {
+            return scheduleDuration;
+        }
+
+        public void setScheduleDuration(final long scheduleDuration) {
+            this.scheduleDuration = scheduleDuration;
+        }
 
         public int getNrVotes() {
             return nrVotes;
@@ -113,6 +161,16 @@ public final class TopTalksTodayDataProvider implements DataProvider {
             }
 
             this.nrVotes = nrVotes;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "scheduleType", getScheduleType(),
+                    "initialDelay", getInitialDelay(),
+                    "scheduleDuration", getScheduleDuration(),
+                    "nrVotes", getNrVotes()
+            )) + " extends " + super.toString();
         }
     }
 }
