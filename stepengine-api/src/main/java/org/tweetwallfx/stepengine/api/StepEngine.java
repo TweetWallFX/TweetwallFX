@@ -247,6 +247,8 @@ public final class StepEngine {
                     } catch (RuntimeException | Error e) {
                         LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
                         LOG.fatal("caused by", e);
+                        // enforce that animation continues
+                        context.proceed();
                     }
                 });
             } else {
@@ -255,6 +257,8 @@ public final class StepEngine {
                     } catch (RuntimeException | Error e) {
                         LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
                         LOG.fatal("caused by", e);
+                        // enforce that animation continues
+                        context.proceed();
                     }
             }
 
