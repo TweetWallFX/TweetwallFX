@@ -136,10 +136,16 @@ public class FilterChain<T> {
 
     private boolean process(final T t) {
         return filterSteps.stream()
+                .peek(fs -> LOGGER.info("Checking {} with {}", t.getClass().getName(), fs.getClass().getName()))
                 .map(fs -> fs.check(t))
                 .filter(FilterStep.Result::isTerminal)
                 .findFirst()
                 .map(FilterStep.Result::isAccepted)
-                .orElse(defaultResult);
+                .orElseGet(() -> {
+                    LOGGER.info("Found nothing definitive for {}. -> {}",
+                            t.getClass().getName(),
+                            defaultResult ? "ACCEPT" : "REJECT");
+                    return defaultResult;
+                });
     }
 }
