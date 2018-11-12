@@ -138,7 +138,9 @@ public class FilterChain<T> {
         return filterSteps.stream()
                 .peek(fs -> LOGGER.info("Checking {} with {}", t.getClass().getName(), fs.getClass().getName()))
                 .map(fs -> fs.check(t))
+                .peek(r -> LOGGER.info("Checking {} determined {}", t.getClass().getName(), r))
                 .filter(FilterStep.Result::isTerminal)
+                .peek(r -> LOGGER.info("Checking {} determined terminally {}", t.getClass().getName(), r))
                 .findFirst()
                 .map(FilterStep.Result::isAccepted)
                 .orElseGet(() -> {
