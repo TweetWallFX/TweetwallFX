@@ -324,7 +324,6 @@ public final class ImageContentAnalysis implements Externalizable {
     public static final class TextEntry implements Externalizable {
 
         private static final long serialVersionUID = 1L;
-        private float confidence;
         private String description;
         private float score;
         private List<LocationEntry> locations;
@@ -335,21 +334,12 @@ public final class ImageContentAnalysis implements Externalizable {
         }
 
         public TextEntry(final EntityAnnotation ea) {
-            this.confidence = ea.getConfidence();
             this.description = ea.getDescription();
             this.locale = ea.getLocale();
             this.locations = ea.getLocationsList().stream()
                     .map(LocationEntry::new)
                     .collect(Collectors.toList());
             this.score = ea.getScore();
-        }
-
-        public float getConfidence() {
-            return confidence;
-        }
-
-        public void setConfidence(final float confidence) {
-            this.confidence = confidence;
         }
 
         public String getDescription() {
@@ -387,7 +377,6 @@ public final class ImageContentAnalysis implements Externalizable {
         @Override
         public String toString() {
             return createToString(this, map(
-                    "confidence", getConfidence(),
                     "description", getDescription(),
                     "score", getScore(),
                     "locale", getLocale(),
@@ -397,9 +386,6 @@ public final class ImageContentAnalysis implements Externalizable {
 
         @Override
         public void writeExternal(final ObjectOutput out) throws IOException {
-            // confidence
-            out.writeFloat(getConfidence());
-
             // description
             out.writeUTF(getDescription());
 
@@ -418,9 +404,6 @@ public final class ImageContentAnalysis implements Externalizable {
 
         @Override
         public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-            // confidence
-            setConfidence(in.readFloat());
-
             // description
             setDescription(in.readUTF());
 
