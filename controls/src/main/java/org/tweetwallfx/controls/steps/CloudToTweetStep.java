@@ -73,6 +73,11 @@ public class CloudToTweetStep implements Step {
     }
 
     @Override
+    public boolean shouldSkip(MachineContext context) {
+        return null == context.getDataProvider(TweetDataProvider.class).getTweet();
+    }
+
+    @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
     }
@@ -154,6 +159,7 @@ public class CloudToTweetStep implements Step {
 
         // layout image and meta data first
         Pane infoBox = createInfoBox(wordleSkin, context, displayTweet, lowerLeft);
+        infoBox.setId("tweetInfo");
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data
