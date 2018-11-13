@@ -23,7 +23,11 @@
  */
 
 dependencies {
-    compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx
+    if (preJDK11) {
+        compile group: 'de.jensd', name: 'fontawesomefx', version: versionFontawesomefx8
+    } else {
+        compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx9
+    }
     compile group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava
     compile project(':tweetwallfx-tweet-api')
     compile project(':tweetwallfx-configuration')
