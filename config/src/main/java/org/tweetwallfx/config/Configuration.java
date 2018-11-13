@@ -286,7 +286,7 @@ public final class Configuration {
         ));
     }
 
-    private static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
+    public static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
         Objects.requireNonNull(next, "Parameter next must not be null!");
 
         if (null == previous || previous.isEmpty()) {

@@ -25,17 +25,18 @@ package org.tweetwallfx.stepengine.api;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -174,7 +175,7 @@ public final class StepEngine {
 
     public final class MachineContext {
 
-        private final Map<String, Object> properties = new HashMap<>();
+        private final Map<String, Object> properties = new ConcurrentHashMap<>();
         private final ObservableList<DataProvider> dataProviders = FXCollections.<DataProvider>observableArrayList();
         private final FilteredList<DataProvider> filteredDataProviders = dataProviders.filtered(null);
 
@@ -192,6 +193,7 @@ public final class StepEngine {
         }
 
         public void proceed() {
+            LOG.info("Proceed called");
             asyncProceed.arrive();
         }
 
@@ -241,9 +243,25 @@ public final class StepEngine {
             LOG.info("call {}.doStep()", stepToExecute.getClass().getSimpleName());
 
             if (stepToExecute.requiresPlatformThread()) {
-                Platform.runLater(() -> stepToExecute.doStep(context));
+                Platform.runLater(() -> {
+                    try {
+                        stepToExecute.doStep(context);
+                    } catch (RuntimeException | Error e) {
+                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
+                        LOG.fatal("caused by", e);
+                        // enforce that animation continues
+                        context.proceed();
+                    }
+                });
             } else {
-                stepToExecute.doStep(context);
+                    try {
+                        stepToExecute.doStep(context);
+                    } catch (RuntimeException | Error e) {
+                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
+                        LOG.fatal("caused by", e);
+                        // enforce that animation continues
+                        context.proceed();
+                    }
             }
 
             final long stop = System.currentTimeMillis();
@@ -258,9 +276,15 @@ public final class StepEngine {
                     Thread.currentThread().interrupt();
                 }
             }
-
-            // wait for proceed being called
-            asyncProceed.arriveAndAwaitAdvance();
+            LOG.info("waiting (possible) for step to call proceed {}", step.getClass().getSimpleName());
+            try {
+                // wait for proceed being called
+                asyncProceed.awaitAdvanceInterruptibly(asyncProceed.arrive(), 30, TimeUnit.SECONDS);
+            } catch (InterruptedException ex) {
+                LOG.error("Await proceed interrupted", ex);
+            } catch (TimeoutException ex) {
+                LOG.error("Await proceed timed out", ex);
+            }
         }
     }
 }
