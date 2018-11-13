@@ -25,12 +25,12 @@ package org.tweetwallfx.stepengine.api;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
@@ -175,7 +175,7 @@ public final class StepEngine {
 
     public final class MachineContext {
 
-        private final Map<String, Object> properties = new HashMap<>();
+        private final Map<String, Object> properties = new ConcurrentHashMap<>();
         private final ObservableList<DataProvider> dataProviders = FXCollections.<DataProvider>observableArrayList();
         private final FilteredList<DataProvider> filteredDataProviders = dataProviders.filtered(null);
 
