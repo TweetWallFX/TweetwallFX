@@ -83,7 +83,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             }
             if (config.getMaxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
-                images.remove(images.size() - 1);
+                images.remove(0);
             }
         });
     }

@@ -23,33 +23,34 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.User;
+import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
 /**
- * A {@link FilterStep} handling {@link Tweet}s by checking the sending
- * {@link User} {@link User#getName()} and possibly reject them.
+ * A {@link FilterStep} handling {@link Tweet}s by checking that the length of
+ * any hashtag in the {@link Tweet} does not exceed a certain number. If it does
+ * the {@link Tweet} is rejected.
  *
- * In case {@link User#getName()} is one of the names configured in
- * {@link Config#getUserHandles()} it is terminally rejected with
+ * In case the length of any Hashtag exceeds the configured length from
+ * {@link Config#getMaxLength()} it is terminally rejected with
  * {@link Result#REJECTED}. Otherwise it is evaluated as
  * {@link Result#NOTHING_DEFINITE}.
  */
-public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
+public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(RejectFromSenderFilterStep.class);
+    private static final Logger LOG = LogManager.getLogger(MaxHashtagLengthFilterStep.class);
     private final Config config;
 
-    private RejectFromSenderFilterStep(final Config config) {
+    private MaxHashtagLengthFilterStep(Config config) {
         this.config = config;
     }
 
@@ -60,12 +61,16 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         do {
             LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
 
-            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
-                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), tweet.getId());
+            final List<HashtagTweetEntry> htes = Arrays.stream(t.getHashtagEntries())
+                    .filter(hte -> hte.getText().length() > config.getMaxLength())
+                    .collect(Collectors.toList());
+
+            if (!htes.isEmpty()) {
+                LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length -> REJECTED", t.getId(), tweet.getId());
                 return Result.REJECTED;
             }
 
-            LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is not blacklisted", t.getId(), tweet.getId());
+            LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) do not exeed allowed limit", t.getId(), tweet.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
@@ -75,7 +80,7 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
 
     /**
      * Implementation of {@link FilterStep.Factory} creating
-     * {@link RejectFromSenderFilterStep}.
+     * {@link MaxHashtagLengthFilterStep}.
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
@@ -85,44 +90,43 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         }
 
         @Override
-        public Class<RejectFromSenderFilterStep> getFilterStepClass() {
-            return RejectFromSenderFilterStep.class;
+        public Class<MaxHashtagLengthFilterStep> getFilterStepClass() {
+            return MaxHashtagLengthFilterStep.class;
         }
 
         @Override
-        public RejectFromSenderFilterStep create(final FilterChainSettings.FilterStepDefinition filterStepDefinition) {
-            return new RejectFromSenderFilterStep(filterStepDefinition.getConfig(Config.class));
+        public MaxHashtagLengthFilterStep create(final FilterChainSettings.FilterStepDefinition filterStepDefinition) {
+            return new MaxHashtagLengthFilterStep(filterStepDefinition.getConfig(Config.class));
         }
     }
 
     /**
-     * POJO used to configure {@link RejectFromSenderFilterStep}.
+     * POJO used to configure {@link MaxHashtagLengthFilterStep}.
      */
     public static final class Config {
 
-        private Set<String> userHandles = Collections.emptySet();
-        private boolean checkRetweeted = false;
+        private boolean checkRetweeted = true;
+        private int maxLength = 30;
 
         /**
-         * Returns the handles for the {@link User} for which any {@link Tweet}
-         * send by them is automatically rejected.
+         * Returns the length of a hashtag that when exceeding it willl cause
+         * the {@link Tweet} to be rejected.
          *
-         * @return the handles for the {@link User} for which any {@link Tweet}
-         * send by them is automatically rejected
+         * @return the length of a hashtag that when exceeding it willl cause
+         * the {@link Tweet} to be rejected
          */
-        public Set<String> getUserHandles() {
-            return userHandles;
+        public int getMaxLength() {
+            return maxLength;
         }
 
         /**
-         * Sets the handles for the {@link User} for which any {@link Tweet}
-         * send by them is automatically accepted.
+         * Sets the length of a hashtag that when exceeding it willl cause the
+         * {@link Tweet} to be rejected
          *
-         * @param userHandles the new value
+         * @param maxLength the new value
          */
-        public void setUserHandles(final Set<String> userHandles) {
-            Objects.requireNonNull(userHandles, "userHandles must not be null!");
-            this.userHandles = userHandles;
+        public void setMaxLength(final int maxLength) {
+            this.maxLength = maxLength;
         }
 
         /**
@@ -150,7 +154,7 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         public String toString() {
             return createToString(this, map(
                     "checkRetweeted", isCheckRetweeted(),
-                    "userHandles", getUserHandles()
+                    "maxLength", getMaxLength()
             )) + " extends " + super.toString();
         }
     }

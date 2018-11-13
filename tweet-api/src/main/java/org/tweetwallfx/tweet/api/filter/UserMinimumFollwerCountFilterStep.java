@@ -24,21 +24,27 @@
 package org.tweetwallfx.tweet.api.filter;
 
 import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking the sending
  * {@link User} {@link User#getFollowersCount()}.
  *
  * In case {@link User#getFollowersCount()} is less than the amount configured
- * in {@link Config#getCount()} it is terminally rejected with {@link Result#REJECTED}.
- * Otherwise it is evaluated as {@link Result#NOTHING_DEFINITE}.
+ * in {@link Config#getCount()} it is terminally rejected with
+ * {@link Result#REJECTED}. Otherwise it is evaluated as
+ * {@link Result#NOTHING_DEFINITE}.
  */
 public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
 
+    private static final Logger LOG = LogManager.getLogger(UserMinimumFollwerCountFilterStep.class);
     private final Config config;
 
     private UserMinimumFollwerCountFilterStep(final Config config) {
@@ -47,9 +53,13 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
 
     @Override
     public Result check(final Tweet tweet) {
-        return config.getCount() <= tweet.getUser().getFollowersCount()
-                ? Result.NOTHING_DEFINITE
-                : Result.REJECTED;
+        if (config.getCount() <= tweet.getUser().getFollowersCount()) {
+            LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+            return Result.NOTHING_DEFINITE;
+        } else {
+            LOG.info("Tweet(id:{}): Too few followers -> REJECTED", tweet.getId());
+            return Result.REJECTED;
+        }
     }
 
     /**
@@ -101,6 +111,13 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
         public void setCount(final Integer count) {
             Objects.requireNonNull(count, "count must not be null!");
             this.count = count;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "count", getCount()
+            )) + " extends " + super.toString();
         }
     }
 }
