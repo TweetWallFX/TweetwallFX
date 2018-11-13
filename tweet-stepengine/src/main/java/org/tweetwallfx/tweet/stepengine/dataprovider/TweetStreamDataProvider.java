@@ -109,7 +109,8 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             try {
                 final Tweet originalTweet = tweet.getOriginTweet();
                 
-                if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId())) {
+                if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId()
+                        && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName())) ) {
                     if (prepend) {
                         tweets.addFirst(originalTweet);
                         updateImage(originalTweet);
