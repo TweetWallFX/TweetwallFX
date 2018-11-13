@@ -57,6 +57,11 @@ public class TweetToCloudStep implements Step {
     }
 
     @Override
+    public boolean shouldSkip(MachineContext context) {
+        return null == context.get("WordleSkin", WordleSkin.class).getPane().lookup("#tweetInfo");
+    }
+    
+    @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(10);
     }

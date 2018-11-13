@@ -1,0 +1,53 @@
+{
+    "google": {
+        "cloudVision": {
+            "featureTypes": [
+                "SAFE_SEARCH_DETECTION",
+                "TEXT_DETECTION"
+            ]
+        }
+    },
+    "cacheConfiguration": {
+        "caches": {
+            "googleVision": {
+                "keyType": "java.lang.String",
+                "valueType": "org.tweetwallfx.google.vision.ImageContentAnalysis",
+                "contentLoaderThreads": 1,
+                "expiry": {
+                    "type": "TIME_TO_IDLE",
+                    "amount": 14,
+                    "unit": "DAYS"
+                },
+                "cacheResources": [
+                    {
+                        "type": "HEAP",
+                        "amount": 200
+                    },
+                    {
+                        "type": "DISK",
+                        "amount": 512,
+                        "unit": "MB"
+                    }
+                ]
+            }
+        }
+    },
+    "org.tweetwallfx.google.vision.ImageContentFilterStep$Config": {
+        "checkRetweeted": true,
+        "adult": {
+            "acceptableLikelyhood": "VERY_UNLIKELY"
+        },
+        "medical": {
+            "acceptableLikelyhood": "UNLIKELY"
+        },
+        "racy": {
+            "acceptableLikelyhood": "VERY_UNLIKELY"
+        },
+        "spoof": {
+            "acceptableLikelyhood": "UNLIKELY"
+        },
+        "violence": {
+            "acceptableLikelyhood": "VERY_UNLIKELY"
+        }
+    }
+}

@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -318,6 +319,9 @@ public final class Configuration {
             @SuppressWarnings("unchecked")
             final Map<String, Object> nextMap = (Map<String, Object>) next;
             return mergeMap(previousMap, nextMap);
+        } else if (Collection.class.isInstance(previous)
+                && Collection.class.isInstance(next)) {
+            return next;
         } else {
             throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
         }
