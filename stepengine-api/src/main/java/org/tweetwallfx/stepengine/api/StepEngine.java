@@ -279,7 +279,7 @@ public final class StepEngine {
             LOG.info("waiting (possible) for step to call proceed {}", step.getClass().getSimpleName());
             try {
                 // wait for proceed being called
-                asyncProceed.awaitAdvanceInterruptibly(asyncProceed.arrive(), 30, TimeUnit.SECONDS);
+                asyncProceed.awaitAdvanceInterruptibly(asyncProceed.arrive(), 60, TimeUnit.SECONDS);
             } catch (InterruptedException ex) {
                 LOG.error("Await proceed interrupted", ex);
             } catch (TimeoutException ex) {
