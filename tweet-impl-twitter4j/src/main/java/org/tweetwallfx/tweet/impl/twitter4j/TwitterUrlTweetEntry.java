@@ -24,6 +24,8 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 import twitter4j.URLEntity;
 
 final class TwitterUrlTweetEntry extends BaseTwitterTweetEntry<URLEntity> implements UrlTweetEntry {
@@ -45,5 +47,14 @@ final class TwitterUrlTweetEntry extends BaseTwitterTweetEntry<URLEntity> implem
     @Override
     public String getDisplayURL() {
         return getT().getDisplayURL();
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "url", getURL(),
+                "ExpandedURL", getExpandedURL(),
+                "displayURL", getDisplayURL()
+        ), super.toString());
     }
 }
