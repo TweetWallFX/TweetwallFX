@@ -24,16 +24,21 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.User;
+import org.tweetwallfx.tweet.api.config.TwitterSettings;
 import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -144,6 +149,43 @@ public class TwitterTweeterTest {
         testEnhancedText(
                 925750697861279745L,
                 "@Stephan007");
+    }
 
+    @Test
+    @Ignore
+    public void tweetGetFriends() {
+        final Tweeter tweeter = getTweeter();
+        assertNotNull(tweeter);
+        skipIfOauthisNotConfigured();
+
+        List<String> users = tweeter
+                .getFriends("Devoxx")
+                .map(User::getScreenName)
+                .limit(1000)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
+
+        System.out.println("users.size: " + users.size());
+        users.forEach(System.out::println);
+        assertFalse("Did not find any Users", users.isEmpty());
+    }
+
+    @Test
+    @Ignore
+    public void tweetGetFollowers() {
+        final Tweeter tweeter = getTweeter();
+        assertNotNull(tweeter);
+        skipIfOauthisNotConfigured();
+
+        List<String> users = tweeter
+                .getFollowers("Devoxx")
+                .map(User::getScreenName)
+                .limit(1000)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
+
+        System.out.println("users.size: " + users.size());
+        users.forEach(System.out::println);
+        assertFalse("Did not find any Users", users.isEmpty());
     }
 }
