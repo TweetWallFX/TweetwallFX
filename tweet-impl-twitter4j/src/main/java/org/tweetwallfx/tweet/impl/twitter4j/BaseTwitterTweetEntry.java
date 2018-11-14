@@ -24,6 +24,8 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.entry.TweetEntry;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 import twitter4j.TweetEntity;
 
 public class BaseTwitterTweetEntry<T extends TweetEntity> implements TweetEntry {
@@ -51,5 +53,14 @@ public class BaseTwitterTweetEntry<T extends TweetEntity> implements TweetEntry 
     @Override
     public final int getEnd() {
         return t.getEnd();
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "text", getText(),
+                "start", getStart(),
+                "end", getEnd()
+        ), super.toString());
     }
 }
