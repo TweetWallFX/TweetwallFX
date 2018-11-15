@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 import twitter4j.MediaEntity;
 
 final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> implements MediaTweetEntry {
@@ -62,5 +64,14 @@ final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> im
     @Override
     public MediaTweetEntryType getType() {
         return MediaTweetEntryType.valueOf(getT().getType());
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "id", getId(),
+                "mediaUrl", getMediaUrl(),
+                "sizes", getSizes()
+        ), super.toString());
     }
 }

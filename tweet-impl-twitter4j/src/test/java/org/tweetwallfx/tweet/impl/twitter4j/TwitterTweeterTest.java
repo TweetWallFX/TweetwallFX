@@ -67,12 +67,15 @@ public class TwitterTweeterTest {
     }
 
     private static void skipIfOauthisNotConfigured() {
+        final TwitterSettings twitterSettings = Configuration.getInstance()
+                .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
+        Assume.assumeNotNull(twitterSettings);
+        Assume.assumeNotNull(twitterSettings.getOauth());
         Assume.assumeNotNull(
-                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerKey", null),
-                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.consumerSecret", null),
-                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessToken", null),
-                Configuration.getInstance().getConfig("tweetwall.twitter.oauth.accessTokenSecret", null)
-        );
+                twitterSettings.getOauth().getAccessToken(),
+                twitterSettings.getOauth().getAccessTokenSecret(),
+                twitterSettings.getOauth().getConsumerKey(),
+                twitterSettings.getOauth().getConsumerSecret());
     }
 
     @Test
@@ -88,6 +91,7 @@ public class TwitterTweeterTest {
         final Tweet tweet = tweeter.getTweet(id);
         System.out.println("tweet: " + tweet);
         assertNotNull(tweet);
+        System.out.println("tweet.text: " + tweet.getText());
 
         final String textWOEmojis = tweet.getTextWithout(EmojiTweetEntry.class).get();
         System.out.println("textWOEmojis: " + textWOEmojis);
