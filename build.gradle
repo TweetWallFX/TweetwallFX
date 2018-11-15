@@ -195,7 +195,7 @@ allprojects {
             resolutionStrategy {
                 componentSelection { rules ->
                     rules.all { /*ComponentSelection*/ selection ->
-                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{ qualifier ->
                             selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
                         }) {
                             selection.reject('Release candidate')
