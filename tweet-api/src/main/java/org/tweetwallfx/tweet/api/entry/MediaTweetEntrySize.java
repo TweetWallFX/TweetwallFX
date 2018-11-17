@@ -23,6 +23,9 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+
 final class MediaTweetEntrySize implements MediaTweetEntry.Size {
 
     private static final long serialVersionUID = 6285237827L;
@@ -49,5 +52,14 @@ final class MediaTweetEntrySize implements MediaTweetEntry.Size {
     @Override
     public int getResize() {
         return resize;
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "width", getWidth(),
+                "height", getHeight(),
+                "resize", getResize()
+        ), super.toString());
     }
 }

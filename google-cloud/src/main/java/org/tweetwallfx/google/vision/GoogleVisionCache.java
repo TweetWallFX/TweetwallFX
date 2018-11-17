@@ -69,12 +69,17 @@ public final class GoogleVisionCache {
     private volatile ImageAnnotatorClient client;
 
     private GoogleVisionCache() {
-        try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.getCredentialFilePath())) {
-            final GoogleCredentials credentials = GoogleCredentials.fromStream(fis);
-            this.imageAnnotatorSettings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
-        } catch (final IOException ex) {
-            LOG.error(ex, ex);
-            throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.getCredentialFilePath() + "'", ex);
+        if (null == GOOGLE_SETTINGS.getCredentialFilePath()) {
+            LOG.warn("File path of Google Credentials not configured. Bypassing all analysis requests.");
+            this.imageAnnotatorSettings = null;
+        } else {
+            try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.getCredentialFilePath())) {
+                final GoogleCredentials credentials = GoogleCredentials.fromStream(fis);
+                this.imageAnnotatorSettings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
+            } catch (final IOException ex) {
+                LOG.error(ex, ex);
+                throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.getCredentialFilePath() + "'", ex);
+            }
         }
 
         cache = CacheManagerProvider.getCache(
@@ -130,7 +135,10 @@ public final class GoogleVisionCache {
     }
 
     private Map<String, ImageContentAnalysis> load(final Stream<String> imageUris) throws IOException {
-        // TODO: Add actual caching
+        if (null == getClient()) {
+            return Collections.emptyMap();
+        }
+
         final List<AnnotateImageRequest> requests = imageUris
                 .filter(Objects::nonNull)
                 .distinct()
@@ -182,7 +190,7 @@ public final class GoogleVisionCache {
     }
 
     private ImageAnnotatorClient getClient() throws IOException {
-        if (null == client) {
+        if (null == client && null != imageAnnotatorSettings) {
             synchronized (this) {
                 if (null == client) {
                     client = createClient();

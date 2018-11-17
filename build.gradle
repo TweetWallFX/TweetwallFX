@@ -41,11 +41,13 @@ buildscript {
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: versionJGit
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: versionSonarqubeGradlePlugin
+        classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: versionOsdetectorGradlePlugin
     }
 }
 
 apply plugin: 'build-dashboard'
 apply plugin: 'org.sonarqube'
+apply plugin: 'com.google.osdetector'
 
 // applying Versions plugin
 apply plugin: 'com.github.ben-manes.versions'
@@ -56,6 +58,8 @@ ext {
         ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
         null != findProperty('BINTRAY_USER') &&
         null != findProperty('BINTRAY_KEY')
+    preJDK11 = System.getProperty('java.version').startsWith('1.8.')
+    javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 }
 
 allprojects {
@@ -105,7 +109,19 @@ allprojects {
         apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
 
+        configurations {
+            javafx
+            jaxb
+        }
+
         dependencies {
+            javafx group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: versionJavaFx, classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: versionJavaFx, classifier: javaFxPlatform
+            jaxb group: 'com.sun.activation', name: 'javax.activation', version: versionJavaActivation
+            jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: versionJaxB
+            jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: versionJaxB
             testCompile group: 'junit', name: 'junit', version: versionJUnit
             testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
         }
@@ -114,15 +130,34 @@ allprojects {
             manifest.attributes provider: 'gradle'
         }
 
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << '-Xlint:all'
-            options.compilerArgs << '-Werror'
-            options.compilerArgs << '-proc:none'
+        javadoc {
+            doFirst {
+                if (preJDK11) return
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                options.addStringOption('-module-path', additionalModules.asPath)
+                options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
+            }
+        }
+
+        compileJava {
+            doFirst {
+                if (preJDK11) return
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                options.compilerArgs = [
+                        '--module-path', additionalModules.asPath,
+                        '--add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
+                        '-Xlint:all', '-Werror', '-proc:none'
+                ]
+            }
         }
 
         tasks.withType(JavaExec) {
-            jvmArgs '-XX:+IgnoreUnrecognizedVMOptions'
-            jvmArgs '--add-modules java.xml.bind'
+            if (preJDK11) return
+            def additionalModules = (configurations.javafx + configurations.jaxb)
+            jvmArgs '--module-path'
+            jvmArgs additionalModules.asPath
+            jvmArgs '--add-modules'
+            jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
         }
 
         check {
@@ -130,11 +165,11 @@ allprojects {
         }
 
         // configuring Errorprone
-        apply plugin: "net.ltgt.errorprone"
+//        apply plugin: "net.ltgt.errorprone"
 
-        dependencies {
-            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-        }
+//        dependencies {
+//            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+//        }
 
         // configuring Spotbugs
         apply plugin: 'com.github.spotbugs'
@@ -160,7 +195,7 @@ allprojects {
             resolutionStrategy {
                 componentSelection { rules ->
                     rules.all { /*ComponentSelection*/ selection ->
-                        if (['alpha', 'beta', 'rc', 'cr', 'm'].any{ qualifier ->
+                        if (['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{ qualifier ->
                             selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
                         }) {
                             selection.reject('Release candidate')

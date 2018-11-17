@@ -57,6 +57,18 @@ public abstract class Tweeter {
 
     public abstract User getUser(final String userId);
 
+    public abstract Stream<User> getFriends(final User user);
+
+    public abstract Stream<User> getFriends(final String userScreenName);
+
+    public abstract Stream<User> getFriends(final long userId);
+
+    public abstract Stream<User> getFollowers(final User user);
+
+    public abstract Stream<User> getFollowers(final String userScreenName);
+
+    public abstract Stream<User> getFollowers(final long userId);
+
     public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
 
     public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages);
@@ -68,5 +80,4 @@ public abstract class Tweeter {
     public void shutdown() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }
