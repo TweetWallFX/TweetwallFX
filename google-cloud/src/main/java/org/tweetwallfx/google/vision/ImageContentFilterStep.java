@@ -112,7 +112,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         }
 
         if (visionAnalysis.entrySet().stream()
-                .filter(e -> null != e.getValue().getAnalysisError())
+                .filter(e -> null != e.getValue() && null != e.getValue().getAnalysisError())
                 .peek(e -> LOG.warn("Analysis failed for {} with {}", e.getKey(), e.getValue()))
                 .map(Map.Entry::getValue)
                 .map(ImageContentAnalysis::getAnalysisError)
@@ -123,7 +123,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         }
 
         if (visionAnalysis.entrySet().stream()
-                .filter(e -> !isSafeCompliant(e))
+                .filter(e -> null != e.getValue() && !isSafeCompliant(e))
                 .findAny()
                 .isPresent()) {
             LOG.info("One of the images in not compliant to configuration ({}).", imageUrlStrings);
