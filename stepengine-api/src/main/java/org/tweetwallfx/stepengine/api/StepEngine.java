@@ -210,7 +210,7 @@ public final class StepEngine {
                     .filter(klazz::isInstance)
                     .map(klazz::cast)
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' is currently not been available."));
+                    .orElseThrow(() -> new IllegalStateException("A DataProvider of type '" + klazz.getName() + "' is currently not available."));
         }
 
         private void restrictAvailableDataProviders(final Collection<Class<? extends DataProvider>> dataProviderClasses) {
