@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2018 TweetWallFX
+ * Copyright 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,9 @@ package org.tweetwallfx.tweet.stepengine.dataprovider;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -188,21 +186,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
          * {@code 0}.
          */
         private int minFollowersCount = 0;
-
-        /**
-         * DisplayNames of twitter users blocked from this
-         * {@link TweetStreamDataProvider}.
-         */
-        private Set<String> blockedTwitterUserScreenNames;
-
-        public Set<String> getBlockedTwitterUserScreenNames() {
-            return Optional.ofNullable(blockedTwitterUserScreenNames)
-                    .orElse(Collections.emptySet());
-        }
-
-        public void setBlockedTwitterUserScreenNames(final Set<String> blockedTwitterUserScreenNames) {
-            this.blockedTwitterUserScreenNames = blockedTwitterUserScreenNames;
-        }
 
         public int getHistorySize() {
             return historySize;
