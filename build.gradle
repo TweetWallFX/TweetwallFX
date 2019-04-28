@@ -187,6 +187,12 @@ allprojects {
                 xml.enabled = false
                 html.enabled = true
             }
+
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    classpath = (classpath + configurations.javafx)
+                }
+            }
         }
 
         // configuring Versions plugin
