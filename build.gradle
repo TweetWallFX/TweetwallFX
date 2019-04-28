@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -165,11 +165,11 @@ allprojects {
         }
 
         // configuring Errorprone
-//        apply plugin: "net.ltgt.errorprone"
+        apply plugin: 'net.ltgt.errorprone'
 
-//        dependencies {
-//            errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-//        }
+        dependencies {
+            errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+        }
 
         // configuring Spotbugs
         apply plugin: 'com.github.spotbugs'

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -172,7 +172,7 @@ public final class GoogleVisionCache {
         } else if (itRequest.hasNext()) {
             throw new IllegalStateException("There are still annotate Requests available!");
         } else {
-            return result;
+            return Collections.unmodifiableMap(result);
         }
     }
 
