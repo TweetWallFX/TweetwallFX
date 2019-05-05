@@ -42,24 +42,14 @@ public class ToStringTest {
     public TestName testName = new TestName();
     private static final String KEY1 = "one";
     private static final Object VALUE1 = 1L;
-    private static final String KEY2 = "two";
+    private static final String KEY2 = "deux";
     private static final Object VALUE2 = 2d;
     private static final String KEY3 = "drei";
     private static final Object VALUE3 = 3;
-    private static final String KEY4 = "octa";
-    private static final Object VALUE4 = Short.valueOf("8");
-    private static final String KEY5 = "vier";
-    private static final Object VALUE5 = "quatro";
-    private static final String KEY6 = "hexa";
-    private static final Object VALUE6 = "Sextet";
-    private static final String KEY7 = "hepta";
-    private static final Object VALUE7 = "seven dwarfs";
-    private static final String KEY8 = "octo";
-    private static final Object VALUE8 = "2^3";
-    private static final String KEY9 = "nine";
-    private static final Object VALUE9 = "3^1";
-    private static final String KEY10 = "deca";
-    private static final Object VALUE10 = "1001";
+    private static final String KEY4 = "cuatro";
+    private static final Object VALUE4 = Short.valueOf("4");
+    private static final String KEY5 = "quinque";
+    private static final Object VALUE5 = "0x101";
 
     @Before
     public void before() {
