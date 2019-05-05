@@ -58,7 +58,6 @@ ext {
         ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
         null != findProperty('BINTRAY_USER') &&
         null != findProperty('BINTRAY_KEY')
-    preJDK11 = System.getProperty('java.version').startsWith('1.8.')
     javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 }
 
@@ -131,33 +130,57 @@ allprojects {
         }
 
         javadoc {
-            doFirst {
-                if (preJDK11) return
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                options.addStringOption('-module-path', additionalModules.asPath)
-                options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    def additionalModules = (configurations.javafx + configurations.jaxb)
+                    options.addStringOption('-module-path', additionalModules.asPath)
+                    options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
+                }
             }
         }
 
-        compileJava {
-            doFirst {
-                if (preJDK11) return
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                options.compilerArgs = [
-                        '--module-path', additionalModules.asPath,
-                        '--add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
-                        '-Xlint:all', '-Werror', '-proc:none'
-                ]
+        tasks.withType(JavaCompile) {
+            options.compilerArgs.addAll([
+                    '-Xlint:all',
+                    '-Werror',
+                    '-proc:none',
+            ])
+
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    def additionalModules = (configurations.javafx + configurations.jaxb)
+                    options.compilerArgs.addAll([
+                            '--module-path',
+                            additionalModules.asPath,
+                            '--add-modules',
+                            'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
+                    ])
+                }
             }
         }
 
         tasks.withType(JavaExec) {
-            if (preJDK11) return
-            def additionalModules = (configurations.javafx + configurations.jaxb)
-            jvmArgs '--module-path'
-            jvmArgs additionalModules.asPath
-            jvmArgs '--add-modules'
-            jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    def additionalModules = (configurations.javafx + configurations.jaxb)
+                    jvmArgs '--module-path'
+                    jvmArgs additionalModules.asPath
+                    jvmArgs '--add-modules'
+                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
+                }
+            }
+        }
+
+        tasks.withType(Test) {
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    def additionalModules = (configurations.javafx + configurations.jaxb)
+                    jvmArgs '--module-path'
+                    jvmArgs additionalModules.asPath
+                    jvmArgs '--add-modules'
+                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
+                }
+            }
         }
 
         check {
@@ -186,6 +209,12 @@ allprojects {
             reports {
                 xml.enabled = false
                 html.enabled = true
+            }
+
+            if (JavaVersion.current().isJava11Compatible()) {
+                afterEvaluate {
+                    classpath = (classpath + configurations.javafx)
+                }
             }
         }
 
