@@ -91,7 +91,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                         sis -> latestTweetedImage = new Image(sis.getInputStream())));
     }
 
-
     private void appendTweet(final Tweet tweet) {
         addTweet(tweet, false);
     }    

@@ -147,7 +147,6 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         return prefHeight;
     }
 
-
     /*==========================================================================
      *          Create Mesh
      *///=======================================================================

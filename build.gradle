@@ -109,6 +109,7 @@ allprojects {
 //            trimTrailingWhitespace()
             indentWithSpaces(4)
             endWithNewline()
+            custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
         }
     }
 

@@ -39,7 +39,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
-
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
  * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
