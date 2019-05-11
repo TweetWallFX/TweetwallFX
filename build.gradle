@@ -92,6 +92,16 @@ allprojects {
             indentWithSpaces(4)
             endWithNewline()
         }
+        format 'javaFiles', {
+            target fileTree(project.rootDir) {
+                include '**/*.java'
+                include '**/*.groovy'
+            }
+
+//            trimTrailingWhitespace()
+            indentWithSpaces(4)
+            endWithNewline()
+        }
     }
 
     afterEvaluate {
