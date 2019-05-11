@@ -24,6 +24,7 @@
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,7 +59,8 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     @Override
     public void run() {
-        String actualDayName = LocalDateTime.now().getDayOfWeek()
+        String actualDayName = LocalDateTime.now(ZoneId.systemDefault())
+                .getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
                 .getVotingResultsDaily(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName))

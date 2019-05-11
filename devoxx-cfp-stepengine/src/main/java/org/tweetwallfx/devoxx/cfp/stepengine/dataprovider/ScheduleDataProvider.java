@@ -25,14 +25,12 @@ package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.LocalDateTime;
 import java.time.OffsetTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.TimeZone;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
@@ -64,7 +62,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
                 .getSchedule(Optional
                         .ofNullable(System.getProperty("org.tweetwallfx.scheduledata.day"))
                         .orElseGet(()
-                                -> LocalDateTime.now()
+                                -> LocalDateTime.now(ZoneId.systemDefault())
                                 .getDayOfWeek()
                                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
                                 .toLowerCase(Locale.ENGLISH)))
@@ -77,8 +75,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
                 .map(OffsetTime::parse)
                 .orElseGet(()
                         -> OffsetTime
-                        .now(ZoneOffset.UTC)
-                        .plus(TimeZone.getDefault().getRawOffset(), ChronoUnit.MILLIS));
+                        .now(ZoneId.systemDefault()));
         return SessionData.from(scheduleSlots, liveOffset);
     }
 

@@ -172,7 +172,7 @@ public final class GoogleVisionCache {
         } else if (itRequest.hasNext()) {
             throw new IllegalStateException("There are still annotate Requests available!");
         } else {
-            return result;
+            return Collections.unmodifiableMap(result);
         }
     }
 

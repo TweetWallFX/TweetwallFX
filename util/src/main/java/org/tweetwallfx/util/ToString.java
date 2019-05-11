@@ -60,11 +60,7 @@ public class ToString {
      */
     public static <K, V> Map<K, V> map(
             final K key1, final V value1) {
-        final Map<K, V> map = new LinkedHashMap<>();
-
-        map.put(key1, value1);
-
-        return map;
+        return Collections.singletonMap(key1, value1);
     }
 
     /**
@@ -92,7 +88,7 @@ public class ToString {
         map.put(key1, value1);
         map.put(key2, value2);
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     /**
@@ -126,7 +122,7 @@ public class ToString {
         map.put(key2, value2);
         map.put(key3, value3);
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     /**
@@ -166,7 +162,7 @@ public class ToString {
         map.put(key3, value3);
         map.put(key4, value4);
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     /**
@@ -212,7 +208,7 @@ public class ToString {
         map.put(key4, value4);
         map.put(key5, value5);
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     /**
@@ -240,7 +236,7 @@ public class ToString {
                 .filter(e -> Objects.nonNull(e.getKey()))
                 .forEach(e -> map.put(e.getKey(), e.getValue()));
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     /**
@@ -257,7 +253,7 @@ public class ToString {
      * @return the created entry
      */
     public static <K, V> Map.Entry<K, V> mapEntry(final K key, final V value) {
-        return new AbstractMap.SimpleEntry<>(key, value);
+        return new AbstractMap.SimpleImmutableEntry<>(key, value);
     }
 
     /**
