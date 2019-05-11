@@ -68,7 +68,7 @@ public class ConfigurationLoadableTest {
         Assertions.assertThat(testConfig)
                 .isNotNull()
                 .isInstanceOf(Map.class);
-        
+
         @SuppressWarnings("unchecked")
         final Map<String, Object> testConfigMap = (Map<String, Object>) testConfig;
 

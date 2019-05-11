@@ -44,7 +44,7 @@ public class ProposalType {
      * The label of the ProposalType.
      */
     private String label;
-    
+
     /**
      * Duration in minutes.
      */

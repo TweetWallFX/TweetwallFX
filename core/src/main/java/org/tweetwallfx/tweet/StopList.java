@@ -68,7 +68,7 @@ public final class StopList {
         //extract Hashtags from complex query and add to StopList
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
         final Matcher m = Pattern.compile("#[\\S]+").matcher(searchText);
-        
+
         while (m.find()) {
             StopList.add(m.group(0));
         }

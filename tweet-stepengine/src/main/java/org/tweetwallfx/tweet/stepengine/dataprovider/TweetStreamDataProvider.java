@@ -94,12 +94,12 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private void appendTweet(final Tweet tweet) {
         addTweet(tweet, false);
-    }    
+    }
 
     private void prependTweet(final Tweet tweet) {
         addTweet(tweet, true);
-    }    
-    
+    }
+
     private void addTweet(final Tweet tweet, boolean prepend) {
         LOGGER.info("Add tweet {}", tweet.getId());
         tweetListLock.writeLock().lock();

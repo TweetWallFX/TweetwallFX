@@ -41,7 +41,7 @@ public class StringPropertyAppender extends AbstractAppender {
     public StringPropertyAppender() {
         super(StringPropertyAppender.class.getName(), null, null, true, Property.EMPTY_ARRAY);
     }
-            
+
     public StringProperty stringProperty() {
         return s;
     }

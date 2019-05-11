@@ -94,7 +94,7 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
         public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TagCloudDataProvider();
         }
-    
+
         @Override
         public Class<TagCloudDataProvider> getDataProviderClass() {
             return TagCloudDataProvider.class;

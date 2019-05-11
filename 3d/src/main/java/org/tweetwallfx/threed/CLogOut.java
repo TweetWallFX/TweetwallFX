@@ -96,15 +96,15 @@ final class CLogOut {
             }
         };
 
-        
+
         LoggerContext context = LoggerContext.getContext(false);
         Configuration config = context.getConfiguration();
         PatternLayout layout = PatternLayout.newBuilder().withConfiguration(config).withPattern("%m%n").build();
         Appender appender = WriterAppender.newBuilder().setLayout(layout).setTarget(new OutputStreamWriter(stdStream, StandardCharsets.UTF_8)).build();
         appender.start();
-        config.addAppender(appender);        
-        
-        updateLoggers(appender, config);        
+        config.addAppender(appender);
+
+        updateLoggers(appender, config);
     }
 
     private void updateLoggers(final Appender appender, final Configuration config) {
