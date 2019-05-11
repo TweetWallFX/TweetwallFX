@@ -99,7 +99,7 @@ allprojects {
             }
 
 //            trimTrailingWhitespace()
-//            indentWithSpaces(4)
+            indentWithSpaces(4)
             endWithNewline()
         }
     }
