@@ -33,5 +33,4 @@ public interface TweetStream {
      * @param tweetConsumer the Consumer to be notified.
      */
     void onTweet(Consumer<Tweet> tweetConsumer);
-
 }

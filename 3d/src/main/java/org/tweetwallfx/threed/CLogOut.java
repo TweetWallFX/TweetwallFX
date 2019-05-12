@@ -126,5 +126,4 @@ final class CLogOut {
     public StringProperty getMessages() {
         return message;
     }
-
 }

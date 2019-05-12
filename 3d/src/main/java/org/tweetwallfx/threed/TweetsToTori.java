@@ -115,7 +115,6 @@ public class TweetsToTori {
         saveTweetsExecutor.shutdown();
         try {
             saveTweetsExecutor.awaitTermination(5, TimeUnit.SECONDS);
-
         } catch (InterruptedException ex) {
         }
     }
@@ -321,7 +320,6 @@ public class TweetsToTori {
                 imagesExportTask.cancel();
                 toriImagesTask.cancel();
             });
-
         }
 
         @Override

@@ -198,5 +198,4 @@ public class SegmentedTorus extends ShapeContainer<SegmentedTorusMesh> {
     public final void setCullFace(CullFace value) {
         mesh.setCullFace(value);
     }
-
 }

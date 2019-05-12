@@ -223,7 +223,6 @@ public class WordleSkin extends SkinBase<Wordle> {
                 public double minWidth(double height) {
                     return 10;
                 }
-
             };
 
             backgroundImage.getStyleClass().add("bg-image");

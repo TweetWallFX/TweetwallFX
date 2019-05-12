@@ -102,7 +102,6 @@ public class SegmentedTorusMesh extends MeshView {
                     (float) getyOffset(),
                     (float) getzOffset()));
         }
-
     };
 
     public final int getRadiusDivisions() {
@@ -123,7 +122,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final int getTubeDivisions() {
@@ -144,7 +142,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final int getTorusCrop() {
@@ -165,7 +162,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getRadius() {
@@ -186,7 +182,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getTubeRadius() {
@@ -207,7 +202,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getTubeStartAngleOffset() {
@@ -227,7 +221,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getxOffset() {
@@ -247,7 +240,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getyOffset() {
@@ -267,7 +259,6 @@ public class SegmentedTorusMesh extends MeshView {
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getzOffset() {
@@ -371,5 +362,4 @@ public class SegmentedTorusMesh extends MeshView {
         triangleMesh.getFaceSmoothingGroups().addAll(faceSmoothingGroups);
         return triangleMesh;
     }
-
 }
