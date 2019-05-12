@@ -50,7 +50,7 @@ public class Link {
      * Title is the link title.
      */
     private String title;
-    
+
     /**
      * UUID of the link.
      */

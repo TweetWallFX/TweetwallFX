@@ -106,7 +106,7 @@ allprojects {
                 include '**/*.groovy'
             }
 
-//            trimTrailingWhitespace()
+            trimTrailingWhitespace()
             indentWithSpaces(4)
             endWithNewline()
         }
