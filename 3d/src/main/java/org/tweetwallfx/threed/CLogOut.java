@@ -95,7 +95,6 @@ final class CLogOut {
             }
         };
 
-
         LoggerContext context = LoggerContext.getContext(false);
         Configuration config = context.getConfiguration();
         PatternLayout layout = PatternLayout.newBuilder().withConfiguration(config).withPattern("%m%n").build();
