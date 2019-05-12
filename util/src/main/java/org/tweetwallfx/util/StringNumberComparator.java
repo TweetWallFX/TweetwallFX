@@ -102,7 +102,7 @@ public final class StringNumberComparator implements Comparator<String> {
             if (!hasNext()) {
                 throw new NoSuchElementException("End of string was reached");
             }
-            
+
             final boolean isDigit = Character.isDigit(string.charAt(index));
             int partIndexEnd = index + 1;
 

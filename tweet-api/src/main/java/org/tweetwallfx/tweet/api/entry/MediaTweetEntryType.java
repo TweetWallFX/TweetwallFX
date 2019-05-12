@@ -37,7 +37,7 @@ public enum MediaTweetEntryType {
      * MediaTweetEntryType;
      *
      * @param mte MediaTweetEntry checked against
-     * 
+     *
      * @return {@code true} in case the entries type is the same as this
      */
     public boolean isType(final MediaTweetEntry mte) {

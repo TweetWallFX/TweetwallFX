@@ -119,7 +119,7 @@ public final class WordleLayout {
             Point2D center = new Point2D(0, 0);
             double totalWeight = 0.0;
             for (int prev = 0; prev < i; ++prev) {
-                Bounds prevBounds = boundsList.get(prev);   
+                Bounds prevBounds = boundsList.get(prev);
                 double weight = configuration.words.get(prev).getWeight();
                 if (0 == i % 2) {
                     center = center.add((prevBounds.getWidth() / 2d) * weight, (prevBounds.getHeight() / 2d) * weight);

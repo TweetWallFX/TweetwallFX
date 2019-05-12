@@ -380,7 +380,7 @@ public abstract class CFPClientTestBase {
                 return false;
             }
         }));
-        
+
         assertThat("Some avatar images are not loadable", avatarsLoadable.get(false), CoreMatchers.equalTo(new ArrayList<>()));
     }
 

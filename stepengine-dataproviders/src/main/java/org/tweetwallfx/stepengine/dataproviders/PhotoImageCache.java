@@ -84,7 +84,7 @@ public final class PhotoImageCache extends URLContentCacheBase {
                         mte.getSizes().keySet().stream().max(Comparator.naturalOrder()).orElse(Integer.MAX_VALUE),
                         this::unsupportedSize)
                 .apply(mte);
-        
+
         LogManager.getLogger(PhotoImageCache.class).info("MediaTweetEntry({}): {}", mte.getId(), urlString);
         return urlString;
     }

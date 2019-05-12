@@ -39,7 +39,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
-
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
  * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
@@ -96,15 +95,15 @@ final class CLogOut {
             }
         };
 
-        
+
         LoggerContext context = LoggerContext.getContext(false);
         Configuration config = context.getConfiguration();
         PatternLayout layout = PatternLayout.newBuilder().withConfiguration(config).withPattern("%m%n").build();
         Appender appender = WriterAppender.newBuilder().setLayout(layout).setTarget(new OutputStreamWriter(stdStream, StandardCharsets.UTF_8)).build();
         appender.start();
-        config.addAppender(appender);        
-        
-        updateLoggers(appender, config);        
+        config.addAppender(appender);
+
+        updateLoggers(appender, config);
     }
 
     private void updateLoggers(final Appender appender, final Configuration config) {

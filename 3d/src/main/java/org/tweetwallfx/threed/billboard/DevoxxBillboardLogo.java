@@ -147,7 +147,6 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
         return prefHeight;
     }
 
-
     /*==========================================================================
      *          Create Mesh
      *///=======================================================================
@@ -233,7 +232,7 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
             }
             needsUpdate = false;
         } /*======================================================================
-         step values if animated        
+         step values if animated
          */ else if (isAnimated() && !needsUpdate) {
             // update pointPos and texCoords
             int index = 0;
@@ -263,7 +262,7 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                 pointCache[subX][y][2] = holdPos;
             }
         } /*======================================================================
-         else create default points  
+         else create default points
          */ else {
             // Create pointPos and texCoords
             for (int y = 0; y <= subY; y++) {
@@ -277,7 +276,7 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     double fx = (1 - currX) * minX + currX * maxX;
                     int index = y * numDivX * pointSize + (x * pointSize);
 
-                    // Apply The Wave To Our Mesh on XZ plane                     
+                    // Apply The Wave To Our Mesh on XZ plane
                     pointCache[x][y][0] = (float) (fx);
                     pointCache[x][y][1] = (float) (fy);
                     pointCache[x][y][2] = (float) (getAmplitude() * (Math.sin(((waveNumber.get()) * x) - (getFrequency() * currX))));
