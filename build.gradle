@@ -109,8 +109,8 @@ allprojects {
             trimTrailingWhitespace()
             indentWithSpaces(4)
             endWithNewline()
-            custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
             custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
+            custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
         }
     }
 
