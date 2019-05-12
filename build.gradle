@@ -206,17 +206,15 @@ allprojects {
         }
 
         // configuring Errorprone
-        if (!JavaVersion.current().isJava12Compatible()) {
-            apply plugin: 'net.ltgt.errorprone'
+        apply plugin: 'net.ltgt.errorprone'
 
-            dependencies {
-                if (JavaVersion.current().isJava11Compatible()) {
-                    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-                } else if (JavaVersion.current().isJava8Compatible()) {
-                    errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-                } else {
-                    throw new GradleException("Building with Java major version prior to 8 is not supported.")
-                }
+        dependencies {
+            if (JavaVersion.current().isJava11Compatible()) {
+                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+            } else if (JavaVersion.current().isJava8Compatible()) {
+                errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+            } else {
+                throw new GradleException("Building with Java major version prior to 8 is not supported.")
             }
         }
 
