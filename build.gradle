@@ -110,6 +110,7 @@ allprojects {
             indentWithSpaces(4)
             endWithNewline()
             custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
+            custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
         }
     }
 

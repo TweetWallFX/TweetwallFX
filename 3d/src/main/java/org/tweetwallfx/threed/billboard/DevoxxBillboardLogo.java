@@ -228,7 +228,6 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     index = y * numDivX * texCoordSize + (x * texCoordSize);
                     texCoords[index] = currX;
                     texCoords[index + 1] = currY;
-
                 }
             }
             needsUpdate = false;
@@ -258,7 +257,6 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     texIndex = y * numDivX * texCoordSize + (x * texCoordSize);
                     texCoords[texIndex] = currX;
                     texCoords[texIndex + 1] = currY;
-
                 }
                 // Last Value Becomes The Far Left Stored Value
                 pointCache[subX][y][2] = holdPos;
@@ -290,7 +288,6 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
                     index = y * numDivX * texCoordSize + (x * texCoordSize);
                     texCoords[index] = currX;
                     texCoords[index + 1] = currY;
-
                 }
             }
         }
@@ -453,5 +450,4 @@ public class DevoxxBillboardLogo extends MeshView implements BillboardBehavior<D
     public Node getOther() {
         return otherNode;
     }
-
 }

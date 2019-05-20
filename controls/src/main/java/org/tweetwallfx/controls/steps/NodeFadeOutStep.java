@@ -55,7 +55,6 @@ public class NodeFadeOutStep implements Step {
         final ParallelTransition fadeOutAll = new ParallelTransition();
         nodes.forEach(node ->  {
             fadeOutAll.getChildren().add(new FlipOutXTransition(node));
-
         });
         fadeOutAll.setOnFinished(e -> {
             wordleSkin.getPane().getChildren().removeAll(nodes);

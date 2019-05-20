@@ -175,7 +175,6 @@ public class TweetWallFX extends Application {
             mousePosY = me.getSceneY();
             cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + (mousePosX - mouseOldX) * 2.0) % 360 + 540) % 360 - 180);
             cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - (mousePosY - mouseOldY) * 2.0) % 360 + 540) % 360 - 180);
-
         });
 
         primaryStage.setTitle("TweetWallFX Test - Devoxx 2014");
@@ -242,5 +241,4 @@ public class TweetWallFX extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }

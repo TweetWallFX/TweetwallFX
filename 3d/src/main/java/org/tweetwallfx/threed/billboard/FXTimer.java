@@ -280,12 +280,10 @@ public class FXTimer {
                         Platform.runLater(runnable);
                     }
                 }
-
             }
         };
         if (timer == null) {
             timer = new java.util.Timer(isDaemon);
-
         }
         timer.schedule(loop, (long) this.delay.getValue().toMillis(), (long) this.cycleDuration.getValue().toMillis());
         // remember for future reference
@@ -319,5 +317,4 @@ public class FXTimer {
     public void setRunnable(final Runnable runnable) {
         this.runnable = runnable;
     }
-
 }

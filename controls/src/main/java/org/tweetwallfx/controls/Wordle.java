@@ -363,5 +363,4 @@ public class Wordle extends Control {
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return StyleableProperties.STYLEABLES;
     }
-
 }
