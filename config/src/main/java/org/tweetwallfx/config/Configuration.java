@@ -29,10 +29,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -55,6 +57,21 @@ public final class Configuration {
     private static final String STANDARD_CONFIG_FILENAME = "tweetwallConfig.json";
     private static final String CUSTOM_CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName");
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
+    private static final Collection<Class<?>> MERGE_BY_OVERWRITE_TYPES
+            = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+                    java.lang.Boolean.class,
+                    java.lang.Byte.class,
+                    java.lang.Character.class,
+                    java.lang.Double.class,
+                    java.lang.Float.class,
+                    java.lang.Integer.class,
+                    java.lang.Long.class,
+                    java.lang.Short.class,
+                    java.lang.String.class,
+                    java.lang.Void.class,
+                    java.math.BigDecimal.class,
+                    java.math.BigInteger.class
+            )));
     private static final Map<String, ConfigurationConverter> CONVERTERS = StreamSupport
             .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
             .collect(Collectors.toMap(
@@ -310,7 +327,8 @@ public final class Configuration {
         final Class<?> pClass = previous.getClass();
         final Class<?> nClass = next.getClass();
 
-        if (pClass.getName().startsWith("java.lang.") || nClass.getName().startsWith("java.lang.")) {
+        if (MERGE_BY_OVERWRITE_TYPES.contains(pClass)
+                || MERGE_BY_OVERWRITE_TYPES.contains(nClass)) {
             return next;
         } else if (Map.class.isInstance(previous)
                 && Map.class.isInstance(next)) {
@@ -322,8 +340,10 @@ public final class Configuration {
         } else if (Collection.class.isInstance(previous)
                 && Collection.class.isInstance(next)) {
             return next;
+        } else if (next.equals(previous)) {
+            return next;
         } else {
-            throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
+            throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported! (" + previous + " -> " + next + ')');
         }
     }
 }
