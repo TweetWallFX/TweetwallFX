@@ -27,12 +27,16 @@ import java.io.InputStream;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
+import javax.json.bind.JsonbException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Converts data from an input into a typesafe object.
  */
 public class JsonDataConverter {
 
+    private static final Logger LOG = LogManager.getLogger(JsonDataConverter.class);
     private static final Jsonb JSONB = JsonbBuilder.create(new JsonbConfig()
             .setProperty("jsonb.fail-on-unknown-properties", true)
     );
@@ -86,7 +90,12 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
-        return JSONB.fromJson(jsonString, typeClass);
+        try {
+            return JSONB.fromJson(jsonString, typeClass);
+        } catch (final JsonbException je) {
+            LOG.error("Failed to convert to " + typeClass + ": " + jsonString, je);
+            throw je;
+        }
     }
 
     /**
