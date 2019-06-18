@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,7 @@ public final class StringNumberComparator implements Comparator<String> {
             if (!hasNext()) {
                 throw new NoSuchElementException("End of string was reached");
             }
-            
+
             final boolean isDigit = Character.isDigit(string.charAt(index));
             int partIndexEnd = index + 1;
 

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,7 +84,7 @@ public class FXTimer {
     }
     /*==========================================================================
      *    Variables
-     *///========================================================================    
+     *///========================================================================
     public static final long minFPS = 10;
     public static final long targetFPS = 60;
     public static final long maxFPS = 120;
@@ -280,12 +280,10 @@ public class FXTimer {
                         Platform.runLater(runnable);
                     }
                 }
-
             }
         };
         if (timer == null) {
             timer = new java.util.Timer(isDaemon);
-
         }
         timer.schedule(loop, (long) this.delay.getValue().toMillis(), (long) this.cycleDuration.getValue().toMillis());
         // remember for future reference
@@ -319,5 +317,4 @@ public class FXTimer {
     public void setRunnable(final Runnable runnable) {
         this.runnable = runnable;
     }
-
 }

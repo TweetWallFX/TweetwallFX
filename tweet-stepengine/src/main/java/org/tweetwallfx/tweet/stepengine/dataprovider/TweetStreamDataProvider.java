@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,9 @@ package org.tweetwallfx.tweet.stepengine.dataprovider;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -93,38 +91,35 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                         sis -> latestTweetedImage = new Image(sis.getInputStream())));
     }
 
-
     private void appendTweet(final Tweet tweet) {
         addTweet(tweet, false);
-    }    
+    }
 
     private void prependTweet(final Tweet tweet) {
         addTweet(tweet, true);
-    }    
-    
+    }
+
     private void addTweet(final Tweet tweet, boolean prepend) {
         LOGGER.info("Add tweet {}", tweet.getId());
-        if (tweet.getUser().getFollowersCount() > config.getMinFollowersCount()) {
-            tweetListLock.writeLock().lock();
-            try {
-                final Tweet originalTweet = tweet.getOriginTweet();
-                
-                if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId()
-                        && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName())) ) {
-                    if (prepend) {
-                        tweets.addFirst(originalTweet);
-                        updateImage(originalTweet);
-                    } else {
-                        tweets.addLast(originalTweet);
-                    }
-                }
+        tweetListLock.writeLock().lock();
+        try {
+            final Tweet originalTweet = tweet.getOriginTweet();
 
-                if (tweets.size() > config.getMaxTweets()) {
-                    tweets.removeLast();
+            if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId()
+                    && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName())) ) {
+                if (prepend) {
+                    tweets.addFirst(originalTweet);
+                    updateImage(originalTweet);
+                } else {
+                    tweets.addLast(originalTweet);
                 }
-            } finally {
-                tweetListLock.writeLock().unlock();
             }
+
+            if (tweets.size() > config.getMaxTweets()) {
+                tweets.removeLast();
+            }
+        } finally {
+            tweetListLock.writeLock().unlock();
         }
     }
 
@@ -182,28 +177,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
          */
         private int maxTweets = 4;
 
-        /**
-         * The number of followers required of a tweets user in order to be
-         * considerable for {@link TweetStreamDataProvider}. Defaults to
-         * {@code 0}.
-         */
-        private int minFollowersCount = 0;
-
-        /**
-         * DisplayNames of twitter users blocked from this
-         * {@link TweetStreamDataProvider}.
-         */
-        private Set<String> blockedTwitterUserScreenNames;
-
-        public Set<String> getBlockedTwitterUserScreenNames() {
-            return Optional.ofNullable(blockedTwitterUserScreenNames)
-                    .orElse(Collections.emptySet());
-        }
-
-        public void setBlockedTwitterUserScreenNames(final Set<String> blockedTwitterUserScreenNames) {
-            this.blockedTwitterUserScreenNames = blockedTwitterUserScreenNames;
-        }
-
         public int getHistorySize() {
             return historySize;
         }
@@ -226,18 +199,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             }
 
             this.maxTweets = maxTweets;
-        }
-
-        public int getMinFollowersCount() {
-            return minFollowersCount;
-        }
-
-        public void setMinFollowersCount(final int minFollowersCount) {
-            if (minFollowersCount < 0) {
-                throw new IllegalArgumentException("property 'minFollowersCount' must not be a negative number");
-            }
-
-            this.minFollowersCount = minFollowersCount;
         }
     }
 }
