@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2016-2018 TweetWallFX
+ * Copyright (c) 2016-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ public class TweetToCloudStep implements Step {
     public boolean shouldSkip(MachineContext context) {
         return null == context.get("WordleSkin", WordleSkin.class).getPane().lookup("#tweetInfo");
     }
-    
+
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(10);
@@ -109,7 +109,6 @@ public class TweetToCloudStep implements Step {
                         .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
                 moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
                         .withSize(textNode.getFont().getSize(), cloudWordleLayout.getFontSizeForWeight(word.getWeight())));
-
             } else {
                 Text textNode = cloudWordleLayout.createTextNode(word);
 

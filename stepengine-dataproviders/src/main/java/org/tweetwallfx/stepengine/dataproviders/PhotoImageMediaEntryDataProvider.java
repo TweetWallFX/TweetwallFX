@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -63,8 +63,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
     private void processTweet(final Tweet tweet) {
         LOG.info("new Tweet received: {}", tweet.getId());
         if (null == tweet.getMediaEntries()
-                || (tweet.isRetweet() && !config.isIncludeRetweets())
-                || tweet.getUser().getFollowersCount() < 25) {
+                || (tweet.isRetweet() && !config.isIncludeRetweets())) {
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
