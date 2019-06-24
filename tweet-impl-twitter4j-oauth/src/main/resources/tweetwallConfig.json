@@ -8,11 +8,5 @@
         }
     },
     "twitter" : {
-        "oauth" : {
-            "consumerKey" : null,
-            "consumerSecret" : null,
-            "accessToken" : null,
-            "accessTokenSecret" : null
-        }
     }
 }
