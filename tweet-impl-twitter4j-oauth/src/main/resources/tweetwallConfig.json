@@ -1,11 +1,5 @@
 {
     "connectionSettings" : {
-        "proxy" : {
-            "host" : null,
-            "port" : -1,
-            "user" : null,
-            "password" : null
-        }
     },
     "twitter" : {
         "oauth" : {
