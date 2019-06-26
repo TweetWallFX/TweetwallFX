@@ -103,7 +103,7 @@ public final class StepEngineSettings {
 
     /**
      * Service implementation converting the configuration data of the root key
-     * {@link ConnectionSettings#CONFIG_KEY} into {@link ConnectionSettings}.
+     * {@link StepEngineSettings#CONFIG_KEY} into {@link StepEngineSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
 
