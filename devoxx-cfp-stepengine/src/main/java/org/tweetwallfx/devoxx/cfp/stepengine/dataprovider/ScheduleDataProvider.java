@@ -71,12 +71,13 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
     }
 
     public List<SessionData> getFilteredSessionData() {
+        ZoneId zoneId = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.zone"))
+                .map(ZoneId::of)
+                .orElseGet(ZoneId::systemDefault);
         OffsetTime liveOffset = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.time"))
                 .map(OffsetTime::parse)
-                .orElseGet(()
-                        -> OffsetTime
-                        .now(ZoneId.systemDefault()));
-        return SessionData.from(scheduleSlots, liveOffset);
+                .orElseGet(() -> OffsetTime.now(zoneId));
+        return SessionData.from(scheduleSlots, liveOffset, zoneId);
     }
 
     public static class FactoryImpl implements DataProvider.Factory {

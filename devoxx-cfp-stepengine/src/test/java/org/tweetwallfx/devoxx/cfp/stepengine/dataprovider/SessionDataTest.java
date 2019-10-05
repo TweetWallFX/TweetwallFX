@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.OffsetTime;
+import java.time.ZoneId;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -44,7 +45,7 @@ public class SessionDataTest {
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()) {
             Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
-            List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"));
+            List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("10:35Z"), ZoneId.systemDefault());
             assertEquals(6, result.size());
         }
     }
@@ -55,7 +56,7 @@ public class SessionDataTest {
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()) {
             Schedule schedule = JsonDataConverter.convertFromInputStream(inputStream, Schedule.class);
-            List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("13:00Z"));
+            List<SessionData> result = SessionData.from(schedule, OffsetTime.parse("13:00Z"), ZoneId.systemDefault());
             assertEquals(7, result.size());
         }
     }
