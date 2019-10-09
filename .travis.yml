@@ -6,10 +6,5 @@ matrix:
       jdk: oraclejdk8
     - dist: xenial
       jdk: openjdk11
-    - dist: xenial
-      jdk: openjdk12
-
-#addons:
-#  apt:
-#    packages:
-#      - oracle-java8-installer
+#    - dist: xenial
+#      jdk: openjdk12
