@@ -245,15 +245,11 @@ allprojects {
         // configuring Versions plugin
         dependencyUpdates {
             revision = 'release'
-            resolutionStrategy {
-                componentSelection { rules ->
-                    rules.all { /*ComponentSelection*/ selection ->
-                        if (['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{ qualifier ->
-                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
-                        }) {
-                            selection.reject('Release candidate')
-                        }
-                    }
+
+            rejectVersionIf { /*ComponentSelection*/ selection ->
+                // version is a non-release version?
+                return ['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{qualifier ->
+                     selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
                 }
             }
         }
