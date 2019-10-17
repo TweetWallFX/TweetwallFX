@@ -23,17 +23,8 @@
  */
 
 dependencies {
-    def javaVersion = JavaVersion.current()
-
-    if (javaVersion.isJava11Compatible()) {
-        compile group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
-        compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
-    } else if (javaVersion.isJava9Compatible()) {
-        compile group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons9
-        compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx9
-    } else {
-        compile group: 'de.jensd', name: 'fontawesomefx', version: versionFontawesomefx8
-    }
+    compile group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
+    compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
     compile group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava
     compile project(':tweetwallfx-tweet-api')
     compile project(':tweetwallfx-configuration')

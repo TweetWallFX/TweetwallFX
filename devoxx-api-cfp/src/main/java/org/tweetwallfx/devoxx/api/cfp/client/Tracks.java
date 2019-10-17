@@ -57,6 +57,10 @@ public class Tracks {
     }
 
     public void setRooms(final List<Track> tracks) {
+        setTracks(tracks);
+    }
+
+    public void setTracks(final List<Track> tracks) {
         this.tracks = tracks;
     }
 

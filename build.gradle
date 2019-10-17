@@ -40,10 +40,8 @@ buildscript {
 
         if (JavaVersion.current().isJava11Compatible()) {
             classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin4Java11AndLater
-        } else if (JavaVersion.current().isJava8Compatible()) {
-            classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin4Java8AndLater
         } else {
-            throw new GradleException("Building with Java major version prior to 8 is not supported.")
+            throw new GradleException("Building with Java major version prior to 11 is not supported.")
         }
 
         // VCS dependency required by plugin 'gradle-info-plugin'
@@ -214,10 +212,8 @@ allprojects {
             dependencies {
                 if (JavaVersion.current().isJava11Compatible()) {
                     errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-                } else if (JavaVersion.current().isJava8Compatible()) {
-                    errorproneJavac group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
                 } else {
-                    throw new GradleException("Building with Java major version prior to 8 is not supported.")
+                    throw new GradleException("Building with Java major version prior to 11 is not supported.")
                 }
             }
         }
@@ -249,15 +245,11 @@ allprojects {
         // configuring Versions plugin
         dependencyUpdates {
             revision = 'release'
-            resolutionStrategy {
-                componentSelection { rules ->
-                    rules.all { /*ComponentSelection*/ selection ->
-                        if (['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{ qualifier ->
-                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
-                        }) {
-                            selection.reject('Release candidate')
-                        }
-                    }
+
+            rejectVersionIf { /*ComponentSelection*/ selection ->
+                // version is a non-release version?
+                return ['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{qualifier ->
+                     selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
                 }
             }
         }
