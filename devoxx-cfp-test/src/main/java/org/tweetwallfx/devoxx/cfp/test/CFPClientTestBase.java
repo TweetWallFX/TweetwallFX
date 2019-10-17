@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.ClientBuilder;
@@ -49,7 +50,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.Event;
 import org.tweetwallfx.devoxx.api.cfp.client.Events;
@@ -61,42 +61,51 @@ import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwallfx.devoxx.api.cfp.client.Talk;
 import org.tweetwallfx.devoxx.api.cfp.client.Tracks;
-import org.tweetwallfx.devoxx.cfp.impl.CFPClientSettings;
-import org.tweetwallfx.devoxx.cfp.impl.ConfigurableCFPClientImpl;
 
 public abstract class CFPClientTestBase {
 
     private static final Logger LOG = LogManager.getLogger(CFPClientTestBase.class);
-    private static final boolean CFP_REACHABLE = isCfpReachable();
+    private static final AtomicBoolean CFP_REACHABLE = new AtomicBoolean(false);
 
     @Rule
     public TestName testName = new TestName();
+    private final Class<? extends CFPClient> expectedCfpClient;
     private final String conferenceDay;
     private final String conferenceRoom;
     private final String talkId;
 
-    protected CFPClientTestBase(final String conferenceDay, final String conferenceRoom, final String talkId) {
+    protected CFPClientTestBase(
+            final Class<? extends CFPClient> expectedCfpClient,
+            final String conferenceDay,
+            final String conferenceRoom,
+            final String talkId) {
+        this.expectedCfpClient = expectedCfpClient;
         this.conferenceDay = Objects.requireNonNull(conferenceDay, "conferenceDay must not be null");
         this.conferenceRoom = Objects.requireNonNull(conferenceRoom, "conferenceRoom must not be null");
         this.talkId = Objects.requireNonNull(talkId, "talkId must not be null");
     }
 
-    private static boolean isCfpReachable() {
+    protected static final void checkCfpReachable(final String baseUri) {
         final boolean testingLive = Boolean.getBoolean("org.tweetwallfx.tests.executeCFPClientLiveTests");
         LOG.info("Test of CFP Client against live system is {}.", testingLive ? "enabled" : "disabled");
 
+        if (!testingLive) {
+            return;
+        }
+
         try {
-            return testingLive && Response.Status.Family.SUCCESSFUL == ClientBuilder.newClient()
-                    .target(Configuration.getInstance().getConfigTyped(
-                            CFPClientSettings.CONFIG_KEY,
-                            CFPClientSettings.class).getBaseUri())
+            LOG.info("Checking if CFP is reachable at {}", baseUri);
+            final Response response = ClientBuilder.newClient()
+                    .target(baseUri)
                     .request(MediaType.APPLICATION_JSON)
-                    .get()
+                    .get();
+
+            LOG.info("Received {}", response);
+            CFP_REACHABLE.set(Response.Status.Family.SUCCESSFUL == response
                     .getStatusInfo()
-                    .getFamily();
+                    .getFamily());
         } catch (final ProcessingException pe) {
             LogManager.getLogger(CFPClientTestBase.class).error(pe, pe);
-            return false;
         }
     }
 
@@ -118,8 +127,8 @@ public abstract class CFPClientTestBase {
         LOG.info("####################   END: {} ####################", testName.getMethodName());
     }
 
-    private static void ignoreIfServerUnreachable() {
-        if (!CFP_REACHABLE) {
+    protected final static void ignoreIfServerUnreachable() {
+        if (!CFP_REACHABLE.get()) {
             LOG.info("CFP Server is unreachable");
             Assume.assumeTrue(false);
         }
@@ -144,7 +153,7 @@ public abstract class CFPClientTestBase {
     public void clientImplIsFound() {
         final CFPClient client = getCFPClient();
         assertEquals(1, CFPClient.getClientStream().count());
-        assertEquals(ConfigurableCFPClientImpl.class, client.getClass());
+        assertEquals(expectedCfpClient, client.getClass());
     }
 
     @Test
