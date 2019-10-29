@@ -25,6 +25,8 @@ package org.tweetwallfx.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -114,7 +116,37 @@ public final class Configuration {
             }
         }
 
+        result = mergeWithAdditionalConfigurations(result);
+
         return convertConfigData(result);
+    }
+
+    private static Map<String, Object> mergeWithAdditionalConfigurations(final Map<String, Object> input) {
+        LOGGER.info("loading additional configurations data");
+        Map<String, Object> result = input;
+
+        // Load Configuration fragments from configured url paths
+        final ConfigurationSettings cs = JsonDataConverter.convertFromObject(
+                result.getOrDefault(ConfigurationSettings.CONFIG_KEY, Collections.EMPTY_MAP),
+                ConfigurationSettings.class);
+
+        for (String additionalConfigurationURL : cs.getAdditionalConfigurationURLs()) {
+            final URL url;
+
+            try {
+                url = URI.create(additionalConfigurationURL).toURL();
+            } catch (final MalformedURLException ex) {
+                throw new IllegalStateException("URL String '" + additionalConfigurationURL + "' is not a valid URL", ex);
+            }
+
+            result = mergeMap(
+                    result,
+                    readConfiguration(
+                            url,
+                            "Additional Configuration URL '" + additionalConfigurationURL + '\''));
+        }
+
+        return result;
     }
 
     private static Stream<Map<String, Object>> loadConfigurationDataFromClasspath(final String configFileName) {
@@ -126,11 +158,11 @@ public final class Configuration {
 
             while (resources.hasMoreElements()) {
                 final URL url = resources.nextElement();
-                LOGGER.info("Found config file: " + url);
-
-                try (final InputStream is = url.openStream()) {
-                    result = Stream.concat(result, Stream.of(readConfiguration(is, "Classpath entry '" + url.toExternalForm() + '\'')));
-                }
+                result = Stream.concat(
+                        result,
+                        Stream.of(readConfiguration(
+                                url,
+                                "Classpath entry '" + url.toExternalForm() + '\'')));
             }
         } catch (final IOException ioe) {
             throw new IllegalStateException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
@@ -153,12 +185,22 @@ public final class Configuration {
                 .filter(Files::isRegularFile)
                 .peek(p -> LOGGER.info("Found config override file: {}", p.toAbsolutePath()))
                 .map(p -> {
-                    try (InputStream is = Files.newInputStream(p)) {
+                    try (final InputStream is = Files.newInputStream(p)) {
                         return readConfiguration(is, "File '" + p.toString() + "'");
                     } catch (IOException ioe) {
                         throw new IllegalStateException("Error loading configuration data from " + p, ioe);
                     }
                 });
+    }
+
+    private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification) {
+        LOGGER.info("Processing config file: " + url);
+
+        try (final InputStream is = url.openStream()) {
+            return readConfiguration(is, dataSourceIdentification);
+        } catch (final IOException ioe) {
+            throw new IllegalStateException("Error loading configuration data from " + url.toExternalForm(), ioe);
+        }
     }
 
     private static Map<String, Object> readConfiguration(final InputStream input, final String dataSourceIdentification) {
