@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.config;
 
+import java.util.Map;
 import java.util.Objects;
 import static org.tweetwallfx.util.ToString.*;
 
@@ -40,6 +41,8 @@ public final class TweetwallSettings {
     private String stylesheetResource;
     private String stylesheetFile;
     private String query;
+    private Rectangle resolution = new Rectangle(1920, 1280);
+    private boolean scaling = false;
 
     /**
      * Return the title of the Tweetwall.
@@ -82,22 +85,22 @@ public final class TweetwallSettings {
     }
 
     /**
-     * Returns the resource path containing stylesheet to be read from
-     * the filesystem.
+     * Returns the resource path containing stylesheet to be read from the
+     * filesystem.
      *
-     * @return the resource path containing stylesheet to be read from
-     * the filesystem
+     * @return the resource path containing stylesheet to be read from the
+     * filesystem
      */
     public String getStylesheetFile() {
         return stylesheetFile;
     }
 
     /**
-     * Sets the resource path containing stylesheet to be read from
-     * the filesystem.
+     * Sets the resource path containing stylesheet to be read from the
+     * filesystem.
      *
-     * @param stylesheetFile the resource path containing stylesheet to be read from
-     * the filesystem
+     * @param stylesheetFile the resource path containing stylesheet to be read
+     * from the filesystem
      */
     public void setStylesheetFile(final String stylesheetFile) {
         this.stylesheetFile = stylesheetFile;
@@ -122,14 +125,79 @@ public final class TweetwallSettings {
         this.query = Objects.requireNonNull(query, "query must not be null!");
     }
 
+    public Rectangle getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(final Rectangle resolution) {
+        Objects.requireNonNull(resolution, "resolution msut not be null");
+        this.resolution = resolution;
+    }
+
+    public boolean isScaling() {
+        return scaling;
+    }
+
+    public void setScaling(final Boolean scaling) {
+        this.scaling = Boolean.TRUE.equals(scaling);
+    }
+
     @Override
     public String toString() {
-        return createToString(this, map(
+        return createToString(this, Map.of(
                 "title", getTitle(),
                 "stylesheetResource", getStylesheetResource(),
                 "stylesheetFile", getStylesheetFile(),
-                "query", getQuery()
-        )) + " extends " + super.toString();
+                "query", getQuery(),
+                "resolution", getResolution(),
+                "scaling", isScaling()
+        ), super.toString());
+    }
+
+    public static final class Rectangle {
+
+        private int width;
+        private int height;
+
+        public Rectangle(final int width, final int height) {
+            setWidth(width);
+            setHeight(height);
+        }
+
+        public Rectangle() {
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(final int width) {
+            if (width <= 0) {
+                throw new IllegalArgumentException("width must be larger than 0");
+            } else {
+                this.width = width;
+            }
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(final int height) {
+            if (height <= 0) {
+                throw new IllegalArgumentException("height must be larger than 0");
+            } else {
+                this.height = height;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, Map.of(
+                    "width", getWidth(),
+                    "height", getHeight()
+            ), super.toString());
+        }
     }
 
     /**
