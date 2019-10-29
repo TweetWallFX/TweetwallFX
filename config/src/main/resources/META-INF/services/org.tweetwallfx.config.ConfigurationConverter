@@ -1,2 +1,3 @@
+org.tweetwallfx.config.ConfigurationSettings$Converter
 org.tweetwallfx.config.ConnectionSettings$Converter
 org.tweetwallfx.config.TweetwallSettings$Converter
