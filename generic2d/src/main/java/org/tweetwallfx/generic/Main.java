@@ -26,9 +26,14 @@ package org.tweetwallfx.generic;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -51,12 +56,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        BorderPane borderPane = new BorderPane();
-        Scene scene = new Scene(borderPane, 1920, 1280);
-        borderPane.getStyleClass().add("splash");
-
         final TweetwallSettings tweetwallSettings
                 = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
+
+        BorderPane borderPane = new BorderPane();
+        Scene scene = new Scene(
+                borderPane,
+                tweetwallSettings.getResolution().getWidth(),
+                tweetwallSettings.getResolution().getHeight());
+        borderPane.getStyleClass().add("splash");
 
         Optional.ofNullable(tweetwallSettings.getStylesheetResource())
                 .map(ClassLoader.getSystemClassLoader()::getResource)
@@ -95,9 +103,53 @@ public class Main extends Application {
 
         primaryStage.setTitle(tweetwallSettings.getTitle());
         primaryStage.setScene(scene);
-
         primaryStage.show();
-        primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
+
+        if (tweetwallSettings.isScaling()) {
+            primaryStage.setFullScreen(false);
+
+            final Slider scaling = new Slider(0, 200, 100);
+            final Label scalingCaption = new Label("Scaling Factor:");
+            final Label scalingValue = new Label();
+
+            scaling.setShowTickMarks(true);
+            scaling.setShowTickLabels(false);
+            scaling.setMajorTickUnit(25d);
+            scaling.setBlockIncrement(5d);
+
+            scalingValue.textProperty().bind(Bindings.convert(scaling.valueProperty()));
+
+            final GridPane grid = new GridPane();
+            grid.setPadding(new Insets(10, 10, 10, 10));
+            grid.setVgap(10);
+            grid.setHgap(20);
+
+            GridPane.setConstraints(scalingCaption, 0, 0);
+            grid.getChildren().add(scalingCaption);
+
+            GridPane.setConstraints(scaling, 1, 0);
+            grid.getChildren().add(scaling);
+
+            GridPane.setConstraints(scalingValue, 2, 0);
+            grid.getChildren().add(scalingValue);
+
+            scaling.valueProperty().addListener((ov, oldV, newV) -> {
+                scene.getRoot().scaleXProperty().setValue(newV.doubleValue() / 100d);
+                scene.getRoot().scaleYProperty().setValue(newV.doubleValue() / 100d);
+            });
+
+            final Scene scalingScene = new Scene(new BorderPane(grid), 300, 80);
+
+            borderPane.setMaxWidth(tweetwallSettings.getResolution().getWidth());
+            borderPane.setMaxHeight(tweetwallSettings.getResolution().getHeight());
+
+            final Stage secondaryStage = new Stage();
+            secondaryStage.setTitle("Scale");
+            secondaryStage.setScene(scalingScene);
+            secondaryStage.show();
+        } else {
+            primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
+        }
     }
 
     @Override
