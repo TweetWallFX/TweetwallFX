@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,8 @@ import org.tweetwallfx.tweet.api.entry.BasicEntry;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
-import static java.util.stream.Collectors.toSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import static java.util.stream.Collectors.toCollection;
 import java.util.stream.IntStream;
 import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
@@ -141,10 +142,15 @@ public interface Tweet extends BasicEntry {
 
     public default EmojiTweetEntry[] getEmojiEntries() {
         final int[] codePoints = getText().codePoints().toArray();
+        final AtomicInteger offset = new AtomicInteger(0);
 
         return IntStream.range(0, codePoints.length)
                 .filter(i -> codePoints[i] >= 0x1f000)
-                .mapToObj(i -> new EmojiTweetEntry(new String(codePoints, i, 1), i))
+                .mapToObj(i -> {
+                    final int charCount = Character.charCount(codePoints[i]);
+                    final int cOffset = offset.getAndAdd(charCount - 1);
+                    return new EmojiTweetEntry(new String(codePoints, i, 1), cOffset + i, charCount);
+                })
                 .toArray(i -> new EmojiTweetEntry[i]);
     }
 
@@ -207,14 +213,14 @@ public interface Tweet extends BasicEntry {
                 filteredIndexes = IntStream.concat(filteredIndexes, nextFilter);
             }
 
-            final Set<Integer> indexesToFilterOut = filteredIndexes.boxed().collect(toSet());
-            final int[] codePoints = tweet.getText().codePoints().toArray();
-            final int[] filteredCodePoints = IntStream.range(0, codePoints.length)
+            final Set<Integer> indexesToFilterOut = filteredIndexes.boxed().collect(toCollection(TreeSet::new));
+            final int[] chars = tweet.getText().chars().toArray();
+            final int[] filteredChars = IntStream.range(0, chars.length)
                     .filter(i -> !indexesToFilterOut.contains(i))
-                    .map(i -> codePoints[i])
+                    .map(i -> chars[i])
                     .toArray();
 
-            return new String(filteredCodePoints, 0, filteredCodePoints.length)
+            return new String(filteredChars, 0, filteredChars.length)
                     .replaceAll("  *", " ")
                     .trim();
         }

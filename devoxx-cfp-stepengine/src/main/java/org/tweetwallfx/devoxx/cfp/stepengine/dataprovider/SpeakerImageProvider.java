@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,11 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 import javafx.scene.image.Image;
+import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
@@ -62,9 +61,9 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     }
 
     private Image getSpeakerImage(final String avatarURL) {
-        final Supplier<InputStream> supplier = ProfileImageCache.INSTANCE.getCachedOrLoad(avatarURL);
+        final URLContent urlc = ProfileImageCache.INSTANCE.getCachedOrLoad(avatarURL);
 
-        if (null == supplier) {
+        if (null == urlc) {
             // avatar url is not in cache (url content was not loadable)
             final String urlReplacement = config.getUrlReplacements().get(avatarURL);
 
@@ -74,7 +73,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
                     // look for configured replacement
                     : getSpeakerImage(urlReplacement);
         } else {
-            return new Image(supplier.get());
+            return new Image(urlc.getInputStream());
         }
     }
 
@@ -100,7 +99,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
                 .forEach((k, v) -> ProfileImageCache.INSTANCE.putCachedContent(v, this::handleURLContent));
     }
 
-    private void handleURLContent(final Supplier<InputStream> urlc) {
+    private void handleURLContent(final URLContent urlc) {
         // do nothing
     }
 

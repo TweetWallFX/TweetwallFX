@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,19 +31,33 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-final class URLContent implements Externalizable {
+public final class URLContent implements Externalizable {
 
     private static final Logger LOG = LogManager.getLogger(URLContent.class);
     private static final long serialVersionUID = 1L;
     private static final byte[] NO_DATA = new byte[0];
     private byte[] data;
+    private String digest;
 
     public URLContent(final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
-        data = readFully(in);
+        InputStream in2 = in;
+        try {
+            in2 = new DigestInputStream(in, MessageDigest.getInstance("md5"));
+        } catch (NoSuchAlgorithmException ex) {
+            LOG.warn("Failed to create digest for {}", in, ex);
+        }
+        data = readFully(in2);
+        digest = in2 instanceof DigestInputStream
+                ? javax.xml.bind.DatatypeConverter.printHexBinary(((DigestInputStream) in2).getMessageDigest().digest())
+                : null;
+        LOG.info("MD5: {}", digest);
     }
 
     public URLContent(final String urlString) throws IOException {
@@ -70,14 +84,24 @@ final class URLContent implements Externalizable {
         return new ByteArrayInputStream(data);
     }
 
+    public String getDigest() {
+        return digest;
+    }
+
     @Override
     public void writeExternal(final ObjectOutput out) throws IOException {
+        // digest
+        out.writeUTF(digest);
+        // data
         out.writeInt(data.length);
         out.write(data);
     }
 
     @Override
     public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+        // digest
+        digest = in.readUTF();
+        // data
         final int size = in.readInt();
         data = new byte[size];
         in.readFully(data);

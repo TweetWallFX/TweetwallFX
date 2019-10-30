@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@ package org.tweetwallfx.tweet.api.filter;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -44,6 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
 
+    private static final Logger LOG = LogManager.getLogger(RejectFromSenderFilterStep.class);
     private final Config config;
 
     private RejectFromSenderFilterStep(final Config config) {
@@ -55,13 +58,18 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            if (config.getUserHandles().contains(t.getUser().getName())) {
+            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+
+            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
+                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), tweet.getId());
                 return Result.REJECTED;
             }
 
+            LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is not blacklisted", t.getId(), tweet.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
+        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 

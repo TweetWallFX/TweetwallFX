@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,9 @@
  * THE SOFTWARE.
  */
 package org.tweetwallfx.tweet.api.entry;
+
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 final class MediaTweetEntrySize implements MediaTweetEntry.Size {
 
@@ -49,5 +52,14 @@ final class MediaTweetEntrySize implements MediaTweetEntry.Size {
     @Override
     public int getResize() {
         return resize;
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "width", getWidth(),
+                "height", getHeight(),
+                "resize", getResize()
+        ), super.toString());
     }
 }

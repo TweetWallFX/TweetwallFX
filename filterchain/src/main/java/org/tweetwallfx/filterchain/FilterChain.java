@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -136,10 +136,18 @@ public class FilterChain<T> {
 
     private boolean process(final T t) {
         return filterSteps.stream()
+                .peek(fs -> LOGGER.info("Checking {} with {}", t.getClass().getName(), fs.getClass().getName()))
                 .map(fs -> fs.check(t))
+                .peek(r -> LOGGER.info("Checking {} determined {}", t.getClass().getName(), r))
                 .filter(FilterStep.Result::isTerminal)
+                .peek(r -> LOGGER.info("Checking {} determined terminally {}", t.getClass().getName(), r))
                 .findFirst()
                 .map(FilterStep.Result::isAccepted)
-                .orElse(defaultResult);
+                .orElseGet(() -> {
+                    LOGGER.info("Found nothing definitive for {}. -> {}",
+                            t.getClass().getName(),
+                            defaultResult ? "ACCEPT" : "REJECT");
+                    return defaultResult;
+                });
     }
 }

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,10 +92,9 @@ public abstract class URLContentCacheBase {
      * @return an {@link Optional} containing the current cache content for the
      * {code urlString}
      */
-    public final Optional<Supplier<InputStream>> getCachedContent(final String urlString) {
+    public final Optional<URLContent> getCachedContent(final String urlString) {
         LOG.debug("{}: Getting Content for '{}'", cacheName, urlString);
-        return Optional.ofNullable(urlContentCache.get(urlString))
-                .map(urlc -> urlc::getInputStream);
+        return Optional.ofNullable(urlContentCache.get(urlString));
     }
 
     /**
@@ -109,7 +107,7 @@ public abstract class URLContentCacheBase {
      * @return a Supplier of InputStream in case content was loaded or
      * {@code null}
      */
-    public final Supplier<InputStream> getCachedOrLoad(final String urlString) {
+    public final URLContent getCachedOrLoad(final String urlString) {
         try {
             return getCachedOrLoadSync(urlString);
         } catch (IOException ex) {
@@ -127,12 +125,12 @@ public abstract class URLContentCacheBase {
      *
      * @param contentConsumer the Consumer processing the content
      */
-    public final void getCachedOrLoad(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
+    public final void getCachedOrLoad(final String urlString, final Consumer<URLContent> contentConsumer) {
         Objects.requireNonNull(contentConsumer, "contentConsumer must not be null");
-        final Task<Supplier<InputStream>> task = new Task<Supplier<InputStream>>() {
+        final Task<URLContent> task = new Task<URLContent>() {
 
             @Override
-            protected Supplier<InputStream> call() throws Exception {
+            protected URLContent call() throws Exception {
                 return getCachedOrLoadSync(urlString);
             }
         };
@@ -144,7 +142,7 @@ public abstract class URLContentCacheBase {
         contentLoader.execute(task);
     }
 
-    private Supplier<InputStream> getCachedOrLoadSync(final String urlString) throws IOException {
+    private URLContent getCachedOrLoadSync(final String urlString) throws IOException {
         URLContent urlc = urlContentCache.get(urlString);
 
         if (null == urlc) {
@@ -152,7 +150,7 @@ public abstract class URLContentCacheBase {
             putCachedContent(urlString, urlc);
         }
 
-        return urlc::getInputStream;
+        return urlc;
     }
 
     /**
@@ -194,11 +192,11 @@ public abstract class URLContentCacheBase {
      *
      * @param contentConsumer the Consumer processing the content
      */
-    public final void putCachedContent(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
+    public final void putCachedContent(final String urlString, final Consumer<URLContent> contentConsumer) {
         putCachedContentAsync(urlString, contentConsumer);
     }
 
-    private void putCachedContentAsync(final String urlString, final Consumer<Supplier<InputStream>> contentConsumer) {
+    private void putCachedContentAsync(final String urlString, final Consumer<URLContent> contentConsumer) {
         final Task<URLContent> task = new Task<URLContent>() {
 
             @Override
@@ -211,7 +209,7 @@ public abstract class URLContentCacheBase {
             putCachedContent(urlString, task.getValue());
 
             if (null != contentConsumer) {
-                contentConsumer.accept(() -> task.getValue().getInputStream());
+                contentConsumer.accept(task.getValue());
             }
         });
         task.setOnFailed(event

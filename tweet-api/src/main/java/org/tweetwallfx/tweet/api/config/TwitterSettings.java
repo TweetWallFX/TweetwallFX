@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright (c) 2017-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ public final class TwitterSettings {
     private Map<String, Object> extendedConfig;
     private boolean extendedMode = false;
     private OAuth oauth;
+    private boolean ignoreRateLimit = true;
 
     /**
      * Returns a flag indicating that the twitter client is to work in debug
@@ -106,6 +107,27 @@ public final class TwitterSettings {
     }
 
     /**
+     * Returns a flag indicating that the twitter rate limitations shall be
+     * ignored.
+     *
+     * @return a flag indicating that the twitter rate limitations shall be
+     * ignored
+     */
+    public boolean isIgnoreRateLimit() {
+        return ignoreRateLimit;
+    }
+
+    /**
+     * Sets a flag indicating that the twitter rate limitations shall be
+     * ignored.
+     *
+     * @param ignoreRateLimit the new value
+     */
+    public void setIgnoreRateLimit(boolean ignoreRateLimit) {
+        this.ignoreRateLimit = ignoreRateLimit;
+    }
+
+    /**
      * Returns the OAuth setting the twitter client is to use in order to
      * connect with twitter.
      *
@@ -133,6 +155,7 @@ public final class TwitterSettings {
                 "debugEnabled", isDebugEnabled(),
                 "extendedConfig", getExtendedConfig(),
                 "extendedMode", isExtendedMode(),
+                "ignoreRateLimit", isIgnoreRateLimit(),
                 "oauth", getOauth()
         )) + " extends " + super.toString();
     }

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright (c) 2017-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,7 +59,8 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     @Override
     public void run() {
-        String actualDayName = LocalDateTime.now().getDayOfWeek()
+        String actualDayName = LocalDateTime.now(ZoneId.systemDefault())
+                .getDayOfWeek()
                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH).toLowerCase(Locale.ENGLISH);
         List<VotingResultTalk> votingResults = CFPClient.getClient()
                 .getVotingResultsDaily(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName))

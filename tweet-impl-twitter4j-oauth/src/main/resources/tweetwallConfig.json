@@ -1,18 +1,6 @@
 {
     "connectionSettings" : {
-        "proxy" : {
-            "host" : null,
-            "port" : -1,
-            "user" : null,
-            "password" : null
-        }
     },
     "twitter" : {
-        "oauth" : {
-            "consumerKey" : null,
-            "consumerSecret" : null,
-            "accessToken" : null,
-            "accessTokenSecret" : null
-        }
     }
 }

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,18 @@ package org.tweetwallfx.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,6 +59,21 @@ public final class Configuration {
     private static final String STANDARD_CONFIG_FILENAME = "tweetwallConfig.json";
     private static final String CUSTOM_CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName");
     private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
+    private static final Collection<Class<?>> MERGE_BY_OVERWRITE_TYPES
+            = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+                    java.lang.Boolean.class,
+                    java.lang.Byte.class,
+                    java.lang.Character.class,
+                    java.lang.Double.class,
+                    java.lang.Float.class,
+                    java.lang.Integer.class,
+                    java.lang.Long.class,
+                    java.lang.Short.class,
+                    java.lang.String.class,
+                    java.lang.Void.class,
+                    java.math.BigDecimal.class,
+                    java.math.BigInteger.class
+            )));
     private static final Map<String, ConfigurationConverter> CONVERTERS = StreamSupport
             .stream(ServiceLoader.load(ConfigurationConverter.class).spliterator(), false)
             .collect(Collectors.toMap(
@@ -96,7 +116,37 @@ public final class Configuration {
             }
         }
 
+        result = mergeWithAdditionalConfigurations(result);
+
         return convertConfigData(result);
+    }
+
+    private static Map<String, Object> mergeWithAdditionalConfigurations(final Map<String, Object> input) {
+        LOGGER.info("loading additional configurations data");
+        Map<String, Object> result = input;
+
+        // Load Configuration fragments from configured url paths
+        final ConfigurationSettings cs = JsonDataConverter.convertFromObject(
+                result.getOrDefault(ConfigurationSettings.CONFIG_KEY, Collections.EMPTY_MAP),
+                ConfigurationSettings.class);
+
+        for (String additionalConfigurationURL : cs.getAdditionalConfigurationURLs()) {
+            final URL url;
+
+            try {
+                url = URI.create(additionalConfigurationURL).toURL();
+            } catch (final MalformedURLException ex) {
+                throw new IllegalStateException("URL String '" + additionalConfigurationURL + "' is not a valid URL", ex);
+            }
+
+            result = mergeMap(
+                    result,
+                    readConfiguration(
+                            url,
+                            "Additional Configuration URL '" + additionalConfigurationURL + '\''));
+        }
+
+        return result;
     }
 
     private static Stream<Map<String, Object>> loadConfigurationDataFromClasspath(final String configFileName) {
@@ -108,11 +158,11 @@ public final class Configuration {
 
             while (resources.hasMoreElements()) {
                 final URL url = resources.nextElement();
-                LOGGER.info("Found config file: " + url);
-
-                try (final InputStream is = url.openStream()) {
-                    result = Stream.concat(result, Stream.of(readConfiguration(is, "Classpath entry '" + url.toExternalForm() + '\'')));
-                }
+                result = Stream.concat(
+                        result,
+                        Stream.of(readConfiguration(
+                                url,
+                                "Classpath entry '" + url.toExternalForm() + '\'')));
             }
         } catch (final IOException ioe) {
             throw new IllegalStateException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
@@ -135,12 +185,22 @@ public final class Configuration {
                 .filter(Files::isRegularFile)
                 .peek(p -> LOGGER.info("Found config override file: {}", p.toAbsolutePath()))
                 .map(p -> {
-                    try (InputStream is = Files.newInputStream(p)) {
+                    try (final InputStream is = Files.newInputStream(p)) {
                         return readConfiguration(is, "File '" + p.toString() + "'");
                     } catch (IOException ioe) {
                         throw new IllegalStateException("Error loading configuration data from " + p, ioe);
                     }
                 });
+    }
+
+    private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification) {
+        LOGGER.info("Processing config file: " + url);
+
+        try (final InputStream is = url.openStream()) {
+            return readConfiguration(is, dataSourceIdentification);
+        } catch (final IOException ioe) {
+            throw new IllegalStateException("Error loading configuration data from " + url.toExternalForm(), ioe);
+        }
     }
 
     private static Map<String, Object> readConfiguration(final InputStream input, final String dataSourceIdentification) {
@@ -286,7 +346,7 @@ public final class Configuration {
         ));
     }
 
-    private static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
+    public static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
         Objects.requireNonNull(next, "Parameter next must not be null!");
 
         if (null == previous || previous.isEmpty()) {
@@ -309,7 +369,8 @@ public final class Configuration {
         final Class<?> pClass = previous.getClass();
         final Class<?> nClass = next.getClass();
 
-        if (pClass.getName().startsWith("java.lang.") || nClass.getName().startsWith("java.lang.")) {
+        if (MERGE_BY_OVERWRITE_TYPES.contains(pClass)
+                || MERGE_BY_OVERWRITE_TYPES.contains(nClass)) {
             return next;
         } else if (Map.class.isInstance(previous)
                 && Map.class.isInstance(next)) {
@@ -318,8 +379,13 @@ public final class Configuration {
             @SuppressWarnings("unchecked")
             final Map<String, Object> nextMap = (Map<String, Object>) next;
             return mergeMap(previousMap, nextMap);
+        } else if (Collection.class.isInstance(previous)
+                && Collection.class.isInstance(next)) {
+            return next;
+        } else if (next.equals(previous)) {
+            return next;
         } else {
-            throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported!");
+            throw new UnsupportedOperationException("Merging type " + pClass + " with " + nClass + " is not supported! (" + previous + " -> " + next + ')');
         }
     }
 }

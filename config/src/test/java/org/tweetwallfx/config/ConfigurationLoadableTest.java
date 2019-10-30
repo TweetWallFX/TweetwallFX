@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,7 +68,7 @@ public class ConfigurationLoadableTest {
         Assertions.assertThat(testConfig)
                 .isNotNull()
                 .isInstanceOf(Map.class);
-        
+
         @SuppressWarnings("unchecked")
         final Map<String, Object> testConfigMap = (Map<String, Object>) testConfig;
 

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Property;
 
 /**
  *
@@ -38,9 +39,9 @@ public class StringPropertyAppender extends AbstractAppender {
     private final StringProperty s = new SimpleStringProperty();
 
     public StringPropertyAppender() {
-        super(StringPropertyAppender.class.getName(), null, null);
+        super(StringPropertyAppender.class.getName(), null, null, true, Property.EMPTY_ARRAY);
     }
-            
+
     public StringProperty stringProperty() {
         return s;
     }

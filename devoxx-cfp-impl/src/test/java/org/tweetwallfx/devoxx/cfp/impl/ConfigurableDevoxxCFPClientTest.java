@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,20 @@
  */
 package org.tweetwallfx.devoxx.cfp.impl;
 
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.devoxx.cfp.test.CFPClientTestBase;
 
 public class ConfigurableDevoxxCFPClientTest extends CFPClientTestBase {
 
+    static {
+        checkCfpReachable(Configuration.getInstance()
+                .getConfigTyped(
+                        CFPClientSettings.CONFIG_KEY,
+                        CFPClientSettings.class)
+                .getBaseUri());
+    }
+
     public ConfigurableDevoxxCFPClientTest() {
-        super("monday", "room8", "OZB-4067");
+        super(ConfigurableCFPClientImpl.class, "monday", "room8", "OZB-4067");
     }
 }

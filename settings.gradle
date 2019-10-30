@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 
 rootProject.name='tweetwallfx'
-enableFeaturePreview('STABLE_PUBLISHING')
 
 include ':cache'
 project(":cache").name = "tweetwallfx-cache"
@@ -33,6 +32,8 @@ include ':controls'
 project(":controls").name = "tweetwallfx-controls"
 include ':filterchain'
 project(":filterchain").name = "tweetwallfx-filterchain"
+include ':google-cloud'
+project(':google-cloud').name = 'tweetwallfx-google-cloud'
 include ':logging'
 project(":logging").name = "tweetwallfx-logging"
 include ':stepengine-api'
@@ -66,15 +67,6 @@ include ':devoxx-cfp-impl'
 project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
 include ':devoxx-cfp-test'
 project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
-
-include ':devoxx-2017-be'
-project(':devoxx-2017-be').name = 'tweetwallfx-devoxx-2017-be'
-include ':tweetwallfx-devoxx-2017-be:cfp-impl'
-project(':tweetwallfx-devoxx-2017-be:cfp-impl').name = 'tweetwallfx-devoxx-2017-be-cfp-impl'
-include ':tweetwallfx-devoxx-2017-be:exhibition'
-project(':tweetwallfx-devoxx-2017-be:exhibition').name = 'tweetwallfx-devoxx-2017-be-exhibition'
-include ':tweetwallfx-devoxx-2017-be:cinema'
-project(':tweetwallfx-devoxx-2017-be:cinema').name = 'tweetwallfx-devoxx-2017-be-cinema'
 
 include ':generic2d'
 project(":generic2d").name = "tweetwallfx-generic2d"

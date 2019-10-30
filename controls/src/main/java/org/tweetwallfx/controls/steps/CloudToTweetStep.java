@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2016-2018 TweetWallFX
+ * Copyright (c) 2016-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,6 +70,11 @@ public class CloudToTweetStep implements Step {
 
     private CloudToTweetStep() {
         // prevent external instantiation
+    }
+
+    @Override
+    public boolean shouldSkip(MachineContext context) {
+        return null == context.getDataProvider(TweetDataProvider.class).getTweet();
     }
 
     @Override
@@ -154,6 +159,7 @@ public class CloudToTweetStep implements Step {
 
         // layout image and meta data first
         Pane infoBox = createInfoBox(wordleSkin, context, displayTweet, lowerLeft);
+        infoBox.setId("tweetInfo");
         wordleSkin.setInfoBox(infoBox);
         wordleSkin.getPane().getChildren().add(infoBox);
         // add fade in for image and meta data

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 import twitter4j.UserMentionEntity;
 
 final class TwitterUserMentionTweetEntry extends BaseTwitterTweetEntry<UserMentionEntity> implements UserMentionTweetEntry {
@@ -45,5 +47,14 @@ final class TwitterUserMentionTweetEntry extends BaseTwitterTweetEntry<UserMenti
     @Override
     public long getId() {
         return getT().getId();
+    }
+
+    @Override
+    public String toString() {
+        return createToString(this, map(
+                "id", getId(),
+                "name", getName(),
+                "screenName", getScreenName()
+        ), super.toString());
     }
 }

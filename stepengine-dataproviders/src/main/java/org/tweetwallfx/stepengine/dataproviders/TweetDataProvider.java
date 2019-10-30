@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2016-2018 TweetWallFX
+ * Copyright (c) 2016-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,9 +57,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
     @Override
     public void processNewTweet(final Tweet tweet) {
         LOGGER.info("new Tweet received");
-        if (tweet.getUser().getFollowersCount() > 25) {
-            this.nextTweet = tweet;
-        }
+        this.nextTweet = tweet;
         this.lastTweetCollection = null;
     }
 
@@ -72,7 +70,6 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         return Tweeter.getInstance().search(new TweetQuery()
                 .query(searchText)
                 .count(HISTORY_SIZE))
-                .filter(t -> t.getUser().getFollowersCount() > 25)
                 .collect(Collectors.toList());
     }
 

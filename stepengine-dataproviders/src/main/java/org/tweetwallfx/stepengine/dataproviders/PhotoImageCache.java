@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2018 TweetWallFX
+ * Copyright (c) 2018-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,14 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.cache.URLContentCacheBase;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -68,29 +68,32 @@ public final class PhotoImageCache extends URLContentCacheBase {
                 this::handleLoadedContent);
     }
 
-    public Supplier<InputStream> getCached(final MediaTweetEntry mte) {
+    public URLContent getCached(final MediaTweetEntry mte) {
         return getCachedOrLoad(getImageUrlString(mte));
     }
 
-    public void getCachedOrLoad(final MediaTweetEntry mte, final Consumer<Supplier<InputStream>> consumer) {
+    public void getCachedOrLoad(final MediaTweetEntry mte, final Consumer<URLContent> consumer) {
         getCachedOrLoad(
                 getImageUrlString(mte),
                 consumer);
     }
 
     private String getImageUrlString(final MediaTweetEntry mte) {
-        return MTE_SIZE_TO_URL_FUNCTIONS
+        final String urlString = MTE_SIZE_TO_URL_FUNCTIONS
                 .getOrDefault(
                         mte.getSizes().keySet().stream().max(Comparator.naturalOrder()).orElse(Integer.MAX_VALUE),
                         this::unsupportedSize)
                 .apply(mte);
+
+        LogManager.getLogger(PhotoImageCache.class).info("MediaTweetEntry({}): {}", mte.getId(), urlString);
+        return urlString;
     }
 
     private String unsupportedSize(final MediaTweetEntry mte) {
         throw new IllegalArgumentException("Illegal value");
     }
 
-    private void handleLoadedContent(final Supplier<InputStream> cache) {
+    private void handleLoadedContent(final URLContent urlc) {
         // do nothing
     }
 }

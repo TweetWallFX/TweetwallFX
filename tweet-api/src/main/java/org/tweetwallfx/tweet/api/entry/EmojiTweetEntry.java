@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2015-2018 TweetWallFX
+ * Copyright (c) 2015-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,19 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+
 public class EmojiTweetEntry implements TweetEntry {
 
     private final String emojiText;
-    private final int codePointIndex;
+    private final int start;
+    private final int width;
 
-    public EmojiTweetEntry(final String emojiText, final int codePointIndex) {
+    public EmojiTweetEntry(final String emojiText, final int start, final int width) {
         this.emojiText = emojiText;
-        this.codePointIndex = codePointIndex;
+        this.start = start;
+        this.width = width;
     }
 
     @Override
@@ -40,20 +45,20 @@ public class EmojiTweetEntry implements TweetEntry {
 
     @Override
     public int getStart() {
-        return codePointIndex;
+        return start;
     }
 
     @Override
     public int getEnd() {
-        return codePointIndex;
+        return start + width;
     }
 
     @Override
     public String toString() {
-        return "EmojiTweetEntry{"
-                + "\n    text=" + getText()
-                + "\n    start=" + getStart()
-                + "\n    end=" + getEnd()
-                + "\n} extends " + super.toString();
+        return createToString(this, map(
+                "text", getText(),
+                "start", getStart(),
+                "end", getEnd()
+        ), super.toString());
     }
 }

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright (c) 2017-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,21 @@ package org.tweetwallfx.stepengine.api.config;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
 import org.tweetwallfx.util.ConfigurableObjectBase;
+import org.tweetwallfx.util.JsonDataConverter;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
 /**
- * POJO for reading Settings concerning the HTTP Connection itself.
+ * POJO for reading Settings concerning the {@link StepEngine}.
  */
 public final class StepEngineSettings {
 
@@ -100,7 +103,7 @@ public final class StepEngineSettings {
 
     /**
      * Service implementation converting the configuration data of the root key
-     * {@link ConnectionSettings#CONFIG_KEY} into {@link ConnectionSettings}.
+     * {@link StepEngineSettings#CONFIG_KEY} into {@link StepEngineSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
 
@@ -156,6 +159,11 @@ public final class StepEngineSettings {
      * {@link #getConfig()} or {@link #getConfig(java.lang.Class)}) for a
      * {@link DataProvider} instance (identified via
      * {@link #getDataProviderClassName()}.
+     *
+     * <p>
+     * Configuration can be extended by configuring the properties of the
+     * {@code config} section of this definition on the root level of the
+     * Configuration.
      */
     public static final class DataProviderSetting extends ConfigurableObjectBase {
 
@@ -178,6 +186,14 @@ public final class StepEngineSettings {
          */
         public void setDataProviderClassName(final String dataProviderClassName) {
             this.dataProviderClassName = dataProviderClassName;
+        }
+
+        @Override
+        public <T> T getConfig(final Class<T> typeClass) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> specializedConfig = (Map<String, Object>) Configuration.getInstance().getConfig(typeClass.getName(), Collections.emptyMap());
+            final Map<String, Object> mergedConfig = Configuration.mergeMap(getConfig(), specializedConfig);
+            return JsonDataConverter.convertFromObject(mergedConfig, typeClass);
         }
 
         @Override

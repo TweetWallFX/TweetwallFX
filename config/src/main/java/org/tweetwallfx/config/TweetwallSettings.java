@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright (c) 2017-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -109,7 +109,7 @@ public final class TweetwallSettings {
      * @return the Query String that is to provide Tweets for this Tweetwall
      */
     public String getQuery() {
-        return query;
+        return Objects.requireNonNull(query, "query must not be null!");
     }
 
     /**
@@ -119,7 +119,7 @@ public final class TweetwallSettings {
      * Tweetwall
      */
     public void setQuery(final String query) {
-        this.query = query;
+        this.query = Objects.requireNonNull(query, "query must not be null!");
     }
 
     @Override

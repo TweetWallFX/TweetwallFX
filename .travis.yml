@@ -1,7 +1,11 @@
 language: java
-jdk:
-  - oraclejdk8
-#addons:
-#  apt:
-#    packages:
-#      - oracle-java8-installer
+
+matrix:
+  include:
+    - dist: xenial
+      jdk: openjdk11
+    - dist: xenial
+      jdk: openjdk12
+#    - dist: xenial
+#      jdk: openjdk13
+

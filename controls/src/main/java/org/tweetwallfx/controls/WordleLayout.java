@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2016-2018 TweetWallFX
+ * Copyright (c) 2016-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -121,12 +121,16 @@ public final class WordleLayout {
             for (int prev = 0; prev < i; ++prev) {
                 Bounds prevBounds = boundsList.get(prev);
                 double weight = configuration.words.get(prev).getWeight();
-                center = center.add((prevBounds.getWidth() / 2d) * weight, (prevBounds.getHeight() / 2d) * weight);
+                if (0 == i % 2) {
+                    center = center.add((prevBounds.getWidth() / 2d) * weight, (prevBounds.getHeight() / 2d) * weight);
+                } else {
+                    center = center.subtract((prevBounds.getWidth() / 2d) * weight, (prevBounds.getHeight() / 2d) * weight);
+                }
                 totalWeight += weight;
             }
             center = center.multiply(1d / totalWeight);
             boolean done = false;
-            double radius = 0.5 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
+            double radius = 0.1 * Math.min(boundsList.get(0).getWidth(), boundsList.get(0).getHeight());
             while (!done) {
                 if (radius > Math.max(configuration.layoutBounds.getHeight(), configuration.layoutBounds.getWidth())) {
                     doFinish = true;
@@ -136,7 +140,11 @@ public final class WordleLayout {
                 double prevY = -1;
                 for (int deg = startDeg; deg < startDeg + 360; deg += DEG) {
                     double rad = ((double) deg / Math.PI) * 180.0;
-                    center = center.add(radius * Math.cos(rad), radius * Math.sin(rad));
+                    if (0 == i % 2) {
+                        center = center.add(radius * Math.cos(rad), radius * Math.sin(rad));
+                    } else {
+                        center = center.subtract(radius * Math.cos(rad), radius * Math.sin(rad));
+                    }
                     if (prevX == center.getX() && prevY == center.getY()) {
                         continue;
                     }
@@ -158,10 +166,14 @@ public final class WordleLayout {
                     if (useable) {
                         useable = boundsList.stream().filter(Objects::nonNull).noneMatch(mayBe::intersects);
                     }
-                    if (useable || doFinish) {
+                    if (useable) {
                         done = true;
                         boundsList.set(i, new BoundingBox(center.getX() - width / 2d,
                                 center.getY() - height / 2d, width, height));
+                        break;
+                    }
+                    if (doFinish) {
+                        done = true;
                         break;
                     }
                 }

@@ -1,7 +1,7 @@
 /*
- * The MIT License
+ * The MIT License (MIT)
  *
- * Copyright 2017-2018 TweetWallFX
+ * Copyright (c) 2017-2019 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,7 @@ public class SessionData {
     public final List<String> speakers;
     public final String title;
     public final String beginTime;
+    public final String endTime;
     public final boolean isNotAllocated;
     public final String roomSetup;
 
@@ -59,6 +60,7 @@ public class SessionData {
         this.beginTime = slot.getFromTime();
         this.isNotAllocated = slot.isNotAllocated();
         this.roomSetup = slot.getRoomSetup();
+        this.endTime = slot.getToTime();
     }
 
     /**
