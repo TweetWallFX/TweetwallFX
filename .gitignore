@@ -11,5 +11,8 @@
 **/.settings/
 **/bin/
 
+# Intellij
+**/.idea
+
 #
 /*/config.properties
