@@ -23,7 +23,10 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
+import java.time.Instant;
+import java.time.LocalTime;
 import java.time.OffsetTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -66,14 +69,14 @@ public class SessionData {
     /**
      * For testing purposes only.
      */
-    static List<SessionData> from(final Schedule schedule, OffsetTime now) {
-        return from(schedule.getSlots(), now);
+    static List<SessionData> from(final Schedule schedule, OffsetTime now, ZoneId zoneId) {
+        return from(schedule.getSlots(), now, zoneId);
     }
 
-    public static List<SessionData> from(List<ScheduleSlot> slots, OffsetTime now) {
+    public static List<SessionData> from(List<ScheduleSlot> slots, OffsetTime now, ZoneId zoneId) {
         List<SessionData> sessionData = slots.stream()
                 .filter(slot -> null != slot.getTalk())
-                .filter(slot -> OffsetTime.parse(slot.getToTime() + "Z").isAfter(now.plusMinutes(10)))
+                .filter(slot -> OffsetTime.ofInstant(Instant.ofEpochMilli(slot.getToTimeMillis()), zoneId).isAfter(now.plusMinutes(10)))
                 .collect(Collectors.groupingBy(ScheduleSlot::getRoomId))
                 .entrySet().stream()
                 .map(entry -> entry.getValue().stream().findFirst())
