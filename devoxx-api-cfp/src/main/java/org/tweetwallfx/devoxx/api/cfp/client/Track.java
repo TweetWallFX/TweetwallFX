@@ -23,7 +23,8 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A track of a event.

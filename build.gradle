@@ -104,9 +104,11 @@ allprojects {
                 include '**/*.groovy'
             }
 
+            paddedCell()
             trimTrailingWhitespace()
             indentWithSpaces(4)
             endWithNewline()
+            custom('noStarImports', {fileContent -> fileContent.replaceAll(/\nimport (static )?[a-zA-Z0-9.]*[.][\*];\n/, '\n')})
             custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
             custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
         }
