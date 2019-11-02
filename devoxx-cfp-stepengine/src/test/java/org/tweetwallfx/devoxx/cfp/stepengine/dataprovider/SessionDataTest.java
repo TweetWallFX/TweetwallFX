@@ -29,8 +29,8 @@ import java.net.URL;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.util.JsonDataConverter;
 

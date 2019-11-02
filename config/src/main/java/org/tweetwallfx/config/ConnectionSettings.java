@@ -23,7 +23,8 @@
  */
 package org.tweetwallfx.config;
 
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.

@@ -26,7 +26,8 @@ package org.tweetwallfx.devoxx.api.cfp.client;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A POJO containing links to other POJOs.

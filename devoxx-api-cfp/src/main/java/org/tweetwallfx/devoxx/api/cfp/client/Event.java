@@ -25,7 +25,9 @@ package org.tweetwallfx.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.mapEntry;
+import static org.tweetwallfx.util.ToString.mapOf;
 
 /**
  * A conference is described by an eventCode, a label, a list of Locale, a

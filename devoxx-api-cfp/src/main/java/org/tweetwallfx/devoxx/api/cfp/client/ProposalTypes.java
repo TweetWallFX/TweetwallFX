@@ -25,7 +25,8 @@ package org.tweetwallfx.devoxx.api.cfp.client;
 
 import java.util.Collections;
 import java.util.List;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * Show the list of ProposalTypes.

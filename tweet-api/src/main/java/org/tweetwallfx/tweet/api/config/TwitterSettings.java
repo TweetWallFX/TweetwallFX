@@ -26,7 +26,8 @@ package org.tweetwallfx.tweet.api.config;
 import java.util.Collections;
 import java.util.Map;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning the twitter client.
