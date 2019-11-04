@@ -24,9 +24,10 @@
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
 import java.time.Instant;
-import java.time.LocalTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +56,12 @@ public class SessionData {
     public final String endTime;
     public final boolean isNotAllocated;
     public final String roomSetup;
+    public final List<SpeakerReference> speakerObjects;
 
     private SessionData(final ScheduleSlot slot) {
         this.room = slot.getRoomName();
         this.speakers = slot.getTalk().getSpeakers().stream().map(SpeakerReference::getName).collect(Collectors.toList());
+        this.speakerObjects = Collections.unmodifiableList(new ArrayList<>(slot.getTalk().getSpeakers()));
         this.title = slot.getTalk().getTitle();
         this.beginTime = slot.getFromTime();
         this.isNotAllocated = slot.isNotAllocated();
