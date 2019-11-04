@@ -99,6 +99,11 @@ public class Talk extends ObjectWithLinksBase {
      */
     private String videoURL;
 
+    /**
+     * The number of times this talk was marked as favorite.
+     */
+    private int favoritesCount = -1;
+
     public String getId() {
         return id;
     }
@@ -199,6 +204,14 @@ public class Talk extends ObjectWithLinksBase {
         this.videoURL = videoURL;
     }
 
+    public int getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public void setFavoritesCount(final int favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
     public boolean hasCompleteInformation() {
         return !getLinkStream(Link.Type.TALK).findAny().isPresent();
     }
@@ -228,6 +241,7 @@ public class Talk extends ObjectWithLinksBase {
                 mapEntry("tags", getTags()),
                 mapEntry("speakers", getSpeakers()),
                 mapEntry("videoURL", getVideoURL()),
+                mapEntry("favoritesCount", getFavoritesCount()),
                 mapEntry("hasCompleteInformation", hasCompleteInformation())
         )) + " extends " + super.toString();
     }
