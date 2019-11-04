@@ -165,6 +165,8 @@ public final class FilterChainSettings {
         @Override
         public String toString() {
             return createToString(this, map(
+                    "domainObjectClassName", getDomainObjectClassName(),
+                    "defaultResult", getDefaultResult(),
                     "filterSteps", getFilterSteps()
             ), super.toString());
         }

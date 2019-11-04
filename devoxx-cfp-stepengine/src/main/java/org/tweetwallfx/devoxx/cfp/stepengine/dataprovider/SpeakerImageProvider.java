@@ -26,6 +26,7 @@ package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import javafx.scene.image.Image;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
@@ -51,13 +52,17 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     public Image getSpeakerImage(final Speaker speaker) {
         return null == speaker
                 ? getDefaultClasspathImage()
-                : getSpeakerImage(speaker.getAvatarURL());
+                : Optional.ofNullable(speaker.getAvatarURL())
+                        .map(this::getSpeakerImage)
+                        .orElseGet(this::getDefaultClasspathImage);
     }
 
     public Image getSpeakerImage(final SpeakerReference speakerReference) {
         return null == speakerReference
                 ? getDefaultClasspathImage()
-                : getSpeakerImage(speakerReference.getSpeaker().map(Speaker::getAvatarURL).orElse(null));
+                : speakerReference.getSpeaker()
+                        .map(this::getSpeakerImage)
+                        .orElseGet(this::getDefaultClasspathImage);
     }
 
     private Image getSpeakerImage(final String avatarURL) {

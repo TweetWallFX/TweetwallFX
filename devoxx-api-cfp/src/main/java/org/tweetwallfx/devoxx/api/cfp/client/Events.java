@@ -26,8 +26,9 @@ package org.tweetwallfx.devoxx.api.cfp.client;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import static org.tweetwallfx.devoxx.api.cfp.client.impl.RestCallHelper.*;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A listing of events handled by the REST API.
