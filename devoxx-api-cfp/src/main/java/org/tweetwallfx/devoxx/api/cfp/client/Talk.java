@@ -100,9 +100,14 @@ public class Talk extends ObjectWithLinksBase {
     private String videoURL;
 
     /**
-     * The URL providing the avatar image of the trck of the session.
+     * The URL providing the avatar image of the track of the session.
      */
     private String trackImageURL = null;
+
+    /**
+     * The number of times this talk was marked as favorite.
+     */
+    private int favoritesCount = -1;
 
     public String getId() {
         return id;
@@ -212,6 +217,14 @@ public class Talk extends ObjectWithLinksBase {
         this.videoURL = videoURL;
     }
 
+    public int getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public void setFavoritesCount(final int favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
     public boolean hasCompleteInformation() {
         return !getLinkStream(Link.Type.TALK).findAny().isPresent();
     }
@@ -242,6 +255,7 @@ public class Talk extends ObjectWithLinksBase {
                 mapEntry("speakers", getSpeakers()),
                 mapEntry("trackImageURL", getTrackImageURL()),
                 mapEntry("videoURL", getVideoURL()),
+                mapEntry("favoritesCount", getFavoritesCount()),
                 mapEntry("hasCompleteInformation", hasCompleteInformation())
         )) + " extends " + super.toString();
     }
