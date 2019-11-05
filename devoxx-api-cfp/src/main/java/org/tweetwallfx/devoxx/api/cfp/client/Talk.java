@@ -100,6 +100,11 @@ public class Talk extends ObjectWithLinksBase {
     private String videoURL;
 
     /**
+     * The URL providing the avatar image of the track of the session.
+     */
+    private String trackImageURL = null;
+
+    /**
      * The number of times this talk was marked as favorite.
      */
     private int favoritesCount = -1;
@@ -196,6 +201,14 @@ public class Talk extends ObjectWithLinksBase {
         this.speakers = speakers;
     }
 
+    public String getTrackImageURL() {
+        return trackImageURL;
+    }
+
+    public void setTrackImageURL(final String trackImageURL) {
+        this.trackImageURL = trackImageURL;
+    }
+
     public String getVideoURL() {
         return videoURL;
     }
@@ -240,6 +253,7 @@ public class Talk extends ObjectWithLinksBase {
                 mapEntry("track", getTrack()),
                 mapEntry("tags", getTags()),
                 mapEntry("speakers", getSpeakers()),
+                mapEntry("trackImageURL", getTrackImageURL()),
                 mapEntry("videoURL", getVideoURL()),
                 mapEntry("favoritesCount", getFavoritesCount()),
                 mapEntry("hasCompleteInformation", hasCompleteInformation())
