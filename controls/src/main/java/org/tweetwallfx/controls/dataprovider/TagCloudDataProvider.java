@@ -84,8 +84,9 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
                 .map(StopList::removeEmojis)
+                .distinct()
                 .filter(StopList::notIn)
-                .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
+                .forEach(w -> tree.merge(w, 1L, (oldValue, newValue) -> oldValue + newValue));
     }
 
     public static class FactoryImpl implements DataProvider.Factory {
