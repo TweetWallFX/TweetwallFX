@@ -24,8 +24,10 @@
 package org.tweetwallfx.tweet.api.filter;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterChainSettings;
@@ -60,7 +62,7 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         do {
             LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
 
-            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
+            if (config.getUserHandles().contains(t.getUser().getScreenName().toLowerCase(Locale.ENGLISH))) {
                 LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), tweet.getId());
                 return Result.REJECTED;
             }
@@ -122,7 +124,9 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
          */
         public void setUserHandles(final Set<String> userHandles) {
             Objects.requireNonNull(userHandles, "userHandles must not be null!");
-            this.userHandles = userHandles;
+            this.userHandles = userHandles.stream()
+                    .map(s -> s.toLowerCase(Locale.ENGLISH))
+                    .collect(Collectors.toSet());
         }
 
         /**
