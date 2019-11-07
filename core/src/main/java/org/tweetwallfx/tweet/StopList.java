@@ -66,12 +66,16 @@ public final class StopList {
     //TODO: Add I18N support
     static {
         //extract Hashtags from complex query and add to StopList
-        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+        final TweetwallSettings tweetwallSettings = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
+        final String searchText = tweetwallSettings.getQuery();
         final Matcher m = Pattern.compile("#[\\S]+").matcher(searchText);
 
         while (m.find()) {
             StopList.add(m.group(0));
         }
+
+        tweetwallSettings.getAdditionalStopWords()
+                .forEach(StopList::add);
     }
 
     private StopList() {
@@ -123,7 +127,7 @@ public final class StopList {
     }
 
     private static Set<String> readStopListResource(String resourceName) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
             return reader.lines().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
         } catch (IOException e) {
             LOG.error("Unable to load stoplist resource: " + resourceName, e);
