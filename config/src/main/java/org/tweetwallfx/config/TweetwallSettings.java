@@ -23,7 +23,9 @@
  */
 package org.tweetwallfx.config;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
@@ -41,6 +43,7 @@ public final class TweetwallSettings {
     private String stylesheetResource;
     private String stylesheetFile;
     private String query;
+    private Set<String> additionalStopWords = Collections.emptySet();
 
     /**
      * Return the title of the Tweetwall.
@@ -83,22 +86,22 @@ public final class TweetwallSettings {
     }
 
     /**
-     * Returns the resource path containing stylesheet to be read from
-     * the filesystem.
+     * Returns the resource path containing stylesheet to be read from the
+     * filesystem.
      *
-     * @return the resource path containing stylesheet to be read from
-     * the filesystem
+     * @return the resource path containing stylesheet to be read from the
+     * filesystem
      */
     public String getStylesheetFile() {
         return stylesheetFile;
     }
 
     /**
-     * Sets the resource path containing stylesheet to be read from
-     * the filesystem.
+     * Sets the resource path containing stylesheet to be read from the
+     * filesystem.
      *
-     * @param stylesheetFile the resource path containing stylesheet to be read from
-     * the filesystem
+     * @param stylesheetFile the resource path containing stylesheet to be read
+     * from the filesystem
      */
     public void setStylesheetFile(final String stylesheetFile) {
         this.stylesheetFile = stylesheetFile;
@@ -121,6 +124,27 @@ public final class TweetwallSettings {
      */
     public void setQuery(final String query) {
         this.query = Objects.requireNonNull(query, "query must not be null!");
+    }
+
+    /**
+     * Returns the set containing the additional stopwords to consider.
+     *
+     * @return the set containing the additional stopwords to consider
+     */
+    public Set<String> getAdditionalStopWords() {
+        return additionalStopWords;
+    }
+
+    /**
+     * Sets the new set containing the additional stopwords to consider.
+     *
+     * @param additionalStopWords the new set containing the additional
+     * stopwords to concider
+     */
+    public void setAdditionalStopWords(final Set<String> additionalStopWords) {
+        this.additionalStopWords = Objects.requireNonNull(
+                additionalStopWords,
+                "additionalStopWords must not be null!");
     }
 
     @Override
