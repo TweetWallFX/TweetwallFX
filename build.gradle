@@ -76,6 +76,14 @@ allprojects {
         jcenter()
     }
 
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                // workaround for spotbugs not yet supporting JDK 13 class formats
+                substitute module('org.ow2.asm:asm')  with module ("org.ow2.asm:asm:${versionAsm}")
+            }
+        }
+    }
     // configuring Spotless
     apply plugin: "com.diffplug.gradle.spotless"
 
