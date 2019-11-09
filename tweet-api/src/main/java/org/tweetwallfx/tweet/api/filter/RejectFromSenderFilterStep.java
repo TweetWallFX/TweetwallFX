@@ -60,18 +60,25 @@ public class RejectFromSenderFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
             if (config.getUserHandles().contains(t.getUser().getScreenName().toLowerCase(Locale.ENGLISH))) {
-                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), tweet.getId());
+                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is blacklisted -> REJECTED",
+                        tweet.getId(),
+                        t.getId());
                 return Result.REJECTED;
             }
 
-            LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is not blacklisted", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): User handle for Tweet(id:{}) is not blacklisted",
+                    tweet.getId(),
+                    t.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 

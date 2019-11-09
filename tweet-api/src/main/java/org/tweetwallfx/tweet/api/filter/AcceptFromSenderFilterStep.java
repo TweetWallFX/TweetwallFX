@@ -60,18 +60,25 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
             if (config.getUserHandles().contains(t.getUser().getScreenName().toLowerCase(Locale.ENGLISH))) {
-                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is whitelisted -> ACCEPTED", t.getId(), tweet.getId());
+                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is whitelisted -> ACCEPTED",
+                        tweet.getId(),
+                        t.getId());
                 return Result.ACCEPTED;
             }
 
-            LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is not whitelisted", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): User handle for Tweet(id:{}) is not whitelisted",
+                    t.getId(),
+                    tweet.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 

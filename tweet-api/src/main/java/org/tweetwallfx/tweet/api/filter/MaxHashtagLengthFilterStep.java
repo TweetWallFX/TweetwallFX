@@ -59,22 +59,30 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
             final List<HashtagTweetEntry> htes = Arrays.stream(t.getHashtagEntries())
                     .filter(hte -> hte.getText().length() > config.getMaxLength())
                     .collect(Collectors.toList());
 
             if (!htes.isEmpty()) {
-                LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length -> REJECTED", t.getId(), tweet.getId());
+                LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length of {} -> REJECTED",
+                        tweet.getId(),
+                        t.getId(),
+                        config.getMaxLength());
                 return Result.REJECTED;
             }
 
-            LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) do not exeed allowed limit", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Hashtags in Tweet(id:{}) do not exeed allowed limit",
+                    tweet.getId(),
+                    t.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 
