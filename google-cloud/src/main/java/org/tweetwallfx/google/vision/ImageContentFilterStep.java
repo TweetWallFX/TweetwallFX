@@ -120,7 +120,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             visionAnalysis = GoogleVisionCache.INSTANCE.getCachedOrLoad(imageUrlStrings.stream());
         } catch (final IOException ex) {
             LOG.warn(String.format(
-                    "Tweet(id:{}): Tweet(id:{}) failed analysation of its photos -> REJECTED",
+                    "Tweet(id:%s): Tweet(id:%s) failed analysation of its photos -> REJECTED",
                     tweet.getId(),
                     t.getId()),
                     ex);
