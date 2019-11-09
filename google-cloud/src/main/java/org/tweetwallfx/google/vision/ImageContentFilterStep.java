@@ -70,9 +70,16 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
     }
 
     private final Config config;
+    private final ImageContentAnalysis.SafeSearch requiredSafeSearch;
 
     private ImageContentFilterStep(final Config config) {
         this.config = config;
+        requiredSafeSearch = new ImageContentAnalysis.SafeSearch();
+        requiredSafeSearch.setAdult(config.getAdult().getAcceptableLikelyhood());
+        requiredSafeSearch.setMedical(config.getMedical().getAcceptableLikelyhood());
+        requiredSafeSearch.setRacy(config.getRacy().getAcceptableLikelyhood());
+        requiredSafeSearch.setSpoof(config.getSpoof().getAcceptableLikelyhood());
+        requiredSafeSearch.setViolence(config.getViolence().getAcceptableLikelyhood());
     }
 
     @Override
@@ -80,11 +87,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            List<MediaTweetEntry> mtes = Stream.of(t.getMediaEntries())
-                    .filter(MediaTweetEntryType.photo::isType)
-                    .collect(Collectors.toList());
-
-            Result r = checkImages(mtes);
+            Result r = checkImages(tweet, t);
 
             if (r.isTerminal()) {
                 return r;
@@ -93,11 +96,20 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             }
         } while (config.isCheckRetweeted() && null != t);
 
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 
-    private Result checkImages(final List<MediaTweetEntry> mtes) {
+    private Result checkImages(final Tweet tweet, final Tweet t) {
+        final List<MediaTweetEntry> mtes = Stream.of(t.getMediaEntries())
+                .filter(MediaTweetEntryType.photo::isType)
+                .collect(Collectors.toList());
+
         if (mtes.isEmpty()) {
+            LOG.debug("Tweet(id:{}): Tweet(id:{}) has no photos -> NOTHING_DEFINITE",
+                    tweet.getId(),
+                    t.getId());
             return Result.NOTHING_DEFINITE;
         }
 
@@ -107,27 +119,38 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         try {
             visionAnalysis = GoogleVisionCache.INSTANCE.getCachedOrLoad(imageUrlStrings.stream());
         } catch (final IOException ex) {
-            LOG.info("Failed to analyze the following images: {}", imageUrlStrings);
+            LOG.warn(String.format(
+                    "Tweet(id:%s): Tweet(id:%s) failed analysation of its photos -> REJECTED",
+                    tweet.getId(),
+                    t.getId()),
+                    ex);
             return Result.REJECTED;
         }
 
-        if (visionAnalysis.entrySet().stream()
-                .filter(e -> null != e.getValue() && null != e.getValue().getAnalysisError())
-                .peek(e -> LOG.warn("Analysis failed for {} with {}", e.getKey(), e.getValue()))
-                .map(Map.Entry::getValue)
-                .map(ImageContentAnalysis::getAnalysisError)
-                .findAny()
-                .isPresent()) {
-            LOG.info("Analyzation failed for one of the images in question ({}).", imageUrlStrings);
-            return Result.REJECTED;
-        }
+        for (final Map.Entry<String, ImageContentAnalysis> entry : visionAnalysis.entrySet()) {
+            if (null == entry.getValue()) {
+                continue;
+            }
 
-        if (visionAnalysis.entrySet().stream()
-                .filter(e -> null != e.getValue() && !isSafeCompliant(e))
-                .findAny()
-                .isPresent()) {
-            LOG.info("One of the images in not compliant to configuration ({}).", imageUrlStrings);
-            return Result.REJECTED;
+            if (null != entry.getValue().getAnalysisError()) {
+                LOG.info("Tweet(id:{}): Tweet(id:{}) photo \"{}\" failed analysation \"{}\" -> REJECTED",
+                        tweet.getId(),
+                        t.getId(),
+                        entry.getValue().getAnalysisError(),
+                        entry.getKey());
+                return Result.REJECTED;
+            }
+
+            final String analysisResult = diff(entry.getValue().getSafeSearch(), requiredSafeSearch);
+
+            if (!analysisResult.isEmpty()) {
+                LOG.info("Tweet(id:{}): Tweet(id:{}) photo \"{}\" is not compliant to configuration {} -> REJECTED",
+                        tweet.getId(),
+                        t.getId(),
+                        entry.getKey(),
+                        analysisResult);
+                return Result.REJECTED;
+            }
         }
 
         return Result.NOTHING_DEFINITE;
@@ -145,23 +168,22 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         throw new IllegalArgumentException("Illegal value");
     }
 
-    private boolean isSafeCompliant(final Map.Entry<String, ImageContentAnalysis> e) {
-        final ImageContentAnalysis ica = e.getValue();
-        final ImageContentAnalysis.SafeSearch safeSearch = ica.getSafeSearch();
-
-        boolean compliant = true;
-
-        compliant &= isPartCompliant(safeSearch.getAdult(), config.getAdult());
-        compliant &= isPartCompliant(safeSearch.getMedical(), config.getMedical());
-        compliant &= isPartCompliant(safeSearch.getRacy(), config.getRacy());
-        compliant &= isPartCompliant(safeSearch.getSpoof(), config.getSpoof());
-        compliant &= isPartCompliant(safeSearch.getViolence(), config.getViolence());
-
-        return compliant;
-    }
-
-    private boolean isPartCompliant(final GoogleLikelihood likelihood, final SafeTypeConfig safeTypeConfig) {
-        return likelihood.compareTo(safeTypeConfig.getAcceptableLikelyhood()) <= 0;
+    private String diff(final ImageContentAnalysis.SafeSearch actual, final ImageContentAnalysis.SafeSearch required) {
+        return Map.<String, Function<ImageContentAnalysis.SafeSearch, GoogleLikelihood>>of(
+                "adult", ImageContentAnalysis.SafeSearch::getAdult,
+                "medical", ImageContentAnalysis.SafeSearch::getMedical,
+                "racy", ImageContentAnalysis.SafeSearch::getRacy,
+                "spoof", ImageContentAnalysis.SafeSearch::getSpoof,
+                "violence", ImageContentAnalysis.SafeSearch::getViolence)
+                .entrySet().stream()
+                .filter(e -> e.getValue().apply(actual).compareTo(e.getValue().apply(required)) > 0)
+                .map(e
+                        -> String.format(
+                        "%s: %s > %s",
+                        e.getKey(),
+                        e.getValue().apply(actual),
+                        e.getValue().apply(required)))
+                .collect(Collectors.joining("; "));
     }
 
     /**

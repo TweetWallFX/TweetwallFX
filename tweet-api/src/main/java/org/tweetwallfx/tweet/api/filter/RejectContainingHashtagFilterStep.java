@@ -61,20 +61,28 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
             for (final HashtagTweetEntry hashtagEntry : t.getHashtagEntries()) {
                 if (config.getHashtags().contains(hashtagEntry.getText().toLowerCase(Locale.ENGLISH))) {
-                    LOG.info("Tweet(id:{}): Hashtag {} for Tweet(id:{}) is blacklisted -> REJECTED", t.getId(), hashtagEntry.getText(), tweet.getId());
+                    LOG.info("Tweet(id:{}): Hashtag {} for Tweet(id:{}) is blacklisted -> REJECTED",
+                            tweet.getId(),
+                            hashtagEntry.getText(),
+                            t.getId());
                     return Result.REJECTED;
                 }
             }
 
-            LOG.info("Tweet(id:{}): none of the Hashtags for Tweet(id:{}) is blacklisted", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): none of the Hashtags in Tweet(id:{}) is blacklisted",
+                    tweet.getId(),
+                    t.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 

@@ -54,10 +54,14 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
     @Override
     public Result check(final Tweet tweet) {
         if (config.getCount() <= tweet.getUser().getFollowersCount()) {
-            LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+            LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                    tweet.getId());
             return Result.NOTHING_DEFINITE;
         } else {
-            LOG.info("Tweet(id:{}): Too few followers -> REJECTED", tweet.getId());
+            LOG.info("Tweet(id:{}): Too few followers (have: {}; need: {}) -> REJECTED",
+                    tweet.getId(),
+                    tweet.getUser().getFollowersCount(),
+                    config.getCount());
             return Result.REJECTED;
         }
     }
