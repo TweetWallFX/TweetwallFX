@@ -37,7 +37,7 @@ public class VisualizationFactoryProducesUniqueVisualization implements Runnable
 
     @Override
     public void execute() throws Exception {
-        StreamSupport.stream(ServiceLoader.load(Visualization.Factory.class).spliterator(), false) 
+        StreamSupport.stream(ServiceLoader.load(Visualization.Factory.class).spliterator(), false)
                .collect(Collectors.groupingBy(sf -> sf.getVisualizationClass().getCanonicalName()))
                 .entrySet().stream()
                 .filter(e -> 1 != e.getValue().size())
