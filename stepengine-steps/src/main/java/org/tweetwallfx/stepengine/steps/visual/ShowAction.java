@@ -38,6 +38,10 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
+/**
+ * A special Step in the {@link StepEngine}. It represents an action triggered against an existing
+ * visualization implementing {@link Visualization.Showable}.
+ */
 public class ShowAction extends ActionStep<Visualization.Showable> {
 
     public ShowAction(Config config, Showable showable) {

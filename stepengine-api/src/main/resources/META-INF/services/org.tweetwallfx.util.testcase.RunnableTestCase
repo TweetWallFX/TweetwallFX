@@ -1,2 +1,5 @@
 org.tweetwallfx.stepengine.api.testcase.DataProviderFactoryLoadable
 org.tweetwallfx.stepengine.api.testcase.StepFactoryLoadable
+org.tweetwallfx.stepengine.api.testcase.StepFactoryProducesUniqueStep
+org.tweetwallfx.stepengine.api.testcase.VisualizationFactoryLoadable
+org.tweetwallfx.stepengine.api.testcase.VisualizationFactoryProducesUniqueVisualization
