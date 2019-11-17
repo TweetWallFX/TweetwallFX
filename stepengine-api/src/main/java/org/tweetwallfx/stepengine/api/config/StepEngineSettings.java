@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.Objects;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConfigurationConverter;
-import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
+import org.tweetwallfx.stepengine.api.Visualization;
 import org.tweetwallfx.util.ConfigurableObjectBase;
 import org.tweetwallfx.util.JsonDataConverter;
 import static org.tweetwallfx.util.ToString.createToString;
@@ -50,6 +50,7 @@ public final class StepEngineSettings {
     public static final String CONFIG_KEY = "stepEngine";
     private List<StepDefinition> steps = Collections.emptyList();
     private List<DataProviderSetting> dataProviderSettings = Collections.emptyList();
+    private Map<String, VisualizationSetting> visualizationSettings = Collections.emptyMap();
 
     /**
      * Returns a list containing the definitions for the steps in the
@@ -93,10 +94,30 @@ public final class StepEngineSettings {
         this.dataProviderSettings = dataProviderSettings;
     }
 
+    /**
+     * Returns a list of settings for {@link Visualization} instances.
+     *
+     * @return a list of settings for {@link Visualization} instances
+     */
+    public Map<String, VisualizationSetting> getVisualizationSettings() {
+        return visualizationSettings;
+    }
+
+    /**
+     * Sets a list of settings for {@link Visualization} instances.
+     *
+     * @param visualizationSettings a list of settings for {@link Visualization}
+     * instances
+     */
+    public void setVisualizationSettings(final Map<String, VisualizationSetting> visualizationSettings) {
+        this.visualizationSettings = visualizationSettings;
+    }
+
     @Override
     public String toString() {
         return createToString(this, map(
                 "dataProviderSettings", getDataProviderSettings(),
+                "visualizationSettings", getVisualizationSettings(),
                 "steps", getSteps()
         ), super.toString());
     }
@@ -200,6 +221,49 @@ public final class StepEngineSettings {
         public String toString() {
             return createToString(this, map(
                     "dataProviderClassName", getDataProviderClassName(),
+                    "config", getConfig()
+            ), super.toString());
+        }
+    }
+
+    /**
+     * Configurable object containing configuration data (via
+     * {@link #getConfig()} or {@link #getConfig(java.lang.Class)}) for a
+     * {@link Visualization} instance (identified via
+     * {@link #getVisualizationClassName()}.
+     *
+     * <p>
+     * Configuration can be extended by configuring the properties of the
+     * {@code config} section of this definition on the root level of the
+     * Configuration.
+     */
+    public static final class VisualizationSetting extends ConfigurableObjectBase {
+
+        private String visualizationClassName;
+
+        /**
+         * Returns the class name of the {@link Visualization}.
+         *
+         * @return the class name of the {@link Visualization}
+         */
+        public String getVisualizationClassName() {
+            return visualizationClassName;
+        }
+
+        /**
+         * Sets the class name of the {@link Visualization}
+         *
+         * @param visualizationClassName the class name of the
+         * {@link Visualization}
+         */
+        public void setVisualizationClassName(final String visualizationClassName) {
+            this.visualizationClassName = visualizationClassName;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "visualizationClassName", getVisualizationClassName(),
                     "config", getConfig()
             ), super.toString());
         }
