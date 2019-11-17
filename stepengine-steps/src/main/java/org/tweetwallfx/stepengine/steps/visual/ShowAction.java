@@ -49,9 +49,8 @@ public class ShowAction extends ActionStep<Visualization.Showable> {
     }
 
     @Override
-    public void doStep(StepEngine.MachineContext context) {
+    public void perform(Visualization.Context context) {
         getVisualization().doShow(context);
-        context.proceed();
     }
 
     @Override
