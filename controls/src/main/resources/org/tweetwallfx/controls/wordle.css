@@ -50,30 +50,31 @@
 }
 
 .favoriteCount{
-    -glyph-name: "THUMBS_UP";
-    -glyph-size: 24px;
+    -fx-pref-height: 24px;
+    -fx-pref-width: 24px;
     -fx-fill: #8899A6;
 }
 
 .retweetCount{
-    -glyph-name: "RETWEET";
-    -glyph-size: 24px;
+    -fx-pref-height: 24px;
+    -fx-pref-width: 24px;
     -fx-fill: #8899A6;
 }
 
 .verifiedAccount{
-    -glyph-name: "CHECK_CIRCLE";
-    -glyph-size: 24px;
+    -fx-pref-height: 24px;
+    -fx-pref-width: 24px;
     -fx-fill: #8899A6;
 }
 
 .retweetBack{
-    -glyph-name: "SQUARE";
-    -glyph-size: 22px;
+    -fx-pref-height: 22px;
+    -fx-pref-width: 22px;
     -fx-fill: yellowgreen;
 }
+
 .retweetFront{
-    -glyph-name: "RETWEET";
-    -glyph-size: 16px;
+    -fx-pref-height: 16px;
+    -fx-pref-width: 16px;
     -fx-fill: white;
 }

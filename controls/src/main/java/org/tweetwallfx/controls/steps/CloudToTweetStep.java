@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import de.jensd.fx.glyphs.GlyphsStack;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,9 +43,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.tweetwallfx.controls.Icons;
 import org.tweetwallfx.controls.TweetLayout;
 import org.tweetwallfx.controls.TweetWordNodeFactory;
 import org.tweetwallfx.controls.Word;
@@ -280,7 +281,7 @@ public class CloudToTweetStep implements Step {
         HBox thirdLineBox = new HBox(handle);
 
         if (originalTweet.getUser().isVerified()) {
-            FontAwesomeIconView verifiedIcon = new FontAwesomeIconView();
+            final Shape verifiedIcon = Icons.CHECK_CIRCLE.createShape();
             verifiedIcon.getStyleClass().addAll("verifiedAccount");
 
             secondLineBox.getChildren().add(verifiedIcon);
@@ -288,18 +289,16 @@ public class CloudToTweetStep implements Step {
         }
 
         if (displayTweet.isRetweet()) {
-            FontAwesomeIconView retweetIconBack = new FontAwesomeIconView();
+            final Shape retweetIconBack = Icons.SQUARE.createShape();
             retweetIconBack.getStyleClass().addAll("retweetBack");
 
-            FontAwesomeIconView retweetIconFront = new FontAwesomeIconView();
+            final Shape retweetIconFront = Icons.TWITTER_RETWEET.createShape();
             retweetIconFront.getStyleClass().addAll("retweetFront");
 
-            Label retweetName = new Label(displayTweet.getUser().getName());
+            final Label retweetName = new Label(displayTweet.getUser().getName());
             retweetName.getStyleClass().setAll("retweetName");
 
-            GlyphsStack stackedIcon = GlyphsStack.create()
-                    .add(retweetIconBack)
-                    .add(retweetIconFront);
+            final StackPane stackedIcon = new StackPane(retweetIconBack, retweetIconFront);
 
             firstLineBox.getChildren().addAll(stackedIcon, retweetName);
             HBox.setMargin(stackedIcon, new Insets(0, 10, 0, 0));
@@ -307,10 +306,10 @@ public class CloudToTweetStep implements Step {
 
         if (wordleSkin.getFavIconsVisible()) {
             if (0 < originalTweet.getRetweetCount()) {
-                FontAwesomeIconView faiReTwCount = new FontAwesomeIconView();
+                final Shape faiReTwCount = Icons.TWITTER_RETWEET.createShape();
                 faiReTwCount.getStyleClass().setAll("retweetCount");
 
-                Label reTwCount = new Label(String.valueOf(originalTweet.getRetweetCount()));
+                final Label reTwCount = new Label(String.valueOf(originalTweet.getRetweetCount()));
                 reTwCount.getStyleClass().setAll("handle");
 
                 thirdLineBox.getChildren().addAll(faiReTwCount, reTwCount);
@@ -318,10 +317,10 @@ public class CloudToTweetStep implements Step {
             }
 
             if (0 < originalTweet.getFavoriteCount()) {
-                FontAwesomeIconView faiFavCount = new FontAwesomeIconView();
+                final Shape faiFavCount = Icons.THUMB_UP.createShape();
                 faiFavCount.getStyleClass().setAll("favoriteCount");
 
-                Label favCount = new Label(String.valueOf(originalTweet.getFavoriteCount()));
+                final Label favCount = new Label(String.valueOf(originalTweet.getFavoriteCount()));
                 favCount.getStyleClass().setAll("handle");
 
                 thirdLineBox.getChildren().addAll(faiFavCount, favCount);
