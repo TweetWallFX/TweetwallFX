@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.config;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -30,9 +32,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -192,7 +194,7 @@ public class ConfigurationTest {
     @Test
     public void checkMerge() throws Exception {
         try {
-            Assert.assertThat(
+            assertThat(
                     "Result of map merge failed!",
                     Configuration.mergeMap(previousMap, newMap),
                     CoreMatchers.equalTo(resultMap));
