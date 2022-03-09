@@ -24,6 +24,7 @@
 dependencies {
     implementation project(':tweetwallfx-configuration')
     implementation project(':tweetwallfx-devoxx-api-cfp')
+    implementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: versionJavaxWsRsAPI
 
     testImplementation project(':tweetwallfx-devoxx-cfp-test')
 }

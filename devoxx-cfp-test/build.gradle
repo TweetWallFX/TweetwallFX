@@ -23,6 +23,8 @@
  */
 dependencies {
     implementation project(':tweetwallfx-devoxx-api-cfp')
+    implementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: versionJavaxWsRsAPI
     implementation group: 'junit', name: 'junit', version: versionJUnit
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
     implementation group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
 }

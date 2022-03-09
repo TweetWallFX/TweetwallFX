@@ -26,5 +26,6 @@ apply plugin: 'java-library'
 
 dependencies {
     api project(':tweetwallfx-stepengine-api')
+    api project(':tweetwallfx-tweet-api')
     api project(':tweetwallfx-cache')
 }

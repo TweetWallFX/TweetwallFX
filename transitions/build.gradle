@@ -24,10 +24,5 @@
 
 dependencies {
     implementation group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
-    implementation group: 'org.twitter4j', name: 'twitter4j-core', version: versionTwitter4j
-    implementation group: 'org.twitter4j', name: 'twitter4j-stream', version: versionTwitter4j
-    implementation project(':tweetwallfx-configuration')
-    implementation project(':tweetwallfx-filterchain')
-    implementation project(':tweetwallfx-tweet-api')
-    implementation project(':tweetwallfx-tweet-impl-twitter4j-oauth')
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
 }

@@ -147,8 +147,8 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: versionJavaFx, classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: versionJavaFx, classifier: javaFxPlatform
-            jaxb group: 'jakarta.activation', name: 'jakarta.activation-api', version: versionJavaActivation
-            jaxb group: 'com.sun.activation', name: 'jakarta.activation', version: versionJavaActivation
+            jaxb group: 'jakarta.activation', name: 'jakarta.activation-api', version: versionJavaActivationApi
+            jaxb group: 'org.eclipse.angus', name: 'angus-activation', version: versionJavaActivation
             jaxb group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: versionJaxB
             jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: versionJaxBruntime
             testImplementation group: 'junit', name: 'junit', version: versionJUnit

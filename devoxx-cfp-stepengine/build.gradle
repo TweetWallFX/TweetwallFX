@@ -22,6 +22,13 @@
  * THE SOFTWARE.
  */
 dependencies {
+    implementation project(':tweetwallfx-cache')
     implementation project(':tweetwallfx-controls')
     implementation project(':tweetwallfx-devoxx-api-cfp')
+    implementation project(':tweetwallfx-stepengine-api')
+    implementation project(':tweetwallfx-stepengine-dataproviders')
+    implementation project(':tweetwallfx-utility')
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
+    implementation group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
 }

@@ -28,6 +28,9 @@ dependencies {
     api group: 'javax.cache', name: 'cache-api', version: versionCacheApi
     api project(':tweetwallfx-configuration')
 
+    implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: versionJaxB
     implementation group: 'org.ehcache', name: 'ehcache', version: versionEHCache
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: versionLog4j
+    implementation group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
 }

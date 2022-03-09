@@ -23,5 +23,9 @@
  */
 
 dependencies {
+    implementation project(':tweetwallfx-configuration')
     implementation project(':tweetwallfx-tweet-api')
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
+    implementation group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
 }

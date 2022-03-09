@@ -23,7 +23,12 @@
  */
 
 dependencies {
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
+    implementation group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
     implementation project(':tweetwallfx-core')
+    implementation project(':tweetwallfx-stepengine-api')
+    implementation project(':tweetwallfx-stepengine-dataproviders')
     implementation project(':tweetwallfx-stepengine-steps')
     implementation project(':tweetwallfx-transitions')
+    implementation project(':tweetwallfx-tweet-api')
 }

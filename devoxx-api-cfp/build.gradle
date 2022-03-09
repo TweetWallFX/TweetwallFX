@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
     implementation project(':tweetwallfx-utility')
+    implementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: versionJavaxWsRsAPI
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
 
     runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
     runtimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
