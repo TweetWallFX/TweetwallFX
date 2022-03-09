@@ -55,9 +55,6 @@ import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
-/**
- * @author Jörg Michelberger
- */
 public final class StepEngine {
 
     private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");

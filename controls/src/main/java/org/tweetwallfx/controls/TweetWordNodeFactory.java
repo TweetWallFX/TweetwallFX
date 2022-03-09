@@ -26,10 +26,6 @@ package org.tweetwallfx.controls;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-/**
- *
- * @author sven
- */
 public class TweetWordNodeFactory extends AbstractWordNodeFactory {
 
     private final Config configuration;

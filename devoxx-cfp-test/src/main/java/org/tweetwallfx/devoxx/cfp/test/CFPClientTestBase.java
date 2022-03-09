@@ -66,6 +66,7 @@ import org.tweetwallfx.devoxx.api.cfp.client.Speaker;
 import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwallfx.devoxx.api.cfp.client.Talk;
 import org.tweetwallfx.devoxx.api.cfp.client.Tracks;
+import org.tweetwallfx.devoxx.api.cfp.client.VotingResults;
 
 public abstract class CFPClientTestBase {
 
@@ -362,8 +363,9 @@ public abstract class CFPClientTestBase {
         final CFPClient client = getCFPClient();
         Assume.assumeTrue(client.canGetVotingResults());
 
-        client.getVotingResultsOverall()
+        final VotingResults votingResults = client.getVotingResultsOverall()
                 .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
+        LOG.info("votingResults: {}", votingResults);
     }
 
     @Test
@@ -372,8 +374,9 @@ public abstract class CFPClientTestBase {
         final CFPClient client = getCFPClient();
         Assume.assumeTrue(client.canGetVotingResults());
 
-        client.getVotingResultsDaily(getConferenceDay())
+        final VotingResults votingResults = client.getVotingResultsDaily(getConferenceDay())
                 .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
+        LOG.info("votingResults: {}", votingResults);
     }
 
     @Test

@@ -30,10 +30,6 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Property;
 
-/**
- *
- * @author Jörg
- */
 public class StringPropertyAppender extends AbstractAppender {
 
     private final StringProperty s = new SimpleStringProperty();

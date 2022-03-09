@@ -35,9 +35,6 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 public class CloudFadeOutStep implements Step {
 
     private CloudFadeOutStep() {
