@@ -63,9 +63,6 @@ import org.tweetwallfx.transitions.FontSizeTransition;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 
-/**
- * @author Jörg Michelberger
- */
 public class CloudToTweetStep implements Step {
 
     private CloudToTweetStep() {
