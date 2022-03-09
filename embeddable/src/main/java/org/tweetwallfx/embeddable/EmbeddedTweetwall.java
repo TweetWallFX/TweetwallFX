@@ -30,9 +30,6 @@ import org.tweetwallfx.tweet.StopList;
 import org.tweetwallfx.twod.TagTweets;
 import org.tweetwallfx.tweet.api.Tweeter;
 
-/**
- * @author martin
- */
 public final class EmbeddedTweetwall extends Parent {
 
     private TagTweets tweetsTask = null;

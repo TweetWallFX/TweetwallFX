@@ -41,9 +41,6 @@ import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 class StepIterator {
 
     private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);

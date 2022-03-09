@@ -38,9 +38,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.text.Font;
 
-/**
- * @author Sven Reimers
- */
 public class Wordle extends Control {
 
     private SimpleStyleableStringProperty logo;
