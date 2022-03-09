@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 dependencies {
-    compile project(':tweetwallfx-devoxx-api-cfp')
-    compile group: 'junit', name: 'junit', version: versionJUnit
-    compile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+    implementation project(':tweetwallfx-devoxx-api-cfp')
+    implementation group: 'junit', name: 'junit', version: versionJUnit
+    implementation group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
 }

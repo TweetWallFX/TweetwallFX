@@ -27,7 +27,7 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -85,7 +85,7 @@ allprojects {
         }
     }
     // configuring Spotless
-    apply plugin: "com.diffplug.gradle.spotless"
+    apply plugin: "com.diffplug.spotless"
 
     spotless {
         format 'textBasedFiles', {
@@ -113,7 +113,7 @@ allprojects {
                 include '**/*.groovy'
             }
 
-            paddedCell()
+//#            paddedCell()
             trimTrailingWhitespace()
             indentWithSpaces(4)
             endWithNewline()
@@ -124,7 +124,7 @@ allprojects {
     }
 
     afterEvaluate {
-        check.dependsOn(spotlessCheck)
+//#        check.dependsOn(spotlessCheck)
     }
 
     // now configuring for projects that coontain code not just structuring the project
@@ -134,7 +134,7 @@ allprojects {
         apply plugin: 'idea'
         apply plugin: 'jacoco'
         apply plugin: 'eclipse'
-        apply plugin: 'nebula.info'
+//#        apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
 
         configurations {
@@ -151,8 +151,8 @@ allprojects {
             jaxb group: 'com.sun.activation', name: 'jakarta.activation', version: versionJavaActivation
             jaxb group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: versionJaxB
             jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: versionJaxBruntime
-            testCompile group: 'junit', name: 'junit', version: versionJUnit
-            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+            testImplementation group: 'junit', name: 'junit', version: versionJUnit
+            testImplementation group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
         }
 
         jar {
@@ -164,7 +164,7 @@ allprojects {
                 afterEvaluate {
                     def additionalModules = (configurations.javafx + configurations.jaxb)
                     options.addStringOption('-module-path', additionalModules.asPath)
-                    options.addStringOption('-add-modules', 'jakarta.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
+                    options.addStringOption('-add-modules', 'jakarta.activation,jakarta.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
                 }
             }
         }
@@ -183,7 +183,7 @@ allprojects {
                             '--module-path',
                             additionalModules.asPath,
                             '--add-modules',
-                            'jakarta.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
+                            'jakarta.activation,jakarta.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
                     ])
                 }
             }
@@ -196,7 +196,7 @@ allprojects {
                     jvmArgs '--module-path'
                     jvmArgs additionalModules.asPath
                     jvmArgs '--add-modules'
-                    jvmArgs 'jakarta.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
+                    jvmArgs 'jakarta.activation,jakarta.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
                 }
             }
         }
@@ -208,7 +208,7 @@ allprojects {
                     jvmArgs '--module-path'
                     jvmArgs additionalModules.asPath
                     jvmArgs '--add-modules'
-                    jvmArgs 'jakarta.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
+                    jvmArgs 'jakarta.activation,jakarta.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
                 }
             }
         }
@@ -270,7 +270,7 @@ allprojects {
 
         apply plugin: 'nebula.maven-publish'
         apply plugin: 'nebula.javadoc-jar'
-        apply plugin: 'nebula.source-jar'
+//#        apply plugin: 'nebula.source-jar'
         apply plugin: 'nebula.publish-verification'
 
         // configuring Bintray Upload
@@ -328,8 +328,8 @@ allprojects {
 
     plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
         dependencies {
-            compile group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
-            testCompile group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
+            implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
+            testImplementation group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
         }
     }
 

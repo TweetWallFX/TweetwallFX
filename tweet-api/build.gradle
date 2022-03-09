@@ -22,5 +22,5 @@
  * THE SOFTWARE.
  */
 dependencies {
-    compile project(':tweetwallfx-filterchain')
+    implementation project(':tweetwallfx-filterchain')
 }

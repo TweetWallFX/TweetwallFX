@@ -24,10 +24,10 @@
 apply plugin: 'java'
 
 dependencies {
-    compile group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
+    implementation group: 'javax.json.bind', name:'javax.json.bind-api', version: versionJavaxJsonBindAPI
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
 
-    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-    runtime group: 'org.eclipse', name: 'yasson', version: versionYasson
-    runtime group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
+    runtimeOnly group: 'org.eclipse', name: 'yasson', version: versionYasson
+    runtimeOnly group: 'org.glassfish', name: 'javax.json', version: versionJavaxJson
 }

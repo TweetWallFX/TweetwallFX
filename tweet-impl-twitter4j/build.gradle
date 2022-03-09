@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    compile group: 'org.twitter4j', name: 'twitter4j-core', version: versionTwitter4j
-    compile group: 'org.twitter4j', name: 'twitter4j-stream', version: versionTwitter4j
-    compile project(':tweetwallfx-tweet-api')
-    compile project(':tweetwallfx-tweet-impl-twitter4j-oauth')
-    compile project(':tweetwallfx-configuration')
+    implementation group: 'org.twitter4j', name: 'twitter4j-core', version: versionTwitter4j
+    implementation group: 'org.twitter4j', name: 'twitter4j-stream', version: versionTwitter4j
+    implementation project(':tweetwallfx-tweet-api')
+    implementation project(':tweetwallfx-tweet-impl-twitter4j-oauth')
+    implementation project(':tweetwallfx-configuration')
 }

@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    compile group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
-    compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
-    compile group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava
-    compile project(':tweetwallfx-tweet-api')
-    compile project(':tweetwallfx-configuration')
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
+    implementation group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
+    implementation group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava
+    implementation project(':tweetwallfx-tweet-api')
+    implementation project(':tweetwallfx-configuration')
 }

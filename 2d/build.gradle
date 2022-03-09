@@ -23,6 +23,6 @@
  */
 
 dependencies {
-    compile project(':tweetwallfx-core')
-    compile project(':tweetwallfx-controls')
+    implementation project(':tweetwallfx-core')
+    implementation project(':tweetwallfx-controls')
 }

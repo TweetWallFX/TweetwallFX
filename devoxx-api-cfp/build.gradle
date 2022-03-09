@@ -23,12 +23,12 @@
  */
 
 dependencies {
-    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
-    compile project(':tweetwallfx-utility')
+    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
+    implementation project(':tweetwallfx-utility')
 
-    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-    runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
-    runtime group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versionJersey
-    runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
+    runtimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
+    runtimeOnly group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versionJersey
+    runtimeOnly group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey
 }
