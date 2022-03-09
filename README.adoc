@@ -30,7 +30,6 @@
 
 image:https://img.shields.io/badge/license-MIT-blue.svg["MIT License", link="https://github.com/{project-full-path}/blob/{github-branch}/LICENSE"]
 image:https://github.com/TweetWallFX/TweetwallFX/actions/workflows/gradleBuild.yml/badge.svg?branch={github-branch}[Gradle Build, link="https://github.com/TweetWallFX/TweetwallFX/actions/workflows/gradleBuild.yml"]
-image:https://api.bintray.com/packages/tweetwallfx-team/maven/org.tweetwallfx/images/download.svg[link="https://bintray.com/tweetwallfx-team/maven/org.tweetwallfx/_latestVersion"]
 
 ## Getting OAuth keys
 
