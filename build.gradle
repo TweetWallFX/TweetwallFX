@@ -257,7 +257,7 @@ allprojects {
 
         // configuring Versions plugin
         dependencyUpdates {
-            outputFormatter = 'plain,jhtml'
+            outputFormatter = 'plain,html'
             gradleReleaseChannel = 'current'
 
             resolutionStrategy {
