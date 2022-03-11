@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 dependencies {
     compile project(':tweetwallfx-devoxx-api-cfp')
-    compile group: 'junit', name: 'junit', version: versionJUnit
-    compile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+
+    implementation group: 'junit', name: 'junit', version: '4.12'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+    implementation group: 'org.assertj', name: 'assertj-core', version: '3.+'
 }

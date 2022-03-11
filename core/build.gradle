@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 
 dependencies {
+    api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
+
     compile group: 'de.jensd', name: 'fontawesomefx-commons', version: versionFontawesomeCommons11
     compile group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: versionFontawesomefx11
     compile group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava

@@ -23,6 +23,5 @@
  */
 
 dependencies {
-    api group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.0'
 }
