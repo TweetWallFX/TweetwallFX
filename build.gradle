@@ -36,7 +36,7 @@ buildscript {
         classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
-        classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: versionSpotbugs
+        classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '2.0.0'
 
         if (JavaVersion.current().isJava11Compatible()) {
             classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
