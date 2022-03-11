@@ -32,7 +32,7 @@ buildscript {
 
     dependencies {
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
-        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.27.0'
+        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
         classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
@@ -257,12 +257,19 @@ allprojects {
 
         // configuring Versions plugin
         dependencyUpdates {
-            revision = 'release'
+            outputFormatter = 'plain,html'
+            gradleReleaseChannel = 'current'
 
-            rejectVersionIf { /*ComponentSelection*/ selection ->
-                // version is a non-release version?
-                return ['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{qualifier ->
-                     selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
+            resolutionStrategy {
+                componentSelection { rules ->
+                    rules.all { ComponentSelection selection ->
+                        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'pr', 'ea'].any { qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
+                        }
+                        if (rejected) {
+                            selection.reject('Release candidate')
+                        }
+                    }
                 }
             }
         }
