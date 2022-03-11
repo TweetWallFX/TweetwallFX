@@ -39,7 +39,7 @@ buildscript {
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: versionSpotbugs
 
         if (JavaVersion.current().isJava11Compatible()) {
-            classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin4Java11AndLater
+            classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
         } else {
             throw new GradleException("Building with Java major version prior to 11 is not supported.")
         }
@@ -147,11 +147,13 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: versionJavaFx, classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: versionJavaFx, classifier: javaFxPlatform
+
             jaxb group: 'com.sun.activation', name: 'javax.activation', version: versionJavaActivation
             jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: versionJaxB
             jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: versionJaxB
-            testCompile group: 'junit', name: 'junit', version: versionJUnit
-            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+
+            testImplementation group: 'junit', name: 'junit', version: '4.12'
+            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.+'
         }
 
         jar {
@@ -222,7 +224,7 @@ allprojects {
 
             dependencies {
                 if (JavaVersion.current().isJava11Compatible()) {
-                    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
+                    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.11.0'
                 } else {
                     throw new GradleException("Building with Java major version prior to 11 is not supported.")
                 }

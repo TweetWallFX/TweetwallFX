@@ -27,5 +27,5 @@ dependencies {
     api project(':tweetwallfx-configuration')
 
     implementation group: 'org.ehcache', name: 'ehcache', version: versionEHCache
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: versionLog4j
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.0'
 }

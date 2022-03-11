@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,10 @@
 
 dependencies {
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versionJavaxWsRsAPI
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: versionLog4j
     compile project(':tweetwallfx-utility')
 
-    runtime group: 'org.apache.logging.log4j', name: 'log4j-core', version: versionLog4j
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
+
     runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
     runtime group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versionJersey
     runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey

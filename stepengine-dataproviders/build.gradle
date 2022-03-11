@@ -25,4 +25,6 @@
 dependencies {
     api project(':tweetwallfx-stepengine-api')
     api project(':tweetwallfx-cache')
+
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.0'
 }
