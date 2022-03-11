@@ -31,7 +31,7 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
+        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.25.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
         classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
