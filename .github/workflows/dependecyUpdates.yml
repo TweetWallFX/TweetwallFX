@@ -44,4 +44,11 @@ jobs:
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: --no-daemon --refresh-dependencies dependencyUpdates
-      
+
+      # Store dependencyUpdates result files
+      - name: Store dependencyUpdates result files
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependencyUpdates results
+          path: build/dependencyUpdates/
+          retention-days: 3
