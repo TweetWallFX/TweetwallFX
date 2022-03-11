@@ -33,7 +33,6 @@ buildscript {
     dependencies {
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.25.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
-        classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '2.0.0'
@@ -59,11 +58,6 @@ apply plugin: 'com.google.osdetector'
 apply plugin: 'com.github.ben-manes.versions'
 
 ext {
-    releaseDate = new Date()
-    bintrayEnabled = \
-        ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
-        null != findProperty('BINTRAY_USER') &&
-        null != findProperty('BINTRAY_KEY')
     javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 }
 
@@ -278,58 +272,6 @@ allprojects {
         apply plugin: 'nebula.javadoc-jar'
         apply plugin: 'nebula.source-jar'
         apply plugin: 'nebula.publish-verification'
-
-        // configuring Bintray Upload
-        apply plugin: 'com.jfrog.bintray'
-        bintray {
-            user = findProperty('BINTRAY_USER') // null if not found
-            key = findProperty('BINTRAY_KEY') // null if not found
-
-            dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
-            publish = false //[Default: false] Whether version should be auto published after an upload
-            override = project.version.endsWith('-SNAPSHOT') //[Default: false] Whether to override version artifacts already published
-
-            publications = ['nebula']
-
-            pkg {
-                repo = 'maven'
-                name = rootProject.group
-                userOrg = 'tweetwallfx-team'
-                desc = project.description
-
-                websiteUrl = 'https://github.com/TweetWallFX/TweetwallFX'
-                issueTrackerUrl = 'https://github.com/TweetWallFX/TweetwallFX/issues'
-                vcsUrl = 'https://github.com/TweetWallFX/TweetwallFX.git'
-
-                licenses = ['MIT']
-
-                labels = ['tweetwall', 'javafx']
-                publicDownloadNumbers = false
-                //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
-
-                githubRepo = 'TweetWallFX/TweetwallFX' //Optional Github repository
-                githubReleaseNotesFile = 'README.adoc'      //Optional Github readme file
-
-                version {
-                    name = project.version
-                    desc = "Tweetwall FX ${project.version}"
-                    released = releaseDate
-                    vcsTag = project.version
-                    //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-
-                    //Optional configuration for Maven Central sync of the version
-                    mavenCentralSync {
-                        sync = false //[Default: true] Determines whether to sync the version to Maven Central.
-                        // user = 'userToken' //OSS user token: mandatory
-                        // password = 'paasword' //OSS user password: mandatory
-                        // close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-                    }
-                }
-            }
-        }
-
-        bintrayUpload.enabled = bintrayEnabled
-        bintrayPublish.enabled = bintrayEnabled
     }
 
     plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
