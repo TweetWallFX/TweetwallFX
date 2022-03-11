@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,16 @@
  */
 package org.tweetwallfx.config;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -102,7 +104,7 @@ public class AdditionalConfigurationTest {
         try {
             final Method m = Configuration.class.getDeclaredMethod("mergeWithAdditionalConfigurations", Map.class);
             m.setAccessible(true);
-            Assert.assertThat(
+            assertThat(
                     "Result of additional configuration loading failed!",
                     m.invoke(null, inputMap),
                     CoreMatchers.equalTo(resultMap));
