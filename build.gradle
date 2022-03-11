@@ -27,12 +27,12 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
-        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
+        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.27.0'
         classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
