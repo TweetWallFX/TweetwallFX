@@ -27,7 +27,8 @@ dependencies {
     api group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-11'
     api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
 
-    compile group: 'com.vdurmont', name: 'emoji-java', version: versionEmojiJava
     compile project(':tweetwallfx-tweet-api')
     compile project(':tweetwallfx-configuration')
+
+    implementation group: 'com.vdurmont', name: 'emoji-java', version: '5.1.1'
 }
