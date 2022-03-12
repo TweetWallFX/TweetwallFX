@@ -28,7 +28,7 @@ dependencies {
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
 
-    runtime group: 'org.glassfish.jersey.core', name: 'jersey-client', version: versionJersey
-    runtime group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: versionJersey
-    runtime group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: versionJersey
+    runtimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.29.1'
+    runtimeOnly group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.29.1'
+    runtimeOnly group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.29.1'
 }
