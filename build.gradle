@@ -45,7 +45,7 @@ buildscript {
 
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: versionJGit
-        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: versionSonarqubeGradlePlugin
+        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.8'
         classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.7.0'
     }
 }
