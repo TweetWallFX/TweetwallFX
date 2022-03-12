@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 dependencies {
-    compile project(':tweetwallfx-configuration')
-    compile project(':tweetwallfx-devoxx-api-cfp')
+    implementation project(':tweetwallfx-configuration')
+    implementation project(':tweetwallfx-devoxx-api-cfp')
 
-    testCompile project(':tweetwallfx-devoxx-cfp-test')
+    testImplementation project(':tweetwallfx-devoxx-cfp-test')
 }
