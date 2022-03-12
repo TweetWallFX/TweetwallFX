@@ -154,14 +154,14 @@ allprojects {
         }
 
         dependencies {
-            javafx group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: versionJavaFx, classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '13.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '13.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '13.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '13.0.2', classifier: javaFxPlatform
 
             jaxb group: 'com.sun.activation', name: 'javax.activation', version: versionJavaActivation
-            jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: versionJaxB
-            jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: versionJaxB
+            jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b+'
+            jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b+'
 
             testImplementation group: 'junit', name: 'junit', version: '4.13.2'
             testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.+'
