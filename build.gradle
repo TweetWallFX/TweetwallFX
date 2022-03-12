@@ -31,7 +31,7 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '3.25.0'
+        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '6.3.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
@@ -50,6 +50,7 @@ buildscript {
     }
 }
 
+apply plugin: 'base'
 apply plugin: 'build-dashboard'
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.google.osdetector'
@@ -78,42 +79,58 @@ allprojects {
             }
         }
     }
+
     // configuring Spotless
-    apply plugin: "com.diffplug.gradle.spotless"
+    apply plugin: "com.diffplug.spotless"
 
-    spotless {
-        format 'textBasedFiles', {
-            target fileTree(project.rootDir) {
-                include '**/*.gradle'
-                include '**/*.asciidoc'
-                include '**/*.adoc'
-                include '**/*.asc'
-                include '**/*.css'
-                include '**/*.json'
-                include '**/*.md'
-                include '**/*.properties'
-                include '**/.gitignore'
-                exclude '**/.gradle/**'
-                exclude '**/build/**'
+    afterEvaluate {
+        spotless {
+//            if (!System.env.CI) {
+//                // https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+//                // only format files which have changed since this ref
+//                // TODO: Figure out a way to get this working in CI (i.e. Github Workflows)
+//                ratchetFrom 'origin/master'
+//            }
+
+            format 'textBasedFiles', {
+                target(
+                    '*.gradle',
+                    '**/*.asciidoc',
+                    '**/*.adoc',
+                    '**/*.asc',
+                    '**/*.css',
+                    '**/*.json',
+                    '**/*.md',
+                    '**/*.properties',
+                    '.gitignore',
+                )
+
+                trimTrailingWhitespace()
+                indentWithSpaces(4)
+                endWithNewline()
             }
 
-            trimTrailingWhitespace()
-            indentWithSpaces(4)
-            endWithNewline()
-        }
-        format 'javaFiles', {
-            target fileTree(project.rootDir) {
-                include '**/*.java'
-                include '**/*.groovy'
+            def closure = {
+                trimTrailingWhitespace()
+                indentWithSpaces(4)
+                endWithNewline()
+//                importOrder(
+//                    '\\#',    // static imports
+//                    'java',   // classes from java root package
+//                    'javax',  // classes from javax root package
+//                    '',       // any other import
+//                )
+                custom('noStarImports', {fileContent -> fileContent.replaceAll(/\nimport (static )?[a-zA-Z0-9.]*[.][\*];\n/, '\n')})
+                custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
+                custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
+                licenseHeaderFile rootProject.file('LICENSE.spotlessTemplate')
             }
 
-            paddedCell()
-            trimTrailingWhitespace()
-            indentWithSpaces(4)
-            endWithNewline()
-            custom('noStarImports', {fileContent -> fileContent.replaceAll(/\nimport (static )?[a-zA-Z0-9.]*[.][\*];\n/, '\n')})
-            custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
-            custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
+            if (plugins.hasPlugin(org.gradle.api.plugins.GroovyPlugin)) {
+                groovy(closure)
+            } else if (plugins.hasPlugin(org.gradle.api.plugins.JavaPlugin)) {
+                java(closure)
+            }
         }
     }
 
