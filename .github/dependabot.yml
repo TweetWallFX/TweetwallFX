@@ -13,8 +13,8 @@ updates:
       interval: "daily"
       # Check for npm updates at 0815hrs UTC
       time: "08:15"
-    # Allow up to 10 open pull requests
-    open-pull-requests-limit: 10
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
@@ -23,5 +23,5 @@ updates:
       interval: "daily"
       # Check for npm updates at 0815hrs UTC
       time: "08:15"
-    # Allow up to 10 open pull requests
-    open-pull-requests-limit: 10
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50

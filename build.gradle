@@ -159,7 +159,7 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '13.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '13.0.2', classifier: javaFxPlatform
 
-            jaxb group: 'com.sun.activation', name: 'javax.activation', version: versionJavaActivation
+            jaxb group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
             jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b+'
             jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b+'
 
