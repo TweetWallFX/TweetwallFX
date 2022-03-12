@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@
 apply plugin: 'cz.kubacki.nbm'
 
 dependencies {
-    compile project(':TweetWallFX-2D')
-    compile project(':TweetWallFX-Controls')
-    runtime project(':TweetWallFX-Tweet-Impl-Twitter4J')
+    implementation project(':TweetWallFX-2D')
+    implementation project(':TweetWallFX-Controls')
+    runtimeOnly project(':TweetWallFX-Tweet-Impl-Twitter4J')
 }
 
 task copyToLib(type: Copy) {
