@@ -34,7 +34,7 @@ buildscript {
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '6.3.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
         classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
-        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
+        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: '14.1.1'
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '2.0.0'
 
         if (JavaVersion.current().isJava11Compatible()) {
