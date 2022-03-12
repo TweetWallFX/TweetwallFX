@@ -190,9 +190,6 @@ allprojects {
                     '-Xlint:all',
                     '-Werror',
                     '-proc:none',
-            ])
-
-            options.compilerArgs.addAll([
                     '--module-path',
                     getJvmModulePath(),
                     '--add-modules',
