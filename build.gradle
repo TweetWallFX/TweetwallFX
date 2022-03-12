@@ -154,7 +154,7 @@ allprojects {
         }
 
         dependencies {
-            javafx group: 'org.openjfx', name: 'javafx-base', version: '13.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '17.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '13.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '13.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '13.0.2', classifier: javaFxPlatform
