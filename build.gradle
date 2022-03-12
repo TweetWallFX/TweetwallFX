@@ -154,24 +154,35 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '17.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '17.0.2', classifier: javaFxPlatform
 
-            jaxb group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
-            jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b+'
-            jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b+'
+            jaxb group: 'jakarta.activation', name: 'jakarta.activation-api', version: '2.1.0'
+            jaxb group: 'org.eclipse.angus', name: 'angus-activation', version: '1.0.0'
+            jaxb group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'
+            jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
             testImplementation group: 'junit', name: 'junit', version: '4.13.2'
             testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
         }
 
-        jar {
+        ext {
+            getJvmModulePath = { -> (configurations.javafx + configurations.jaxb).asPath}
+            getJvmAdditionalModules = { ->
+                [
+                    'jakarta.activation',
+                    'jakarta.xml.bind',
+                    'javafx.controls',
+                    'javafx.graphics',
+                    'javafx.fxml'
+                ].toUnique().toSorted().join(',')
+            }
+        }
+
+        tasks.named('jar') {
             manifest.attributes provider: 'gradle'
         }
 
-        javadoc {
-            afterEvaluate {
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                options.addStringOption('-module-path', additionalModules.asPath)
-                options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
-            }
+        tasks.named('javadoc') {
+            options.addStringOption('-module-path', getJvmModulePath())
+            options.addStringOption('-add-modules', getJvmAdditionalModules())
         }
 
         tasks.withType(JavaCompile) {
@@ -181,38 +192,29 @@ allprojects {
                     '-proc:none',
             ])
 
-            afterEvaluate {
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                options.compilerArgs.addAll([
-                        '--module-path',
-                        additionalModules.asPath,
-                        '--add-modules',
-                        'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
-                ])
-            }
+            options.compilerArgs.addAll([
+                    '--module-path',
+                    getJvmModulePath(),
+                    '--add-modules',
+                    getJvmAdditionalModules(),
+            ])
         }
 
         tasks.withType(JavaExec) {
-            afterEvaluate {
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                jvmArgs '--module-path'
-                jvmArgs additionalModules.asPath
-                jvmArgs '--add-modules'
-                jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-            }
+            jvmArgs '--module-path'
+            jvmArgs getJvmModulePath()
+            jvmArgs '--add-modules'
+            jvmArgs getJvmAdditionalModules()
         }
 
         tasks.withType(Test) {
-            afterEvaluate {
-                def additionalModules = (configurations.javafx + configurations.jaxb)
-                jvmArgs '--module-path'
-                jvmArgs additionalModules.asPath
-                jvmArgs '--add-modules'
-                jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-            }
+            jvmArgs '--module-path'
+            jvmArgs getJvmModulePath()
+            jvmArgs '--add-modules'
+            jvmArgs getJvmAdditionalModules()
         }
 
-        check {
+        tasks.named('check') {
             dependsOn 'javadoc'
         }
 
@@ -242,9 +244,7 @@ allprojects {
                 html.enabled = true
             }
 
-            afterEvaluate {
-                classpath = (classpath + configurations.javafx)
-            }
+            classpath = (classpath + configurations.javafx)
         }
 
         // configuring Versions plugin
@@ -284,7 +284,9 @@ allprojects {
     }
 }
 
-task createFolders(description: 'Creates the folders for the projects and sourceSets should they not exist.') doLast {
+tasks.register('createFolders') {
+    description = 'Creates the folders for the projects and sourceSets should they not exist.'
+
     rootProject.allprojects.each {p ->
         if (!p.getProjectDir().isDirectory()) {
             println 'Creating project folder: ' + p.getProjectDir()

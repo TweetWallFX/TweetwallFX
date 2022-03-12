@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,11 @@ import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import jakarta.xml.bind.DatatypeConverter;
 
 public final class URLContent implements Externalizable {
 
@@ -55,7 +58,7 @@ public final class URLContent implements Externalizable {
         }
         data = readFully(in2);
         digest = in2 instanceof DigestInputStream
-                ? javax.xml.bind.DatatypeConverter.printHexBinary(((DigestInputStream) in2).getMessageDigest().digest())
+                ? DatatypeConverter.printHexBinary(((DigestInputStream) in2).getMessageDigest().digest())
                 : null;
         LOG.info("MD5: {}", digest);
     }
