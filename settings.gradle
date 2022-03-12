@@ -24,6 +24,11 @@
 
 rootProject.name='tweetwallfx'
 
+// enforce minimum JDK version
+if (!JavaVersion.current().isJava11Compatible()) {
+    throw new GradleException("Building with Java major version prior to 11 is not supported.")
+}
+
 include ':cache'
 project(":cache").name = "tweetwallfx-cache"
 include ':config'

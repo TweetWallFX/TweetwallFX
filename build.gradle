@@ -31,22 +31,17 @@ buildscript {
     }
 
     dependencies {
+        classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.7.0'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '6.3.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
         classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: '14.1.1'
         classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '2.0.0'
-
-        if (JavaVersion.current().isJava11Compatible()) {
-            classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
-        } else {
-            throw new GradleException("Building with Java major version prior to 11 is not supported.")
-        }
-
-        // VCS dependency required by plugin 'gradle-info-plugin'
-        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.+'
+        classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
-        classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.7.0'
+
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
+        // VCS dependency required by plugin 'gradle-info-plugin'
+        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
     }
 }
 
@@ -164,7 +159,7 @@ allprojects {
             jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b+'
 
             testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.+'
+            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
         }
 
         jar {
@@ -172,12 +167,10 @@ allprojects {
         }
 
         javadoc {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    options.addStringOption('-module-path', additionalModules.asPath)
-                    options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
-                }
+            afterEvaluate {
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                options.addStringOption('-module-path', additionalModules.asPath)
+                options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
             }
         }
 
@@ -188,40 +181,34 @@ allprojects {
                     '-proc:none',
             ])
 
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    options.compilerArgs.addAll([
-                            '--module-path',
-                            additionalModules.asPath,
-                            '--add-modules',
-                            'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
-                    ])
-                }
+            afterEvaluate {
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                options.compilerArgs.addAll([
+                        '--module-path',
+                        additionalModules.asPath,
+                        '--add-modules',
+                        'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
+                ])
             }
         }
 
         tasks.withType(JavaExec) {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    jvmArgs '--module-path'
-                    jvmArgs additionalModules.asPath
-                    jvmArgs '--add-modules'
-                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-                }
+            afterEvaluate {
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                jvmArgs '--module-path'
+                jvmArgs additionalModules.asPath
+                jvmArgs '--add-modules'
+                jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
             }
         }
 
         tasks.withType(Test) {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    jvmArgs '--module-path'
-                    jvmArgs additionalModules.asPath
-                    jvmArgs '--add-modules'
-                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-                }
+            afterEvaluate {
+                def additionalModules = (configurations.javafx + configurations.jaxb)
+                jvmArgs '--module-path'
+                jvmArgs additionalModules.asPath
+                jvmArgs '--add-modules'
+                jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
             }
         }
 
@@ -234,11 +221,7 @@ allprojects {
             apply plugin: 'net.ltgt.errorprone'
 
             dependencies {
-                if (JavaVersion.current().isJava11Compatible()) {
-                    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.11.0'
-                } else {
-                    throw new GradleException("Building with Java major version prior to 11 is not supported.")
-                }
+                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.11.0'
             }
         }
 
@@ -259,10 +242,8 @@ allprojects {
                 html.enabled = true
             }
 
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    classpath = (classpath + configurations.javafx)
-                }
+            afterEvaluate {
+                classpath = (classpath + configurations.javafx)
             }
         }
 
