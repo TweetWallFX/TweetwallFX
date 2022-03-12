@@ -75,7 +75,7 @@ allprojects {
         resolutionStrategy {
             dependencySubstitution {
                 // workaround for spotbugs not yet supporting JDK 13 class formats
-                substitute module('org.ow2.asm:asm') with module ('org.ow2.asm:asm:7.2')
+                substitute module('org.ow2.asm:asm') with module ('org.ow2.asm:asm:9.2')
             }
         }
     }
