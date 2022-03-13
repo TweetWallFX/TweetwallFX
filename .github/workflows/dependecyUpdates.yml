@@ -32,11 +32,11 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.4
 
       # Setup JDK environment for the next steps
-      - name: Setup JDK 11
+      - name: Setup JDK 17
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
           cache: gradle
 
       # Run dependencyUpdates task
