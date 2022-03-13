@@ -25,7 +25,6 @@ jobs:
     strategy:
       matrix:
         jdk:
-          - '11'
           - '17'
 
     steps:
