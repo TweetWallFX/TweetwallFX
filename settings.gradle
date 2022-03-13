@@ -29,58 +29,35 @@ if (!JavaVersion.current().isJava11Compatible()) {
     throw new GradleException("Building with Java major version prior to 11 is not supported.")
 }
 
-include ':cache'
-project(":cache").name = "tweetwallfx-cache"
-include ':config'
-project(":config").name = "tweetwallfx-configuration"
-include ':controls'
-project(":controls").name = "tweetwallfx-controls"
-include ':filterchain'
-project(":filterchain").name = "tweetwallfx-filterchain"
-include ':google-cloud'
-project(':google-cloud').name = 'tweetwallfx-google-cloud'
-include ':logging'
-project(":logging").name = "tweetwallfx-logging"
-include ':stepengine-api'
-project(":stepengine-api").name = "tweetwallfx-stepengine-api"
-include ':stepengine-dataproviders'
-project(":stepengine-dataproviders").name = "tweetwallfx-stepengine-dataproviders"
-include ':stepengine-steps'
-project(":stepengine-steps").name = "tweetwallfx-stepengine-steps"
-include ':transitions'
-project(":transitions").name = "tweetwallfx-transitions"
-include ':tweet-api'
-project(":tweet-api").name = "tweetwallfx-tweet-api"
-include ':tweet-stepengine'
-project(":tweet-stepengine").name = "tweetwallfx-tweet-stepengine"
-include ':tweet-impl-twitter4j'
-project(":tweet-impl-twitter4j").name = "tweetwallfx-tweet-impl-twitter4j"
-include ':tweet-impl-twitter4j-oauth'
-project(":tweet-impl-twitter4j-oauth").name = "tweetwallfx-tweet-impl-twitter4j-oauth"
-include ':core'
-project(":core").name = "tweetwallfx-core"
-include ':2d'
-project(":2d").name = "tweetwallfx-2d"
-include ':util'
-project(":util").name = "tweetwallfx-utility"
+def includeWithName(String path, String name) {
+    include(path)
+    project(path).name = name
+}
 
-include ':devoxx-api-cfp'
-project(":devoxx-api-cfp").name = "tweetwallfx-devoxx-api-cfp"
-include ':devoxx-cfp-stepengine'
-project(":devoxx-cfp-stepengine").name = "tweetwallfx-devoxx-cfp-stepengine"
-include ':devoxx-cfp-impl'
-project(":devoxx-cfp-impl").name = "tweetwallfx-devoxx-cfp-impl"
-include ':devoxx-cfp-test'
-project(":devoxx-cfp-test").name = "tweetwallfx-devoxx-cfp-test"
+includeWithName ':cache', 'tweetwallfx-cache'
+includeWithName ':config', 'tweetwallfx-configuration'
+includeWithName ':filterchain', 'tweetwallfx-filterchain'
+includeWithName ':stepengine-api', 'tweetwallfx-stepengine-api'
+includeWithName ':stepengine-dataproviders', 'tweetwallfx-stepengine-dataproviders'
+includeWithName ':stepengine-steps', 'tweetwallfx-stepengine-steps'
+includeWithName ':transitions', 'tweetwallfx-transitions'
+includeWithName ':tweet-api', 'tweetwallfx-tweet-api'
+includeWithName ':tweet-stepengine', 'tweetwallfx-tweet-stepengine'
+includeWithName ':tweet-impl-twitter4j', 'tweetwallfx-tweet-impl-twitter4j'
+includeWithName ':util', 'tweetwallfx-utility'
 
-include ':generic2d'
-project(":generic2d").name = "tweetwallfx-generic2d"
+includeWithName ':controls', 'tweetwallfx-controls'
+includeWithName ':core', 'tweetwallfx-core'
+includeWithName ':2d', 'tweetwallfx-2d'
 
+includeWithName ':google-cloud', 'tweetwallfx-google-cloud'
+
+includeWithName ':devoxx-api-cfp', 'tweetwallfx-devoxx-api-cfp'
+includeWithName ':devoxx-cfp-stepengine', 'tweetwallfx-devoxx-cfp-stepengine'
+includeWithName ':devoxx-cfp-impl', 'tweetwallfx-devoxx-cfp-impl'
+includeWithName ':devoxx-cfp-test', 'tweetwallfx-devoxx-cfp-test'
+
+includeWithName ':generic2d', 'tweetwallfx-generic2d'
 
 // disabled subproject for future reference
-//include ':3d'
-//project(':3d').name = 'tweetwallfx-3d'
-//include ':embeddable'
-//project(':embeddable').name = 'tweetwallfx-embeddable'
-//include ':embeddabletest'
-//project(':embeddabletest').name = 'tweetwallfx-embeddabletest'
+//includeWithName ':3d', 'tweetwallfx-3d'

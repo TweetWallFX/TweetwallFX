@@ -23,7 +23,8 @@
  */
 
 dependencies {
-    compile project(':tweetwallfx-tweet-api')
+    api project(':tweetwallfx-configuration')
+    api project(':tweetwallfx-tweet-api')
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
 }
