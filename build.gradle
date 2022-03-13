@@ -39,7 +39,7 @@ buildscript {
         classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
 
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '5.2.0'
+        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '11.3.3'
         // VCS dependency required by plugin 'gradle-info-plugin'
         classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
     }
