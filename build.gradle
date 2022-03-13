@@ -34,7 +34,7 @@ buildscript {
         classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.7.0'
         classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '6.3.0'
         classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
-        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: '14.1.1'
+        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: '18.4.0'
         classpath group: 'com.github.spotbugs.snom', name: 'spotbugs-gradle-plugin', version: '5.0.6'
         classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
         classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
