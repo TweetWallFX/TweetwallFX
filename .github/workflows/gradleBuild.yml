@@ -26,6 +26,7 @@ jobs:
       matrix:
         jdk:
           - '17'
+          - '18-ea'
 
     steps:
       # Check out sources
