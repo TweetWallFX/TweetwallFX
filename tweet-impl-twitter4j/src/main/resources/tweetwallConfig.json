@@ -1,4 +1,6 @@
 {
+    "connectionSettings" : {
+    },
     "filterchains": {
         "chains": {
             "twitter": {
@@ -6,5 +8,7 @@
                 "defaultResult": true
             }
         }
+    },
+    "twitter" : {
     }
 }
