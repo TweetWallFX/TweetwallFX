@@ -25,7 +25,7 @@
 rootProject.name='tweetwallfx'
 
 // enforce minimum JDK version
-if (!JavaVersion.current().isJava17Compatible()) {
+if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     throw new GradleException("Building with Java major version prior to 17 is not supported.")
 }
 
