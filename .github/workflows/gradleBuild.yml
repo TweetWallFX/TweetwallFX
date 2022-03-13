@@ -27,6 +27,7 @@ jobs:
         jdk:
           - '11'
           - '17'
+          - '18-ea'
 
     steps:
       # Check out sources
