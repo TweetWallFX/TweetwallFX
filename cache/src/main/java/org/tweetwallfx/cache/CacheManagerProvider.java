@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -135,28 +135,18 @@ public final class CacheManagerProvider {
     }
 
     private static ResourcePoolsBuilder addResource(final ResourcePoolsBuilder builder, final CacheResource cacheResource) {
-        switch (cacheResource.getType()) {
-            case DISK:
-                return builder.disk(cacheResource.getAmount(), cacheResource.getUnit(), true);
-            case HEAP:
-                return builder.heap(cacheResource.getAmount(), EntryUnit.ENTRIES);
-            case OFFHEAP:
-                return builder.offheap(cacheResource.getAmount(), cacheResource.getUnit());
-            default:
-                throw new IllegalStateException(CacheResourceType.class.getSimpleName() + "'" + cacheResource.getType() + "' is not supported!");
-        }
+        return switch (cacheResource.getType()) {
+            case DISK -> builder.disk(cacheResource.getAmount(), cacheResource.getUnit(), true);
+            case HEAP -> builder.heap(cacheResource.getAmount(), EntryUnit.ENTRIES);
+            case OFFHEAP -> builder.offheap(cacheResource.getAmount(), cacheResource.getUnit());
+        };
     }
 
     private static ExpiryPolicy<Object, Object> createExpiryPolicy(final CacheSettings.CacheExpiry cacheExpiry) {
-        switch (cacheExpiry.getType()) {
-            case NONE:
-                return ExpiryPolicyBuilder.noExpiration();
-            case TIME_TO_IDLE:
-                return ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
-            case TIME_TO_LIVE:
-                return ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());
-            default:
-                throw new IllegalStateException(CacheExpiryType.class.getSimpleName() + " '" + cacheExpiry.getType() + "' is not supported!");
-        }
+        return switch (cacheExpiry.getType()) {
+            case NONE -> ExpiryPolicyBuilder.noExpiration();
+            case TIME_TO_IDLE -> ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
+            case TIME_TO_LIVE -> ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());
+        };
     }
 }
