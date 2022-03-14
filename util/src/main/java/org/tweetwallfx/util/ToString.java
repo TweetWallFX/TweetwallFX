@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -301,44 +301,25 @@ public class ToString {
     }
 
     private static String getValueToStringImpl(final Object object) {
-        if (null == object) {
-            return "null";
-        } else if (object instanceof Map) {
-            @SuppressWarnings("unchecked")
-            final Map<Object, Object> map = (Map<Object, Object>) object;
-
-            if (map.isEmpty()) {
-                return "{}";
-            }
-
-            return map.entrySet()
-                    .stream()
-                    .map(e -> getValueToString(e.getKey()) + ": " + getValueToString(e.getValue()))
-                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "{\n    ", "\n}"));
-        } else if (object instanceof Iterable) {
-            @SuppressWarnings("unchecked")
-            final Iterable<?> iterable = (Iterable<?>) object;
-
-            if (!iterable.iterator().hasNext()) {
-                return "[]";
-            }
-
-            return StreamSupport.stream(iterable.spliterator(), false)
-                    .map(ToString::getValueToString)
-                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
-        } else if (object.getClass().isArray()) {
-            @SuppressWarnings("unchecked")
-            final Object[] array = (Object[]) object;
-
-            if (0 == array.length) {
-                return "[]";
-            }
-
-            return Arrays.stream(array)
-                    .map(ToString::getValueToString)
-                    .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
-        } else {
-            return String.valueOf(object);
-        }
+        return switch(object) {
+            case null -> "null";
+            case Map<?,?> map ->
+                map.isEmpty() ? "{}" :
+                    map.entrySet()
+                        .stream()
+                        .map(e -> getValueToString(e.getKey()) + ": " + getValueToString(e.getValue()))
+                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "{\n    ", "\n}"));
+            case Iterable<?> iterable ->
+                !iterable.iterator().hasNext() ? "[]" :
+                    StreamSupport.stream(iterable.spliterator(), false)
+                        .map(ToString::getValueToString)
+                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
+            case Object[] array ->
+                0 == array.length ? "[]":
+                    Arrays.stream(array)
+                        .map(ToString::getValueToString)
+                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
+            default -> String.valueOf(object);
+        };
     }
 }

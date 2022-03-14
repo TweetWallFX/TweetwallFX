@@ -177,7 +177,8 @@ allprojects {
 
         tasks.withType(JavaCompile) {
             options.compilerArgs.addAll([
-                    '-Xlint:all',
+                    '-Xlint:-preview',
+                    '--enable-preview',
                     '-Werror',
                     '-proc:none',
                     '--module-path',
@@ -188,6 +189,7 @@ allprojects {
         }
 
         tasks.withType(JavaExec) {
+            jvmArgs '--enable-preview'
             jvmArgs '--module-path'
             jvmArgs getJvmModulePath()
             jvmArgs '--add-modules'
@@ -195,6 +197,7 @@ allprojects {
         }
 
         tasks.withType(Test) {
+            jvmArgs '--enable-preview'
             jvmArgs '--module-path'
             jvmArgs getJvmModulePath()
             jvmArgs '--add-modules'

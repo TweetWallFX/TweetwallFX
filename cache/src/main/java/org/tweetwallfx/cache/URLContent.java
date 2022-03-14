@@ -57,8 +57,8 @@ public final class URLContent implements Externalizable {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
         data = readFully(in2);
-        digest = in2 instanceof DigestInputStream
-                ? DatatypeConverter.printHexBinary(((DigestInputStream) in2).getMessageDigest().digest())
+        digest = in2 instanceof DigestInputStream dis
+                ? DatatypeConverter.printHexBinary(dis.getMessageDigest().digest())
                 : null;
         LOG.info("MD5: {}", digest);
     }

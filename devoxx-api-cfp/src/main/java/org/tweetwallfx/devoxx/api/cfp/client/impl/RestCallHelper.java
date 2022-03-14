@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,13 +68,11 @@ public class RestCallHelper {
                 final String key = entry.getKey();
                 final Object value = entry.getValue();
 
-                if (value instanceof Object[]) {
-                    webTarget = webTarget.queryParam(key, Object[].class.cast(value));
-                } else if (value instanceof Collection) {
-                    webTarget = webTarget.queryParam(key, ((Collection<?>) value).toArray());
-                } else {
-                    webTarget = webTarget.queryParam(key, value);
-                }
+                webTarget = switch(value) {
+                    case Object[] array -> webTarget.queryParam(key, array);
+                    case Collection<?> collection -> webTarget.queryParam(key, collection.toArray());
+                    default -> webTarget.queryParam(key, value);
+                };
             }
         }
 
