@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -89,32 +89,19 @@ public final class GoogleVisionCache {
     }
 
     private static Feature.Type convertFeatureType(final FeatureType featureType) {
-        switch (featureType) {
-            case CROP_HINTS:
-                return Feature.Type.CROP_HINTS;
-            case DOCUMENT_TEXT_DETECTION:
-                return Feature.Type.DOCUMENT_TEXT_DETECTION;
-            case FACE_DETECTION:
-                return Feature.Type.FACE_DETECTION;
-            case IMAGE_PROPERTIES:
-                return Feature.Type.IMAGE_PROPERTIES;
-            case LABEL_DETECTION:
-                return Feature.Type.LABEL_DETECTION;
-            case LANDMARK_DETECTION:
-                return Feature.Type.LANDMARK_DETECTION;
-            case LOGO_DETECTION:
-                return Feature.Type.LOGO_DETECTION;
-            case OBJECT_LOCALIZATION:
-                return Feature.Type.OBJECT_LOCALIZATION;
-            case SAFE_SEARCH_DETECTION:
-                return Feature.Type.SAFE_SEARCH_DETECTION;
-            case TEXT_DETECTION:
-                return Feature.Type.TEXT_DETECTION;
-            case WEB_DETECTION:
-                return Feature.Type.WEB_DETECTION;
-            default:
-                throw new IllegalArgumentException("FeatureType '" + featureType.name() + "' not supported.");
-        }
+        return switch (featureType) {
+            case CROP_HINTS -> Feature.Type.CROP_HINTS;
+            case DOCUMENT_TEXT_DETECTION -> Feature.Type.DOCUMENT_TEXT_DETECTION;
+            case FACE_DETECTION -> Feature.Type.FACE_DETECTION;
+            case IMAGE_PROPERTIES -> Feature.Type.IMAGE_PROPERTIES;
+            case LABEL_DETECTION -> Feature.Type.LABEL_DETECTION;
+            case LANDMARK_DETECTION -> Feature.Type.LANDMARK_DETECTION;
+            case LOGO_DETECTION -> Feature.Type.LOGO_DETECTION;
+            case OBJECT_LOCALIZATION -> Feature.Type.OBJECT_LOCALIZATION;
+            case SAFE_SEARCH_DETECTION -> Feature.Type.SAFE_SEARCH_DETECTION;
+            case TEXT_DETECTION -> Feature.Type.TEXT_DETECTION;
+            case WEB_DETECTION -> Feature.Type.WEB_DETECTION;
+        };
     }
 
     public Map<String, ImageContentAnalysis> getCachedOrLoad(final Stream<String> imageUris) throws IOException {
