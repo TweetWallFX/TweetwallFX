@@ -140,7 +140,7 @@ allprojects {
         dependencies {
             javafx group: 'org.openjfx', name: 'javafx-base', version: '17.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '17.0.2', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '17.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '18', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '17.0.2', classifier: javaFxPlatform
 
             jaxb group: 'jakarta.activation', name: 'jakarta.activation-api', version: '2.1.0'
