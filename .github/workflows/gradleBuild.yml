@@ -46,7 +46,7 @@ jobs:
 
       # Run assemble tasks
       - name: Run assemble tasks
-        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+        uses: gradle/gradle-build-action@v2.1.4
         with:
           arguments: --no-daemon --refresh-dependencies --warning-mode all assemble
 
