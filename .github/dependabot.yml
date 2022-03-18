@@ -9,6 +9,8 @@ updates:
     # Workflow files stored in the
     # default location of `.github/workflows`
     directory: "/"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
     schedule:
       interval: "daily"
       # Check for npm updates at 0815hrs UTC
@@ -19,6 +21,260 @@ updates:
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
     directory: "/"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/2d"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/3d"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/cache"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/config"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/controls"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/core"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/devoxx-api-cfp"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/devoxx-cfp-impl"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/devoxx-cfp-stepengine"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/devoxx-cfp-test"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/filterchain"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/generic2d"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/google-cloud"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/stepengine-api"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/stepengine-dataproviders"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/stepengine-steps"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/transitions"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/tweet-api"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/tweet-impl-twitter4j"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/tweet-stepengine"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/util"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
     schedule:
       interval: "daily"
       # Check for npm updates at 0815hrs UTC
