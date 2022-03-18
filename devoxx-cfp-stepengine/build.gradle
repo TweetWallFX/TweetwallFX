@@ -26,3 +26,5 @@ dependencies {
     implementation project(':tweetwallfx-devoxx-api-cfp')
     implementation project(':tweetwallfx-stepengine-dataproviders')
 }
+
+tasks.named('spotbugsMain') { ignoreFailures = true }

@@ -221,7 +221,8 @@ allprojects {
         apply plugin: 'com.github.spotbugs'
 
         spotbugs {
-            ignoreFailures = true // TODO: change to false
+            // fail build in case a failure was detected
+            ignoreFailures = false
             jvmArgs.add '--module-path'
             jvmArgs.add getJvmModulePath()
             jvmArgs.add '--add-modules'
