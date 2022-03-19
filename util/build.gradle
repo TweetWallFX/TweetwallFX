@@ -28,5 +28,3 @@ dependencies {
 
     runtimeOnly group: 'org.eclipse', name: 'yasson', version: '2.0.4'
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }
