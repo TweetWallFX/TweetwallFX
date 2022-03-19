@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.tweetwallfx.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
@@ -106,7 +105,7 @@ public class Speaker extends ObjectWithLinksBase {
     /**
      * array of links to each accepted talk presented by this speaker
      */
-    private List<Talk> acceptedTalks;
+    private List<Talk> acceptedTalks = List.of();
 
     public String getUuid() {
         return uuid;
@@ -189,13 +188,11 @@ public class Speaker extends ObjectWithLinksBase {
     }
 
     public List<Talk> getAcceptedTalks() {
-        return null == acceptedTalks
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(acceptedTalks);
+        return List.copyOf(acceptedTalks);
     }
 
     public void setAcceptedTalks(final List<Talk> acceptedTalks) {
-        this.acceptedTalks = acceptedTalks;
+        this.acceptedTalks = List.copyOf(acceptedTalks);
     }
 
     public boolean hasCompleteInformation() {

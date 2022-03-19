@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.tweetwallfx.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
@@ -87,12 +86,12 @@ public class Talk extends ObjectWithLinksBase {
     /**
      * The proposal content tags, always 3 tags defined
      */
-    private List<Tag> tags;
+    private List<Tag> tags = List.of();
 
     /**
      * an array of links to each speaker, with its full name
      */
-    private List<SpeakerReference> speakers;
+    private List<SpeakerReference> speakers = List.of();
 
     /**
      * A URL to a video of this talk.
@@ -182,23 +181,19 @@ public class Talk extends ObjectWithLinksBase {
     }
 
     public List<Tag> getTags() {
-        return null == tags
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(tags);
+        return List.copyOf(tags);
     }
 
     public void setTags(final List<Tag> tags) {
-        this.tags = tags;
+        this.tags = List.copyOf(tags);
     }
 
     public List<SpeakerReference> getSpeakers() {
-        return null == speakers
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(speakers);
+        return List.copyOf(speakers);
     }
 
     public void setSpeakers(final List<SpeakerReference> speakers) {
-        this.speakers = speakers;
+        this.speakers = List.copyOf(speakers);
     }
 
     public String getTrackImageURL() {

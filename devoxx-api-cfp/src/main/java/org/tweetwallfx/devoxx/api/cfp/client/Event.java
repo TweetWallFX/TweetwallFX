@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.mapEntry;
@@ -54,16 +53,16 @@ public class Event extends ObjectWithLinksBase {
     /**
      * A list of Locale
      */
-    private List<String> locale;
+    private List<String> locale = List.of();
 
     private Link link;
 
     /**
      * A list of dates the event is heldd
      */
-    private List<String> days;
+    private List<String> days = List.of();
 
-    private List<String> proposalTypesId;
+    private List<String> proposalTypesId = List.of();
 
     public String getEventCode() {
         return eventCode;
@@ -98,33 +97,27 @@ public class Event extends ObjectWithLinksBase {
     }
 
     public List<String> getLocale() {
-        return null == locale
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(locale);
+        return List.copyOf(locale);
     }
 
     public void setLocale(final List<String> locale) {
-        this.locale = locale;
+        this.locale = List.copyOf(locale);
     }
 
     public List<String> getDays() {
-        return null == days
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(days);
+        return List.copyOf(days);
     }
 
     public void setDays(final List<String> days) {
-        this.days = days;
+        this.days = List.copyOf(days);
     }
 
     public List<String> getProposalTypesId() {
-        return null == proposalTypesId
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(proposalTypesId);
+        return List.copyOf(proposalTypesId);
     }
 
     public void setProposalTypesId(final List<String> proposalTypesId) {
-        this.proposalTypesId = proposalTypesId;
+        this.proposalTypesId = List.copyOf(proposalTypesId);
     }
 
     @Override

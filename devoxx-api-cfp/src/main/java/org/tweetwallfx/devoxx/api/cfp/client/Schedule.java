@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -35,16 +34,14 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class Schedule {
 
-    private List<ScheduleSlot> slots;
+    private List<ScheduleSlot> slots = List.of();
 
     public List<ScheduleSlot> getSlots() {
-        return null == slots
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(slots);
+        return List.copyOf(slots);
     }
 
     public void setSlots(final List<ScheduleSlot> slots) {
-        this.slots = slots;
+        this.slots = List.copyOf(slots);
     }
 
     @Override

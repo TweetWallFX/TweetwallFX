@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -41,7 +40,7 @@ public class Tracks {
     /**
      * All tracks.
      */
-    private List<Track> tracks;
+    private List<Track> tracks = List.of();
 
     public String getContent() {
         return content;
@@ -52,9 +51,7 @@ public class Tracks {
     }
 
     public List<Track> getTracks() {
-        return null == tracks
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(tracks);
+        return List.copyOf(tracks);
     }
 
     public void setRooms(final List<Track> tracks) {
@@ -62,7 +59,7 @@ public class Tracks {
     }
 
     public void setTracks(final List<Track> tracks) {
-        this.tracks = tracks;
+        this.tracks = List.copyOf(tracks);
     }
 
     @Override

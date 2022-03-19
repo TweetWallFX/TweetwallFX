@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -41,7 +40,7 @@ public class ProposalTypes {
     /**
      * All rooms.
      */
-    private List<ProposalType> proposalTypes;
+    private List<ProposalType> proposalTypes = List.of();
 
     public String getContent() {
         return content;
@@ -52,13 +51,11 @@ public class ProposalTypes {
     }
 
     public List<ProposalType> getProposalTypes() {
-        return null == proposalTypes
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(proposalTypes);
+        return List.copyOf(proposalTypes);
     }
 
     public void setProposalTypes(final List<ProposalType> proposalTypes) {
-        this.proposalTypes = proposalTypes;
+        this.proposalTypes = List.copyOf(proposalTypes);
     }
 
     @Override

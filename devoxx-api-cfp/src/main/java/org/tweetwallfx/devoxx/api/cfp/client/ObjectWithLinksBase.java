@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import static org.tweetwallfx.util.ToString.createToString;
@@ -37,24 +36,18 @@ public abstract class ObjectWithLinksBase {
     /**
      * Links to the actual talk POJO and its speakers
      */
-    private List<Link> links;
+    private List<Link> links = List.of();
 
     public List<Link> getLinks() {
-        return null == links
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(links);
+        return List.copyOf(links);
     }
 
     public void setLinks(final List<Link> links) {
-        this.links = links;
+        this.links = List.copyOf(links);
     }
 
     public Stream<Link> getLinkStream() {
-        if (null == links) {
-            return Stream.empty();
-        } else {
-            return links.stream();
-        }
+        return links.stream();
     }
 
     public Stream<Link> getLinkStream(final Link.Type linkType) {
