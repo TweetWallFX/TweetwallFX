@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.tweet.api.config;
 
-import java.util.Collections;
 import java.util.Map;
 import org.tweetwallfx.config.ConfigurationConverter;
 import static org.tweetwallfx.util.ToString.createToString;
@@ -40,7 +39,7 @@ public final class TwitterSettings {
      */
     public static final String CONFIG_KEY = "twitter";
     private boolean debugEnabled = false;
-    private Map<String, Object> extendedConfig;
+    private Map<String, Object> extendedConfig = Map.of();
     private boolean extendedMode = false;
     private OAuth oauth;
     private boolean ignoreRateLimit = true;
@@ -72,9 +71,7 @@ public final class TwitterSettings {
      * @return the extended configuration of the twitter client
      */
     public Map<String, Object> getExtendedConfig() {
-        return null == extendedConfig
-                ? Collections.emptyMap()
-                : Collections.unmodifiableMap(extendedConfig);
+        return Map.copyOf(extendedConfig);
     }
 
     /**
@@ -83,7 +80,7 @@ public final class TwitterSettings {
      * @param extendedConfig the extended configuration of the twitter client
      */
     public void setExtendedConfig(final Map<String, Object> extendedConfig) {
-        this.extendedConfig = extendedConfig;
+        this.extendedConfig = Map.copyOf(extendedConfig);
     }
 
     /**

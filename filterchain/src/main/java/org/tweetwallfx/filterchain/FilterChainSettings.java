@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.filterchain;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +43,7 @@ public final class FilterChainSettings {
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "filterchains";
-    private Map<String, FilterChainDefinition> chains = Collections.emptyMap();
+    private Map<String, FilterChainDefinition> chains = Map.of();
 
     /**
      * Returns the mapping the the {@link FilterChainDefinition}s to the name of
@@ -54,7 +53,7 @@ public final class FilterChainSettings {
      * the defined {@link FilterChain}
      */
     public Map<String, FilterChainDefinition> getChains() {
-        return chains;
+        return Map.copyOf(chains);
     }
 
     /**
@@ -65,7 +64,7 @@ public final class FilterChainSettings {
      */
     public void setChains(final Map<String, FilterChainDefinition> chains) {
         Objects.requireNonNull(chains, "chains must not be null!");
-        this.chains = chains;
+        this.chains = Map.copyOf(chains);
     }
 
     @Override
@@ -98,7 +97,7 @@ public final class FilterChainSettings {
     public static class FilterChainDefinition {
 
         private Boolean defaultResult = null;
-        private List<FilterStepDefinition> filterSteps = Collections.emptyList();
+        private List<FilterStepDefinition> filterSteps = List.of();
         private String domainObjectClassName = null;
 
         /**
@@ -149,7 +148,7 @@ public final class FilterChainSettings {
          * @return the filter steps contained in the {@link FilterChain}
          */
         public List<FilterStepDefinition> getFilterSteps() {
-            return filterSteps;
+            return List.copyOf(filterSteps);
         }
 
         /**
@@ -159,7 +158,7 @@ public final class FilterChainSettings {
          */
         public void setFilterSteps(final List<FilterStepDefinition> filterSteps) {
             Objects.requireNonNull(filterSteps, "filterSteps must not be null!");
-            this.filterSteps = filterSteps;
+            this.filterSteps = List.copyOf(filterSteps);
         }
 
         @Override
@@ -207,7 +206,7 @@ public final class FilterChainSettings {
         @Override
         public <T> T getConfig(final Class<T> typeClass) {
             @SuppressWarnings("unchecked")
-            final Map<String, Object> specializedConfig = (Map<String, Object>) Configuration.getInstance().getConfig(typeClass.getName(), Collections.emptyMap());
+            final Map<String, Object> specializedConfig = (Map<String, Object>) Configuration.getInstance().getConfig(typeClass.getName(), Map.of());
             final Map<String, Object> mergedConfig = Configuration.mergeMap(getConfig(), specializedConfig);
             return JsonDataConverter.convertFromObject(mergedConfig, typeClass);
         }

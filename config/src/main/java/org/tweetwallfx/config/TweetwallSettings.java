@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.config;
 
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import static org.tweetwallfx.util.ToString.createToString;
@@ -43,7 +42,7 @@ public final class TweetwallSettings {
     private String stylesheetResource;
     private String stylesheetFile;
     private String query;
-    private Set<String> additionalStopWords = Collections.emptySet();
+    private Set<String> additionalStopWords = Set.of();
 
     /**
      * Return the title of the Tweetwall.
@@ -132,7 +131,7 @@ public final class TweetwallSettings {
      * @return the set containing the additional stopwords to consider
      */
     public Set<String> getAdditionalStopWords() {
-        return additionalStopWords;
+        return Set.copyOf(additionalStopWords);
     }
 
     /**
@@ -142,9 +141,8 @@ public final class TweetwallSettings {
      * stopwords to concider
      */
     public void setAdditionalStopWords(final Set<String> additionalStopWords) {
-        this.additionalStopWords = Objects.requireNonNull(
-                additionalStopWords,
-                "additionalStopWords must not be null!");
+        Objects.requireNonNull(additionalStopWords, "additionalStopWords must not be null!");
+        this.additionalStopWords = Set.copyOf(additionalStopWords);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -113,7 +112,7 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
      */
     public static final class Config {
 
-        private Set<String> hashtags = Collections.emptySet();
+        private Set<String> hashtags = Set.of();
         private boolean checkRetweeted = false;
 
         /**
@@ -124,7 +123,7 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
          * {@link Tweet} containing any of them is automatically rejected
          */
         public Set<String> getHashtags() {
-            return hashtags;
+            return Set.copyOf(hashtags);
         }
 
         /**
@@ -137,9 +136,7 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
             Objects.requireNonNull(hashtags, "hashtags must not be null!");
             this.hashtags = hashtags.stream()
                     .map(s -> s.toLowerCase(Locale.ENGLISH))
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toSet(),
-                            Collections::unmodifiableSet));
+                    .collect(Collectors.toSet());
         }
 
         /**

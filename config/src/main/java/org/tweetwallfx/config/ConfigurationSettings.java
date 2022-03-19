@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.config;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -38,7 +37,7 @@ public final class ConfigurationSettings {
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "configuration";
-    private List<String> additionalConfigurationURLs = null;
+    private List<String> additionalConfigurationURLs = List.of();
 
     /**
      * Retrieves the list of string representations of URLs containing
@@ -48,9 +47,7 @@ public final class ConfigurationSettings {
      * fragments for {@link Configuration}
      */
     public List<String> getAdditionalConfigurationURLs() {
-        return null == additionalConfigurationURLs
-                ? Collections.emptyList()
-                : additionalConfigurationURLs;
+        return List.copyOf(additionalConfigurationURLs);
     }
 
     /**
@@ -61,7 +58,7 @@ public final class ConfigurationSettings {
      * URLs containing additional fragments for {@link Configuration}
      */
     public void setAdditionalConfigurationURLs(final List<String> additionalConfigurationURLs) {
-        this.additionalConfigurationURLs = additionalConfigurationURLs;
+        this.additionalConfigurationURLs = List.copyOf(additionalConfigurationURLs);
     }
 
     @Override

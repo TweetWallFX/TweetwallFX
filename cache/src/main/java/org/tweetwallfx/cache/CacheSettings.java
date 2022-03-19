@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package org.tweetwallfx.cache;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +41,7 @@ public class CacheSettings {
      */
     public static final String CONFIG_KEY = "cacheConfiguration";
     private String persistenceDirectoryName = "tweetwall-cache";
-    private Map<String, CacheSetting> caches = Collections.emptyMap();
+    private Map<String, CacheSetting> caches = Map.of();
 
     public String getPersistenceDirectoryName() {
         return persistenceDirectoryName;
@@ -54,12 +53,12 @@ public class CacheSettings {
     }
 
     public Map<String, CacheSetting> getCaches() {
-        return caches;
+        return Map.copyOf(caches);
     }
 
     public void setCaches(final Map<String, CacheSetting> caches) {
         Objects.requireNonNull(caches, "caches must not be null!");
-        this.caches = caches;
+        this.caches = Map.copyOf(caches);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class CacheSettings {
         private String valueType = null;
         private CacheExpiry expiry = null;
         private int contentLoaderThreads;
-        private List<CacheResource> cacheResources = Collections.emptyList();
+        private List<CacheResource> cacheResources = List.of();
 
         public String getKeyType() {
             return keyType;
@@ -128,11 +127,11 @@ public class CacheSettings {
         }
 
         public List<CacheResource> getCacheResources() {
-            return cacheResources;
+            return List.copyOf(cacheResources);
         }
 
         public void setCacheResources(final List<CacheResource> cacheResources) {
-            this.cacheResources = cacheResources;
+            this.cacheResources = List.copyOf(cacheResources);
         }
 
         @Override
