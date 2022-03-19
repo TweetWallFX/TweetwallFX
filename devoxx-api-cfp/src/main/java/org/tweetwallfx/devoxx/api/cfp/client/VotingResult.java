@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.api.cfp.client;
 
-import java.util.Collections;
 import java.util.List;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -35,7 +34,7 @@ public class VotingResult {
 
     private int totalResults;
     private String trackId;
-    private List<VotingResultTalk> talks;
+    private List<VotingResultTalk> talks = List.of();
     private String talkTypeId;
     private String day;
 
@@ -56,13 +55,11 @@ public class VotingResult {
     }
 
     public List<VotingResultTalk> getTalks() {
-        return null == talks
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(talks);
+        return List.copyOf(talks);
     }
 
     public void setTalks(final List<VotingResultTalk> talks) {
-        this.talks = talks;
+        this.talks = List.copyOf(talks);
     }
 
     public String getTalkTypeId() {
