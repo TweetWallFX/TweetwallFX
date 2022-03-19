@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,14 +32,14 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public final class CloudVisionSettings {
 
-    private Set<FeatureType> featureTypes;
+    private Set<FeatureType> featureTypes = Set.of();
 
     public Set<FeatureType> getFeatureTypes() {
-        return featureTypes;
+        return Set.copyOf(featureTypes);
     }
 
-    public void setFeatureTypes(Set<FeatureType> featureTypes) {
-        this.featureTypes = featureTypes;
+    public void setFeatureTypes(final Set<FeatureType> featureTypes) {
+        this.featureTypes = Set.copyOf(featureTypes);
     }
 
     @Override

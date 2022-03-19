@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.tweetwallfx.google.GoogleLikelihood;
@@ -48,7 +47,7 @@ public final class ImageContentAnalysis implements Externalizable {
     private static final long serialVersionUID = 1L;
     private AnalysisError analysisError;
     private SafeSearch safeSearch;
-    private List<TextEntry> texts;
+    private List<TextEntry> texts = List.of();
 
     public ImageContentAnalysis() {
     }
@@ -92,11 +91,11 @@ public final class ImageContentAnalysis implements Externalizable {
     }
 
     public List<TextEntry> getTexts() {
-        return texts;
+        return List.copyOf(texts);
     }
 
     public void setTexts(final List<TextEntry> texts) {
-        this.texts = texts;
+        this.texts = List.copyOf(texts);
     }
 
     @Override
@@ -143,7 +142,7 @@ public final class ImageContentAnalysis implements Externalizable {
 
         private static final long serialVersionUID = 1L;
         private String message;
-        private List<String> details = Collections.emptyList();
+        private List<String> details = List.of();
 
         public AnalysisError() {
             // default constructor doing nothing
@@ -163,11 +162,11 @@ public final class ImageContentAnalysis implements Externalizable {
         }
 
         public List<String> getDetails() {
-            return details;
+            return List.copyOf(details);
         }
 
         public void setDetails(final List<String> details) {
-            this.details = details;
+            this.details = List.copyOf(details);
         }
 
         @Override
@@ -326,7 +325,7 @@ public final class ImageContentAnalysis implements Externalizable {
         private static final long serialVersionUID = 1L;
         private String description;
         private float score;
-        private List<LocationEntry> locations;
+        private List<LocationEntry> locations = List.of();
         private String locale;
 
         public TextEntry() {
@@ -359,11 +358,11 @@ public final class ImageContentAnalysis implements Externalizable {
         }
 
         public List<LocationEntry> getLocations() {
-            return locations;
+            return List.copyOf(locations);
         }
 
         public void setLocations(final List<LocationEntry> locations) {
-            this.locations = locations;
+            this.locations = List.copyOf(locations);
         }
 
         public String getLocale() {

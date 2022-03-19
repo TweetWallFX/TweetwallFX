@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -109,7 +108,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
      */
     public static final class Config {
 
-        private Set<String> userHandles = Collections.emptySet();
+        private Set<String> userHandles = Set.of();
         private boolean checkRetweeted = false;
 
         /**
@@ -120,7 +119,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
          * send by them is automatically accepted
          */
         public Set<String> getUserHandles() {
-            return userHandles;
+            return Set.copyOf(userHandles);
         }
 
         /**
