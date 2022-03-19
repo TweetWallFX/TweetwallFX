@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.util;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -33,7 +32,7 @@ import java.util.Map;
  */
 public abstract class ConfigurableObjectBase {
 
-    private Map<String, Object> config;
+    private Map<String, Object> config = Map.of();
 
     /**
      * Gets the objects configuration data in its raw form.
@@ -41,9 +40,7 @@ public abstract class ConfigurableObjectBase {
      * @return the objects configuration data in its raw form
      */
     public final Map<String, Object> getConfig() {
-        return null == config
-                ? Collections.emptyMap()
-                : Collections.unmodifiableMap(config);
+        return Map.copyOf(config);
     }
 
     /**
@@ -67,6 +64,6 @@ public abstract class ConfigurableObjectBase {
      * @param config the configuration data
      */
     public final void setConfig(final Map<String, Object> config) {
-        this.config = config;
+        this.config = Map.copyOf(config);
     }
 }
