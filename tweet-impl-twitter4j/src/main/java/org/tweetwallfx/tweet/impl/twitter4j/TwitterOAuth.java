@@ -99,13 +99,13 @@ final class TwitterOAuth {
 
         // optional proxy settings
         tweetWallFxConfig.getConfigTypedOptional(ConnectionSettings.CONFIG_KEY, ConnectionSettings.class)
-                .map(ConnectionSettings::getProxy)
-                .filter(proxy -> Objects.nonNull(proxy.getHost()) && !proxy.getHost().isEmpty())
+                .map(ConnectionSettings::proxy)
+                .filter(proxy -> !proxy.host().isEmpty())
                 .ifPresent(proxy -> {
-                    builder.setHttpProxyHost(proxy.getHost());
-                    builder.setHttpProxyPort(proxy.getPort());
-                    builder.setHttpProxyUser(proxy.getUser());
-                    builder.setHttpProxyPassword(proxy.getPassword());
+                    builder.setHttpProxyHost(proxy.host());
+                    builder.setHttpProxyPort(proxy.port());
+                    builder.setHttpProxyUser(proxy.user());
+                    builder.setHttpProxyPassword(proxy.password());
                 });
 
         Configuration conf = builder.build();

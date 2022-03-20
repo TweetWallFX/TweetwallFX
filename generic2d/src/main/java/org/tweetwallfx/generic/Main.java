@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,11 +58,11 @@ public class Main extends Application {
         final TweetwallSettings tweetwallSettings
                 = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
 
-        Optional.ofNullable(tweetwallSettings.getStylesheetResource())
+        Optional.ofNullable(tweetwallSettings.stylesheetResource())
                 .map(ClassLoader.getSystemClassLoader()::getResource)
                 .map(java.net.URL::toExternalForm)
                 .ifPresent(scene.getStylesheets()::add);
-        Optional.ofNullable(tweetwallSettings.getStylesheetFile())
+        Optional.ofNullable(tweetwallSettings.stylesheetFile())
                 .ifPresent(scene.getStylesheets()::add);
 
         StringPropertyAppender spa = new StringPropertyAppender();
@@ -93,7 +93,7 @@ public class Main extends Application {
             }
         });
 
-        primaryStage.setTitle(tweetwallSettings.getTitle());
+        primaryStage.setTitle(tweetwallSettings.title());
         primaryStage.setScene(scene);
 
         primaryStage.show();

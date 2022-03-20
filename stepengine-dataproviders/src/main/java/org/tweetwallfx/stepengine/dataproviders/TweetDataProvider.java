@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
     private final Random rand = new SecureRandom();
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
-    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
 

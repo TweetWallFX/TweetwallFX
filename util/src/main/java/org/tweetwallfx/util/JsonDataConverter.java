@@ -23,13 +23,15 @@
  */
 package org.tweetwallfx.util;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbConfig;
-import jakarta.json.bind.JsonbException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ParameterizedMessage;
 
 /**
  * Converts data from an input into a typesafe object.
@@ -37,9 +39,9 @@ import org.apache.logging.log4j.Logger;
 public class JsonDataConverter {
 
     private static final Logger LOG = LogManager.getLogger(JsonDataConverter.class);
-    private static final Jsonb JSONB = JsonbBuilder.create(new JsonbConfig()
-            .setProperty("jsonb.fail-on-unknown-properties", true)
-    );
+    private static final ObjectMapper OM = new JsonMapper()
+            .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     private JsonDataConverter() {
         // prevent instantiation
@@ -74,7 +76,12 @@ public class JsonDataConverter {
      * @return the converted object
      */
     public static <T> T convertFromInputStream(final InputStream inputStream, final Class<T> typeClass) {
-        return JSONB.fromJson(inputStream, typeClass);
+        try {
+            return OM.readValue(inputStream, typeClass);
+        } catch (final IOException ex) {
+            LOG.error(new ParameterizedMessage("Failed to convert to {} from {}", typeClass, inputStream), ex);
+            throw new UncheckedIOException(ex);
+        }
     }
 
     /**
@@ -91,10 +98,10 @@ public class JsonDataConverter {
      */
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
         try {
-            return JSONB.fromJson(jsonString, typeClass);
-        } catch (final JsonbException je) {
-            LOG.error("Failed to convert to " + typeClass + ": " + jsonString, je);
-            throw je;
+            return OM.readValue(jsonString, typeClass);
+        } catch (final IOException ex) {
+            LOG.error(new ParameterizedMessage("Failed to convert to {}: {}", typeClass, jsonString), ex);
+            throw new UncheckedIOException(ex);
         }
     }
 
@@ -106,6 +113,11 @@ public class JsonDataConverter {
      * @return the converted String
      */
     public static String convertToString(final Object object) {
-        return JSONB.toJson(object);
+        try {
+            return OM.writeValueAsString(object);
+        } catch (final IOException ex) {
+            LOG.error(new ParameterizedMessage("Failed to convert to {}: {}", String.class, object), ex);
+            throw new UncheckedIOException(ex);
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,7 +91,7 @@ public final class StepEngine {
         final Set<Class<? extends DataProvider>> requiredDataProviders = stepIterator.getRequiredDataProviders();
         LOGGER.info("init DataProviders");
 
-        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
         LOGGER.info("query: " + searchText);
 
         LOGGER.info("create DataProviders");

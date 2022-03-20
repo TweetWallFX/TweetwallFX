@@ -24,49 +24,35 @@
 package org.tweetwallfx.cache;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.ehcache.config.units.MemoryUnit;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
-public class CacheSettings {
+public final record CacheSettings(
+        String persistenceDirectoryName,
+        Map<String, CacheSetting> caches) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "cacheConfiguration";
-    private String persistenceDirectoryName = "tweetwall-cache";
-    private Map<String, CacheSetting> caches = Map.of();
 
-    public String getPersistenceDirectoryName() {
-        return persistenceDirectoryName;
-    }
-
-    public void setPersistenceDirectoryName(final String persistenceDirectoryName) {
-        Objects.requireNonNull(persistenceDirectoryName, "persistenceDirectoryName must not be null!");
-        this.persistenceDirectoryName = persistenceDirectoryName;
-    }
-
-    public Map<String, CacheSetting> getCaches() {
-        return Map.copyOf(caches);
-    }
-
-    public void setCaches(final Map<String, CacheSetting> caches) {
-        Objects.requireNonNull(caches, "caches must not be null!");
-        this.caches = Map.copyOf(caches);
+    public CacheSettings(
+            final String persistenceDirectoryName,
+            final Map<String, CacheSetting> caches) {
+        this.persistenceDirectoryName = valueOrDefault(persistenceDirectoryName, "tweetwall-cache");
+        this.caches = nullable(caches);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "persistenceDirectoryName", getPersistenceDirectoryName(),
-                "caches", getCaches()
-        ), super.toString());
+    public Map<String, CacheSetting> caches() {
+        return nullable(caches);
     }
 
     /**
@@ -86,106 +72,48 @@ public class CacheSettings {
         }
     }
 
-    public static class CacheSetting {
+    public static record CacheSetting(
+            String keyType,
+            String valueType,
+            CacheExpiry expiry,
+            Integer contentLoaderThreads,
+            List<CacheResource> cacheResources) {
 
-        private String keyType = null;
-        private String valueType = null;
-        private CacheExpiry expiry = null;
-        private int contentLoaderThreads;
-        private List<CacheResource> cacheResources = List.of();
-
-        public String getKeyType() {
-            return keyType;
-        }
-
-        public void setKeyType(final String keyType) {
-            this.keyType = keyType;
-        }
-
-        public String getValueType() {
-            return valueType;
-        }
-
-        public void setValueType(final String valueType) {
-            this.valueType = valueType;
-        }
-
-        public CacheExpiry getExpiry() {
-            return expiry;
-        }
-
-        public void setExpiry(final CacheExpiry expiry) {
+        public CacheSetting(
+                final String keyType,
+                final String valueType,
+                final CacheExpiry expiry,
+                final Integer contentLoaderThreads,
+                final List<CacheResource> cacheResources) {
+            this.keyType = Objects.requireNonNull(keyType, "keyType must not be null");
+            this.valueType = Objects.requireNonNull(valueType, "valueType must not be null");
             this.expiry = expiry;
-        }
-
-        public int getContentLoaderThreads() {
-            return contentLoaderThreads;
-        }
-
-        public void setContentLoaderThreads(int contentLoaderThreads) {
-            this.contentLoaderThreads = contentLoaderThreads;
-        }
-
-        public List<CacheResource> getCacheResources() {
-            return List.copyOf(cacheResources);
-        }
-
-        public void setCacheResources(final List<CacheResource> cacheResources) {
-            this.cacheResources = List.copyOf(cacheResources);
+            this.contentLoaderThreads = valueOrDefault(contentLoaderThreads, 0);
+            this.cacheResources = nullable(cacheResources);
         }
 
         @Override
-        public String toString() {
-            return createToString(this, map(
-                    "keyType", getKeyType(),
-                    "valueType", getValueType(),
-                    "expiry", getExpiry(),
-                    "cacheResources", getCacheResources()
-            ), super.toString());
+        public List<CacheResource> cacheResources() {
+            return nullable(cacheResources);
         }
     }
 
-    public static class CacheExpiry {
+    public static record CacheExpiry(
+            CacheExpiryType type,
+            Long amount,
+            TemporalUnit unit) {
 
-        private CacheExpiryType type = CacheExpiryType.NONE;
-        private long amount;
-        private ChronoUnit unit;
-
-        public CacheExpiryType getType() {
-            return type;
-        }
-
-        public void setType(final CacheExpiryType type) {
-            this.type = Objects.requireNonNull(type, "type must not be null!");
-        }
-
-        public long getAmount() {
-            return amount;
-        }
-
-        public void setAmount(final long amount) {
-            this.amount = amount;
-        }
-
-        public ChronoUnit getUnit() {
-            return unit;
-        }
-
-        public void setUnit(final ChronoUnit unit) {
-            this.unit = Objects.requireNonNull(unit, "unit must not be null!");
+        public CacheExpiry(
+                final CacheExpiryType type,
+                final Long amount,
+                final TemporalUnit unit) {
+            this.type = valueOrDefault(type, CacheExpiryType.NONE);
+            this.amount = Objects.requireNonNull(amount, "amount must not be null");
+            this.unit = Objects.requireNonNull(unit, "unit must not be null");
         }
 
         public Duration produceDuration() {
             return Duration.of(amount, unit);
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "type", getType(),
-                    "amount", getAmount(),
-                    "unit", getUnit()
-            ), super.toString());
         }
     }
 
@@ -196,43 +124,18 @@ public class CacheSettings {
         TIME_TO_LIVE;
     }
 
-    public static class CacheResource {
+    public static record CacheResource(
+            CacheResourceType type,
+            Long amount,
+            MemoryUnit unit) {
 
-        private CacheResourceType type;
-        private long amount;
-        private MemoryUnit unit;
-
-        public CacheResourceType getType() {
-            return type;
-        }
-
-        public void setType(final CacheResourceType type) {
+        public CacheResource(
+                final CacheResourceType type,
+                final Long amount,
+                final MemoryUnit unit) {
             this.type = Objects.requireNonNull(type, "type must not be null!");
-        }
-
-        public long getAmount() {
-            return amount;
-        }
-
-        public void setAmount(final long amount) {
-            this.amount = amount;
-        }
-
-        public MemoryUnit getUnit() {
-            return unit;
-        }
-
-        public void setUnit(final MemoryUnit unit) {
+            this.amount = Objects.requireNonNull(amount, "amount must not be null!");
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "type", getType(),
-                    "amount", getAmount(),
-                    "unit", getUnit()
-            ), super.toString());
         }
     }
 

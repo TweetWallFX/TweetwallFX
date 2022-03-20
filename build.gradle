@@ -134,6 +134,10 @@ allprojects {
         apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
 
+        jacoco {
+            toolVersion = '0.8.7'
+        }
+
         configurations {
             javafx
             jaxb
@@ -208,6 +212,13 @@ allprojects {
 
         tasks.named('check') {
             dependsOn 'javadoc'
+        }
+
+        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_18)) {
+            // jacoco not yet compatible with JDK18
+            tasks.named('test') {
+                finalizedBy 'jacocoTestReport'
+            }
         }
 
         // configuring Errorprone

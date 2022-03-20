@@ -59,7 +59,7 @@ public class TagTweets {
         hWordle.prefHeightProperty().bind(root.heightProperty());
 
         root.setCenter(hWordle);
-        String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+        String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
         LOGGER.trace("** 1. Creating Tag Cloud for " + searchText);
 
         LOGGER.trace("** create wordle");
