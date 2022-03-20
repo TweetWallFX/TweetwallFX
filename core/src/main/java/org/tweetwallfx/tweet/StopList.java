@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,14 +67,14 @@ public final class StopList {
     static {
         //extract Hashtags from complex query and add to StopList
         final TweetwallSettings tweetwallSettings = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
-        final String searchText = tweetwallSettings.getQuery();
+        final String searchText = tweetwallSettings.query();
         final Matcher m = Pattern.compile("#[\\S]+").matcher(searchText);
 
         while (m.find()) {
             StopList.add(m.group(0));
         }
 
-        tweetwallSettings.getAdditionalStopWords()
+        tweetwallSettings.additionalStopWords()
                 .forEach(StopList::add);
     }
 

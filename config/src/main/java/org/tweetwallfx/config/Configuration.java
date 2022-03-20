@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -131,7 +131,7 @@ public final class Configuration {
                 result.getOrDefault(ConfigurationSettings.CONFIG_KEY, Collections.EMPTY_MAP),
                 ConfigurationSettings.class);
 
-        for (String additionalConfigurationURL : cs.getAdditionalConfigurationURLs()) {
+        for (String additionalConfigurationURL : cs.additionalConfigurationURLs()) {
             final URL url;
 
             try {

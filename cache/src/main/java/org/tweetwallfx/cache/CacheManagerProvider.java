@@ -45,9 +45,7 @@ import org.ehcache.event.EventType;
 import org.ehcache.expiry.ExpiryPolicy;
 import org.ehcache.impl.config.persistence.CacheManagerPersistenceConfiguration;
 import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.cache.CacheSettings.CacheExpiryType;
 import org.tweetwallfx.cache.CacheSettings.CacheResource;
-import org.tweetwallfx.cache.CacheSettings.CacheResourceType;
 
 public final class CacheManagerProvider {
 
@@ -86,20 +84,20 @@ public final class CacheManagerProvider {
                 .newCacheManagerBuilder()
                 .with(new CacheManagerPersistenceConfiguration(new File(
                         System.getProperty("user.home"),
-                        cacheSettings.getPersistenceDirectoryName())));
+                        cacheSettings.persistenceDirectoryName())));
 
-        for (final Map.Entry<String, CacheSettings.CacheSetting> entry : cacheSettings.getCaches().entrySet()) {
+        for (final Map.Entry<String, CacheSettings.CacheSetting> entry : cacheSettings.caches().entrySet()) {
             final String alias = entry.getKey();
             final CacheSettings.CacheSetting cacheSetting = entry.getValue();
 
             CacheConfigurationBuilder<?, ?> builder = CacheConfigurationBuilder
                     .newCacheConfigurationBuilder(
-                            loadClass(cacheSetting.getKeyType()),
-                            loadClass(cacheSetting.getValueType()),
-                            createResourcePoolsBuilder(cacheSetting.getCacheResources()));
+                            loadClass(cacheSetting.keyType()),
+                            loadClass(cacheSetting.valueType()),
+                            createResourcePoolsBuilder(cacheSetting.cacheResources()));
 
-            if (null != cacheSetting.getExpiry()) {
-                builder = builder.withExpiry(createExpiryPolicy(cacheSetting.getExpiry()));
+            if (null != cacheSetting.expiry()) {
+                builder = builder.withExpiry(createExpiryPolicy(cacheSetting.expiry()));
             }
 
             cacheManagerBuilder = cacheManagerBuilder.withCache(alias, builder);
@@ -135,15 +133,15 @@ public final class CacheManagerProvider {
     }
 
     private static ResourcePoolsBuilder addResource(final ResourcePoolsBuilder builder, final CacheResource cacheResource) {
-        return switch (cacheResource.getType()) {
-            case DISK -> builder.disk(cacheResource.getAmount(), cacheResource.getUnit(), true);
-            case HEAP -> builder.heap(cacheResource.getAmount(), EntryUnit.ENTRIES);
-            case OFFHEAP -> builder.offheap(cacheResource.getAmount(), cacheResource.getUnit());
+        return switch (cacheResource.type()) {
+            case DISK -> builder.disk(cacheResource.amount(), cacheResource.unit(), true);
+            case HEAP -> builder.heap(cacheResource.amount(), EntryUnit.ENTRIES);
+            case OFFHEAP -> builder.offheap(cacheResource.amount(), cacheResource.unit());
         };
     }
 
     private static ExpiryPolicy<Object, Object> createExpiryPolicy(final CacheSettings.CacheExpiry cacheExpiry) {
-        return switch (cacheExpiry.getType()) {
+        return switch (cacheExpiry.type()) {
             case NONE -> ExpiryPolicyBuilder.noExpiration();
             case TIME_TO_IDLE -> ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
             case TIME_TO_LIVE -> ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());

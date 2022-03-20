@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +59,9 @@ public abstract class URLContentCacheBase {
         contentLoader = createExecutor(
                 Configuration.getInstance()
                         .getConfigTyped(CacheSettings.CONFIG_KEY, CacheSettings.class)
-                        .getCaches()
+                        .caches()
                         .get(cacheName)
-                        .getContentLoaderThreads(),
+                        .contentLoaderThreads(),
                 cacheName);
     }
 

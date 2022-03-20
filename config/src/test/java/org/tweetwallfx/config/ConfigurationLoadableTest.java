@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,9 @@
 package org.tweetwallfx.config;
 
 import java.util.Map;
+import java.util.ServiceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +38,8 @@ import org.junit.rules.TestName;
  * Testing if Configuration is safely retrievable.
  */
 public class ConfigurationLoadableTest {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     @Rule
     public TestName testName = new TestName();
@@ -76,5 +81,15 @@ public class ConfigurationLoadableTest {
                 .isNotNull()
                 .containsOnlyKeys("fileName")
                 .containsEntry("fileName", "myCustomConfig.json");
+
+        for (final ConfigurationConverter o : ServiceLoader.load(ConfigurationConverter.class)) {
+            System.out.println("Config Key " + o.getResponsibleKey() + " with type " + o.getDataClass());
+
+            try {
+                System.out.println(configuration.getConfigTyped(o.getResponsibleKey(), o.getDataClass()));
+            } catch (RuntimeException npe) {
+                System.out.println("value not found");
+            }
+        }
     }
 }

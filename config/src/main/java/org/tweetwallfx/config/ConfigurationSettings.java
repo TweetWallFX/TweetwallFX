@@ -24,48 +24,31 @@
 package org.tweetwallfx.config;
 
 import java.util.List;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * POJO for reading Settings concerning the Configuration itself.
+ *
+ * @param additionalConfigurationURLs list of string representations of URLs
+ * containing additional fragments for {@link Configuration}
  */
-public final class ConfigurationSettings {
+public record ConfigurationSettings(
+        List<String> additionalConfigurationURLs) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "configuration";
-    private List<String> additionalConfigurationURLs = List.of();
 
-    /**
-     * Retrieves the list of string representations of URLs containing
-     * additional fragments for {@link Configuration}.
-     *
-     * @return the list of string representations of URLs containing additional
-     * fragments for {@link Configuration}
-     */
-    public List<String> getAdditionalConfigurationURLs() {
-        return List.copyOf(additionalConfigurationURLs);
-    }
-
-    /**
-     * Sets the new list of string representations of URLs containing additional
-     * fragments for {@link Configuration}.
-     *
-     * @param additionalConfigurationURLs then list of string representations of
-     * URLs containing additional fragments for {@link Configuration}
-     */
-    public void setAdditionalConfigurationURLs(final List<String> additionalConfigurationURLs) {
-        this.additionalConfigurationURLs = List.copyOf(additionalConfigurationURLs);
+    public ConfigurationSettings(
+            final List<String> additionalConfigurationURLs) {
+        this.additionalConfigurationURLs = nullable(additionalConfigurationURLs);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "additionalConfigurationURLs", getAdditionalConfigurationURLs()
-        ), super.toString());
+    public List<String> additionalConfigurationURLs() {
+        return nullable(additionalConfigurationURLs);
     }
 
     /**

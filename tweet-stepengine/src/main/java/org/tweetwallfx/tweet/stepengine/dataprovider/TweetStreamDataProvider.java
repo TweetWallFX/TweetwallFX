@@ -55,7 +55,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private final String searchText = Configuration.getInstance()
             .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class)
-            .getQuery();
+            .query();
     private volatile Image latestTweetedImage;
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
     private final Config config;
