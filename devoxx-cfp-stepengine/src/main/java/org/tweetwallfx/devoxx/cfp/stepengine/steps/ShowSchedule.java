@@ -57,8 +57,6 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * Devoxx 2019 Show Schedule (Flip In) Animation Step
- *
- * @author Sven Reimers
  */
 public class ShowSchedule implements Step {
 

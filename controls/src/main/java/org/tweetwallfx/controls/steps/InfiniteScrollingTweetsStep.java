@@ -70,8 +70,6 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
  * Infinite TweetStream Animation Step
- *
- * @author Sven Reimers
  */
 public class InfiniteScrollingTweetsStep implements Step, Controllable {
 

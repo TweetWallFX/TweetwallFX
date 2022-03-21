@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,6 @@ import javafx.util.Duration;
  * Heavily inspired by canned animations from Jasper Potts.
  *
  * Port of FlipOutX from Animate.css http://daneden.me/animate by Dan Eden
- *
- * @author Sven Reimers
  */
 public final class FlipOutXTransition extends Transition {
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,6 @@ import org.tweetwallfx.tweet.api.Tweet;
 
 /**
  * A Provider of data. The type of data is implementation specific.
- *
- * @author Sven Reimers
  */
 public interface DataProvider {
 

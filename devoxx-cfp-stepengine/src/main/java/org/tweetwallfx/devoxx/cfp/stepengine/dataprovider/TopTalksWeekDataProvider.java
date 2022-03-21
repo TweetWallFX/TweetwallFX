@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,6 @@ import static org.tweetwallfx.util.ToString.map;
 
 /**
  * DataProvider Implementation for Top Talks Week
- *
- * @author Sven Reimers
  */
 public final class TopTalksWeekDataProvider implements DataProvider, DataProvider.Scheduled {
 
