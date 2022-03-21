@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.stepengine.api;
 
-dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'com.github.mfornos', name: 'humanize-slim', version: '1.2.2'
-    implementation project(':tweetwallfx-core')
-    implementation project(':tweetwallfx-stepengine-dataproviders')
-    implementation project(':tweetwallfx-transitions')
+public interface Controllable {
+
+    public void shutdown();
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }

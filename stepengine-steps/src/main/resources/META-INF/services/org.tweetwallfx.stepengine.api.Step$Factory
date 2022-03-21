@@ -1,3 +1,4 @@
+org.tweetwallfx.stepengine.steps.GenericShutdownStep$FactoryImpl
 org.tweetwallfx.stepengine.steps.NextTweetStep$FactoryImpl
 org.tweetwallfx.stepengine.steps.PauseStep$FactoryImpl
 org.tweetwallfx.stepengine.steps.visual.HideAction$FactoryImpl

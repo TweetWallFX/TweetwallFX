@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
-dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'com.github.mfornos', name: 'humanize-slim', version: '1.2.2'
-    implementation project(':tweetwallfx-core')
-    implementation project(':tweetwallfx-stepengine-dataproviders')
-    implementation project(':tweetwallfx-transitions')
+import org.tweetwallfx.cache.URLContentCacheBase;
+
+/**
+ * Cache used to provide the avatar image of a track.
+ */
+public final class TrackImageCache extends URLContentCacheBase {
+
+    /**
+     * Cache instance.
+     */
+    public static final TrackImageCache INSTANCE = new TrackImageCache();
+
+    private TrackImageCache() {
+        super("trackImage");
+    }
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }

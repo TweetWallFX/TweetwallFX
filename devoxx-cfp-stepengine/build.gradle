@@ -22,9 +22,14 @@
  * THE SOFTWARE.
  */
 dependencies {
+    api group: 'de.jensd', name: 'fontawesomefx-commons', version: '11.0'
+    api group: 'de.jensd', name: 'fontawesomefx-fontawesome', version: '4.7.0-11'
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+    implementation project(':tweetwallfx-controls')
     implementation project(':tweetwallfx-devoxx-api-cfp')
     implementation project(':tweetwallfx-stepengine-dataproviders')
+    implementation project(':tweetwallfx-transitions')
 }
 
 tasks.named('spotbugsMain') { ignoreFailures = true }
