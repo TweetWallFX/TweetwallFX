@@ -2,3 +2,4 @@ org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.ScheduleDataProvider$FactoryI
 org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.SpeakerImageProvider$FactoryImpl
 org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksTodayDataProvider$FactoryImpl
 org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TopTalksWeekDataProvider$FactoryImpl
+org.tweetwallfx.devoxx.cfp.stepengine.dataprovider.TrackImageDataProvider$FactoryImpl
