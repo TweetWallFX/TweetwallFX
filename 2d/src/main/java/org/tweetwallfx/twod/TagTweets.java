@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,9 +39,6 @@ import org.tweetwallfx.controls.Wordle;
  * Tasks to perform a search on Twitter for some hashtag, create an HBox with
  * each tweets, crate a snapshot and then load the image as diffuseMap of a
  * segmented torus Tasks and blockingQueues take care of this complex process
- *
- * @author José Pereda
- * @author Sven Reimers
  */
 public class TagTweets {
 
