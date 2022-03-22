@@ -25,137 +25,55 @@ package org.tweetwallfx.tweet.api.config;
 
 import java.util.Map;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * POJO for reading Settings concerning the twitter client.
+ *
+ * @param debugEnabled a flag indicating that the twitter client is to work in
+ * debug mode
+ *
+ * @param extendedConfig the extended configuration of the twitter client
+ *
+ * @param extendedMode a flag indicating if the twitter client is to use the
+ * extended mode
+ *
+ * @param oauth the OAuth setting the twitter client is to use in order to
+ * connect with twitter
+ *
+ * @param ignoreRateLimit a flag indicating that the twitter rate limitations
+ * shall be ignored
  */
-public final class TwitterSettings {
+public record TwitterSettings(
+        Boolean debugEnabled,
+        Map<String, Object> extendedConfig,
+        Boolean extendedMode,
+        OAuth oauth,
+        Boolean ignoreRateLimit) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "twitter";
-    private boolean debugEnabled = false;
-    private Map<String, Object> extendedConfig = Map.of();
-    private boolean extendedMode = false;
-    private OAuth oauth;
-    private boolean ignoreRateLimit = true;
 
-    /**
-     * Returns a flag indicating that the twitter client is to work in debug
-     * mode.
-     *
-     * @return a flag indicating that the twitter client is to work in debug
-     * mode
-     */
-    public boolean isDebugEnabled() {
-        return debugEnabled;
-    }
-
-    /**
-     * Sets a flag indicating that the twitter client is to work in debug mode.
-     *
-     * @param debugEnabled a flag indicating that the twitter client is to work
-     * in debug mode
-     */
-    public void setDebugEnabled(final boolean debugEnabled) {
-        this.debugEnabled = debugEnabled;
-    }
-
-    /**
-     * Returns the extended configuration of the twitter client.
-     *
-     * @return the extended configuration of the twitter client
-     */
-    public Map<String, Object> getExtendedConfig() {
-        return Map.copyOf(extendedConfig);
-    }
-
-    /**
-     * Sets the extended configuration of the twitter client.
-     *
-     * @param extendedConfig the extended configuration of the twitter client
-     */
-    public void setExtendedConfig(final Map<String, Object> extendedConfig) {
-        this.extendedConfig = Map.copyOf(extendedConfig);
-    }
-
-    /**
-     * Returns a flag indicating if the twitter client is to use the extended
-     * mode.
-     *
-     * @return a flag indicating if the twitter client is to use the extended
-     * mode
-     */
-    public boolean isExtendedMode() {
-        return extendedMode;
-    }
-
-    /**
-     * Set a flag indicating if the twitter client is to use the extended mode.
-     *
-     * @param extendedMode a flag indicating if the twitter client is to use the
-     * extended mode
-     */
-    public void setExtendedMode(final boolean extendedMode) {
-        this.extendedMode = extendedMode;
-    }
-
-    /**
-     * Returns a flag indicating that the twitter rate limitations shall be
-     * ignored.
-     *
-     * @return a flag indicating that the twitter rate limitations shall be
-     * ignored
-     */
-    public boolean isIgnoreRateLimit() {
-        return ignoreRateLimit;
-    }
-
-    /**
-     * Sets a flag indicating that the twitter rate limitations shall be
-     * ignored.
-     *
-     * @param ignoreRateLimit the new value
-     */
-    public void setIgnoreRateLimit(boolean ignoreRateLimit) {
-        this.ignoreRateLimit = ignoreRateLimit;
-    }
-
-    /**
-     * Returns the OAuth setting the twitter client is to use in order to
-     * connect with twitter.
-     *
-     * @return the OAuth setting the twitter client is to use in order to
-     * connect with twitter
-     */
-    public OAuth getOauth() {
-        return oauth;
-    }
-
-    /**
-     * Returns the OAuth setting the twitter client is to use in order to
-     * connect with twitter.
-     *
-     * @param oauth the OAuth setting the twitter client is to use in order to
-     * connect with twitter
-     */
-    public void setOauth(final OAuth oauth) {
+    public TwitterSettings(
+            final Boolean debugEnabled,
+            final Map<String, Object> extendedConfig,
+            final Boolean extendedMode,
+            final OAuth oauth,
+            final Boolean ignoreRateLimit) {
+        this.debugEnabled = valueOrDefault(debugEnabled, false);
+        this.extendedConfig = nullable(extendedConfig);
+        this.extendedMode = valueOrDefault(extendedMode, false);
         this.oauth = oauth;
+        this.ignoreRateLimit = valueOrDefault(ignoreRateLimit, true);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "debugEnabled", isDebugEnabled(),
-                "extendedConfig", getExtendedConfig(),
-                "extendedMode", isExtendedMode(),
-                "ignoreRateLimit", isIgnoreRateLimit(),
-                "oauth", getOauth()
-        )) + " extends " + super.toString();
+    public Map<String, Object> extendedConfig() {
+        return Map.copyOf(extendedConfig);
     }
 
     /**
@@ -178,94 +96,19 @@ public final class TwitterSettings {
     /**
      * POJO for the OAuth setting the twitter client is to use in order to
      * connect with twitter.
+     *
+     * @param consumerKey the consumer key
+     *
+     * @param consumerSecret the consumer secret
+     *
+     * @param accessToken the access token
+     *
+     * @param accessTokenSecret the access token secret
      */
-    public static final class OAuth {
-
-        private String consumerKey;
-        private String consumerSecret;
-        private String accessToken;
-        private String accessTokenSecret;
-
-        /**
-         * Returns the consumer key.
-         *
-         * @return the consumer key
-         */
-        public String getConsumerKey() {
-            return consumerKey;
-        }
-
-        /**
-         * Sets the consumer key.
-         *
-         * @param consumerKey the consumer key
-         */
-        public void setConsumerKey(final String consumerKey) {
-            this.consumerKey = consumerKey;
-        }
-
-        /**
-         * Returns the consumer secret.
-         *
-         * @return the consumer secret
-         */
-        public String getConsumerSecret() {
-            return consumerSecret;
-        }
-
-        /**
-         * Sets the consumer secret.
-         *
-         * @param consumerSecret the consumer secret
-         */
-        public void setConsumerSecret(final String consumerSecret) {
-            this.consumerSecret = consumerSecret;
-        }
-
-        /**
-         * Returns the access token.
-         *
-         * @return the access token
-         */
-        public String getAccessToken() {
-            return accessToken;
-        }
-
-        /**
-         * Sets the access token.
-         *
-         * @param accessToken the access token
-         */
-        public void setAccessToken(final String accessToken) {
-            this.accessToken = accessToken;
-        }
-
-        /**
-         * Returns the access token secret.
-         *
-         * @return the access token secret
-         */
-        public String getAccessTokenSecret() {
-            return accessTokenSecret;
-        }
-
-        /**
-         * Sets the access token secret.
-         *
-         * @param accessTokenSecret the access token secret
-         */
-        public void setAccessTokenSecret(final String accessTokenSecret) {
-            this.accessTokenSecret = accessTokenSecret;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "consumerKey", getConsumerKey(),
-                    "consumerSecret", getConsumerSecret(),
-                    "accessToken", getAccessToken(),
-                    "accessTokenSecret", getAccessTokenSecret()
-            )) + " extends " + super.toString();
-        }
+    public static record OAuth(
+            String consumerKey,
+            String consumerSecret,
+            String accessToken,
+            String accessTokenSecret) {
     }
 }

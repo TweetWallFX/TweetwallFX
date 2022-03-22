@@ -69,16 +69,16 @@ public final class GoogleVisionCache {
     private volatile ImageAnnotatorClient client;
 
     private GoogleVisionCache() {
-        if (null == GOOGLE_SETTINGS.getCredentialFilePath()) {
+        if (null == GOOGLE_SETTINGS.credentialFilePath()) {
             LOG.warn("File path of Google Credentials not configured. Bypassing all analysis requests.");
             this.imageAnnotatorSettings = null;
         } else {
-            try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.getCredentialFilePath())) {
+            try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
                 final GoogleCredentials credentials = GoogleCredentials.fromStream(fis);
                 this.imageAnnotatorSettings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
             } catch (final IOException ex) {
                 LOG.error(ex, ex);
-                throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.getCredentialFilePath() + "'", ex);
+                throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
             }
         }
 
@@ -169,7 +169,7 @@ public final class GoogleVisionCache {
                         .setSource(ImageSource.newBuilder()
                                 .setImageUri(imageUri)));
 
-        GOOGLE_SETTINGS.getCloudVision().getFeatureTypes().stream()
+        GOOGLE_SETTINGS.cloudVision().featureTypes().stream()
                 .map(GoogleVisionCache::convertFeatureType)
                 .forEach(builder.addFeaturesBuilder()::setType);
 

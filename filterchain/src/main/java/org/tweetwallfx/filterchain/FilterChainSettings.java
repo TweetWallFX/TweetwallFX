@@ -30,48 +30,33 @@ import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.util.ConfigurableObjectBase;
 import org.tweetwallfx.util.JsonDataConverter;
+import static org.tweetwallfx.util.Nullable.nullable;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning {@link FilterChain}s.
+ *
+ * @param chains the mapping of the {@link FilterChainDefinition}s to the name
+ * of the defined {@link FilterChain}
  */
-public final class FilterChainSettings {
+public record FilterChainSettings(
+        Map<String, FilterChainDefinition> chains) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "filterchains";
-    private Map<String, FilterChainDefinition> chains = Map.of();
 
-    /**
-     * Returns the mapping the the {@link FilterChainDefinition}s to the name of
-     * the defined {@link FilterChain}.
-     *
-     * @return the mapping the the {@link FilterChainDefinition}s to the name of
-     * the defined {@link FilterChain}
-     */
-    public Map<String, FilterChainDefinition> getChains() {
-        return Map.copyOf(chains);
-    }
-
-    /**
-     * Sets the mapping the the {@link FilterChainDefinition}s to the name of
-     * the defined {@link FilterChain}.
-     *
-     * @param chains the new value
-     */
-    public void setChains(final Map<String, FilterChainDefinition> chains) {
-        Objects.requireNonNull(chains, "chains must not be null!");
-        this.chains = Map.copyOf(chains);
+    public FilterChainSettings(
+            final Map<String, FilterChainDefinition> chains) {
+        this.chains = Map.copyOf(Objects.requireNonNull(chains, "chains must not be null!"));
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "chains", getChains()
-        ), super.toString());
+    public Map<String, FilterChainDefinition> chains() {
+        return Map.copyOf(chains);
     }
 
     /**
@@ -93,81 +78,33 @@ public final class FilterChainSettings {
 
     /**
      * POJO defining a {@link FilterChain}.
+     *
+     * @param defaultResult a boolean flag determining if the evaluated object
+     * are accepted or rejected should no previous evaluation by the
+     * {@link FilterStep}s have terminated the evaluation
+     *
+     * @param filterSteps the filter steps contained in the {@link FilterChain}
+     *
+     * @param domainObjectClassName the class name of the domain object being
+     * evaluated
      */
-    public static class FilterChainDefinition {
+    public static record FilterChainDefinition(
+            Boolean defaultResult,
+            List<FilterStepDefinition> filterSteps,
+            String domainObjectClassName) {
 
-        private Boolean defaultResult = null;
-        private List<FilterStepDefinition> filterSteps = List.of();
-        private String domainObjectClassName = null;
-
-        /**
-         * Returns a boolean flag determining if the evaluated object are
-         * accepted or rejected should no previous evaluation by the
-         * {@link FilterStep}s have terminated the evaluation.
-         *
-         * @return a boolean flag determining if the evaluated object are
-         * accepted or rejected should no previous evaluation by the
-         * {@link FilterStep}s have terminated the evaluation
-         */
-        public Boolean getDefaultResult() {
-            return defaultResult;
-        }
-
-        /**
-         * Sets a boolean flag determining if the evaluated object are accepted
-         * or rejected should no previous evaluation by the {@link FilterStep}s
-         * have terminated the evaluation.
-         *
-         * @param defaultResult the new value
-         */
-        public void setDefaultResult(final Boolean defaultResult) {
+        public FilterChainDefinition(
+                final Boolean defaultResult,
+                final List<FilterStepDefinition> filterSteps,
+                final String domainObjectClassName) {
             this.defaultResult = defaultResult;
-        }
-
-        /**
-         * Returns the class name of the domain object being evaluated.
-         *
-         * @return the class name of the domain object being evaluated
-         */
-        public String getDomainObjectClassName() {
-            return domainObjectClassName;
-        }
-
-        /**
-         * Sets the class name of the domain object being evaluated.
-         *
-         * @param domainObjectClassName the new value
-         */
-        public void setDomainObjectClassName(final String domainObjectClassName) {
+            this.filterSteps = nullable(filterSteps);
             this.domainObjectClassName = domainObjectClassName;
         }
 
-        /**
-         * Returns the filter steps contained in the {@link FilterChain}.
-         *
-         * @return the filter steps contained in the {@link FilterChain}
-         */
-        public List<FilterStepDefinition> getFilterSteps() {
-            return List.copyOf(filterSteps);
-        }
-
-        /**
-         * Sets the filter steps contained in the {@link FilterChain}.
-         *
-         * @param filterSteps the filter steps
-         */
-        public void setFilterSteps(final List<FilterStepDefinition> filterSteps) {
-            Objects.requireNonNull(filterSteps, "filterSteps must not be null!");
-            this.filterSteps = List.copyOf(filterSteps);
-        }
-
         @Override
-        public String toString() {
-            return createToString(this, map(
-                    "domainObjectClassName", getDomainObjectClassName(),
-                    "defaultResult", getDefaultResult(),
-                    "filterSteps", getFilterSteps()
-            ), super.toString());
+        public List<FilterStepDefinition> filterSteps() {
+            return List.copyOf(filterSteps);
         }
     }
 

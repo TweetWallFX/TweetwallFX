@@ -24,29 +24,22 @@
 package org.tweetwallfx.google.vision;
 
 import java.util.Set;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * POJO for reading Settings concerning the usage of Google APIs.
  */
-public final class CloudVisionSettings {
+public record CloudVisionSettings(
+        Set<FeatureType> featureTypes) {
 
-    private Set<FeatureType> featureTypes = Set.of();
-
-    public Set<FeatureType> getFeatureTypes() {
-        return Set.copyOf(featureTypes);
-    }
-
-    public void setFeatureTypes(final Set<FeatureType> featureTypes) {
-        this.featureTypes = Set.copyOf(featureTypes);
+    public CloudVisionSettings(
+            final Set<FeatureType> featureTypes) {
+        this.featureTypes = nullable(featureTypes);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "featureTypes", getFeatureTypes()
-        )) + " extends " + super.toString();
+    public Set<FeatureType> featureTypes() {
+        return Set.copyOf(featureTypes);
     }
 
     public enum FeatureType {

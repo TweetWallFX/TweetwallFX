@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,16 +91,16 @@ public class FilterChain<T> {
                 FilterChainSettings.CONFIG_KEY,
                 FilterChainSettings.class);
 
-        final FilterChainSettings.FilterChainDefinition filterChainDefinition = settings.getChains().get(name);
+        final FilterChainSettings.FilterChainDefinition filterChainDefinition = settings.chains().get(name);
         Objects.requireNonNull(filterChainDefinition, "FilterChainDefinition with name '" + name + "' does not exist!");
 
-        if (!domainObjectClass.getName().equals(filterChainDefinition.getDomainObjectClassName())) {
+        if (!domainObjectClass.getName().equals(filterChainDefinition.domainObjectClassName())) {
             throw new IllegalStateException("The Class name of the domain objects for FilterChainDefinition with name '"
                     + name
                     + "' do not match with requested domainClass (domainClass: '"
                     + domainObjectClass.getName()
                     + "'; filterChainDefinition.domainObjectClassName: '"
-                    + filterChainDefinition.getDomainObjectClassName()
+                    + filterChainDefinition.domainObjectClassName()
                     + "')");
         }
 
@@ -109,7 +109,7 @@ public class FilterChain<T> {
         });
 
         return new FilterChain<>(
-                filterChainDefinition.getFilterSteps().stream()
+                filterChainDefinition.filterSteps().stream()
                         .map(fsd
                                 -> Objects.requireNonNull(
                                 domainObjectFilterStepFactories.get(fsd.getStepClassName()),
@@ -121,7 +121,7 @@ public class FilterChain<T> {
                             return fs2;
                         })
                         .collect(Collectors.toList()),
-                filterChainDefinition.getDefaultResult()
+                filterChainDefinition.defaultResult()
         );
     }
 
