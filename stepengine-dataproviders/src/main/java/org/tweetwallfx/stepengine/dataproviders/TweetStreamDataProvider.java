@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,24 +25,37 @@ package org.tweetwallfx.stepengine.dataproviders;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.Tweeter;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
  * Provides an always current list of tweets based on the configured query. The
  * history length is not yet configurable.
  */
-public class TweetStreamDataProvider implements DataProvider.NewTweetAware, DataProvider.HistoryAware {
+public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
+    private final String searchText = Configuration.getInstance()
+            .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class)
+            .query();
+    private volatile Image latestTweetedImage;
     private volatile Deque<Tweet> tweets = new ArrayDeque<>();
     private final Config config;
 
@@ -50,18 +63,37 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
         this.config = config;
 
         LOGGER.info("Initialize tweet stream provider");
+        List<Tweet> history = getLatestHistory();
+        tweetListLock.writeLock().lock();
+        try {
+            history.forEach(this::appendTweet);
+        } finally {
+            tweetListLock.writeLock().unlock();
+        }
     }
 
     @Override
     public void processNewTweet(final Tweet tweet) {
         LOGGER.info("New tweet received");
-        addTweet(tweet, true);
+        prependTweet(tweet);
     }
 
-    @Override
-    public void processHistoryTweet(final Tweet tweet) {
-        LOGGER.info("New historic Tweet received: {}", tweet.getId());
+    private void updateImage(final Tweet tweet) {
+        Arrays.stream(tweet.getMediaEntries())
+                .filter(MediaTweetEntryType.photo::isType)
+                .findFirst()
+                .ifPresent(mte
+                        -> PhotoImageCache.INSTANCE.getCachedOrLoad(
+                        mte,
+                        sis -> latestTweetedImage = new Image(sis.getInputStream())));
+    }
+
+    private void appendTweet(final Tweet tweet) {
         addTweet(tweet, false);
+    }
+
+    private void prependTweet(final Tweet tweet) {
+        addTweet(tweet, true);
     }
 
     private void addTweet(final Tweet tweet, boolean prepend) {
@@ -69,17 +101,16 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
             LOGGER.info("Tweet " + tweet.getId() + " is a retweet and retweets are currently not allowed");
             return;
         }
-
         LOGGER.info("Add tweet {}", tweet.getId());
-
         tweetListLock.writeLock().lock();
         try {
             final Tweet originalTweet = tweet.getOriginTweet();
 
             if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId()
-                    && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName()))) {
+                    && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName())) ) {
                 if (prepend) {
                     tweets.addFirst(originalTweet);
+                    updateImage(originalTweet);
                 } else {
                     tweets.addLast(originalTweet);
                 }
@@ -93,6 +124,10 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
         }
     }
 
+    public Optional<Image> getLatestImage() {
+        return Optional.ofNullable(latestTweetedImage);
+    }
+
     public List<Tweet> getTweets() {
         tweetListLock.readLock().lock();
 
@@ -101,6 +136,15 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
         } finally {
             tweetListLock.readLock().unlock();
         }
+    }
+
+    private List<Tweet> getLatestHistory() {
+        LOGGER.info("Reinit the history");
+        return Tweeter.getInstance()
+                .search(new TweetQuery()
+                        .query(searchText)
+                        .count(config.getHistorySize()))
+                .collect(Collectors.toList());
     }
 
     public static class FactoryImpl implements DataProvider.Factory {
@@ -122,6 +166,13 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
     public static final class Config {
 
         /**
+         * The number of the tweets to request from query in order to fill up
+         * {@link TweetStreamDataProvider} upon initialization. Defaults to
+         * {@code 50}.
+         */
+        private int historySize = 50;
+
+        /**
          * The number of tweet to produce upon request via
          * {@link TweetStreamDataProvider#getTweets()}. Defaults to {@code 4}.
          */
@@ -132,6 +183,18 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware, Data
          * acceptable? Defaults to {@code false}.
          */
         private boolean hideRetweets = false;
+
+        public int getHistorySize() {
+            return historySize;
+        }
+
+        public void setHistorySize(int historySize) {
+            if (historySize < 0) {
+                throw new IllegalArgumentException("property 'historySize' must not be a negative number");
+            }
+
+            this.historySize = historySize;
+        }
 
         public int getMaxTweets() {
             return maxTweets;
