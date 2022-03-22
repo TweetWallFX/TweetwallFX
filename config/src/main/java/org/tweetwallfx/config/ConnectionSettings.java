@@ -30,7 +30,7 @@ import java.util.Objects;
  *
  * @param proxy the Proxy settings to use with HTTP connections
  */
-public final record ConnectionSettings(
+public record ConnectionSettings(
         Proxy proxy) {
 
     /**
@@ -74,15 +74,9 @@ public final record ConnectionSettings(
             String user,
             String password) {
 
-        public Proxy(
-                final String host,
-                final Integer port,
-                final String user,
-                final String password) {
-            this.host = Objects.requireNonNull(host, "host must not be null");
-            this.port = Objects.requireNonNull(port, "port must not be null");
-            this.user = user;
-            this.password = password;
+        public Proxy    {
+            Objects.requireNonNull(host, "host must not be null");
+            Objects.requireNonNull(port, "port must not be null");
 
             if (Objects.nonNull(user) ^ Objects.nonNull(password)) {
                 throw new IllegalArgumentException("user and password values have to be set or unset at the sametime");

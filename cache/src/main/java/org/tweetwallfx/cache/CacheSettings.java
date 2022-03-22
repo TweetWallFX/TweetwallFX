@@ -33,7 +33,7 @@ import org.tweetwallfx.config.ConfigurationConverter;
 import static org.tweetwallfx.util.Nullable.nullable;
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
-public final record CacheSettings(
+public record CacheSettings(
         String persistenceDirectoryName,
         Map<String, CacheSetting> caches) {
 
@@ -129,13 +129,10 @@ public final record CacheSettings(
             Long amount,
             MemoryUnit unit) {
 
-        public CacheResource(
-                final CacheResourceType type,
-                final Long amount,
-                final MemoryUnit unit) {
-            this.type = Objects.requireNonNull(type, "type must not be null!");
-            this.amount = Objects.requireNonNull(amount, "amount must not be null!");
-            this.unit = Objects.requireNonNull(unit, "unit must not be null!");
+        public CacheResource   {
+            Objects.requireNonNull(type, "type must not be null!");
+            Objects.requireNonNull(amount, "amount must not be null!");
+            Objects.requireNonNull(unit, "unit must not be null!");
         }
     }
 

@@ -38,7 +38,7 @@ public class VisualizationRegistry {
 
     public static VisualizationRegistry INSTANCE = new VisualizationRegistry();
     private final Map<String, StepEngineSettings.VisualizationSetting> visualizationSettingsMap
-            = Configuration.getInstance().getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class).getVisualizationSettings();
+            = Configuration.getInstance().getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class).visualizationSettings();
 
     private final Map<String, Visualization> visualizationCache = new ConcurrentHashMap<>();
 

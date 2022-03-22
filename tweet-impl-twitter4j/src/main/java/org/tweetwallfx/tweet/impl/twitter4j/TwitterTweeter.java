@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -320,7 +320,7 @@ public class TwitterTweeter extends Tweeter {
             final TwitterSettings twitterSettings = org.tweetwallfx.config.Configuration.getInstance()
                     .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
 
-            if (twitterSettings.isIgnoreRateLimit()) {
+            if (twitterSettings.ignoreRateLimit()) {
                 return;
             }
 

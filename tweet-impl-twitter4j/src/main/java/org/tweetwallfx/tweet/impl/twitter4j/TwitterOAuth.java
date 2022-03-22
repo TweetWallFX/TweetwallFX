@@ -88,14 +88,14 @@ final class TwitterOAuth {
                 .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
 
         ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.setDebugEnabled(twitterSettings.isDebugEnabled());
-        builder.setTweetModeExtended(twitterSettings.isExtendedMode());
+        builder.setDebugEnabled(twitterSettings.debugEnabled());
+        builder.setTweetModeExtended(twitterSettings.extendedMode());
 
-        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.getOauth();
-        builder.setOAuthConsumerKey(twitterOAuthSettings.getConsumerKey());
-        builder.setOAuthConsumerSecret(twitterOAuthSettings.getConsumerSecret());
-        builder.setOAuthAccessToken(twitterOAuthSettings.getAccessToken());
-        builder.setOAuthAccessTokenSecret(twitterOAuthSettings.getAccessTokenSecret());
+        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.oauth();
+        builder.setOAuthConsumerKey(twitterOAuthSettings.consumerKey());
+        builder.setOAuthConsumerSecret(twitterOAuthSettings.consumerSecret());
+        builder.setOAuthAccessToken(twitterOAuthSettings.accessToken());
+        builder.setOAuthAccessTokenSecret(twitterOAuthSettings.accessTokenSecret());
 
         // optional proxy settings
         tweetWallFxConfig.getConfigTypedOptional(ConnectionSettings.CONFIG_KEY, ConnectionSettings.class)

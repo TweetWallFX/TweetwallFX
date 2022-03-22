@@ -97,7 +97,7 @@ public final class StepEngine {
         LOGGER.info("create DataProviders");
         final Map<String, StepEngineSettings.DataProviderSetting> dataProviderSettings = Configuration.getInstance()
                 .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
-                .getDataProviderSettings()
+                .dataProviderSettings()
                 .stream()
                 .collect(Collectors.toMap(
                         StepEngineSettings.DataProviderSetting::getDataProviderClassName,

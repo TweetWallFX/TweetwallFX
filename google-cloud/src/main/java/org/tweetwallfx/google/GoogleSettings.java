@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,19 @@ package org.tweetwallfx.google;
 
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.google.vision.CloudVisionSettings;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings Google APIs.
  */
-public class GoogleSettings {
+public record GoogleSettings(
+    String credentialFilePath,
+    CloudVisionSettings cloudVision) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "google";
-    private String credentialFilePath;
-    private CloudVisionSettings cloudVision;
-
-    public String getCredentialFilePath() {
-        return credentialFilePath;
-    }
-
-    public void setCredentialFilePath(final String credentialFilePath) {
-        this.credentialFilePath = credentialFilePath;
-    }
-
-    public CloudVisionSettings getCloudVision() {
-        return cloudVision;
-    }
-
-    public void setCloudVision(final CloudVisionSettings cloudVision) {
-        this.cloudVision = cloudVision;
-    }
-
-    @Override
-    public String toString() {
-        return createToString(this, map(
-                "credentialFilePath", getCredentialFilePath(),
-                "cloudVision", getCloudVision()
-        )) + " extends " + super.toString();
-    }
 
     /**
      * Service implementation converting the configuration data of the root key

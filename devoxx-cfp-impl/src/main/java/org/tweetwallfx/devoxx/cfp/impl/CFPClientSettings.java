@@ -25,8 +25,6 @@ package org.tweetwallfx.devoxx.cfp.impl;
 
 import java.util.Objects;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning Devoxx CFP Client.
@@ -37,7 +35,7 @@ import static org.tweetwallfx.util.ToString.map;
  *
  * @param votingResultsUri the Query Uri from where voting results are retrieved
  */
-public final record CFPClientSettings(
+public record CFPClientSettings(
         String baseUri,
         String eventId,
         String votingResultsUri) {
@@ -48,13 +46,9 @@ public final record CFPClientSettings(
      */
     public static final String CONFIG_KEY = "devoxxCFP";
 
-    public CFPClientSettings(
-            final String baseUri,
-            final String eventId,
-            final String votingResultsUri) {
-        this.baseUri = Objects.requireNonNull(baseUri, "baseUri must not be null!");
-        this.eventId = Objects.requireNonNull(eventId, "eventId must not be null!");
-        this.votingResultsUri = votingResultsUri;
+    public CFPClientSettings   {
+        Objects.requireNonNull(baseUri, "baseUri must not be null!");
+        Objects.requireNonNull(eventId, "eventId must not be null!");
     }
 
     /**
