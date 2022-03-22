@@ -97,7 +97,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private void addTweet(final Tweet tweet, boolean prepend) {
-        if (tweet.isRetweet() && config.isHideRetweets()) {
+        if (tweet.isRetweet() && config.hideRetweets()) {
             LOGGER.info("Tweet " + tweet.getId() + " is a retweet and retweets are currently not allowed");
             return;
         }
@@ -116,7 +116,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 }
             }
 
-            if (tweets.size() > config.getMaxTweets()) {
+            if (tweets.size() > config.maxTweets()) {
                 tweets.removeLast();
             }
         } finally {
@@ -143,7 +143,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         return Tweeter.getInstance()
                 .search(new TweetQuery()
                         .query(searchText)
-                        .count(config.getHistorySize()))
+                        .count(config.historySize()))
                 .collect(Collectors.toList());
     }
 
@@ -163,57 +163,13 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     /**
      * POJO used to configure {@link TweetStreamDataProvider}.
      */
-    public static final class Config {
+    public static record Config(
+            int historySize,
+            int maxTweets,
+            boolean hideRetweets) {
 
-        /**
-         * The number of the tweets to request from query in order to fill up
-         * {@link TweetStreamDataProvider} upon initialization. Defaults to
-         * {@code 50}.
-         */
-        private int historySize = 50;
-
-        /**
-         * The number of tweet to produce upon request via
-         * {@link TweetStreamDataProvider#getTweets()}. Defaults to {@code 4}.
-         */
-        private int maxTweets = 4;
-
-        /**
-         * Is accepting retweets into the datastore of the DataProvider
-         * acceptable? Defaults to {@code false}.
-         */
-        private boolean hideRetweets = false;
-
-        public int getHistorySize() {
-            return historySize;
-        }
-
-        public void setHistorySize(int historySize) {
-            if (historySize < 0) {
-                throw new IllegalArgumentException("property 'historySize' must not be a negative number");
-            }
-
-            this.historySize = historySize;
-        }
-
-        public int getMaxTweets() {
-            return maxTweets;
-        }
-
-        public void setMaxTweets(final int maxTweets) {
-            if (maxTweets < 0) {
-                throw new IllegalArgumentException("property 'maxTweets' must not be a negative number");
-            }
-
-            this.maxTweets = maxTweets;
-        }
-
-        public boolean isHideRetweets() {
-            return hideRetweets;
-        }
-
-        public void setHideRetweets(boolean hideRetweets) {
-            this.hideRetweets = hideRetweets;
+        public Config() {
+            this(50, 4, false);
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,6 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
 
 public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -63,7 +61,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
     private void processTweet(final Tweet tweet) {
         LOG.info("new Tweet received: {}", tweet.getId());
         if (null == tweet.getMediaEntries()
-                || (tweet.isRetweet() && !config.isIncludeRetweets())) {
+                || (tweet.isRetweet() && !config.includeRetweets())) {
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
@@ -85,23 +83,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
         }
     }
 
-    public static class Config {
-
-        private boolean includeRetweets = false;
-
-        public boolean isIncludeRetweets() {
-            return includeRetweets;
-        }
-
-        public void setIncludeRetweets(final boolean includeRetweets) {
-            this.includeRetweets = includeRetweets;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "includeRetweets", isIncludeRetweets()
-            )) + " extends " + super.toString();
-        }
+    public static record Config(
+            boolean includeRetweets) {
     }
 }

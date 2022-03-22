@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -136,7 +136,7 @@ public class ImageMosaicStep implements Step {
             for (int j = 0; j < 5; j++) {
                 int index = RANDOM.nextInt(distillingList.size());
                 ImageStore selectedImage = distillingList.remove(index);
-                ImageView imageView = new ImageView(selectedImage.getImage());
+                ImageView imageView = new ImageView(selectedImage.image());
                 imageView.setCache(true);
                 imageView.setCacheHint(CacheHint.SPEED);
                 imageView.setFitWidth(width);

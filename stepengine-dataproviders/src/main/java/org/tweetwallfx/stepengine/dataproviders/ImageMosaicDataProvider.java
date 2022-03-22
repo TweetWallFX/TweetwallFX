@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
@@ -40,8 +39,6 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -62,7 +59,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     public void processHistoryTweet(final Tweet tweet) {
         LOG.info("new Tweet received: {}", tweet.getId());
         if (null == tweet.getMediaEntries()
-                || (tweet.isRetweet() && !config.isIncludeRetweets())) {
+                || (tweet.isRetweet() && !config.includeRetweeets())) {
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
@@ -80,8 +77,8 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             if (images.addIfAbsent(new ImageStore(urlc, date.toInstant()))) {
                 LOG.info("Added ImageStore for mediaID: {}", mte.getId());
             }
-            if (config.getMaxCacheSize() < images.size()) {
-                images.sort(Comparator.comparing(ImageStore::getInstant));
+            if (config.maxCacheSize() < images.size()) {
+                images.sort(Comparator.comparing(ImageStore::instant));
                 images.remove(0);
             }
         });
@@ -100,83 +97,18 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         }
     }
 
-    public static class Config {
-
-        private boolean includeRetweets = false;
-        private int maxCacheSize = 40;
-
-        public boolean isIncludeRetweets() {
-            return includeRetweets;
-        }
-
-        public void setIncludeRetweets(final boolean includeRetweets) {
-            this.includeRetweets = includeRetweets;
-        }
-
-        public int getMaxCacheSize() {
-            return maxCacheSize;
-        }
-
-        public void setMaxCacheSize(final int maxCacheSize) {
-            this.maxCacheSize = maxCacheSize;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "includeRetweets", isIncludeRetweets(),
-                    "maxCacheSize", getMaxCacheSize()
-            )) + " extends " + super.toString();
-        }
+    public static record Config(
+            boolean includeRetweeets,
+            int maxCacheSize) {
     }
 
-    public static final class ImageStore {
-
-        private final Image image;
-        private final String digest;
-        private final Instant instant;
+    public static record ImageStore(
+            Image image,
+            String digest,
+            Instant instant) {
 
         public ImageStore(final URLContent urlc, final Instant instant) {
-            this.digest = urlc.getDigest();
-            this.image = new Image(urlc.getInputStream());
-            this.instant = instant;
-        }
-
-        public String getDigest() {
-            return digest;
-        }
-
-        public Instant getInstant() {
-            return instant;
-        }
-
-        public Image getImage() {
-            return image;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 5;
-            hash = 97 * hash + Objects.hashCode(this.digest);
-            return hash;
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (null == obj || getClass() != obj.getClass()) {
-                return false;
-            }
-
-            final ImageStore other = (ImageStore) obj;
-            boolean result = true;
-
-            result &= Objects.nonNull(this.digest);
-            result &= Objects.nonNull(other.digest);
-            result &= Objects.equals(this.digest, other.digest);
-
-            return result;
+            this(new Image(urlc.getInputStream()), urlc.getDigest(), instant);
         }
     }
 }
