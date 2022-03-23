@@ -19,14 +19,17 @@ on:
 
 jobs:
   build:
-    name: Build with JDK ${{ matrix.jdk }}
+    name: Build with ${{ matrix.distribution }} JDK ${{ matrix.jdk }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         jdk:
           - '17'
-          - '18-ea'
+          - '18'
+#          - '19-ea'
+        distribution:
+          - 'zulu'
 
     steps:
       # Check out sources
@@ -38,10 +41,10 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.4
 
       # Setup JDK environment for the next steps
-      - name: Setup JDK ${{ matrix.jdk }}
-        uses: actions/setup-java@v2
+      - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.jdk }}
           cache: gradle
 
