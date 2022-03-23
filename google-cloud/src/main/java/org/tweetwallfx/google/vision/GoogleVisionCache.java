@@ -148,7 +148,7 @@ public final class GoogleVisionCache {
             final AnnotateImageResponse response = itResponse.next();
 
             final String uri = request.getImage().getSource().getImageUri();
-            final ImageContentAnalysis ica = new ImageContentAnalysis(response);
+            final ImageContentAnalysis ica = ImageContentAnalysis.of(response);
             LOG.info("Image('{}') was evaluated as {}", uri, ica);
             result.put(uri, ica);
             cache.put(uri, ica);

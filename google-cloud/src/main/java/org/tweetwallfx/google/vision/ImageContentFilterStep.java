@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +40,7 @@ import org.tweetwallfx.google.GoogleLikelihood;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
-import static org.tweetwallfx.util.ToString.mapEntry;
-import static org.tweetwallfx.util.ToString.mapOf;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking that photos comply
@@ -74,12 +71,13 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
 
     private ImageContentFilterStep(final Config config) {
         this.config = config;
-        requiredSafeSearch = new ImageContentAnalysis.SafeSearch();
-        requiredSafeSearch.setAdult(config.getAdult().getAcceptableLikelyhood());
-        requiredSafeSearch.setMedical(config.getMedical().getAcceptableLikelyhood());
-        requiredSafeSearch.setRacy(config.getRacy().getAcceptableLikelyhood());
-        requiredSafeSearch.setSpoof(config.getSpoof().getAcceptableLikelyhood());
-        requiredSafeSearch.setViolence(config.getViolence().getAcceptableLikelyhood());
+        requiredSafeSearch = new ImageContentAnalysis.SafeSearch(
+                config.adult().acceptableLikelyhood(),
+                config.medical().acceptableLikelyhood(),
+                config.racy().acceptableLikelyhood(),
+                config.spoof().acceptableLikelyhood(),
+                config.violence().acceptableLikelyhood()
+        );
     }
 
     @Override
@@ -94,7 +92,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             } else {
                 t = t.getRetweetedTweet();
             }
-        } while (config.isCheckRetweeted() && null != t);
+        } while (config.checkRetweeted() && null != t);
 
         LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
                 tweet.getId());
@@ -132,16 +130,16 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
                 continue;
             }
 
-            if (null != entry.getValue().getAnalysisError()) {
+            if (null != entry.getValue().analysisError()) {
                 LOG.info("Tweet(id:{}): Tweet(id:{}) photo \"{}\" failed analysation \"{}\" -> REJECTED",
                         tweet.getId(),
                         t.getId(),
-                        entry.getValue().getAnalysisError(),
+                        entry.getValue().analysisError(),
                         entry.getKey());
                 return Result.REJECTED;
             }
 
-            final String analysisResult = diff(entry.getValue().getSafeSearch(), requiredSafeSearch);
+            final String analysisResult = diff(entry.getValue().safeSearch(), requiredSafeSearch);
 
             if (!analysisResult.isEmpty()) {
                 LOG.info("Tweet(id:{}): Tweet(id:{}) photo \"{}\" is not compliant to configuration {} -> REJECTED",
@@ -170,11 +168,11 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
 
     private String diff(final ImageContentAnalysis.SafeSearch actual, final ImageContentAnalysis.SafeSearch required) {
         return Map.<String, Function<ImageContentAnalysis.SafeSearch, GoogleLikelihood>>of(
-                "adult", ImageContentAnalysis.SafeSearch::getAdult,
-                "medical", ImageContentAnalysis.SafeSearch::getMedical,
-                "racy", ImageContentAnalysis.SafeSearch::getRacy,
-                "spoof", ImageContentAnalysis.SafeSearch::getSpoof,
-                "violence", ImageContentAnalysis.SafeSearch::getViolence)
+                "adult", ImageContentAnalysis.SafeSearch::adult,
+                "medical", ImageContentAnalysis.SafeSearch::medical,
+                "racy", ImageContentAnalysis.SafeSearch::racy,
+                "spoof", ImageContentAnalysis.SafeSearch::spoof,
+                "violence", ImageContentAnalysis.SafeSearch::violence)
                 .entrySet().stream()
                 .filter(e -> e.getValue().apply(actual).compareTo(e.getValue().apply(required)) > 0)
                 .map(e
@@ -210,114 +208,39 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
 
     /**
      * POJO used to configure {@link ImageContentFilterStep}.
+     *
+     * @param checkRetweeted a boolean flag controlling whether for a retweet
+     * the retweeted Tweet is also checked
      */
-    public static final class Config {
+    private static record Config(
+            Boolean checkRetweeted,
+            SafeTypeConfig adult,
+            SafeTypeConfig medical,
+            SafeTypeConfig racy,
+            SafeTypeConfig spoof,
+            SafeTypeConfig violence) {
 
-        private boolean checkRetweeted = false;
-        private SafeTypeConfig adult = new SafeTypeConfig();
-        private SafeTypeConfig medical = new SafeTypeConfig();
-        private SafeTypeConfig racy = new SafeTypeConfig();
-        private SafeTypeConfig spoof = new SafeTypeConfig(GoogleLikelihood.UNLIKELY);
-        private SafeTypeConfig violence = new SafeTypeConfig();
-
-        /**
-         * Returns a boolean flag controlling whether for a retweet the
-         * retweeted Tweet is also checked.
-         *
-         * @return boolean flag controlling whether for a retweet the retweeted
-         * Tweet is also checked
-         */
-        public boolean isCheckRetweeted() {
-            return checkRetweeted;
-        }
-
-        /**
-         * Sets the boolean flag controlling whether for a retweet the retweeted
-         * Tweet is also checked.
-         *
-         * @param checkRetweeted the new value
-         */
-        public void setCheckRetweeted(final boolean checkRetweeted) {
-            this.checkRetweeted = checkRetweeted;
-        }
-
-        public SafeTypeConfig getAdult() {
-            return adult;
-        }
-
-        public void setAdult(SafeTypeConfig adult) {
-            this.adult = adult;
-        }
-
-        public SafeTypeConfig getMedical() {
-            return medical;
-        }
-
-        public void setMedical(SafeTypeConfig medical) {
-            this.medical = medical;
-        }
-
-        public SafeTypeConfig getRacy() {
-            return racy;
-        }
-
-        public void setRacy(SafeTypeConfig racy) {
-            this.racy = racy;
-        }
-
-        public SafeTypeConfig getSpoof() {
-            return spoof;
-        }
-
-        public void setSpoof(SafeTypeConfig spoof) {
-            this.spoof = spoof;
-        }
-
-        public SafeTypeConfig getViolence() {
-            return violence;
-        }
-
-        public void setViolence(SafeTypeConfig violence) {
-            this.violence = violence;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, mapOf(
-                    mapEntry("checkRetweeted", isCheckRetweeted()),
-                    mapEntry("adult", getAdult()),
-                    mapEntry("medical", getMedical()),
-                    mapEntry("racy", getRacy()),
-                    mapEntry("spoof", getSpoof()),
-                    mapEntry("violence", getViolence())
-            )) + " extends " + super.toString();
+        public Config(
+                final Boolean checkRetweeted,
+                final SafeTypeConfig adult,
+                final SafeTypeConfig medical,
+                final SafeTypeConfig racy,
+                final SafeTypeConfig spoof,
+                final SafeTypeConfig violence) {
+            this.checkRetweeted = valueOrDefault(checkRetweeted, false);
+            this.adult = valueOrDefault(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.medical = valueOrDefault(medical, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.racy = valueOrDefault(racy, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.spoof = valueOrDefault(spoof, new SafeTypeConfig(GoogleLikelihood.UNLIKELY));
+            this.violence = valueOrDefault(violence, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
         }
     }
 
-    public static final class SafeTypeConfig {
-
-        private GoogleLikelihood acceptableLikelyhood = GoogleLikelihood.VERY_UNLIKELY;
-
-        public SafeTypeConfig() {
-        }
+    private static record SafeTypeConfig(
+            GoogleLikelihood acceptableLikelyhood) {
 
         public SafeTypeConfig(final GoogleLikelihood acceptableLikelyhood) {
-            this.acceptableLikelyhood = acceptableLikelyhood;
-        }
-
-        public GoogleLikelihood getAcceptableLikelyhood() {
-            return acceptableLikelyhood;
-        }
-
-        public void setAcceptableLikelyhood(final GoogleLikelihood acceptableLikelyhood) {
-            this.acceptableLikelyhood = acceptableLikelyhood;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "acceptableLikelyhood", getAcceptableLikelyhood()
-            )) + " extends " + super.toString();
+            this.acceptableLikelyhood = valueOrDefault(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
         }
     }
 }
