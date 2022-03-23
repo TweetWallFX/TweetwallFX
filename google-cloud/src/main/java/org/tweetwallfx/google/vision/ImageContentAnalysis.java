@@ -28,454 +28,133 @@ import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.LocationInfo;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import com.google.rpc.Status;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.tweetwallfx.google.GoogleLikelihood;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * An analysis result performed by Google Cloud API.
  */
-public final class ImageContentAnalysis implements Externalizable {
+public record ImageContentAnalysis(
+        AnalysisError analysisError,
+        SafeSearch safeSearch,
+        List<TextEntry> texts) implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private AnalysisError analysisError;
-    private SafeSearch safeSearch;
-    private List<TextEntry> texts = List.of();
-
-    public ImageContentAnalysis() {
-    }
-
-    public ImageContentAnalysis(final AnnotateImageResponse air) {
-        if (air.hasError()) {
-            setAnalysisError(new AnalysisError(air.getError()));
-        }
-
-        setSafeSearch(SafeSearch.of(air.getSafeSearchAnnotation()));
-        setTexts(air.getTextAnnotationsList().stream()
-                .map(TextEntry::new)
-                .collect(Collectors.toList()));
-//        air.getTextAnnotationsList(); // TODO: add it
-
-//        air.getCropHintsAnnotation(); // TODO: add it
-//        air.getFaceAnnotationsList(); // TODO: add it
-//        air.getFullTextAnnotation(); // TODO: add it
-//        air.getImagePropertiesAnnotation(); // TODO: add it
-//        air.getLabelAnnotationsList(); // TODO: add it
-//        air.getLandmarkAnnotationsList(); // TODO: add it
-//        air.getLocalizedObjectAnnotationsList(); // TODO: add it
-//        air.getLogoAnnotationsList(); // TODO: add it
-//        air.getWebDetection(); // TODO: add it
-    }
-
-    public AnalysisError getAnalysisError() {
-        return analysisError;
-    }
-
-    public void setAnalysisError(final AnalysisError analysisError) {
+    public ImageContentAnalysis(
+            final AnalysisError analysisError,
+            final SafeSearch safeSearch,
+            final List<TextEntry> texts) {
         this.analysisError = analysisError;
-    }
-
-    public SafeSearch getSafeSearch() {
-        return safeSearch;
-    }
-
-    public void setSafeSearch(final SafeSearch safeSearch) {
         this.safeSearch = safeSearch;
+        this.texts = nullable(texts);
     }
 
-    public List<TextEntry> getTexts() {
+    public static ImageContentAnalysis of(final AnnotateImageResponse air) {
+        return new ImageContentAnalysis(
+                AnalysisError.of(air.getError()),
+                SafeSearch.of(air.getSafeSearchAnnotation()),
+                air.getTextAnnotationsList().stream().map(TextEntry::of).toList()
+        );
+    }
+
+    @Override
+    public List<TextEntry> texts() {
         return List.copyOf(texts);
     }
 
-    public void setTexts(final List<TextEntry> texts) {
-        this.texts = List.copyOf(texts);
-    }
+    public static record AnalysisError(
+            String message,
+            List<String> details) implements Serializable {
 
-    @Override
-    public String toString() {
-        return createToString(this, map(
-                "analysisError", getAnalysisError(),
-                "safeSearch", getSafeSearch(),
-                "texts", getTexts()
-        )) + " extends " + super.toString();
-    }
-
-    @Override
-    public void writeExternal(final ObjectOutput out) throws IOException {
-        // analysisError
-        out.writeObject(getAnalysisError());
-
-        // safeSearch
-        out.writeObject(getSafeSearch());
-
-        // texts
-        out.writeInt(getTexts().size());
-        for (TextEntry text : getTexts()) {
-            out.writeObject(text);
-        }
-    }
-
-    @Override
-    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-        // analysisError
-        setAnalysisError((AnalysisError) in.readObject());
-
-        // safeSearch
-        setSafeSearch((SafeSearch) in.readObject());
-
-        // texts
-        final int size = in.readInt();
-        setTexts(new ArrayList<>(size));
-        for (int i = 0; i < size; i++) {
-            getTexts().add((TextEntry) in.readObject());
-        }
-    }
-
-    public static final class AnalysisError implements Externalizable {
-
-        private static final long serialVersionUID = 1L;
-        private String message;
-        private List<String> details = List.of();
-
-        public AnalysisError() {
-            // default constructor doing nothing
-        }
-
-        private AnalysisError(final Status error) {
-            setMessage(error.getMessage());
-            setDetails(error.getDetailsList().stream().map(Object::toString).collect(Collectors.toList()));
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(final String message) {
+        public AnalysisError(
+                final String message,
+                final List<String> details) {
             this.message = message;
+            this.details = nullable(details);
         }
 
-        public List<String> getDetails() {
+        private static AnalysisError of(final Status error) {
+            if (null == error) {
+                return null;
+            }
+
+            return new AnalysisError(
+                    error.getMessage(),
+                    error.getDetailsList().stream().map(Object::toString).toList());
+        }
+
+        @Override
+        public List<String> details() {
             return List.copyOf(details);
         }
-
-        public void setDetails(final List<String> details) {
-            this.details = List.copyOf(details);
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "message", getMessage(),
-                    "details", getDetails()
-            )) + " extends " + super.toString();
-        }
-
-        @Override
-        public void writeExternal(final ObjectOutput out) throws IOException {
-            // message
-            out.writeUTF(getMessage());
-
-            // details
-            out.writeInt(details.size());
-            for (String detail : details) {
-                out.writeUTF(detail);
-            }
-        }
-
-        @Override
-        public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-            // message
-            setMessage(in.readUTF());
-
-            // details
-            final int size = in.readInt();
-            final List<String> dets = new ArrayList<>(size);
-            for (int i = 0; i < size; i++) {
-                dets.add(in.readUTF());
-            }
-            setDetails(dets);
-        }
     }
 
-    public static final class SafeSearch implements Externalizable {
-
-        private static final long serialVersionUID = 1L;
-        private GoogleLikelihood adult;
-        private GoogleLikelihood medical;
-        private GoogleLikelihood racy;
-        private GoogleLikelihood spoof;
-        private GoogleLikelihood violence;
-
-        public SafeSearch() {
-            // default constructor doing nothing
-        }
+    public static record SafeSearch(
+            GoogleLikelihood adult,
+            GoogleLikelihood medical,
+            GoogleLikelihood racy,
+            GoogleLikelihood spoof,
+            GoogleLikelihood violence) implements Serializable {
 
         private static SafeSearch of(final SafeSearchAnnotation ssa) {
             if (null == ssa) {
                 return null;
             }
 
-            final SafeSearch safeSearch = new SafeSearch();
-            safeSearch.setAdult(GoogleLikelihood.valueOf(ssa.getAdult().name()));
-            safeSearch.setMedical(GoogleLikelihood.valueOf(ssa.getMedical().name()));
-            safeSearch.setRacy(GoogleLikelihood.valueOf(ssa.getRacy().name()));
-            safeSearch.setSpoof(GoogleLikelihood.valueOf(ssa.getSpoof().name()));
-            safeSearch.setViolence(GoogleLikelihood.valueOf(ssa.getViolence().name()));
-
-            return safeSearch;
-        }
-
-        public GoogleLikelihood getAdult() {
-            return adult;
-        }
-
-        public void setAdult(final GoogleLikelihood adult) {
-            this.adult = adult;
-        }
-
-        public GoogleLikelihood getMedical() {
-            return medical;
-        }
-
-        public void setMedical(final GoogleLikelihood medical) {
-            this.medical = medical;
-        }
-
-        public GoogleLikelihood getRacy() {
-            return racy;
-        }
-
-        public void setRacy(final GoogleLikelihood racy) {
-            this.racy = racy;
-        }
-
-        public GoogleLikelihood getSpoof() {
-            return spoof;
-        }
-
-        public void setSpoof(final GoogleLikelihood spoof) {
-            this.spoof = spoof;
-        }
-
-        public GoogleLikelihood getViolence() {
-            return violence;
-        }
-
-        public void setViolence(final GoogleLikelihood violence) {
-            this.violence = violence;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "adult", getAdult(),
-                    "medical", getMedical(),
-                    "racy", getRacy(),
-                    "spoof", getSpoof(),
-                    "violence", getViolence()
-            )) + " extends " + super.toString();
-        }
-
-        @Override
-        public void writeExternal(final ObjectOutput out) throws IOException {
-            // adult
-            out.writeUTF(getAdult().name());
-
-            // medical
-            out.writeUTF(getMedical().name());
-
-            // racy
-            out.writeUTF(getRacy().name());
-
-            // spoof
-            out.writeUTF(getSpoof().name());
-
-            // violence
-            out.writeUTF(getViolence().name());
-        }
-
-        @Override
-        public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-            // adult
-            setAdult(GoogleLikelihood.valueOf(in.readUTF()));
-
-            // medical
-            setMedical(GoogleLikelihood.valueOf(in.readUTF()));
-
-            // racy
-            setRacy(GoogleLikelihood.valueOf(in.readUTF()));
-
-            // spoof
-            setSpoof(GoogleLikelihood.valueOf(in.readUTF()));
-
-            // violence
-            setViolence(GoogleLikelihood.valueOf(in.readUTF()));
+            return new SafeSearch(
+                    GoogleLikelihood.valueOf(ssa.getAdult().name()),
+                    GoogleLikelihood.valueOf(ssa.getMedical().name()),
+                    GoogleLikelihood.valueOf(ssa.getRacy().name()),
+                    GoogleLikelihood.valueOf(ssa.getSpoof().name()),
+                    GoogleLikelihood.valueOf(ssa.getViolence().name())
+            );
         }
     }
 
-    public static final class TextEntry implements Externalizable {
+    public static record TextEntry(
+            String description,
+            float score,
+            List<LocationEntry> locations,
+            String locale) implements Serializable {
 
-        private static final long serialVersionUID = 1L;
-        private String description;
-        private float score;
-        private List<LocationEntry> locations = List.of();
-        private String locale;
-
-        public TextEntry() {
-            // default constructor doing nothing
-        }
-
-        public TextEntry(final EntityAnnotation ea) {
-            this.description = ea.getDescription();
-            this.locale = ea.getLocale();
-            this.locations = ea.getLocationsList().stream()
-                    .map(LocationEntry::new)
-                    .collect(Collectors.toList());
-            this.score = ea.getScore();
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(final String description) {
+        public TextEntry(
+                final String description,
+                final float score,
+                final List<LocationEntry> locations,
+                final String locale) {
             this.description = description;
-        }
-
-        public float getScore() {
-            return score;
-        }
-
-        public void setScore(final float score) {
             this.score = score;
-        }
-
-        public List<LocationEntry> getLocations() {
-            return List.copyOf(locations);
-        }
-
-        public void setLocations(final List<LocationEntry> locations) {
-            this.locations = List.copyOf(locations);
-        }
-
-        public String getLocale() {
-            return locale;
-        }
-
-        public void setLocale(final String locale) {
+            this.locations = nullable(locations);
             this.locale = locale;
         }
 
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "description", getDescription(),
-                    "score", getScore(),
-                    "locale", getLocale(),
-                    "locations", getLocations()
-            )) + " extends " + super.toString();
+        private static TextEntry of(final EntityAnnotation ea) {
+            return new TextEntry(
+                    ea.getDescription(),
+                    ea.getScore(),
+                    ea.getLocationsList().stream()
+                            .map(LocationEntry::of)
+                            .toList(),
+                    ea.getLocale()
+            );
         }
 
         @Override
-        public void writeExternal(final ObjectOutput out) throws IOException {
-            // description
-            out.writeUTF(getDescription());
-
-            // score
-            out.writeFloat(getScore());
-
-            // locale
-            out.writeUTF(getLocale());
-
-            // locations
-            out.writeInt(getLocations().size());
-            for (LocationEntry location : getLocations()) {
-                out.writeObject(location);
-            }
-        }
-
-        @Override
-        public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-            // description
-            setDescription(in.readUTF());
-
-            // score
-            setScore(in.readFloat());
-
-            // locale
-            setLocale(in.readUTF());
-
-            // locations
-            int size = in.readInt();
-            setLocations(new ArrayList<>(size));
-            for (int i = 0; i < size; i++) {
-                getLocations().add((LocationEntry) in.readObject());
-            }
+        public List<LocationEntry> locations() {
+            return List.copyOf(locations);
         }
     }
 
-    public static final class LocationEntry implements Externalizable {
+    public static record LocationEntry(
+            double latitude,
+            double longitude) implements Serializable {
 
-        private static final long serialVersionUID = 1L;
-        private double latitude;
-        private double longitude;
-
-        public LocationEntry() {
-            // default constructor doing nothing
-        }
-
-        public LocationEntry(final LocationInfo li) {
-            this.latitude = li.getLatLng().getLatitude();
-            this.longitude = li.getLatLng().getLongitude();
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(final double latitude) {
-            this.latitude = latitude;
-        }
-
-        public double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(final double longitude) {
-            this.longitude = longitude;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "latitude", getLatitude(),
-                    "longitude", getLongitude()
-            )) + " extends " + super.toString();
-        }
-
-        @Override
-        public void writeExternal(final ObjectOutput out) throws IOException {
-            // latitude
-            out.writeDouble(getLatitude());
-
-            // longitude
-            out.writeDouble(getLongitude());
-        }
-
-        @Override
-        public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-            // latitude
-            setLatitude(in.readDouble());
-
-            // longitude
-            setLongitude(in.readDouble());
+        private static LocationEntry of(final LocationInfo li) {
+            return new LocationEntry(
+                    li.getLatLng().getLatitude(),
+                    li.getLatLng().getLongitude()
+            );
         }
     }
 }

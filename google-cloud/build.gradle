@@ -32,4 +32,4 @@ dependencies {
     implementation project(':tweetwallfx-tweet-api')
 }
 
-tasks.named('spotbugsMain') { ignoreFailures = true }
+//tasks.named('spotbugsMain') { ignoreFailures = true }
