@@ -260,18 +260,6 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
-    directory: "/tweet-stepengine"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
     directory: "/util"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
