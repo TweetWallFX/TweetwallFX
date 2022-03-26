@@ -146,7 +146,7 @@ public abstract class URLContentCacheBase {
         URLContent urlc = urlContentCache.get(urlString);
 
         if (null == urlc) {
-            urlc = new URLContent(urlString);
+            urlc = URLContent.of(urlString);
             putCachedContent(urlString, urlc);
         }
 
@@ -162,7 +162,7 @@ public abstract class URLContentCacheBase {
      */
     public final void putCachedContent(final String urlString, final InputStream content) {
         try {
-            putCachedContent(urlString, new URLContent(content));
+            putCachedContent(urlString, URLContent.of(content));
         } catch (IOException ex) {
             LOG.error("{}: Failed to read content from InputStream for {}", cacheName, urlString, ex);
         }
@@ -201,7 +201,7 @@ public abstract class URLContentCacheBase {
 
             @Override
             protected URLContent call() throws Exception {
-                return new URLContent(urlString);
+                return URLContent.of(urlString);
             }
         };
 
