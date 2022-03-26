@@ -36,8 +36,7 @@ import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Schedule Data
@@ -95,58 +94,28 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
 
     /**
      * POJO used to configure {@link ScheduleDataProvider}.
+     *
+     * @param initialDelay The type of scheduling to perform. Defaults to
+     * {@link ScheduleType#FIXED_RATE}.
+     *
+     * @param initialDelay Delay until the first execution in seconds. Defaults
+     * to {@code 0L}.
+     *
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     * executions in seconds. Defaults to {@code 300L}.
      */
-    public static class Config implements ScheduledConfig {
+    private static record Config(
+            ScheduleType scheduleType,
+            Long initialDelay,
+            Long scheduleDuration) implements ScheduledConfig {
 
-        /**
-         * The type of scheduling to perform. Defaults to
-         * {@link ScheduleType#FIXED_RATE}.
-         */
-        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
-        /**
-         * Delay until the first execution in seconds. Defaults to {@code 0L}.
-         */
-        private long initialDelay = 0L;
-        /**
-         * Fixed rate of / delay between consecutive executions in seconds.
-         * Defaults to {@code 300L}.
-         */
-        private long scheduleDuration = 5 * 60L;
-
-        @Override
-        public ScheduleType getScheduleType() {
-            return scheduleType;
-        }
-
-        public void setScheduleType(final ScheduleType scheduleType) {
-            this.scheduleType = scheduleType;
-        }
-
-        @Override
-        public long getInitialDelay() {
-            return initialDelay;
-        }
-
-        public void setInitialDelay(final long initialDelay) {
-            this.initialDelay = initialDelay;
-        }
-
-        @Override
-        public long getScheduleDuration() {
-            return scheduleDuration;
-        }
-
-        public void setScheduleDuration(final long scheduleDuration) {
-            this.scheduleDuration = scheduleDuration;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "scheduleType", getScheduleType(),
-                    "initialDelay", getInitialDelay(),
-                    "scheduleDuration", getScheduleDuration()
-            )) + " extends " + super.toString();
+        public Config(
+                final ScheduleType scheduleType,
+                final Long initialDelay,
+                final Long scheduleDuration) {
+            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = valueOrDefault(initialDelay, 0L);
+            this.scheduleDuration = valueOrDefault(scheduleDuration, 5 * 60L);
         }
     }
 }

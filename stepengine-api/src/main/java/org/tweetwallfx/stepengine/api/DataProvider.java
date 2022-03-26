@@ -108,7 +108,7 @@ public interface DataProvider {
          *
          * @return the type of scheduling
          */
-        ScheduleType getScheduleType();
+        ScheduleType scheduleType();
 
         /**
          * Returns the number of seconds before the first execution of the
@@ -116,7 +116,7 @@ public interface DataProvider {
          *
          * @return the number of seconds before the first execution
          */
-        long getInitialDelay();
+        Long initialDelay();
 
         /**
          * Returns the number of seconds for either delay/fixed rate between
@@ -125,7 +125,7 @@ public interface DataProvider {
          * @return the number of seconds for either delay/fixed rate between
          * executions
          */
-        long getScheduleDuration();
+        Long scheduleDuration();
     }
 
     /**

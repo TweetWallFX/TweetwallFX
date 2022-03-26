@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.stepengine.api;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
@@ -83,6 +84,7 @@ public final class StepEngine {
         stepIterator.applyWith(step -> step.initStep(context));
     }
 
+    @SuppressFBWarnings
     public MachineContext getContext() {
         return context;
     }
@@ -159,10 +161,10 @@ public final class StepEngine {
         final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
 
         try {
-            if (DataProvider.ScheduleType.FIXED_DELAY == sc.getScheduleType()) {
-                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            if (DataProvider.ScheduleType.FIXED_DELAY == sc.scheduleType()) {
+                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             } else {
-                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
             LOGGER.fatal("failed to initializing Scheduled: {}", scheduled, re);

@@ -157,7 +157,7 @@ public class ShowTopRated implements Step {
 
     @Override
     public Duration preferredStepDuration(MachineContext context) {
-        return java.time.Duration.ofMillis(config.stepDuration);
+        return java.time.Duration.ofMillis(config.getStepDuration());
     }
 
     /**

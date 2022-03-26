@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,7 @@ import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -46,19 +45,19 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
     public Image getImage(final User user) {
         return new Image(
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getProfileImageUrl()).getInputStream(),
-                config.getProfileWidth(),
-                config.getProfileHeight(),
-                config.isPreserveRation(),
-                config.isSmooth());
+                config.profileWidth(),
+                config.profileHeight(),
+                config.preserveRation(),
+                config.smooth());
     }
 
     public Image getImageBig(final User user) {
         return new Image(
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl()).getInputStream(),
-                config.getProfileWidth(),
-                config.getProfileHeight(),
-                config.isPreserveRation(),
-                config.isSmooth());
+                config.profileWidth(),
+                config.profileHeight(),
+                config.preserveRation(),
+                config.smooth());
     }
 
     @Override
@@ -108,53 +107,21 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         }
     }
 
-    public static class Config {
+    private static record Config(
+            Integer profileWidth,
+            Integer profileHeight,
+            Boolean preserveRation,
+            Boolean smooth) {
 
-        private int profileWidth = 64;
-        private int profileHeight = 64;
-        private boolean preserveRation = true;
-        private boolean smooth = false;
-
-        public int getProfileWidth() {
-            return profileWidth;
-        }
-
-        public void setProfileWidth(final int profileWidth) {
-            this.profileWidth = profileWidth;
-        }
-
-        public int getProfileHeight() {
-            return profileHeight;
-        }
-
-        public void setProfileHeight(final int profileHeight) {
-            this.profileHeight = profileHeight;
-        }
-
-        public boolean isPreserveRation() {
-            return preserveRation;
-        }
-
-        public void setPreserveRation(final boolean preserveRation) {
-            this.preserveRation = preserveRation;
-        }
-
-        public boolean isSmooth() {
-            return smooth;
-        }
-
-        public void setSmooth(final boolean smooth) {
-            this.smooth = smooth;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "profileWidth", getProfileWidth(),
-                    "profileHeight", getProfileHeight(),
-                    "preserveRation", isPreserveRation(),
-                    "smooth", isSmooth()
-            )) + " extends " + super.toString();
+        public Config(
+                final Integer profileWidth,
+                final Integer profileHeight,
+                final Boolean preserveRation,
+                final Boolean smooth) {
+            this.profileWidth = valueOrDefault(profileWidth, 64);
+            this.profileHeight = valueOrDefault(profileHeight, 64);
+            this.preserveRation = valueOrDefault(preserveRation, true);
+            this.smooth = valueOrDefault(smooth, false);
         }
     }
 }

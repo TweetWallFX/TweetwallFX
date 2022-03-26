@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,8 +34,8 @@ import org.tweetwallfx.devoxx.api.cfp.client.SpeakerReference;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.ProfileImageCache;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * Utility to provide a simple api to get the cached speaker image.
@@ -70,7 +69,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
 
         if (null == urlc) {
             // avatar url is not in cache (url content was not loadable)
-            final String urlReplacement = config.getUrlReplacements().get(avatarURL);
+            final String urlReplacement = config.urlReplacements().get(avatarURL);
 
             return null == urlReplacement
                     // use stand-in for non-loadable
@@ -83,7 +82,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     }
 
     private Image getDefaultClasspathImage() {
-        return new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.getNoImageResource()));
+        return new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.noImageResource()));
     }
 
     @Override
@@ -100,7 +99,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
                 .filter(Objects::nonNull)
                 .forEach(urlString -> ProfileImageCache.INSTANCE.getCachedOrLoad(urlString, this::handleURLContent));
 
-        config.getUrlReplacements()
+        config.urlReplacements()
                 .forEach((k, v) -> ProfileImageCache.INSTANCE.putCachedContent(v, this::handleURLContent));
     }
 
@@ -125,83 +124,47 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
         }
     }
 
-    public static class Config implements ScheduledConfig {
+    /**
+     * POJO used to configure {@link TopTalksTodayDataProvider}.
+     *
+     * @param noImageResource Classpath entry for usage in cases when no speaker
+     * image is available
+     *
+     * @param urlReplacements Mapping of unloadable profile image URLs to
+     * loadable ones (required due to e.g. changed profile pics)
+     *
+     * @param initialDelay The type of scheduling to perform. Defaults to
+     * {@link ScheduleType#FIXED_RATE}.
+     *
+     * @param initialDelay Delay until the first execution in seconds. Defaults
+     * to {@code 0L}.
+     *
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     * executions in seconds. Defaults to {@code 1800L}.
+     */
+    private static record Config(
+            String noImageResource,
+            Map<String, String> urlReplacements,
+            ScheduleType scheduleType,
+            Long initialDelay,
+            Long scheduleDuration) implements ScheduledConfig {
 
-        /**
-         * Classpath entry for usage in cases when no speaker image is
-         * available.
-         */
-        private String noImageResource = "icons/anonymous.jpg";
-        private Map<String, String> urlReplacements = Collections.emptyMap();
-        /**
-         * The type of scheduling to perform. Defaults to
-         * {@link ScheduleType#FIXED_RATE}.
-         */
-        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
-        /**
-         * Delay until the first execution in seconds. Defaults to {@code 0L}.
-         */
-        private long initialDelay = 0L;
-        /**
-         * Fixed rate of / delay between consecutive executions in seconds.
-         * Defaults to {@code 1800L}.
-         */
-        private long scheduleDuration = 30 * 60L;
-
-        public String getNoImageResource() {
-            return noImageResource;
-        }
-
-        public void setNoImageResource(final String noImageResource) {
-            this.noImageResource = noImageResource;
-        }
-
-        public Map<String, String> getUrlReplacements() {
-            return urlReplacements;
-        }
-
-        public void setUrlReplacements(final Map<String, String> urlReplacements) {
-            this.urlReplacements = null == urlReplacements || urlReplacements.isEmpty()
-                    ? Collections.emptyMap()
-                    : Collections.unmodifiableMap(urlReplacements);
+        public Config(
+                final String noImageResource,
+                final Map<String, String> urlReplacements,
+                final ScheduleType scheduleType,
+                final Long initialDelay,
+                final Long scheduleDuration) {
+            this.noImageResource = valueOrDefault(noImageResource, "icons/anonymous.jpg");
+            this.urlReplacements = nullable(urlReplacements);
+            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = valueOrDefault(initialDelay, 0L);
+            this.scheduleDuration = valueOrDefault(scheduleDuration, 30 * 60L);
         }
 
         @Override
-        public ScheduleType getScheduleType() {
-            return scheduleType;
-        }
-
-        public void setScheduleType(final ScheduleType scheduleType) {
-            this.scheduleType = scheduleType;
-        }
-
-        @Override
-        public long getInitialDelay() {
-            return initialDelay;
-        }
-
-        public void setInitialDelay(final long initialDelay) {
-            this.initialDelay = initialDelay;
-        }
-
-        @Override
-        public long getScheduleDuration() {
-            return scheduleDuration;
-        }
-
-        public void setScheduleDuration(final long scheduleDuration) {
-            this.scheduleDuration = scheduleDuration;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "scheduleType", getScheduleType(),
-                    "initialDelay", getInitialDelay(),
-                    "scheduleDuration", getScheduleDuration(),
-                    "noImageResource", getNoImageResource(),
-                    "urlReplacements", getUrlReplacements()
-            )) + " extends " + super.toString();
+        public Map<String, String> urlReplacements() {
+            return nullable(urlReplacements);
         }
     }
 }
