@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -75,7 +74,7 @@ public class TweetToCloudStep implements Step {
         }
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
+        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).toList();
         limitedWords.sort(Comparator.reverseOrder());
 
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();

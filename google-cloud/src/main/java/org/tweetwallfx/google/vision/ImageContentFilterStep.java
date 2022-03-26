@@ -102,7 +102,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
     private Result checkImages(final Tweet tweet, final Tweet t) {
         final List<MediaTweetEntry> mtes = Stream.of(t.getMediaEntries())
                 .filter(MediaTweetEntryType.photo::isType)
-                .collect(Collectors.toList());
+                .toList();
 
         if (mtes.isEmpty()) {
             LOG.debug("Tweet(id:{}): Tweet(id:{}) has no photos -> NOTHING_DEFINITE",
@@ -111,7 +111,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             return Result.NOTHING_DEFINITE;
         }
 
-        final List<String> imageUrlStrings = mtes.stream().map(this::getImageUrlString).collect(Collectors.toList());
+        final List<String> imageUrlStrings = mtes.stream().map(this::getImageUrlString).toList();
         final Map<String, ImageContentAnalysis> visionAnalysis;
 
         try {

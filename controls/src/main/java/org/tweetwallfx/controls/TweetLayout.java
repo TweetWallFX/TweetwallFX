@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package org.tweetwallfx.controls;
 
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
@@ -81,7 +80,9 @@ public class TweetLayout {
                     flow.getChildren().add(textWord);
                 });
         flow.requestLayout();
-        return flow.getChildren().stream().map(node -> new TweetWord(node.getBoundsInParent(), ((Text) node).getText())).collect(Collectors.toList());
+        return flow.getChildren().stream()
+                .map(node -> new TweetWord(node.getBoundsInParent(), ((Text) node).getText()))
+                .toList();
     }
 
     public static TweetLayout createTweetLayout(Configuration configuration) {

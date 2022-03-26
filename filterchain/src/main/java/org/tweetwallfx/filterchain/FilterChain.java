@@ -120,7 +120,7 @@ public class FilterChain<T> {
                             final FilterStep<T> fs2 = (FilterStep<T>) fs;
                             return fs2;
                         })
-                        .collect(Collectors.toList()),
+                        .toList(),
                 filterChainDefinition.defaultResult()
         );
     }

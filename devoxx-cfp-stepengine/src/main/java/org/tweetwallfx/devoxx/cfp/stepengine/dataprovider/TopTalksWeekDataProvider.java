@@ -26,7 +26,6 @@ package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -65,7 +64,7 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
                         .reversed())
                 .limit(config.nrVotes())
                 .map(VotedTalk::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static String averageFormattedVote(final VotingResultTalk ratedTalk) {

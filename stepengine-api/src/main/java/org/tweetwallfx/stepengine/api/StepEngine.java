@@ -114,7 +114,7 @@ public final class StepEngine {
                         dpf.getDataProviderClass().getName(),
                         new StepEngineSettings.DataProviderSetting())))
                 .peek(dataProvider -> LOG.info("created " + dataProvider))
-                .collect(Collectors.toList());
+                .toList();
 
         requiredDataProviders.stream()
                 .filter(rdpc -> providers.stream().noneMatch(rdpc::isInstance))
@@ -126,11 +126,11 @@ public final class StepEngine {
         final List<DataProvider.NewTweetAware> newTweetAwareProviders = providers.stream()
                 .filter(DataProvider.NewTweetAware.class::isInstance)
                 .map(DataProvider.NewTweetAware.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         final List<DataProvider.HistoryAware> historyAwareProviders = providers.stream()
                 .filter(DataProvider.HistoryAware.class::isInstance)
                 .map(DataProvider.HistoryAware.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         providers.stream()
                 .filter(DataProvider.Scheduled.class::isInstance)
                 .map(DataProvider.Scheduled.class::cast)

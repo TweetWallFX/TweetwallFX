@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
@@ -70,7 +69,9 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
     public List<Word> getWords() {
         return tree.entrySet().stream()
                 .sorted(COMPARATOR.reversed())
-                .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+                .limit(NUM_MAX_WORDS)
+                .map(entry -> new Word(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     private void updateTree(final Tweet tweet) {

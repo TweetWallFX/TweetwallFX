@@ -62,7 +62,7 @@ public class SessionData {
 
     private SessionData(final ScheduleSlot slot) {
         this.room = slot.getRoomName();
-        this.speakers = slot.getTalk().getSpeakers().stream().map(SpeakerReference::getName).collect(Collectors.toList());
+        this.speakers = slot.getTalk().getSpeakers().stream().map(SpeakerReference::getName).toList();
         this.speakerObjects = Collections.unmodifiableList(new ArrayList<>(slot.getTalk().getSpeakers()));
         this.title = slot.getTalk().getTitle();
         this.beginTime = slot.getFromTime();
@@ -90,10 +90,10 @@ public class SessionData {
                 .map(optional -> optional.orElse(null))
                 .map(SessionData::new)
                 .sorted(SessionData.COMP)
-                .collect(Collectors.toList());
+                .toList();
         final Optional<String> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
         if (min.isPresent()) {
-            sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).collect(Collectors.toList());
+            sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).toList();
         }
         LOG.info("Possible Next Sessions ({}):\n {}", sessionData.size(), sessionData);
         return sessionData;

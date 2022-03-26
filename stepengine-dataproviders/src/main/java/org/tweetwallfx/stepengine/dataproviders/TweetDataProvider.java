@@ -28,7 +28,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.config.Configuration;
@@ -70,7 +69,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         return Tweeter.getInstance().search(new TweetQuery()
                 .query(searchText)
                 .count(HISTORY_SIZE))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Tweet nextTweet() {

@@ -25,7 +25,6 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -169,7 +168,7 @@ public class TwitterTweeterTest {
                 .map(User::getScreenName)
                 .limit(1000)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("users.size: " + users.size());
         users.forEach(System.out::println);
@@ -188,7 +187,7 @@ public class TwitterTweeterTest {
                 .map(User::getScreenName)
                 .limit(1000)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("users.size: " + users.size());
         users.forEach(System.out::println);

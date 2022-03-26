@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 package org.tweetwallfx.devoxx.api.cfp.client;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static org.tweetwallfx.devoxx.api.cfp.client.impl.RestCallHelper.readOptionalFrom;
 import static org.tweetwallfx.util.ToString.createToString;
@@ -60,7 +59,7 @@ public class Events extends ObjectWithLinksBase {
     public String toString() {
         return createToString(this, map(
                 "content", getContent(),
-                "events", getEvents().collect(Collectors.toList())
+                "events", getEvents().toList()
         )) + " extends " + super.toString();
     }
 }
