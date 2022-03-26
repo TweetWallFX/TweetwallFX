@@ -26,8 +26,7 @@ package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 import javafx.scene.image.Image;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class TrackImageDataProvider implements DataProvider {
 
@@ -40,10 +39,10 @@ public class TrackImageDataProvider implements DataProvider {
     public Image getImage(final String url) {
         return new Image(
                 TrackImageCache.INSTANCE.getCachedOrLoad(url).getInputStream(),
-                config.getImageWidth(),
-                config.getImageHeight(),
-                config.isPreserveRation(),
-                config.isSmooth());
+                config.profileWidth(),
+                config.profileHeight(),
+                config.preserveRation(),
+                config.smooth());
     }
 
     public static class FactoryImpl implements DataProvider.Factory {
@@ -59,52 +58,21 @@ public class TrackImageDataProvider implements DataProvider {
         }
     }
 
-   public static class Config {
+    private static record Config(
+            Integer profileWidth,
+            Integer profileHeight,
+            Boolean preserveRation,
+            Boolean smooth) {
 
-        private int imageWidth = 32;
-        private int imageHeight = 32;
-        private boolean preserveRation = true;
-        private boolean smooth = true;
-
-        public int getImageWidth() {
-            return imageWidth;
-        }
-
-        public void setProfileWidth(final int profileWidth) {
-            this.imageWidth = profileWidth;
-        }
-
-        public int getImageHeight() {
-            return imageHeight;
-        }
-
-        public void setProfileHeight(final int profileHeight) {
-            this.imageHeight = profileHeight;
-        }
-
-        public boolean isPreserveRation() {
-            return preserveRation;
-        }
-
-        public void setPreserveRation(final boolean preserveRation) {
-            this.preserveRation = preserveRation;
-        }
-
-        public boolean isSmooth() {
-            return smooth;
-        }
-
-        public void setSmooth(final boolean smooth) {
-            this.smooth = smooth;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map("profileWidth", getImageWidth(),
-                    "profileHeight", getImageHeight(),
-                    "preserveRation", isPreserveRation(),
-                    "smooth", isSmooth()
-            )) + " extends " + super.toString();
+        public Config(
+                final Integer profileWidth,
+                final Integer profileHeight,
+                final Boolean preserveRation,
+                final Boolean smooth) {
+            this.profileWidth = valueOrDefault(profileWidth, 32);
+            this.profileHeight = valueOrDefault(profileHeight, 32);
+            this.preserveRation = valueOrDefault(preserveRation, true);
+            this.smooth = valueOrDefault(smooth, true);
         }
     }
 }

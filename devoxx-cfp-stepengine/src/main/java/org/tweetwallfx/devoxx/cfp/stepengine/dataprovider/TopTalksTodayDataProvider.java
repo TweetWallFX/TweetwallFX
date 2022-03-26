@@ -35,8 +35,8 @@ import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.VotingResultTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.nullable;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Top Talks Today
@@ -70,7 +70,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
                         .comparing(TopTalksTodayDataProvider::averageFormattedVote)
                         .thenComparing(VotingResultTalk::getRatingTotalVotes)
                         .reversed())
-                .limit(config.getNrVotes())
+                .limit(config.nrVotes())
                 .map(VotedTalk::new)
                 .collect(Collectors.toList());
     }
@@ -80,7 +80,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
     }
 
     public List<VotedTalk> getFilteredSessionData() {
-        return votedTalks;
+        return nullable(votedTalks);
     }
 
     /**
@@ -102,75 +102,37 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     /**
      * POJO used to configure {@link TopTalksTodayDataProvider}.
+     *
+     * @param nrVotes The number of votes to produce at most. Defaults to
+     * {@code 5}.
+     *
+     * @param initialDelay The type of scheduling to perform. Defaults to
+     * {@link ScheduleType#FIXED_RATE}.
+     *
+     * @param initialDelay Delay until the first execution in seconds. Defaults
+     * to {@code 0L}.
+     *
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     * executions in seconds. Defaults to {@code 300L}.
      */
-    public static class Config implements ScheduledConfig {
+    private static record Config(
+            Integer nrVotes,
+            ScheduleType scheduleType,
+            Long initialDelay,
+            Long scheduleDuration) implements ScheduledConfig {
 
-        /**
-         * The number of votes to produce at most. Defaults to {@code 5}.
-         */
-        private int nrVotes = 5;
-        /**
-         * The type of scheduling to perform. Defaults to
-         * {@link ScheduleType#FIXED_RATE}.
-         */
-        private ScheduleType scheduleType = ScheduleType.FIXED_RATE;
-        /**
-         * Delay until the first execution in seconds. Defaults to {@code 0L}.
-         */
-        private long initialDelay = 0L;
-        /**
-         * Fixed rate of / delay between consecutive executions in seconds.
-         * Defaults to {@code 300L}.
-         */
-        private long scheduleDuration = 300L;
-
-        @Override
-        public ScheduleType getScheduleType() {
-            return scheduleType;
-        }
-
-        public void setScheduleType(final ScheduleType scheduleType) {
-            this.scheduleType = scheduleType;
-        }
-
-        @Override
-        public long getInitialDelay() {
-            return initialDelay;
-        }
-
-        public void setInitialDelay(final long initialDelay) {
-            this.initialDelay = initialDelay;
-        }
-
-        @Override
-        public long getScheduleDuration() {
-            return scheduleDuration;
-        }
-
-        public void setScheduleDuration(final long scheduleDuration) {
-            this.scheduleDuration = scheduleDuration;
-        }
-
-        public int getNrVotes() {
-            return nrVotes;
-        }
-
-        public void setNrVotes(final int nrVotes) {
+        public Config(
+                final Integer nrVotes,
+                final ScheduleType scheduleType,
+                final Long initialDelay,
+                final Long scheduleDuration) {
             if (nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
             }
-
-            this.nrVotes = nrVotes;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "scheduleType", getScheduleType(),
-                    "initialDelay", getInitialDelay(),
-                    "scheduleDuration", getScheduleDuration(),
-                    "nrVotes", getNrVotes()
-            )) + " extends " + super.toString();
+            this.nrVotes = valueOrDefault(nrVotes, 5);
+            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = valueOrDefault(initialDelay, 0L);
+            this.scheduleDuration = valueOrDefault(scheduleDuration, 300L);
         }
     }
 }

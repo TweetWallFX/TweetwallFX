@@ -27,5 +27,14 @@ package org.tweetwallfx.stepengine.api.config;
  * Abstract step configuration providing stepDuration as config option.
  */
 public class AbstractConfig {
-    public long stepDuration = 1;
+
+    private long stepDuration = 1;
+
+    public long getStepDuration() {
+        return stepDuration;
+    }
+
+    public void setStepDuration(long stepDuration) {
+        this.stepDuration = stepDuration;
+    }
 }

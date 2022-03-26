@@ -137,7 +137,7 @@ public class ShowSchedule implements Step {
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
-        return java.time.Duration.ofMillis(config.stepDuration);
+        return java.time.Duration.ofMillis(config.getStepDuration());
     }
 
     private Pane createSessionNode(final MachineContext context, final SessionData sessionData) {

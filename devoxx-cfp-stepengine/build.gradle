@@ -31,5 +31,3 @@ dependencies {
     implementation project(':tweetwallfx-stepengine-dataproviders')
     implementation project(':tweetwallfx-transitions')
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }

@@ -43,6 +43,7 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * Provides an always current list of tweets based on the configured query. The
@@ -97,7 +98,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private void addTweet(final Tweet tweet, boolean prepend) {
-        if (tweet.isRetweet() && config.isHideRetweets()) {
+        if (tweet.isRetweet() && config.hideRetweets()) {
             LOGGER.info("Tweet " + tweet.getId() + " is a retweet and retweets are currently not allowed");
             return;
         }
@@ -107,7 +108,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             final Tweet originalTweet = tweet.getOriginTweet();
 
             if (tweets.stream().noneMatch(twt -> originalTweet.getId() == twt.getId()
-                    && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName())) ) {
+                    && originalTweet.getUser().getScreenName().equals(twt.getUser().getScreenName()))) {
                 if (prepend) {
                     tweets.addFirst(originalTweet);
                     updateImage(originalTweet);
@@ -116,7 +117,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 }
             }
 
-            if (tweets.size() > config.getMaxTweets()) {
+            if (tweets.size() > config.maxTweets()) {
                 tweets.removeLast();
             }
         } finally {
@@ -143,7 +144,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         return Tweeter.getInstance()
                 .search(new TweetQuery()
                         .query(searchText)
-                        .count(config.getHistorySize()))
+                        .count(config.historySize()))
                 .collect(Collectors.toList());
     }
 
@@ -162,58 +163,35 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     /**
      * POJO used to configure {@link TweetStreamDataProvider}.
+     *
+     * @param historySize The number of the tweets to request from query in
+     * order to fill up {@link TweetStreamDataProvider} upon initialization.
+     * Defaults to {@code 50}.
+     *
+     * @param maxTweets The number of tweet to produce upon request via
+     * {@link TweetStreamDataProvider#getTweets()}. Defaults to {@code 4}.
+     *
+     * @param hideRetweets Is accepting retweets into the datastore of the
+     * DataProvider acceptable? Defaults to {@code false}.
      */
-    public static final class Config {
+    private static record Config(
+            Integer historySize,
+            Integer maxTweets,
+            Boolean hideRetweets) {
 
-        /**
-         * The number of the tweets to request from query in order to fill up
-         * {@link TweetStreamDataProvider} upon initialization. Defaults to
-         * {@code 50}.
-         */
-        private int historySize = 50;
-
-        /**
-         * The number of tweet to produce upon request via
-         * {@link TweetStreamDataProvider#getTweets()}. Defaults to {@code 4}.
-         */
-        private int maxTweets = 4;
-
-        /**
-         * Is accepting retweets into the datastore of the DataProvider
-         * acceptable? Defaults to {@code false}.
-         */
-        private boolean hideRetweets = false;
-
-        public int getHistorySize() {
-            return historySize;
-        }
-
-        public void setHistorySize(int historySize) {
+        public Config(
+                final Integer historySize,
+                final Integer maxTweets,
+                final Boolean hideRetweets) {
             if (historySize < 0) {
                 throw new IllegalArgumentException("property 'historySize' must not be a negative number");
             }
-
-            this.historySize = historySize;
-        }
-
-        public int getMaxTweets() {
-            return maxTweets;
-        }
-
-        public void setMaxTweets(final int maxTweets) {
+            this.historySize = valueOrDefault(historySize, 50);
             if (maxTweets < 0) {
                 throw new IllegalArgumentException("property 'maxTweets' must not be a negative number");
             }
-
-            this.maxTweets = maxTweets;
-        }
-
-        public boolean isHideRetweets() {
-            return hideRetweets;
-        }
-
-        public void setHideRetweets(boolean hideRetweets) {
-            this.hideRetweets = hideRetweets;
+            this.maxTweets = valueOrDefault(maxTweets, 4);
+            this.hideRetweets = valueOrDefault(hideRetweets, false);
         }
     }
 }
