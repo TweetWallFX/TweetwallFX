@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.cache;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Duration;
 import java.time.temporal.TemporalUnit;
 import java.util.List;
@@ -101,7 +102,7 @@ public record CacheSettings(
     public static record CacheExpiry(
             CacheExpiryType type,
             Long amount,
-            TemporalUnit unit) {
+            @SuppressFBWarnings TemporalUnit unit) {
 
         public CacheExpiry(
                 final CacheExpiryType type,

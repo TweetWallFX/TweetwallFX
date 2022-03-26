@@ -25,11 +25,9 @@ package org.tweetwallfx.cache;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -39,16 +37,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 
-public final class URLContent implements Externalizable {
+public record URLContent(
+        byte[] data,
+        String digest) implements Serializable {
 
-    private static final Logger LOG = LogManager.getLogger(URLContent.class);
-    private static final long serialVersionUID = 1L;
-    private static final byte[] NO_DATA = new byte[0];
-    private byte[] data;
-    private String digest;
+    private static final Logger LOG = LogManager.getLogger();
 
-    public URLContent(final InputStream in) throws IOException {
+    public URLContent(
+            final byte[] data,
+            final String digest) {
+        this.data = Arrays.copyOf(data, data.length);
+        this.digest = digest;
+    }
+
+    public static URLContent of(final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
         InputStream in2 = in;
         try {
@@ -56,19 +60,17 @@ public final class URLContent implements Externalizable {
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
-        data = readFully(in2);
-        digest = in2 instanceof DigestInputStream dis
+        final byte[] d = readFully(in2);
+        final String digest = in2 instanceof DigestInputStream dis
                 ? DatatypeConverter.printHexBinary(dis.getMessageDigest().digest())
                 : null;
         LOG.info("MD5: {}", digest);
+
+        return new URLContent(d, digest);
     }
 
-    public URLContent(final String urlString) throws IOException {
-        this(new URL(urlString).openStream());
-    }
-
-    public URLContent() {
-        data = NO_DATA;
+    public static URLContent of(final String urlString) throws IOException {
+        return of(new URL(urlString).openStream());
     }
 
     private static byte[] readFully(final InputStream in) throws IOException {
@@ -83,30 +85,12 @@ public final class URLContent implements Externalizable {
         return bout.toByteArray();
     }
 
+    @Override
+    public byte[] data() {
+        return Arrays.copyOf(data, data.length);
+    }
+
     public InputStream getInputStream() {
         return new ByteArrayInputStream(data);
-    }
-
-    public String getDigest() {
-        return digest;
-    }
-
-    @Override
-    public void writeExternal(final ObjectOutput out) throws IOException {
-        // digest
-        out.writeUTF(digest);
-        // data
-        out.writeInt(data.length);
-        out.write(data);
-    }
-
-    @Override
-    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-        // digest
-        digest = in.readUTF();
-        // data
-        final int size = in.readInt();
-        data = new byte[size];
-        in.readFully(data);
     }
 }
