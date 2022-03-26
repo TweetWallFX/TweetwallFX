@@ -41,7 +41,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -131,7 +130,7 @@ public final class GoogleVisionCache {
                 .distinct()
                 .map(this::createImageRequest)
                 .peek(air -> LOG.info("Prepared {}", air))
-                .collect(Collectors.toList());
+                .toList();
 
         if (requests.isEmpty()) {
             return Collections.emptyMap();

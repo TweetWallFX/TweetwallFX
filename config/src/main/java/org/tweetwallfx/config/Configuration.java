@@ -105,14 +105,14 @@ public final class Configuration {
 
         for (Map<String, Object> map : Stream.concat(
                 loadConfigurationDataFromClasspath(STANDARD_CONFIG_FILENAME),
-                loadConfigurationDataFromFilesystem(STANDARD_CONFIG_FILENAME)).collect(Collectors.toList())) {
+                loadConfigurationDataFromFilesystem(STANDARD_CONFIG_FILENAME)).toList()) {
             result = mergeMap(result, map);
         }
 
         if (null != CUSTOM_CONFIG_FILENAME && !STANDARD_CONFIG_FILENAME.equals(CUSTOM_CONFIG_FILENAME)) {
             for (Map<String, Object> map : Stream.concat(
                     loadConfigurationDataFromClasspath(CUSTOM_CONFIG_FILENAME),
-                    loadConfigurationDataFromFilesystem(CUSTOM_CONFIG_FILENAME)).collect(Collectors.toList())) {
+                    loadConfigurationDataFromFilesystem(CUSTOM_CONFIG_FILENAME)).toList()) {
                 result = mergeMap(result, map);
             }
         }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,7 +70,7 @@ public class UpdateCloudStep implements Step {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
+        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).toList();
         List<Word> additionalTagCloudWords = context.getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
 
         double minWeight = limitedWords.stream().mapToDouble(Word::getWeight).min().orElse(-2d);
@@ -91,7 +91,9 @@ public class UpdateCloudStep implements Step {
         }
 
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
-        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());
+        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream()
+                .filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word))
+                .toList();
 
         Duration defaultDuration = Duration.seconds(1.5);
 
@@ -119,7 +121,7 @@ public class UpdateCloudStep implements Step {
 
         List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
                 .filter(wordleSkin.word2TextMap::containsKey)
-                .collect(Collectors.toList());
+                .toList();
 
         LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
@@ -136,7 +138,9 @@ public class UpdateCloudStep implements Step {
         moves.getChildren().addAll(moveTransitions);
         morph.getChildren().add(moves);
 
-        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(word -> !wordleSkin.word2TextMap.containsKey(word))
+                .toList();
 
         List<Text> newTextNodes = new ArrayList<>();
         LOGGER.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));

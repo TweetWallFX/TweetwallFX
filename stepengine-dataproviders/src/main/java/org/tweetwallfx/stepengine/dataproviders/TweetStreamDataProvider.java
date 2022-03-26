@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 import javafx.scene.image.Image;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -145,7 +144,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .search(new TweetQuery()
                         .query(searchText)
                         .count(config.historySize()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static class FactoryImpl implements DataProvider.Factory {

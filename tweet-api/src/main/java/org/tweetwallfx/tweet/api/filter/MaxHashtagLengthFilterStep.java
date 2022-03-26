@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package org.tweetwallfx.tweet.api.filter;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterChainSettings;
@@ -65,7 +64,7 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
 
             final List<HashtagTweetEntry> htes = Arrays.stream(t.getHashtagEntries())
                     .filter(hte -> hte.getText().length() > config.getMaxLength())
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (!htes.isEmpty()) {
                 LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length of {} -> REJECTED",
