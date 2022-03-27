@@ -141,6 +141,17 @@ allprojects {
         configurations {
             javafx
             jaxb
+
+            all {
+                resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                    if (details.requested.group == 'com.fasterxml.jackson' &&
+                        details.requested.name == 'jackson-bom' &&
+                        details.requested.version == '2.13.2.1') {
+                        details.useVersion '2.13.2.20220324'
+                        details.because 'fixes CVE-2020-36518 and resolved version does not (pom) match expectation'
+                    }
+                }
+            }
         }
 
         dependencies {
