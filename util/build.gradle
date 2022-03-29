@@ -24,5 +24,5 @@
 
 dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
 }
