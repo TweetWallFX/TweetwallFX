@@ -110,6 +110,7 @@ allprojects {
                 replaceRegex 'noMultipleEmptyLines', '\n{3,}', '\n\n'
                 replaceRegex 'Remove @author javadoc taglets.', '\n\\s*\\*\\s*@author.*', ''
                 replaceRegex 'Remove trailing empty comment lines.', '\n\\s*\\*(\n\\s*\\*/\n)', '$1'
+                replaceRegex 'Remove empty javadoc', '\n\\s*/\\*\\*\n\\s*\\*/\n', '\n\n'
                 replaceRegex 'Remove empty lines before end of block', '\\n[\\n]+(\\s*})(?=\\n)', '\n$1'
                 licenseHeaderFile rootProject.file('LICENSE.spotlessTemplate')
             }
