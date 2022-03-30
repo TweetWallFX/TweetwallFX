@@ -44,8 +44,6 @@ import org.tweetwallfx.google.vision.ImageContentAnalysis.LocationEntry;
 import org.tweetwallfx.google.vision.ImageContentAnalysis.SafeSearch;
 import org.tweetwallfx.google.vision.ImageContentAnalysis.TextEntry;
 
-/**
- */
 public class ImageContentAnalysisTest {
 
     @Rule
