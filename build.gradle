@@ -240,7 +240,7 @@ allprojects {
             apply plugin: 'net.ltgt.errorprone'
 
             dependencies {
-                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.11.0'
+                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.12.0'
             }
         }
 
