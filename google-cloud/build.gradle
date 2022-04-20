@@ -24,7 +24,7 @@
 
 dependencies {
     implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.6.0'
-    implementation group: 'com.google.cloud', name: 'google-cloud-vision', version: '2.0.27'
+    implementation group: 'com.google.cloud', name: 'google-cloud-vision', version: '2.0.28'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
     implementation group: 'org.ehcache', name: 'ehcache', version: '3.10.0'
     implementation project(':tweetwallfx-cache')
