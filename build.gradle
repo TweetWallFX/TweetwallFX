@@ -22,36 +22,18 @@
  * THE SOFTWARE.
  */
 
-buildscript {
-    repositories {
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.7.0'
-        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: '6.5.0'
-        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: '0.42.0'
-        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: '18.4.0'
-        classpath group: 'com.github.spotbugs.snom', name: 'spotbugs-gradle-plugin', version: '5.0.6'
-        classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: '2.0.2'
-        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.3'
-
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: '11.3.3'
-        // VCS dependency required by plugin 'gradle-info-plugin'
-        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
-    }
+plugins {
+    id 'base'
+    id 'build-dashboard'
+    id 'com.diffplug.spotless' version '6.5.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
+    id 'com.github.spotbugs' version '5.0.6'
+    id 'com.google.osdetector' version '1.7.0'
+    id 'nebula.info-dependencies' version '11.3.3'
+    id 'nebula.maven-nebula-publish' version '18.4.0'
+    id 'net.ltgt.errorprone' version '2.0.2'
+    id 'org.sonarqube' version '3.3'
 }
-
-apply plugin: 'base'
-apply plugin: 'build-dashboard'
-apply plugin: 'org.sonarqube'
-apply plugin: 'com.google.osdetector'
-
-// applying Versions plugin
-apply plugin: 'com.github.ben-manes.versions'
 
 ext {
     javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
@@ -63,6 +45,7 @@ allprojects {
     description = 'JavaFX based Tweetwall (' + name + ')'
 
     repositories {
+        mavenCentral()
         jcenter()
     }
 
