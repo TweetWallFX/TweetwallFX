@@ -25,6 +25,7 @@ package org.tweetwallfx.cache;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
@@ -102,12 +103,12 @@ public record CacheSettings(
     public static record CacheExpiry(
             CacheExpiryType type,
             Long amount,
-            @SuppressFBWarnings TemporalUnit unit) {
+            @SuppressFBWarnings ChronoUnit unit) {
 
         public CacheExpiry(
                 final CacheExpiryType type,
                 final Long amount,
-                final TemporalUnit unit) {
+                final ChronoUnit unit) {
             this.type = valueOrDefault(type, CacheExpiryType.NONE);
             this.amount = Objects.requireNonNull(amount, "amount must not be null");
             this.unit = Objects.requireNonNull(unit, "unit must not be null");
@@ -130,10 +131,13 @@ public record CacheSettings(
             Long amount,
             MemoryUnit unit) {
 
-        public CacheResource   {
-            Objects.requireNonNull(type, "type must not be null!");
-            Objects.requireNonNull(amount, "amount must not be null!");
-            Objects.requireNonNull(unit, "unit must not be null!");
+        public CacheResource(
+                final CacheResourceType type,
+                final Long amount,
+                final MemoryUnit unit)    {
+            this.type = Objects.requireNonNull(type, "type must not be null!");
+            this.amount = Objects.requireNonNull(amount, "amount must not be null!");
+            this.unit = Objects.requireNonNull(unit, "unit must not be null!");
         }
     }
 
