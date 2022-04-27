@@ -13,6 +13,7 @@
 
 # Intellij
 **/.idea
+**/out/
 
 #
 /*/config.properties
