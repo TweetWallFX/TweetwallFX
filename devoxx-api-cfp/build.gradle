@@ -33,5 +33,3 @@ dependencies {
     runtimeOnly group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '3.0.4'
     runtimeOnly group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }

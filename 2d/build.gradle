@@ -27,5 +27,3 @@ dependencies {
     implementation project(':tweetwallfx-configuration')
     implementation project(':tweetwallfx-controls')
 }
-
-tasks.named('spotbugsMain') { ignoreFailures = true }
