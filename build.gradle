@@ -237,7 +237,7 @@ allprojects {
             jvmArgs.add getJvmModulePath()
             jvmArgs.add '--add-modules'
             jvmArgs.add getJvmAdditionalModules()
-            excludeFilter = file("${project.rootDir}/spotbugs-exclude.xml")
+            excludeFilter = rootProject.file('spotbugs-exclude.xml')
         }
 
         tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
