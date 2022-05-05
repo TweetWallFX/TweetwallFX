@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.6.0'
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
     implementation group: 'org.ehcache', name: 'ehcache', version: '3.10.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
