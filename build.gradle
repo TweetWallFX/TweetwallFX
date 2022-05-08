@@ -155,8 +155,13 @@ allprojects {
         apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
 
-        java.withJavadocJar()
-        java.withSourcesJar()
+        java {
+            withJavadocJar()
+            withSourcesJar()
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '17')))
+            }
+        }
 
         jacoco {
             toolVersion = '0.8.8'
