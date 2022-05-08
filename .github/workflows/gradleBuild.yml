@@ -27,7 +27,7 @@ jobs:
         jdk:
           - '17'
           - '18'
-#          - '19-ea'
+          - '19-ea'
         distribution:
           - 'zulu'
 
