@@ -43,7 +43,7 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
 public class FilterChainStepsAvailable implements RunnableTestCase {
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         final Map<String, List<FilterStep.Factory>> filterStepFactories = StreamSupport
                 .stream(ServiceLoader.load(FilterStep.Factory.class).spliterator(), false)
                 .collect(Collectors.groupingBy(fsf -> fsf.getFilterStepClass().getCanonicalName()));

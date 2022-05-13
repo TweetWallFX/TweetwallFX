@@ -25,6 +25,14 @@
     <!-- contains specific exclusions of bug patterns -->
     <Match>
         <Or>
+            <Class name="org.tweetwallfx.cache.URLContentCacheBase$1" />
+            <Class name="org.tweetwallfx.cache.URLContentCacheBase$2" />
+            <Class name="org.tweetwallfx.stepengine.api.StepEngine" />
+        </Or>
+        <Bug code="THROWS" />
+    </Match>
+    <Match>
+        <Or>
             <Class name="org.tweetwallfx.controls.TweetLayout" />
             <Class name="org.tweetwallfx.controls.Wordle" />
             <Class name="org.tweetwallfx.controls.WordleLayout" />

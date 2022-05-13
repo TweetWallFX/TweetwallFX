@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
 public class VisualizationFactoryProducesUniqueVisualization implements RunnableTestCase {
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         StreamSupport.stream(ServiceLoader.load(Visualization.Factory.class).spliterator(), false)
                .collect(Collectors.groupingBy(sf -> sf.getVisualizationClass().getCanonicalName()))
                 .entrySet().stream()

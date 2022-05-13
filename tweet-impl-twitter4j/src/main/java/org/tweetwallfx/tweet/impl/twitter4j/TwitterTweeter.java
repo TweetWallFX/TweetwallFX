@@ -142,7 +142,7 @@ public class TwitterTweeter extends Tweeter {
 
     private <T extends TwitterResponse, R> Stream<R> pagedListAsStream(
             final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction,
-            final Function<TwitterException, ? extends RuntimeException> exceptionConverter,
+            final Function<TwitterException, IllegalArgumentException> exceptionConverter,
             final Function<T, R> objectConverter
     ) {
         final Iterable<R> iterable = () -> new PagedEntityIterator<>(
@@ -341,13 +341,13 @@ public class TwitterTweeter extends Tweeter {
         private long cursorId = CursorSupport.START;
         private final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction;
         private final Function<T, R> objectConverter;
-        private final Function<TwitterException, ? extends RuntimeException> exceptionConverter;
+        private final Function<TwitterException, IllegalArgumentException> exceptionConverter;
         private PagableResponseList<T> prList;
 
         public PagedEntityIterator(
                 final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction,
                 final Function<T, R> objectConverter,
-                final Function<TwitterException, ? extends RuntimeException> exceptionConverter) {
+                final Function<TwitterException, IllegalArgumentException> exceptionConverter) {
             this.pageableFunction = pageableFunction;
             this.objectConverter = objectConverter;
             this.exceptionConverter = exceptionConverter;
@@ -359,7 +359,7 @@ public class TwitterTweeter extends Tweeter {
                 LOGGER.debug("Retrieving next page");
                 prList = pageableFunction.apply(cursorId);
             } catch (final TwitterException ex) {
-                final RuntimeException re = exceptionConverter.apply(ex);
+                final IllegalArgumentException re = exceptionConverter.apply(ex);
                 LOGGER.error("Failed to retrieve the next pageable list", re);
                 throw re;
             }
