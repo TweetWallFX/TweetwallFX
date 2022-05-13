@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ public class CFPClientLoadable implements RunnableTestCase {
     private static final Logger LOG = LogManager.getLogger(CFPClientLoadable.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         for (final CFPClient o : ServiceLoader.load(CFPClient.class)) {
             LOG.info("loaded " + o.getClass());
         }

@@ -192,7 +192,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void checkMerge() throws Exception {
+    public void checkMerge() {
         try {
             assertThat(
                     "Result of map merge failed!",

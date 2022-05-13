@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ public class StepFactoryLoadable implements RunnableTestCase {
     private static final Logger LOG = LogManager.getLogger(StepFactoryLoadable.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         for (final Step.Factory o : ServiceLoader.load(Step.Factory.class)) {
             LOG.info("loaded " + o.getClass());
         }
