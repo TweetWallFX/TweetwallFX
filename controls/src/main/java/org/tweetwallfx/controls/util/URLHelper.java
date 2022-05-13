@@ -28,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -46,38 +47,37 @@ public class URLHelper {
     private static final int MAX_CACHE_SIZE = Integer.getInteger("org.tweetwall.urlResolver.cacheSize", 2048);
     private static final Map<String, String> UNSHORTENED_LINKS = new LinkedHashMap<>();
     private static final Pattern SLASH_SPLITTER = Pattern.compile("/");
-    private static final Function<String, String> UNSHORT_LINK = wrapFunction(urlString -> {
-        final URL url = new URL(urlString);
+    private static final Function<String, String> UNSHORT_LINK = urlString -> {
+        try {
+            final URL url = new URL(urlString);
+            final URLConnection connection = url.openConnection();
 
-        URLConnection connection = url.openConnection();
+            if (null == connection) {
+                throw new IllegalStateException("Failed to open connection to " + url);
+            } else if (connection instanceof HttpURLConnection httpURLConnection) {
+                final int responseCode = httpURLConnection.getResponseCode();
 
-        if (connection instanceof HttpURLConnection httpURLConnection) {
-            final int responseCode;
+                if (IntStream.of(HttpURLConnection.HTTP_MOVED_PERM,
+                        HttpURLConnection.HTTP_MOVED_TEMP,
+                        HttpURLConnection.HTTP_SEE_OTHER,
+                        HttpURLConnection.HTTP_NOT_MODIFIED).anyMatch(i -> i == responseCode)) {
+                    // redirected
+                    final String redirected = connection.getHeaderField("Location");
 
-            try {
-                responseCode = httpURLConnection.getResponseCode();
-            } catch (final IOException ioe) {
-                throw new URLResolvingException("Error resolving URL \"" + urlString + "\"", ioe);
-            }
-
-            if (IntStream.of(HttpURLConnection.HTTP_MOVED_PERM,
-                    HttpURLConnection.HTTP_MOVED_TEMP,
-                    HttpURLConnection.HTTP_SEE_OTHER,
-                    HttpURLConnection.HTTP_NOT_MODIFIED).anyMatch(i -> i == responseCode)) {
-                // redirected
-                final String redirected = connection.getHeaderField("Location");
-
-                if (null == redirected) {
-                    return urlString;
-                } else {
-                    LOGGER.info("URL '" + urlString + "' is redirected to '" + redirected + "'");
-                    return resolve(redirected);
+                    if (null == redirected) {
+                        return urlString;
+                    } else {
+                        LOGGER.info("URL '" + urlString + "' is redirected to '" + redirected + "'");
+                        return resolve(redirected);
+                    }
                 }
             }
-        }
 
-        return connection.getURL().toString();
-    });
+            return connection.getURL().toString();
+        } catch (final IOException ioe) {
+            throw new URLResolvingException("Error resolving URL \"" + urlString + "\"", ioe);
+        }
+    };
 
     private URLHelper() {
         // prevent instantiation
@@ -120,7 +120,7 @@ public class URLHelper {
 
         try {
             final String encodedURL = protocol + SLASH_SPLITTER.splitAsStream(urlString.substring(protocol.length()))
-                    .map(wrapFunction(part -> URLEncoder.encode(part, "UTF-8")))
+                    .map(part -> URLEncoder.encode(part, StandardCharsets.UTF_8))
                     .collect(Collectors.joining("/"));
 
             LOGGER.info("encodedURL of '" + urlString + "' is '" + encodedURL + "'");
@@ -129,26 +129,6 @@ public class URLHelper {
             LOGGER.warn("Encoding URL to UTF-8 failed. URL='" + urlString + "'", ex);
             return urlString;
         }
-    }
-
-    private static <T, R> Function<T, R> wrapFunction(final ExceptionalFunction<T, R> exceptionalFunction) {
-        return exceptionalFunction::apply;
-    }
-
-    private static interface ExceptionalFunction<T, R> extends Function<T, R> {
-
-        @Override
-        public default R apply(final T t) {
-            try {
-                return applyImpl(t);
-            } catch (final RuntimeException e) {
-                throw e;
-            } catch (final Exception e) {
-                throw new URLResolvingException(e.getMessage(), e);
-            }
-        }
-
-        public R applyImpl(final T t) throws Exception;
     }
 
     private static class URLResolvingException extends RuntimeException {
