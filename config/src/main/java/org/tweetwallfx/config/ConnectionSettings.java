@@ -28,7 +28,8 @@ import java.util.Objects;
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
  *
- * @param proxy the Proxy settings to use with HTTP connections
+ * <p>
+ * Param {@code proxy} the Proxy settings to use with HTTP connections
  */
 public record ConnectionSettings(
         Proxy proxy) {
@@ -60,13 +61,17 @@ public record ConnectionSettings(
      * POJO containing the proxy setting to use when working with HTTP
      * Connections.
      *
-     * @param host the host of proxy server to use
+     * <p>
+     * Param {@code host} the host of proxy server to use
      *
-     * @param port the port number of the proxy server to use
+     * <p>
+     * Param {@code port} the port number of the proxy server to use
      *
-     * @param user the user name to use for the proxy connection
+     * <p>
+     * Param {@code user} the user name to use for the proxy connection
      *
-     * @param password the password to use for the proxy connection
+     * <p>
+     * Param {@code password} the password to use for the proxy connection
      */
     public static record Proxy(
             String host,

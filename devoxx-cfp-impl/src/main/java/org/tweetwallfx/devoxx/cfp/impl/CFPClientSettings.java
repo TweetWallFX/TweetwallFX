@@ -29,11 +29,15 @@ import org.tweetwallfx.config.ConfigurationConverter;
 /**
  * POJO for reading Settings concerning Devoxx CFP Client.
  *
- * @param baseUri the Base URI from where all standard calls are executed
+ * <p>
+ * Param {@code baseUri} the Base URI from where all standard calls are executed
  *
- * @param eventId the ID of the event on the API Server
+ * <p>
+ * Param {@code eventId} the ID of the event on the API Server
  *
- * @param votingResultsUri the Query Uri from where voting results are retrieved
+ * <p>
+ * Param {@code votingResultsUri} the Query Uri from where voting results are
+ * retrieved
  */
 public record CFPClientSettings(
         String baseUri,

@@ -26,7 +26,6 @@ package org.tweetwallfx.cache;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -134,7 +133,7 @@ public record CacheSettings(
         public CacheResource(
                 final CacheResourceType type,
                 final Long amount,
-                final MemoryUnit unit)    {
+                final MemoryUnit unit) {
             this.type = Objects.requireNonNull(type, "type must not be null!");
             this.amount = Objects.requireNonNull(amount, "amount must not be null!");
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");

@@ -31,19 +31,24 @@ import static org.tweetwallfx.util.Nullable.valueOrDefault;
 /**
  * POJO for reading Settings concerning the twitter client.
  *
- * @param debugEnabled a flag indicating that the twitter client is to work in
- * debug mode
+ * <p>
+ * Param {@code debugEnabled} a flag indicating that the twitter client is to
+ * work in debug mode
  *
- * @param extendedConfig the extended configuration of the twitter client
+ * <p>
+ * Param {@code extendedConfig} the extended configuration of the twitter client
  *
- * @param extendedMode a flag indicating if the twitter client is to use the
- * extended mode
+ * <p>
+ * Param {@code extendedMode} a flag indicating if the twitter client is to use
+ * the extended mode
  *
- * @param oauth the OAuth setting the twitter client is to use in order to
- * connect with twitter
+ * <p>
+ * Param {@code oauth} the OAuth setting the twitter client is to use in order
+ * to connect with twitter
  *
- * @param ignoreRateLimit a flag indicating that the twitter rate limitations
- * shall be ignored
+ * <p>
+ * Param {@code ignoreRateLimit} a flag indicating that the twitter rate
+ * limitations shall be ignored
  */
 public record TwitterSettings(
         Boolean debugEnabled,
@@ -97,13 +102,17 @@ public record TwitterSettings(
      * POJO for the OAuth setting the twitter client is to use in order to
      * connect with twitter.
      *
-     * @param consumerKey the consumer key
+     * <p>
+     * Param {@code consumerKey} the consumer key
      *
-     * @param consumerSecret the consumer secret
+     * <p>
+     * Param {@code consumerSecret} the consumer secret
      *
-     * @param accessToken the access token
+     * <p>
+     * Param {@code accessToken} the access token
      *
-     * @param accessTokenSecret the access token secret
+     * <p>
+     * Param {@code accessTokenSecret} the access token secret
      */
     public static record OAuth(
             String consumerKey,

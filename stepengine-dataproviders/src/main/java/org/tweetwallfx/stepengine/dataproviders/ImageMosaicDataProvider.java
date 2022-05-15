@@ -104,6 +104,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             Boolean includeRetweets,
             Integer maxCacheSize) {
 
+        @SuppressWarnings("unused")
         public Config(
                 final Boolean includeRetweets,
                 final Integer maxCacheSize) {

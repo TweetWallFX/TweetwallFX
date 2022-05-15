@@ -42,14 +42,17 @@ import static org.tweetwallfx.util.ToString.map;
 /**
  * POJO for reading Settings concerning the {@link StepEngine}.
  *
- * @param steps list containing the definitions for the steps in the
+ * <p>
+ * Param {@code steps} list containing the definitions for the steps in the
  * {@link StepEngine}
  *
- * @param dataProviderSettings list of settings for {@link DataProvider}
+ * <p>
+ * Param {@code dataProviderSettings} list of settings for {@link DataProvider}
  * instances
  *
- * @param visualizationSettings list of settings for {@link Visualization}
- * instances
+ * <p>
+ * Param {@code visualizationSettings} list of settings for
+ * {@link Visualization} instances
  */
 public record StepEngineSettings(
         List<StepDefinition> steps,

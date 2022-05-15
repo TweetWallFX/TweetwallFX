@@ -29,8 +29,9 @@ import static org.tweetwallfx.util.Nullable.nullable;
 /**
  * POJO for reading Settings concerning the Configuration itself.
  *
- * @param additionalConfigurationURLs list of string representations of URLs
- * containing additional fragments for {@link Configuration}
+ * <p>
+ * Param {@code additionalConfigurationURLs} is list of string representations
+ * of URLs containing additional fragments for {@link Configuration}
  */
 public record ConfigurationSettings(
         List<String> additionalConfigurationURLs) {

@@ -219,12 +219,10 @@ allprojects {
         }
 
         // configuring Errorprone
-        if (!JavaVersion.current().isJava12Compatible()) {
-            apply plugin: 'net.ltgt.errorprone'
+        apply plugin: 'net.ltgt.errorprone'
 
-            dependencies {
-                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.13.1'
-            }
+        dependencies {
+            errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.13.1'
         }
 
         // configuring Spotbugs

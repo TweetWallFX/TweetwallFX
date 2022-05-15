@@ -127,19 +127,24 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     /**
      * POJO used to configure {@link TopTalksTodayDataProvider}.
      *
-     * @param noImageResource Classpath entry for usage in cases when no speaker
-     * image is available
+     * <p>
+     * Param {@code noImageResource} Classpath entry for usage in cases when no
+     * speaker image is available
      *
-     * @param urlReplacements Mapping of unloadable profile image URLs to
+     * <p>
+     * Param {@code urlReplacements} Mapping of unloadable profile image URLs to
      * loadable ones (required due to e.g. changed profile pics)
      *
-     * @param initialDelay The type of scheduling to perform. Defaults to
+     * <p>
+     * Param {@code initialDelay} The type of scheduling to perform. Defaults to
      * {@link ScheduleType#FIXED_RATE}.
      *
-     * @param initialDelay Delay until the first execution in seconds. Defaults
-     * to {@code 0L}.
+     * <p>
+     * Param {@code initialDelay} Delay until the first execution in seconds.
+     * Defaults to {@code 0L}.
      *
-     * @param scheduleDuration Fixed rate of / delay between consecutive
+     * <p>
+     * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 1800L}.
      */
     private static record Config(
@@ -149,6 +154,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {
 
+        @SuppressWarnings("unused")
         public Config(
                 final String noImageResource,
                 final Map<String, String> urlReplacements,

@@ -37,8 +37,9 @@ import static org.tweetwallfx.util.ToString.map;
 /**
  * POJO for reading Settings concerning {@link FilterChain}s.
  *
- * @param chains the mapping of the {@link FilterChainDefinition}s to the name
- * of the defined {@link FilterChain}
+ * <p>
+ * Param {@code chains} the mapping of the {@link FilterChainDefinition}s to the
+ * name of the defined {@link FilterChain}
  */
 public record FilterChainSettings(
         Map<String, FilterChainDefinition> chains) {
@@ -79,14 +80,18 @@ public record FilterChainSettings(
     /**
      * POJO defining a {@link FilterChain}.
      *
-     * @param defaultResult a boolean flag determining if the evaluated object
-     * are accepted or rejected should no previous evaluation by the
+     * <p>
+     * Param {@code defaultResult} a boolean flag determining if the evaluated
+     * object are accepted or rejected should no previous evaluation by the
      * {@link FilterStep}s have terminated the evaluation
      *
-     * @param filterSteps the filter steps contained in the {@link FilterChain}
+     * <p>
+     * Param {@code filterSteps} the filter steps contained in the
+     * {@link FilterChain}
      *
-     * @param domainObjectClassName the class name of the domain object being
-     * evaluated
+     * <p>
+     * Param {@code domainObjectClassName} the class name of the domain object
+     * being evaluated
      */
     public static record FilterChainDefinition(
             Boolean defaultResult,
