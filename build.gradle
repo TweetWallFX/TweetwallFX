@@ -276,7 +276,7 @@ allprojects {
 
     plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
         dependencies {
-            implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.10'
+            implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '4.0.2'
             testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
         }
     }
