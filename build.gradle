@@ -223,7 +223,7 @@ allprojects {
             apply plugin: 'net.ltgt.errorprone'
 
             dependencies {
-                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.13.1'
+                errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.14.0'
             }
         }
 
