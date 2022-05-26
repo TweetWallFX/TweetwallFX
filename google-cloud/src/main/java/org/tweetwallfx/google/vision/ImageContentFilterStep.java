@@ -209,8 +209,9 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
     /**
      * POJO used to configure {@link ImageContentFilterStep}.
      *
-     * @param checkRetweeted a boolean flag controlling whether for a retweet
-     * the retweeted Tweet is also checked
+     * <p>
+     * Param {@code checkRetweeted} a boolean flag controlling whether for a
+     * retweet the retweeted Tweet is also checked
      */
     private static record Config(
             Boolean checkRetweeted,
@@ -220,6 +221,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             SafeTypeConfig spoof,
             SafeTypeConfig violence) {
 
+        @SuppressWarnings("unused")
         public Config(
                 final Boolean checkRetweeted,
                 final SafeTypeConfig adult,

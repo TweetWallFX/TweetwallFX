@@ -30,17 +30,23 @@ import static org.tweetwallfx.util.Nullable.nullable;
 /**
  * POJO for reading Settings concerning the Tweetwall itself.
  *
- * @param title the title of the Tweetwall
+ * <p>
+ * Param {@code title} the title of the Tweetwall
  *
- * @param stylesheetResource the resource path containing stylesheet to be read
- * from the Classpath
+ * <p>
+ * Param {@code stylesheetResource} the resource path containing stylesheet to
+ * be read from the Classpath
  *
- * @param stylesheetFile the resource path containing stylesheet to be read from
- * the filesystem
+ * <p>
+ * Param {@code stylesheetFile} the resource path containing stylesheet to be
+ * read from the filesystem
  *
- * @param query the Query String that is to provide Tweets for this Tweetwall
+ * <p>
+ * Param {@code query} the Query String that is to provide Tweets for this
+ * Tweetwall
  *
- * @param additionalStopWords
+ * <p>
+ * Param {@code additionalStopWords} the additional stop words to employ
  */
 public record TweetwallSettings(
         String title,

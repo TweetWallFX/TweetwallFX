@@ -64,6 +64,7 @@ public class TrackImageDataProvider implements DataProvider {
             Boolean preserveRation,
             Boolean smooth) {
 
+        @SuppressWarnings("unused")
         public Config(
                 final Integer profileWidth,
                 final Integer profileHeight,

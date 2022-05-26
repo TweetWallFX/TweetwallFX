@@ -163,21 +163,25 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     /**
      * POJO used to configure {@link TweetStreamDataProvider}.
      *
-     * @param historySize The number of the tweets to request from query in
-     * order to fill up {@link TweetStreamDataProvider} upon initialization.
+     * <p>
+     * Param {@code historySize} The number of the tweets to request from query
+     * in order to fill up {@link TweetStreamDataProvider} upon initialization.
      * Defaults to {@code 50}.
      *
-     * @param maxTweets The number of tweet to produce upon request via
+     * <p>
+     * Param {@code maxTweets} The number of tweet to produce upon request via
      * {@link TweetStreamDataProvider#getTweets()}. Defaults to {@code 4}.
      *
-     * @param hideRetweets Is accepting retweets into the datastore of the
-     * DataProvider acceptable? Defaults to {@code false}.
+     * <p>
+     * Param {@code hideRetweets} Is accepting retweets into the datastore of
+     * the DataProvider acceptable? Defaults to {@code false}.
      */
     private static record Config(
             Integer historySize,
             Integer maxTweets,
             Boolean hideRetweets) {
 
+        @SuppressWarnings("unused")
         public Config(
                 final Integer historySize,
                 final Integer maxTweets,

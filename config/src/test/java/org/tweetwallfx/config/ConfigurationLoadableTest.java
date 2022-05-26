@@ -39,8 +39,6 @@ import org.junit.rules.TestName;
  */
 public class ConfigurationLoadableTest {
 
-    private static final Logger LOG = LogManager.getLogger();
-
     @Rule
     public TestName testName = new TestName();
 

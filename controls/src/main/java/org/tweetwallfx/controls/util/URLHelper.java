@@ -31,7 +31,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -47,7 +46,44 @@ public class URLHelper {
     private static final int MAX_CACHE_SIZE = Integer.getInteger("org.tweetwall.urlResolver.cacheSize", 2048);
     private static final Map<String, String> UNSHORTENED_LINKS = new LinkedHashMap<>();
     private static final Pattern SLASH_SPLITTER = Pattern.compile("/");
-    private static final Function<String, String> UNSHORT_LINK = urlString -> {
+
+    private URLHelper() {
+        // prevent instantiation
+    }
+
+    /**
+     * It follows HTTP URL redirects and returns the last URL that is no longer
+     * redirected. If no URL redirect takes place then the original URL is
+     * returned.
+     *
+     * @param urlString The URL (in String form) to resolve
+     *
+     * @return the resolved URL
+     */
+    public static String resolve(final String urlString) {
+        final String resolvedURL;
+
+        try {
+            resolvedURL = UNSHORTENED_LINKS.computeIfAbsent(urlString, URLHelper::unshortenLink);
+        } catch (final URLResolvingException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            return encodeURL(urlString);
+        }
+
+        if (urlString.equals(resolvedURL)) {
+            LOGGER.info("URL: '" + urlString + "' was not redirected");
+        } else {
+            LOGGER.info("URL: '" + urlString + "' was resolved as '" + resolvedURL + "'");
+        }
+
+        if (MAX_CACHE_SIZE > UNSHORTENED_LINKS.size()) {
+            UNSHORTENED_LINKS.remove(UNSHORTENED_LINKS.entrySet().iterator().next().getKey());
+        }
+
+        return encodeURL(resolvedURL);
+    }
+
+    private static String unshortenLink(final String urlString) {
         try {
             final URL url = new URL(urlString);
             final URLConnection connection = url.openConnection();
@@ -77,42 +113,6 @@ public class URLHelper {
         } catch (final IOException ioe) {
             throw new URLResolvingException("Error resolving URL \"" + urlString + "\"", ioe);
         }
-    };
-
-    private URLHelper() {
-        // prevent instantiation
-    }
-
-    /**
-     * It follows HTTP URL redirects and returns the last URL that is no longer
-     * redirected. If no URL redirect takes place then the original URL is
-     * returned.
-     *
-     * @param urlString The URL (in String form) to resolve
-     *
-     * @return the resolved URL
-     */
-    public static String resolve(final String urlString) {
-        final String resolvedURL;
-
-        try {
-            resolvedURL = UNSHORTENED_LINKS.computeIfAbsent(urlString, UNSHORT_LINK);
-        } catch (final URLResolvingException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-            return encodeURL(urlString);
-        }
-
-        if (urlString.equals(resolvedURL)) {
-            LOGGER.info("URL: '" + urlString + "' was not redirected");
-        } else {
-            LOGGER.info("URL: '" + urlString + "' was resolved as '" + resolvedURL + "'");
-        }
-
-        if (MAX_CACHE_SIZE > UNSHORTENED_LINKS.size()) {
-            UNSHORTENED_LINKS.remove(UNSHORTENED_LINKS.entrySet().iterator().next().getKey());
-        }
-
-        return encodeURL(resolvedURL);
     }
 
     private static String encodeURL(final String urlString) {
