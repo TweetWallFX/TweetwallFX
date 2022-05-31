@@ -152,7 +152,7 @@ allprojects {
             jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
             testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
+            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.0'
         }
 
         ext {
