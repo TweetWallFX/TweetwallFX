@@ -184,7 +184,7 @@ allprojects {
             enabled = false // TODO: reenable (currently breaks build with ClassCastException)
         }
 
-        tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile).configureEach {
             options.compilerArgs.addAll([
                     '-Xlint:-preview',
                     '--enable-preview',
@@ -197,7 +197,7 @@ allprojects {
             ])
         }
 
-        tasks.withType(JavaExec) {
+        tasks.withType(JavaExec).configureEach {
             jvmArgs '--enable-preview'
             jvmArgs '--module-path'
             jvmArgs getJvmModulePath()
@@ -205,7 +205,7 @@ allprojects {
             jvmArgs getJvmAdditionalModules()
         }
 
-        tasks.withType(Test) {
+        tasks.withType(Test).configureEach {
             jvmArgs '--enable-preview'
             jvmArgs '--module-path'
             jvmArgs getJvmModulePath()
@@ -244,7 +244,7 @@ allprojects {
             excludeFilter = rootProject.file('spotbugs-exclude.xml')
         }
 
-        tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
             reports {
                 xml.required.set(false)
                 html.required.set(true)
@@ -285,7 +285,7 @@ allprojects {
         }
     }
 
-    tasks.withType(org.gradle.api.tasks.testing.Test) {
+    tasks.withType(Test).configureEach {
         systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
     }
 }
