@@ -123,7 +123,9 @@ allprojects {
         }
 
         configurations {
-            javafx
+            javafx {
+                description = 'Java FX libraries'
+            }
             jaxb
 
             all {
@@ -138,6 +140,10 @@ allprojects {
 */
                 }
             }
+            testFramework {
+                description = 'Libraries for testing'
+            }
+            testImplementation.extendsFrom testFramework
         }
 
         dependencies {
@@ -151,8 +157,8 @@ allprojects {
             jaxb group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '4.0.0'
             jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
-            testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-            testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
+            testFramework group: 'junit', name: 'junit', version: '4.13.2'
+            testFramework group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
         }
 
         ext {
@@ -275,7 +281,7 @@ allprojects {
     plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
         dependencies {
             implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '4.0.2'
-            testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
+            testFramework group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
         }
     }
 
