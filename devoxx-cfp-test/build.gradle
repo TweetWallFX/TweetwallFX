@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+configurations {
+    implementation.extendsFrom testFramework
+}
+
 dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'junit', name: 'junit', version: '4.13.2'
-    implementation group: 'org.assertj', name: 'assertj-core', version: '3.22.0'
     implementation project(':tweetwallfx-devoxx-api-cfp')
 }
