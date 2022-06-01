@@ -105,7 +105,9 @@ allprojects {
             }
         }
 
-        check.dependsOn(spotlessCheck)
+        tasks.named('check') {
+            dependsOn spotlessCheck
+        }
     }
 
     // now configuring for projects that coontain code not just structuring the project
@@ -214,13 +216,13 @@ allprojects {
         }
 
         tasks.named('check') {
-            dependsOn 'javadoc'
+            dependsOn javadoc
         }
 
         if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_18)) {
             // jacoco not yet compatible with JDK18
             tasks.named('test') {
-                finalizedBy 'jacocoTestReport'
+                finalizedBy jacocoTestReport
             }
         }
 
@@ -234,17 +236,17 @@ allprojects {
         // configuring Spotbugs
         apply plugin: 'com.github.spotbugs'
 
-        spotbugs {
+        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
             // fail build in case a failure was detected
             ignoreFailures = false
+
             jvmArgs.add '--module-path'
             jvmArgs.add getJvmModulePath()
             jvmArgs.add '--add-modules'
             jvmArgs.add getJvmAdditionalModules()
-            excludeFilter = rootProject.file('spotbugs-exclude.xml')
-        }
 
-        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+            excludeFilter = rootProject.file('spotbugs-exclude.xml')
+
             reports {
                 xml.required.set(false)
                 html.required.set(true)
@@ -254,7 +256,7 @@ allprojects {
         }
 
         // configuring Versions plugin
-        dependencyUpdates {
+        tasks.withType(com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask).configureEach {
             outputFormatter = 'plain,html'
             gradleReleaseChannel = 'current'
 
