@@ -52,6 +52,10 @@
             <Class name="org.tweetwallfx.controls.WordleLayout$Configuration" />
             <Class name="org.tweetwallfx.controls.WordleSkin" />
             <Class name="org.tweetwallfx.controls.dataprovider.TagCloudDataProvider" />
+            <Class name="org.tweetwallfx.transitions.FlipInXTransition" />
+            <Class name="org.tweetwallfx.transitions.FlipOutXTransition" />
+            <Class name="org.tweetwallfx.transitions.FontSizeTransition" />
+            <Class name="org.tweetwallfx.transitions.LocationTransition" />
             <Class name="org.tweetwallfx.twod.TagTweets" />
             <Package name="org.tweetwallfx.devoxx.api.cfp.client" />
         </Or>
