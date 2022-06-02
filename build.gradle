@@ -51,7 +51,7 @@ allprojects {
     }
 
     // configuring Spotless
-    apply plugin: "com.diffplug.spotless"
+    apply plugin: 'com.diffplug.spotless'
 
     afterEvaluate {
         spotless {
@@ -298,14 +298,14 @@ tasks.register('createFolders') {
 
     rootProject.allprojects.each {p ->
         if (!p.getProjectDir().isDirectory()) {
-            println 'Creating project folder: ' + p.getProjectDir()
+            logger.lifecycle 'Creating project folder: {}', p.getProjectDir()
             p.getProjectDir().mkdirs()
         }
 
         if (p.hasProperty('sourceSets')) {
             p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
                 if (!srcDir.isDirectory()) {
-                    println 'Creating source folder: ' + srcDir
+                    logger.lifecycle 'Creating source folder: {}', srcDir
                     srcDir.mkdirs()
                 }
             }
