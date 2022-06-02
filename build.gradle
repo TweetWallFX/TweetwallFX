@@ -275,21 +275,21 @@ allprojects {
             }
         }
 
+        plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
+            dependencies {
+                implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '4.0.2'
+                testFramework group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
+            }
+        }
+
+        tasks.withType(Test).configureEach {
+            systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
+        }
+
         apply plugin: 'nebula.maven-publish'
         apply plugin: 'nebula.javadoc-jar'
         apply plugin: 'nebula.source-jar'
         apply plugin: 'nebula.publish-verification'
-    }
-
-    plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
-        dependencies {
-            implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '4.0.2'
-            testFramework group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
-        }
-    }
-
-    tasks.withType(Test).configureEach {
-        systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
     }
 }
 
