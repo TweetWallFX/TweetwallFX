@@ -24,6 +24,8 @@
 package org.tweetwallfx.filterchain.testcase;
 
 import java.util.ServiceLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
@@ -33,10 +35,12 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
  */
 public class FilterStepFactoryLoadable implements RunnableTestCase {
 
+    private static final Logger LOG = LogManager.getLogger(FilterStepFactoryLoadable.class);
+
     @Override
     public void execute() {
         for (final FilterStep.Factory o : ServiceLoader.load(FilterStep.Factory.class)) {
-            System.out.println("loaded " + o.getClass());
+            LOG.info("loaded " + o.getClass());
         }
     }
 }
