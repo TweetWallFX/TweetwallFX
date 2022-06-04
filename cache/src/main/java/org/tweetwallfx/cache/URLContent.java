@@ -23,25 +23,26 @@
  */
 package org.tweetwallfx.cache;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import jakarta.xml.bind.DatatypeConverter;
 import java.util.Arrays;
+import java.util.HexFormat;
+import java.util.Objects;
 
 public record URLContent(
         byte[] data,
         String digest) implements Serializable {
+
+    public static final URLContent NO_CONTENT = new URLContent(new byte[0], "d41d8cd98f00b204e9800998ecf8427e");
 
     private static final Logger LOG = LogManager.getLogger();
 
@@ -54,35 +55,23 @@ public record URLContent(
 
     public static URLContent of(final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
-        InputStream in2 = in;
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        in.transferTo(bout);
+        byte[] bytes = bout.toByteArray();
+        String digest = null;
         try {
-            in2 = new DigestInputStream(in, MessageDigest.getInstance("md5"));
+            digest = HexFormat.of().formatHex(MessageDigest.getInstance("md5").digest(bytes));
+            LOG.info("MD5: {}", digest);
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
-        final byte[] d = readFully(in2);
-        final String digest = in2 instanceof DigestInputStream dis
-                ? DatatypeConverter.printHexBinary(dis.getMessageDigest().digest())
-                : null;
-        LOG.info("MD5: {}", digest);
-
-        return new URLContent(d, digest);
+        return new URLContent(bytes, digest);
     }
 
     public static URLContent of(final String urlString) throws IOException {
-        return of(new URL(urlString).openStream());
-    }
-
-    private static byte[] readFully(final InputStream in) throws IOException {
-        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[4096];
-
-        int read;
-        while ((read = in.read(buffer)) > -1) {
-            bout.write(buffer, 0, read);
+        try (InputStream in = new URL(urlString).openStream()) {
+            return of(in);
         }
-
-        return bout.toByteArray();
     }
 
     @Override
@@ -92,5 +81,13 @@ public record URLContent(
 
     public InputStream getInputStream() {
         return new ByteArrayInputStream(data);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof  URLContent other) {
+            return Objects.equals(digest, other.digest) && Arrays.equals(data, other.data);
+        }
+        return false;
     }
 }

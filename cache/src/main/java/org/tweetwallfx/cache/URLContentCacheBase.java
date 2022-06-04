@@ -32,11 +32,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+
 import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ehcache.Cache;
 import org.tweetwallfx.config.Configuration;
+
+import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 
 /**
  * Caches the content urlString to their urlString.
@@ -51,12 +54,24 @@ public abstract class URLContentCacheBase {
     private final Cache<String, URLContent> urlContentCache;
 
     protected URLContentCacheBase(final String cacheName) {
+        this(cacheName, initializeCache(cacheName), initializeExecutor(cacheName));
+    }
+
+    URLContentCacheBase(final String cacheName, final Cache<String, URLContent> urlContentCache, final Executor contentLoader) {
         this.cacheName = cacheName;
-        urlContentCache = CacheManagerProvider.getCache(
+        this.urlContentCache = urlContentCache;
+        this.contentLoader = contentLoader;
+    }
+
+    private static Cache<String, URLContent> initializeCache(String cacheName) {
+        return CacheManagerProvider.getCache(
                 cacheName,
                 String.class,
                 URLContent.class);
-        contentLoader = createExecutor(
+    }
+
+    private static Executor initializeExecutor(String cacheName) {
+        return createExecutor(
                 Configuration.getInstance()
                         .getConfigTyped(CacheSettings.CONFIG_KEY, CacheSettings.class)
                         .caches()
@@ -112,7 +127,7 @@ public abstract class URLContentCacheBase {
             return getCachedOrLoadSync(urlString);
         } catch (IOException ex) {
             LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ex);
-            return null;
+            return NO_CONTENT;
         }
     }
 
