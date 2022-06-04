@@ -27,9 +27,14 @@
         <Or>
             <Class name="org.tweetwallfx.cache.URLContentCacheBase$1" />
             <Class name="org.tweetwallfx.cache.URLContentCacheBase$2" />
+            <Class name="org.tweetwallfx.cache.URLContentCacheBaseTest" />
             <Class name="org.tweetwallfx.stepengine.api.StepEngine" />
         </Or>
         <Bug code="THROWS" />
+    </Match>
+    <Match>
+        <Class name="org.tweetwallfx.cache.URLContentCacheBaseTest" />
+        <Bug code="RCN" />
     </Match>
     <Match>
         <Or>

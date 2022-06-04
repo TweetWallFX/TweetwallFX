@@ -111,7 +111,7 @@ allprojects {
         }
     }
 
-    // now configuring for projects that coontain code not just structuring the project
+    // now configuring for projects that contain code not just structuring the project
     if (childProjects.isEmpty()) {
         // configuring standard java project
         apply plugin: 'java-library'
@@ -162,6 +162,9 @@ allprojects {
 
             testFramework group: 'junit', name: 'junit', version: '4.13.2'
             testFramework group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
+            testFramework group: 'org.mockito', name: 'mockito-core', version: '4.6.0'
+
+            testRuntimeOnly group: 'org.mockito', name: 'mockito-inline', version: '4.6.0'
         }
 
         ext {
