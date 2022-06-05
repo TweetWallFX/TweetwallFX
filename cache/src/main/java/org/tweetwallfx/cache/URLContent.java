@@ -84,10 +84,9 @@ public record URLContent(
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof  URLContent other) {
-            return Objects.equals(digest, other.digest) && Arrays.equals(data, other.data);
-        }
-        return false;
+    public boolean equals(final Object obj) {
+        return obj instanceof URLContent other
+                && Objects.equals(digest, other.digest)
+                && Arrays.equals(data, other.data);
     }
 }
