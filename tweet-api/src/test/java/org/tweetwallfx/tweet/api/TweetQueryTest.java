@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +23,35 @@
  */
 package org.tweetwallfx.tweet.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class TweetQueryTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class TweetQueryTest {
 
     @Test
-    public void queryIsNullByDefault() {
+    void queryIsNullByDefault() {
         assertNull(null, new TweetQuery()
                 .getQuery());
     }
 
     @Test
-    public void queryIsNullWhenProducedByNullParameterOnly() {
-        final String q = null;
+    void queryIsNullWhenProducedByNullParameterOnly() {
         assertNull(new TweetQuery()
-                .query(q)
+                .query((String) null)
                 .getQuery());
     }
 
     @Test
-    public void queryIsNullWhenProducedByNullParametersOnly() {
-        final String q = null;
+    void queryIsNullWhenProducedByNullParametersOnly() {
         assertNull(new TweetQuery()
-                .query(q, q, q)
+                .query(null, null, null)
                 .getQuery());
     }
 
     @Test
-    public void queryWorksWhenProducedByOneValidString() {
+    void queryWorksWhenProducedByOneValidString() {
         final String q = "@Devoxx";
         assertEquals(q, new TweetQuery()
                 .query(q)
@@ -60,7 +59,7 @@ public class TweetQueryTest {
     }
 
     @Test
-    public void queryWorksWhenProducedByOneValidAndSomeInvalidString() {
+    void queryWorksWhenProducedByOneValidAndSomeInvalidString() {
         final String q = "@Devoxx";
         assertEquals(q, new TweetQuery()
                 .query(null, q, null)
@@ -68,64 +67,64 @@ public class TweetQueryTest {
     }
 
     @Test
-    public void queryWorksWhenProducedByTwoValidString() {
+    void queryWorksWhenProducedByTwoValidString() {
         assertEquals("@Devoxx @Java", new TweetQuery()
                 .query("@Devoxx", "@Java")
                 .getQuery());
     }
 
     @Test
-    public void queryFromWithNull() {
+    void queryFromWithNull() {
         assertNull(TweetQuery.queryFrom(null));
     }
 
     @Test
-    public void queryFromWithValidStream() {
+    void queryFromWithValidStream() {
         assertEquals("from:@Devoxx", TweetQuery.queryFrom("@Devoxx"));
     }
 
     @Test
-    public void queryToWithNull() {
+    void queryToWithNull() {
         assertNull(TweetQuery.queryTo(null));
     }
 
     @Test
-    public void queryToWithValidStream() {
+    void queryToWithValidStream() {
         assertEquals("to:@Devoxx", TweetQuery.queryTo("@Devoxx"));
     }
 
     @Test
-    public void queryFilterLinks() {
+    void queryFilterLinks() {
         assertEquals(TweetQuery.QUERY_FILTER_LINKS, "Filter:Links");
     }
 
     @Test
-    public void queryFilterMedia() {
+    void queryFilterMedia() {
         assertEquals(TweetQuery.QUERY_FILTER_MEDIA, "Filter:media");
     }
 
     @Test
-    public void queryFilterOrWithNullParam() {
+    void queryFilterOrWithNullParam() {
         assertNull(TweetQuery.queryOR((String) null));
     }
 
     @Test
-    public void queryFilterOrWithNullParams() {
+    void queryFilterOrWithNullParams() {
         assertNull(TweetQuery.queryOR(null, null, null));
     }
 
     @Test
-    public void queryFilterOrWithOneValidString() {
+    void queryFilterOrWithOneValidString() {
         assertEquals("@Devoxx", TweetQuery.queryOR("@Devoxx"));
     }
 
     @Test
-    public void queryFilterOrWithOneValidStringAndNulls() {
+    void queryFilterOrWithOneValidStringAndNulls() {
         assertEquals("@Devoxx", TweetQuery.queryOR(null, "@Devoxx", null));
     }
 
     @Test
-    public void queryFilterOrWithTwoValidStringAndNulls() {
+    void queryFilterOrWithTwoValidStringAndNulls() {
         assertEquals("( @Devoxx OR @Java )", TweetQuery.queryOR(null, "@Devoxx", "@Java", null));
     }
 }

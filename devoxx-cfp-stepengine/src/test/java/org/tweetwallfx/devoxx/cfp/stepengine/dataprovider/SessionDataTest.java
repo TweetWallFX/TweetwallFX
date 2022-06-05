@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,26 @@
  */
 package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
 
+import org.junit.jupiter.api.Test;
+import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
+import org.tweetwallfx.util.JsonDataConverter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
-import org.tweetwallfx.util.JsonDataConverter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for Session Data Filtering
  */
-public class SessionDataTest {
+class SessionDataTest {
 
     @Test
-    public void testFrom1035OnMonday() throws IOException {
+    void testFrom1035OnMonday() throws IOException {
         System.out.println("from");
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()) {
@@ -51,7 +53,7 @@ public class SessionDataTest {
     }
 
     @Test
-    public void testFrom1300OnMonday() throws IOException {
+    void testFrom1300OnMonday() throws IOException {
         System.out.println("from");
         URL jsonFile = this.getClass().getResource("/Devoxx2017BeMonday.json");
         try (InputStream inputStream = jsonFile.openStream()) {

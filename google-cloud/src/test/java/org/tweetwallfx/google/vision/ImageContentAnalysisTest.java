@@ -23,6 +23,13 @@
  */
 package org.tweetwallfx.google.vision;
 
+import org.junit.jupiter.api.Test;
+import org.tweetwallfx.google.GoogleLikelihood;
+import org.tweetwallfx.google.vision.ImageContentAnalysis.AnalysisError;
+import org.tweetwallfx.google.vision.ImageContentAnalysis.LocationEntry;
+import org.tweetwallfx.google.vision.ImageContentAnalysis.SafeSearch;
+import org.tweetwallfx.google.vision.ImageContentAnalysis.TextEntry;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,33 +38,10 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.RecordComponent;
 import java.util.List;
 import java.util.Objects;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.TestName;
-import org.tweetwallfx.google.GoogleLikelihood;
-import org.tweetwallfx.google.vision.ImageContentAnalysis.AnalysisError;
-import org.tweetwallfx.google.vision.ImageContentAnalysis.LocationEntry;
-import org.tweetwallfx.google.vision.ImageContentAnalysis.SafeSearch;
-import org.tweetwallfx.google.vision.ImageContentAnalysis.TextEntry;
 
-public class ImageContentAnalysisTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Rule
-    public final TestName testName = new TestName();
-
-    @Before
-    public void setUp() {
-        System.out.println("######## " + testName.getMethodName() + " START");
-    }
-
-    @After
-    public void tearDown() {
-        System.out.println("######## " + testName.getMethodName() + " END");
-    }
+class ImageContentAnalysisTest {
 
     @SuppressWarnings("unchecked")
     private static <T> T writeAndReadObject(final T original) {
@@ -100,11 +84,11 @@ public class ImageContentAnalysisTest {
         print(original, "original");
         final Object copy = writeAndReadObject(original);
         print(copy, "copy");
-        MatcherAssert.assertThat(original, CoreMatchers.equalTo(copy));
+        assertThat(original).isEqualTo(copy);
     }
 
     @Test
-    public void testSerializationAnalysisError() {
+    void testSerializationAnalysisError() {
         testSerialization(new AnalysisError(
                 "myMessage",
                 List.of("alpha", "beta", "gamma")
@@ -112,7 +96,7 @@ public class ImageContentAnalysisTest {
     }
 
     @Test
-    public void testSerializationImageContentAnalysis() {
+    void testSerializationImageContentAnalysis() {
         testSerialization(new ImageContentAnalysis(
                 new AnalysisError(
                         "Yikes",
@@ -137,12 +121,12 @@ public class ImageContentAnalysisTest {
     }
 
     @Test
-    public void testSerializationLocationEntry() {
+    void testSerializationLocationEntry() {
         testSerialization(new LocationEntry(23d, -17d));
     }
 
     @Test
-    public void testSerializationSafeSearch() {
+    void testSerializationSafeSearch() {
         testSerialization(new SafeSearch(
                 GoogleLikelihood.LIKELY,
                 GoogleLikelihood.POSSIBLE,
@@ -152,7 +136,7 @@ public class ImageContentAnalysisTest {
     }
 
     @Test
-    public void testSerializationTextEntry() {
+    void testSerializationTextEntry() {
         testSerialization(new TextEntry(
                 "my text description",
                 0.123f,
