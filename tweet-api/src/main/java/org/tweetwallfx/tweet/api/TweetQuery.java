@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -343,24 +343,17 @@ public final class TweetQuery {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final TweetQuery query1 = (TweetQuery) o;
-
-        return Objects.equals(count, query1.count)
-                && Objects.equals(maxId, query1.maxId)
-                && Objects.equals(sinceId, query1.sinceId)
-                && Objects.equals(lang, query1.lang)
-                && Objects.equals(locale, query1.locale)
-                && Objects.equals(query, query1.query)
-                && Objects.equals(resultType, query1.resultType)
-                && Objects.equals(since, query1.since)
-                && Objects.equals(until, query1.until);
+    public boolean equals(final Object obj) {
+        return obj instanceof TweetQuery other
+                && Objects.equals(count, other.count)
+                && Objects.equals(maxId, other.maxId)
+                && Objects.equals(sinceId, other.sinceId)
+                && Objects.equals(lang, other.lang)
+                && Objects.equals(locale, other.locale)
+                && Objects.equals(query, other.query)
+                && Objects.equals(resultType, other.resultType)
+                && Objects.equals(since, other.since)
+                && Objects.equals(until, other.until);
     }
 
     @Override

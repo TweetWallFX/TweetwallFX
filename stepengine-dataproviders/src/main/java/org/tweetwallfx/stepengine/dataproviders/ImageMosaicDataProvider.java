@@ -147,20 +147,10 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
         @Override
         public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (null == obj || getClass() != obj.getClass()) {
-                return false;
-            }
-
-            final ImageStore other = (ImageStore) obj;
-            boolean result = true;
-
-            result &= Objects.nonNull(this.digest);
-            result &= Objects.nonNull(other.digest);
-            result &= Objects.equals(this.digest, other.digest);
-
-            return result;
+            return obj instanceof ImageStore other
+                    && Objects.nonNull(this.digest)
+                    && Objects.nonNull(other.digest)
+                    && Objects.equals(this.digest, other.digest);
         }
     }
 }
