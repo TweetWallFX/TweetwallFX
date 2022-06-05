@@ -23,59 +23,42 @@
  */
 package org.tweetwallfx.config;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Map;
 import java.util.ServiceLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Testing if Configuration is safely retrievable.
  */
-public class ConfigurationLoadableTest {
-
-    @Rule
-    public TestName testName = new TestName();
+class ConfigurationLoadableTest {
 
     @Test
-    public void testConfigurationLoadable() {
+    void testConfigurationLoadable() {
         final Configuration conf = Configuration.getInstance();
         System.out.println(conf);
-        Assertions.assertThat(conf).as("conf is not null").isNotNull();
-    }
-
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
-    }
-
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
+        assertThat(conf).as("conf is not null").isNotNull();
     }
 
     @Test
-    public void testCustomizedConfigurationLoaded() {
+    void testCustomizedConfigurationLoaded() {
         final Configuration configuration = Configuration.getInstance();
-        Assertions.assertThat(configuration)
+        assertThat(configuration)
                 .as("configuration is not null").isNotNull();
 
         // key test is only available if file 'src/test/resources/myCustomConfig.json' was loaded by Configuration
         final Object testConfig = configuration.getConfig("test");
 
-        Assertions.assertThat(testConfig)
+        assertThat(testConfig)
                 .isNotNull()
                 .isInstanceOf(Map.class);
 
         @SuppressWarnings("unchecked")
         final Map<String, Object> testConfigMap = (Map<String, Object>) testConfig;
 
-        Assertions.assertThat(testConfigMap)
+        assertThat(testConfigMap)
                 .isNotNull()
                 .containsOnlyKeys("fileName")
                 .containsEntry("fileName", "myCustomConfig.json");

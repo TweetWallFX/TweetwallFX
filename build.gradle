@@ -160,11 +160,14 @@ allprojects {
             jaxb group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '4.0.0'
             jaxb group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
-            testFramework group: 'junit', name: 'junit', version: '4.13.2'
+            testFramework group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.2'
+            testFramework group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.8.2'
             testFramework group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
-            testFramework group: 'org.mockito', name: 'mockito-core', version: '4.6.0'
+            testFramework group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
 
-            testRuntimeOnly group: 'org.mockito', name: 'mockito-inline', version: '4.6.0'
+            testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.2'
+            testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.8.2'
+            testRuntimeOnly group: 'org.mockito', name: 'mockito-inline', version: '4.6.1'
         }
 
         ext {
@@ -217,6 +220,11 @@ allprojects {
             jvmArgs getJvmModulePath()
             jvmArgs '--add-modules'
             jvmArgs getJvmAdditionalModules()
+
+            useJUnitPlatform()
+            testLogging {
+                events 'skipped', 'passed', 'failed'
+            }
         }
 
         tasks.named('check') {

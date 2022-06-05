@@ -23,80 +23,55 @@
  */
 package org.tweetwallfx.util;
 
-import java.util.Arrays;
-import java.util.List;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
-public class StringNumberComparatorTest {
+import java.util.stream.Stream;
 
-    @Rule
-    public TestName testName = new TestName();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-    @Parameterized.Parameter(0)
-    public int result;
+class StringNumberComparatorTest {
 
-    @Parameterized.Parameter(1)
-    public String string1;
-
-    @Parameterized.Parameter(2)
-    public String string2;
-
-    @Parameterized.Parameters(name = "{0} == compare({1}, {2})")
-    public static List<Object[]> parameters() {
-        return Arrays.asList(
-                new Object[]{
+    static Stream<Arguments> parameters() {
+        return Stream.of(
+                arguments(
                     0,
                     "A",
                     "A"
-                },
-                new Object[]{
+                ),
+                arguments(
                     0,
                     "Alpha",
                     "Alpha"
-                },
-                new Object[]{
+                ),
+                arguments(
                     -1,
                     "Alpha 0",
                     "Alpha 00"
-                },
-                new Object[]{
+                ),
+                arguments(
                     -1,
                     "Alpha 0",
                     "Alpha 0 "
-                },
-                new Object[]{
+                ),
+                arguments(
                     1,
                     "Beta 20",
                     "Beta 2"
-                },
-                new Object[]{
+                ),
+                arguments(
                     1,
                     "Beta 00020",
                     "Beta 2"
-                }
+                )
         );
     }
 
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
-    }
-
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
-    }
-
-    @Test
-    public void checkTestCase() {
+    @ParameterizedTest(name = "{0} == compare({1}, {2})")
+    @MethodSource("parameters")
+    void checkTestCase(int result, String string1, String string2) {
         assertEquals(result, StringNumberComparator.INSTANCE.compare(string1, string2));
     }
 }

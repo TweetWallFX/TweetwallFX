@@ -23,7 +23,7 @@
  */
 package org.tweetwallfx.cache;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +31,9 @@ import java.io.InputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 
-public class URLContentTest {
+class URLContentTest {
     @Test
-    public void equals() throws IOException {
+    void equals() throws IOException {
         assertThat(NO_CONTENT)
                 .isEqualTo(new URLContent(new byte[0], NO_CONTENT.digest()))
                 .isEqualTo(URLContent.of(InputStream.nullInputStream()));

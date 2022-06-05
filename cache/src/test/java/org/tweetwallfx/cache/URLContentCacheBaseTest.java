@@ -24,11 +24,10 @@
 package org.tweetwallfx.cache;
 
 import org.ehcache.Cache;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
@@ -44,8 +43,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 
-@RunWith(MockitoJUnitRunner.class)
-public class URLContentCacheBaseTest {
+@MockitoSettings
+class URLContentCacheBaseTest {
     @Mock
     private Cache<String, URLContent> urlContentCache;
     @Mock
@@ -54,14 +53,14 @@ public class URLContentCacheBaseTest {
     private URLContent cachedValue;
     private URLContentCacheBase cacheBase;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         cacheBase = new URLContentCacheBase("test", urlContentCache, contentLoader) {
         };
     }
 
     @Test
-    public void testGetDefault() {
+    void testGetDefault() {
         try (var cacheManagerProvider = mockStatic(CacheManagerProvider.class);
              var executors = mockStatic(Executors.class)) {
             cacheManagerProvider.when(() -> CacheManagerProvider.getCache("default", String.class,
@@ -73,7 +72,7 @@ public class URLContentCacheBaseTest {
     }
 
     @Test
-    public void hasCachedContent() {
+    void hasCachedContent() {
         when(urlContentCache.containsKey("file:///one")).thenReturn(false);
         when(urlContentCache.containsKey("file:///two")).thenReturn(true);
         assertThat(cacheBase.hasCachedContent("file:///one")).isFalse();
@@ -81,7 +80,7 @@ public class URLContentCacheBaseTest {
     }
 
     @Test
-    public void getCachedContent() {
+    void getCachedContent() {
         when(urlContentCache.get("file:///one")).thenReturn(null);
         when(urlContentCache.get("file:///two")).thenReturn(cachedValue);
         assertThat(cacheBase.getCachedContent("file:///one")).isEmpty();
@@ -89,7 +88,7 @@ public class URLContentCacheBaseTest {
     }
 
     @Test
-    public void getCachedOrLoad() {
+    void getCachedOrLoad() {
         when(urlContentCache.get("file:///one")).thenReturn(null);
         when(urlContentCache.get("file:///two")).thenReturn(cachedValue);
         assertThat(cacheBase.getCachedOrLoad("file:///one")).isEqualTo(NO_CONTENT);
@@ -97,7 +96,7 @@ public class URLContentCacheBaseTest {
     }
 
     @Test
-    public void putCachedContent() {
+    void putCachedContent() {
         cacheBase.putCachedContent("file:///one", InputStream.nullInputStream());
         verify(urlContentCache).put("file:///one", NO_CONTENT);
         verifyNoMoreInteractions(urlContentCache, contentLoader, cachedValue);
