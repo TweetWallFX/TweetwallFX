@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import javafx.concurrent.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ehcache.Cache;
@@ -142,19 +141,15 @@ public abstract class URLContentCacheBase {
      */
     public final void getCachedOrLoad(final String urlString, final Consumer<URLContent> contentConsumer) {
         Objects.requireNonNull(contentConsumer, "contentConsumer must not be null");
-        final Task<URLContent> task = new Task<URLContent>() {
 
-            @Override
-            protected URLContent call() throws Exception {
-                return getCachedOrLoadSync(urlString);
+        contentLoader.execute(() -> {
+            try {
+                final URLContent content = getCachedOrLoadSync(urlString);
+                contentConsumer.accept(content);
+            } catch (final IOException ioe) {
+                LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ioe);
             }
-        };
-
-        task.setOnSucceeded(event
-                -> contentConsumer.accept(task.getValue()));
-        task.setOnFailed(event
-                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
-        contentLoader.execute(task);
+        });
     }
 
     private URLContent getCachedOrLoadSync(final String urlString) throws IOException {
@@ -212,24 +207,18 @@ public abstract class URLContentCacheBase {
     }
 
     private void putCachedContentAsync(final String urlString, final Consumer<URLContent> contentConsumer) {
-        final Task<URLContent> task = new Task<URLContent>() {
+        contentLoader.execute(() -> {
+            try {
+                final URLContent content = URLContent.of(urlString);
+                putCachedContent(urlString, content);
 
-            @Override
-            protected URLContent call() throws Exception {
-                return URLContent.of(urlString);
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            putCachedContent(urlString, task.getValue());
-
-            if (null != contentConsumer) {
-                contentConsumer.accept(task.getValue());
+                if (null != contentConsumer) {
+                    contentConsumer.accept(content);
+                }
+            } catch (final IOException ioe) {
+                LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ioe);
             }
         });
-        task.setOnFailed(event
-                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
-        contentLoader.execute(task);
     }
 
     public static URLContentCacheBase getDefault() {
