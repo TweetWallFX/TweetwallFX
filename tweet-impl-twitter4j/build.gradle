@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.7'
-    implementation group: 'org.twitter4j', name: 'twitter4j-stream', version: '4.0.7'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
+    implementation 'org.twitter4j:twitter4j-core:4.0.7'
+    implementation 'org.twitter4j:twitter4j-stream:4.0.7'
     implementation project(':tweetwallfx-filterchain')
     implementation project(':tweetwallfx-tweet-api')
 }
