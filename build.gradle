@@ -37,7 +37,7 @@ plugins {
 
 ext {
     javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
-    javaFxPlatform = osdetector.arch == 'aarch_64' ? javaFxPlatform + '-aarch64' : javaFxPlatform;
+    javaFxPlatform = osdetector.arch == 'aarch_64' ? javaFxPlatform + '-aarch64' : javaFxPlatform
 }
 
 allprojects {
@@ -99,9 +99,9 @@ allprojects {
                 licenseHeaderFile rootProject.file('LICENSE.spotlessTemplate')
             }
 
-            if (plugins.hasPlugin(org.gradle.api.plugins.GroovyPlugin)) {
+            if (plugins.hasPlugin(GroovyPlugin)) {
                 groovy(closure)
-            } else if (plugins.hasPlugin(org.gradle.api.plugins.JavaPlugin)) {
+            } else if (plugins.hasPlugin(JavaPlugin)) {
                 java(closure)
             }
         }
@@ -145,6 +145,8 @@ allprojects {
             }
             testFramework {
                 description = 'Libraries for testing'
+                // exclude old junit api
+                exclude group: 'junit'
             }
             testImplementation.extendsFrom testFramework
         }
@@ -190,7 +192,7 @@ allprojects {
         tasks.named('javadoc') {
             options.addStringOption('-module-path', getJvmModulePath())
             options.addStringOption('-add-modules', getJvmAdditionalModules())
-            enabled = false // TODO: reenable (currently breaks build with ClassCastException)
+            enabled = false // TODO: re-enable (currently breaks build with ClassCastException)
         }
 
         tasks.withType(JavaCompile).configureEach {
@@ -287,7 +289,7 @@ allprojects {
             }
         }
 
-        plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
+        plugins.withType(GroovyPlugin) {
             dependencies {
                 implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '4.0.2'
                 testFramework group: 'org.spockframework', name: 'spock-core', version: '2.1-groovy-3.0'
