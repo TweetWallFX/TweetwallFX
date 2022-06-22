@@ -24,7 +24,7 @@
 
 dependencies {
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.7.0'
-    implementation 'com.google.cloud:google-cloud-vision:2.1.1'
+    implementation 'com.google.cloud:google-cloud-vision:2.1.2'
     implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
     implementation 'org.ehcache:ehcache:3.10.0'
     implementation project(':tweetwallfx-cache')
