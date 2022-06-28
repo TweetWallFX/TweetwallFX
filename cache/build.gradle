@@ -23,7 +23,7 @@
  */
 
 dependencies {
-    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.0'
+    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.1'
     implementation 'javax.cache:cache-api:1.1.1'
     implementation 'org.ehcache:ehcache:3.10.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
