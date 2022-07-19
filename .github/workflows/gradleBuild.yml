@@ -50,19 +50,19 @@ jobs:
 
       # Run assemble tasks
       - name: Run assemble tasks
-        uses: gradle/gradle-build-action@v2.2.1
+        uses: gradle/gradle-build-action@v2.2.2
         with:
           arguments: --no-daemon --refresh-dependencies --warning-mode all assemble
 
       # Run test tasks
       - name: Run test tasks
-        uses: gradle/gradle-build-action@v2.2.1
+        uses: gradle/gradle-build-action@v2.2.2
         with:
           arguments: --no-daemon --warning-mode all test
 
       # Run check tasks
       - name: Run check tasks
-        uses: gradle/gradle-build-action@v2.2.1
+        uses: gradle/gradle-build-action@v2.2.2
         with:
           arguments: --no-daemon --warning-mode all check
 

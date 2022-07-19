@@ -41,7 +41,7 @@ jobs:
 
       # Run dependencyUpdates task
       - name: Run dependencyUpdates task
-        uses: gradle/gradle-build-action@v2.2.1
+        uses: gradle/gradle-build-action@v2.2.2
         with:
           arguments: --no-daemon --refresh-dependencies dependencyUpdates
 
