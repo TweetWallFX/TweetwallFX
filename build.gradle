@@ -152,10 +152,10 @@ allprojects {
         }
 
         dependencies {
-            javafx 'org.openjfx:javafx-base:18.0.1:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-graphics:18.0.1:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-fxml:18.0.1:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-controls:18.0.1:' + javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '18.0.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '18.0.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '18.0.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '18.0.1', classifier: javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.0'
             jaxb 'org.eclipse.angus:angus-activation:1.0.0'
