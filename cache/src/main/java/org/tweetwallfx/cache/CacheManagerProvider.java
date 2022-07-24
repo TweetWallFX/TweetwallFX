@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
 import org.ehcache.config.Builder;
 import org.ehcache.config.ResourcePools;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -62,7 +61,7 @@ public final class CacheManagerProvider {
     }
 
     public static <K, V> Cache<K, V> getCache(final String alias, final Class<K> keyClass, final Class<V> valueClass) {
-        final Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
+        final org.ehcache.Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
 
         if (null == cache) {
             throw new IllegalArgumentException("No cache named '" + alias + "' exists!");
@@ -75,7 +74,7 @@ public final class CacheManagerProvider {
             );
         }
 
-        return cache;
+        return new Cache<>(cache);
     }
 
     private static org.ehcache.CacheManager createCacheManager() {

@@ -35,7 +35,6 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
 import org.tweetwallfx.config.Configuration;
 
 import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
