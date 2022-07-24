@@ -44,7 +44,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
+import org.tweetwallfx.cache.Cache;
 import org.tweetwallfx.cache.CacheManagerProvider;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.google.GoogleSettings;
