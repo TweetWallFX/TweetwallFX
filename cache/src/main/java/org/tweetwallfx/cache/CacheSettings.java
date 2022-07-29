@@ -29,7 +29,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.ehcache.config.units.MemoryUnit;
 import org.tweetwallfx.config.ConfigurationConverter;
 import static org.tweetwallfx.util.Nullable.nullable;
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
@@ -128,12 +127,12 @@ public record CacheSettings(
     public static record CacheResource(
             CacheResourceType type,
             Long amount,
-            MemoryUnit unit) {
+            MemUnit unit) {
 
         public CacheResource(
                 final CacheResourceType type,
                 final Long amount,
-                final MemoryUnit unit) {
+                final MemUnit unit) {
             this.type = Objects.requireNonNull(type, "type must not be null!");
             this.amount = Objects.requireNonNull(amount, "amount must not be null!");
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");
@@ -145,5 +144,35 @@ public record CacheSettings(
         DISK,
         HEAP,
         OFFHEAP;
+    }
+
+    /**
+     * A memory quantity unit.
+     */
+    public enum MemUnit {
+        /**
+         * Bytes.
+         */
+        B,
+        /**
+         * Kilobytes.
+         */
+        KB,
+        /**
+         * Megabytes.
+         */
+        MB,
+        /**
+         * Gigabytes.
+         */
+        GB,
+        /**
+         * Terabytes.
+         */
+        TB,
+        /**
+         * Petabytes.
+         */
+        PB;
     }
 }

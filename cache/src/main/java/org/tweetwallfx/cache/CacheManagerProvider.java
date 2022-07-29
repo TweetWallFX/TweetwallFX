@@ -38,6 +38,7 @@ import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.event.EventFiring;
 import org.ehcache.event.EventOrdering;
 import org.ehcache.event.EventType;
@@ -133,9 +134,9 @@ public final class CacheManagerProvider {
 
     private static ResourcePoolsBuilder addResource(final ResourcePoolsBuilder builder, final CacheResource cacheResource) {
         return switch (cacheResource.type()) {
-            case DISK -> builder.disk(cacheResource.amount(), cacheResource.unit(), true);
+            case DISK -> builder.disk(cacheResource.amount(), convert(cacheResource.unit()), true);
             case HEAP -> builder.heap(cacheResource.amount(), EntryUnit.ENTRIES);
-            case OFFHEAP -> builder.offheap(cacheResource.amount(), cacheResource.unit());
+            case OFFHEAP -> builder.offheap(cacheResource.amount(), convert(cacheResource.unit()));
         };
     }
 
@@ -144,6 +145,17 @@ public final class CacheManagerProvider {
             case NONE -> ExpiryPolicyBuilder.noExpiration();
             case TIME_TO_IDLE -> ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
             case TIME_TO_LIVE -> ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());
+        };
+        }
+
+    private static MemoryUnit convert(final CacheSettings.MemUnit memUnit) {
+        return switch(memUnit) {
+            case B -> MemoryUnit.B;
+            case KB -> MemoryUnit.KB;
+            case MB -> MemoryUnit.MB;
+            case GB -> MemoryUnit.GB;
+            case TB -> MemoryUnit.TB;
+            case PB -> MemoryUnit.PB;
         };
     }
 }
