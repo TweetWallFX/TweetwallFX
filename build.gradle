@@ -33,6 +33,7 @@ plugins {
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
     id 'net.ltgt.errorprone' version '2.0.2' apply false
     id 'org.sonarqube' version '3.4.0.2513'
+    id 'com.autonomousapps.dependency-analysis' version '1.11.3'
 }
 
 ext {
@@ -108,6 +109,33 @@ allprojects {
 
         tasks.named('check') {
             dependsOn spotlessCheck
+        }
+    }
+
+    // configuring dependencyAnalysis
+    plugins.withType(com.autonomousapps.DependencyAnalysisPlugin) {
+        if (rootProject == project) {
+            dependencyAnalysis {
+                issues {
+                    all { // applies to all projects
+                        onUsedTransitiveDependencies {
+                            severity 'ignore'
+                        }
+                        onUnusedDependencies {
+                            severity 'warn' // default
+                        }
+                        onRedundantPlugins {
+                            severity 'fail'
+                        }
+                    }
+                }
+            }
+
+            afterEvaluate {
+                tasks.named('buildHealth').configure {
+                    printBuildHealth = true
+                }
+            }
         }
     }
 

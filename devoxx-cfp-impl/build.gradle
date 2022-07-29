@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 dependencies {
-    implementation project(':tweetwallfx-configuration')
-    implementation project(':tweetwallfx-devoxx-api-cfp')
+    api project(':tweetwallfx-configuration')
+    api project(':tweetwallfx-devoxx-api-cfp')
 
     testImplementation project(':tweetwallfx-devoxx-cfp-test')
 }

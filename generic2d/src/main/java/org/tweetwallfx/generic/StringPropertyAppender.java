@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.tweet;
+package org.tweetwallfx.generic;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -31,7 +31,7 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Property;
 
-public class StringPropertyAppender extends AbstractAppender {
+class StringPropertyAppender extends AbstractAppender {
 
     private final StringProperty s = new SimpleStringProperty();
 
