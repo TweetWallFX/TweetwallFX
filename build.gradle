@@ -33,7 +33,7 @@ plugins {
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
     id 'net.ltgt.errorprone' version '2.0.2' apply false
     id 'org.sonarqube' version '3.4.0.2513'
-    id 'com.autonomousapps.dependency-analysis' version '1.12.0'
+    id 'com.autonomousapps.dependency-analysis' version '1.13.1'
 }
 
 ext {
