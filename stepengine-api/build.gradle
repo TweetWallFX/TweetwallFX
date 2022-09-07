@@ -26,6 +26,6 @@ dependencies {
     api project(':tweetwallfx-configuration')
     api project(':tweetwallfx-tweet-api')
 
-    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.1'
+    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.2'
     implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
 }
