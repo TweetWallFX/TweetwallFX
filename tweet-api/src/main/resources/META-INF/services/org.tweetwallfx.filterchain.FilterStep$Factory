@@ -1,5 +1,6 @@
 org.tweetwallfx.tweet.api.filter.AcceptFromSenderFilterStep$FactoryImpl
 org.tweetwallfx.tweet.api.filter.MaxHashtagLengthFilterStep$FactoryImpl
 org.tweetwallfx.tweet.api.filter.RejectContainingHashtagFilterStep$FactoryImpl
+org.tweetwallfx.tweet.api.filter.RejectContainingTextPhraseFilterStep$FactoryImpl
 org.tweetwallfx.tweet.api.filter.RejectFromSenderFilterStep$FactoryImpl
 org.tweetwallfx.tweet.api.filter.UserMinimumFollwerCountFilterStep$FactoryImpl
