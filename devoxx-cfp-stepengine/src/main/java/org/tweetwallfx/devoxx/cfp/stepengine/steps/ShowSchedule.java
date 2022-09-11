@@ -56,7 +56,7 @@ import org.tweetwallfx.stepengine.api.config.AbstractConfig;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
- * Devoxx 2019 Show Schedule (Flip In) Animation Step
+ * Show Schedule (Flip In) Animation Step
  */
 public class ShowSchedule implements Step {
 
@@ -91,7 +91,7 @@ public class ShowSchedule implements Step {
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
             fadeIn.setOnFinished(e -> {
-                LOGGER.info("Calling proceed from Devoxx19SchowSchedule");
+                LOGGER.info("Calling proceed from ShowSchedule");
                 context.proceed();
             });
             scheduleNode.setLayoutX(config.layoutX);
