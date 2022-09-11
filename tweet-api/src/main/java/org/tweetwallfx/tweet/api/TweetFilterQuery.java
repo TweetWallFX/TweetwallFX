@@ -26,6 +26,7 @@ package org.tweetwallfx.tweet.api;
 import java.util.Arrays;
 import java.util.Objects;
 
+@SuppressWarnings("CanIgnoreReturnValueSuggester")
 public final class TweetFilterQuery {
 
     private int count = 0;
