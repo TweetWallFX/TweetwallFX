@@ -91,6 +91,7 @@ class StepIterator {
         return steps.get(stepIndex++);
     }
 
+    @SuppressWarnings("CanIgnoreReturnValueSuggester")
     private static class Builder {
 
         private static final Map<String, Step.Factory> FACTORIES = StreamSupport
