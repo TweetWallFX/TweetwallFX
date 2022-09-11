@@ -21,7 +21,7 @@ jobs:
   checkUpdates:
     name: Check for available updates
     runs-on: ubuntu-latest
-    
+
     steps:
       # Check out sources
       - name: Fetch Sources
