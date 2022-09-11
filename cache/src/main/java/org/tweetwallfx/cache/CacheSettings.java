@@ -135,15 +135,22 @@ public record CacheSettings(
                 final MemUnit unit) {
             this.type = Objects.requireNonNull(type, "type must not be null!");
             this.amount = Objects.requireNonNull(amount, "amount must not be null!");
-            this.unit = Objects.requireNonNull(unit, "unit must not be null!");
+            this.unit = this.type.requiresUnit
+                    ? Objects.requireNonNull(unit, "unit must not be null!")
+                    : unit;
         }
     }
 
     public enum CacheResourceType {
 
-        DISK,
-        HEAP,
-        OFFHEAP;
+        DISK(true),
+        HEAP(false),
+        OFFHEAP(true);
+        private final boolean requiresUnit;
+
+        CacheResourceType(final boolean requiresUnit) {
+           this.requiresUnit = requiresUnit;
+        }
     }
 
     /**
