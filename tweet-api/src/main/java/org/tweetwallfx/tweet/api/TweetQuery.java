@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("CanIgnoreReturnValueSuggester")
 public final class TweetQuery {
 
     public static final String QUERY_FILTER_MEDIA = "Filter:media";
