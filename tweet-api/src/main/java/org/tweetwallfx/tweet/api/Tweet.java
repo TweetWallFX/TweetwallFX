@@ -158,6 +158,7 @@ public interface Tweet extends BasicEntry {
         return new TextExtractor(this).getTextWithout(entryToRemove);
     }
 
+    @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class TextExtractor {
 
         private final Set<TweetEntry> entriesToRemove = new TreeSet<>(Comparator.comparing(TweetEntry::getStart).reversed());
