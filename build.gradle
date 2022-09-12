@@ -43,7 +43,13 @@ ext {
 
 allprojects {
     group = 'org.tweetwallfx'
-    version = currentVersion
+    version = VersionNumber.parse(currentVersion).with {
+        if ('release' == System.getenv('GITHUB_REF_NAME')) {
+            return String.format('%d.%d.%d', major, minor, micro)
+        } else {
+            return String.format('%d.%d-SNAPSHOT', major, minor)
+        }
+    }
     description = 'JavaFX based Tweetwall (' + name + ')'
 
     repositories {
@@ -148,6 +154,9 @@ allprojects {
         apply plugin: 'eclipse'
         apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
+
+        java.withJavadocJar()
+        java.withSourcesJar()
 
         jacoco {
             toolVersion = '0.8.8'
@@ -329,9 +338,20 @@ allprojects {
         }
 
         apply plugin: 'nebula.maven-publish'
-        apply plugin: 'nebula.javadoc-jar'
-        apply plugin: 'nebula.source-jar'
         apply plugin: 'nebula.publish-verification'
+
+        publishing {
+            repositories {
+                maven {
+                    name = 'GitHubPackages'
+                    url = uri('https://maven.pkg.github.com/' + System.getenv('GITHUB_REPOSITORY'))
+                    credentials {
+                        username = System.getenv('GITHUB_ACTOR')
+                        password = System.getenv('GITHUB_TOKEN')
+                    }
+                }
+            }
+        }
     }
 }
 
