@@ -26,6 +26,6 @@ dependencies {
     api 'org.twitter4j:twitter4j-core:4.0.7'
     api project(':tweetwallfx-tweet-api')
 
-    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
     implementation 'org.twitter4j:twitter4j-stream:4.0.7'
 }
