@@ -200,7 +200,7 @@ allprojects {
             jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.1'
 
             testFramework 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-            testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.0'
+            testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.1'
             testFramework 'org.assertj:assertj-core:3.23.1'
             testFramework 'org.mockito:mockito-junit-jupiter:4.8.0'
 
