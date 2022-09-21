@@ -197,7 +197,7 @@ allprojects {
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.0'
             jaxb 'org.eclipse.angus:angus-activation:1.0.0'
             jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
-            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
+            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.1'
 
             testFramework 'org.junit.jupiter:junit-jupiter-api:5.9.0'
             testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.0'
