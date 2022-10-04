@@ -329,7 +329,7 @@ allprojects {
         plugins.withType(GroovyPlugin) {
             dependencies {
                 implementation 'org.codehaus.groovy:groovy-all:4.0.2'
-                testFramework 'org.spockframework:spock-core:2.2-groovy-4.0'
+                testFramework 'org.spockframework:spock-core:2.3-groovy-4.0'
             }
         }
 
