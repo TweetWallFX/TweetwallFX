@@ -1,0 +1,222 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2022 TweetWallFX
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.tweetwallfx.conference.spi;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import org.tweetwallfx.conference.api.ScheduleSlot;
+import org.tweetwallfx.conference.api.SessionType;
+import org.tweetwallfx.conference.api.Speaker;
+import org.tweetwallfx.conference.api.Talk;
+import org.tweetwallfx.conference.api.Track;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import org.tweetwallfx.conference.api.ConferenceClient;
+
+public final class TalkImpl implements Talk {
+
+    private final String id;
+    private final String name;
+    private final String audienceLevel;
+    private final SessionType sessionType;
+    private final Locale language;
+    private final List<ScheduleSlot> scheduleSlots;
+    private final List<Speaker> speakers;
+    private final List<String> tags;
+    private final Track track;
+
+    private TalkImpl(final Builder builder) {
+        this.id = Objects.requireNonNull(builder.id, "id must not be null");
+        this.name = Objects.requireNonNull(builder.name, "name must not be null");
+        this.audienceLevel = Objects.requireNonNull(builder.audienceLevel, "audienceLevel must not be null");
+        this.sessionType = Objects.requireNonNull(builder.sessionType, "sessionType must not be null");
+        this.language = Objects.requireNonNull(builder.language, "language must not be null");
+        this.scheduleSlots = List.copyOf(builder.scheduleSlots);
+        this.speakers = List.copyOf(builder.speakers);
+        this.tags = List.copyOf(builder.tags);
+        this.track = Objects.requireNonNull(builder.track, "track must not be null");
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getAudienceLevel() {
+        return audienceLevel;
+    }
+
+    @Override
+    public SessionType getSessionType() {
+        return sessionType;
+    }
+
+    @Override
+    public Locale getLanguage() {
+        return language;
+    }
+
+    @Override
+    public List<ScheduleSlot> getScheduleSlots() {
+        return List.copyOf(scheduleSlots);
+    }
+
+    @Override
+    public List<Speaker> getSpeakers() {
+        return List.copyOf(speakers);
+    }
+
+    @Override
+    public List<String> getTags() {
+        return List.copyOf(tags);
+    }
+
+    @Override
+    public Track getTrack() {
+        return track;
+    }
+
+    @Override
+    public Optional<Talk> reload() {
+        return ConferenceClient.getClient().getTalk(id);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("TalkImpl")
+                .append("{id=").append(getId())
+                .append(", name=").append(getName())
+                .append(", audienceLevel=").append(getAudienceLevel())
+                .append(", sessionType=").append(getSessionType())
+                .append(", language=").append(getLanguage())
+                .append(", scheduleSlots=").append(getScheduleSlots())
+                .append(", speakers=").append(getSpeakers())
+                .append(", tags=").append(getTags())
+                .append(", track=").append(getTrack())
+                .append('}')
+                .toString();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @SuppressWarnings("CanIgnoreReturnValueSuggester")
+    public static final class Builder {
+
+        private String id;
+        private String name;
+        private String audienceLevel;
+        private SessionType sessionType;
+        private Locale language;
+        private List<ScheduleSlot> scheduleSlots = new ArrayList<>();
+        private List<Speaker> speakers = new ArrayList<>();
+        private List<String> tags = new ArrayList<>();
+        private Track track;
+
+        private Builder() {
+        }
+
+        public Builder addScheduleSlot(final ScheduleSlot scheduleSlot) {
+            scheduleSlots.add(Objects.requireNonNull(scheduleSlot, "scheduleSlot must not be null"));
+            return this;
+        }
+
+        public Builder addSpeaker(final Speaker speaker) {
+            speakers.add(Objects.requireNonNull(speaker, "speaker must not be null"));
+            return this;
+        }
+
+        public Builder addTag(final String tag) {
+            tags.add(Objects.requireNonNull(tag, "tag must not be null"));
+            return this;
+        }
+
+        public Builder withId(final String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
+            return this;
+        }
+
+        public Builder withName(final String name) {
+            this.name = Objects.requireNonNull(name, "name must not be null");
+            return this;
+        }
+
+        public Builder withAudienceLevel(final String audienceLevel) {
+            this.audienceLevel = Objects.requireNonNull(audienceLevel, "audienceLevel must not be null");
+            return this;
+        }
+
+        public Builder withSessionType(final SessionType sessionType) {
+            this.sessionType = Objects.requireNonNull(sessionType, "sessionType must not be null");
+            return this;
+        }
+
+        public Builder withLanguage(final Locale language) {
+            this.language = Objects.requireNonNull(language, "language must not be null");
+            return this;
+        }
+
+        public Builder withScheduleSlots(final Collection<? extends ScheduleSlot> scheduleSlots) {
+            this.scheduleSlots.clear();
+            if (null != scheduleSlots) {
+                scheduleSlots.forEach(this::addScheduleSlot);
+            }
+            return this;
+        }
+
+        public Builder withSpeakers(final Collection<? extends Speaker> speakers) {
+            this.speakers.clear();
+            if (null != speakers) {
+                speakers.forEach(this::addSpeaker);
+            }
+            return this;
+        }
+
+        public Builder withTags(final Collection<? extends String> tags) {
+            this.tags.clear();
+            if (null != tags) {
+                tags.forEach(this::addTag);
+            }
+            return this;
+        }
+
+        public Builder withTrack(final Track track) {
+            this.track = Objects.requireNonNull(track, "track must not be null");
+            return this;
+        }
+
+        public Talk build() {
+            return new TalkImpl(this);
+        }
+    }
+}

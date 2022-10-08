@@ -334,7 +334,7 @@ allprojects {
         }
 
         tasks.withType(Test).configureEach {
-            systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
+            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
         }
 
         apply plugin: 'nebula.maven-publish'
