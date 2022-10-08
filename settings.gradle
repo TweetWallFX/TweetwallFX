@@ -51,10 +51,14 @@ includeWithName ':2d', 'tweetwallfx-2d'
 
 includeWithName ':google-cloud', 'tweetwallfx-google-cloud'
 
-includeWithName ':devoxx-api-cfp', 'tweetwallfx-devoxx-api-cfp'
-includeWithName ':devoxx-cfp-stepengine', 'tweetwallfx-devoxx-cfp-stepengine'
-includeWithName ':devoxx-cfp-impl', 'tweetwallfx-devoxx-cfp-impl'
-includeWithName ':devoxx-cfp-test', 'tweetwallfx-devoxx-cfp-test'
+includeWithName ':conference-api', 'tweetwallfx-conference-api'
+includeWithName ':conference-spi', 'tweetwallfx-conference-spi'
+includeWithName ':conference-stepengine', 'tweetwallfx-conference-stepengine'
+includeWithName ':conference-test', 'tweetwallfx-conference-test'
+
+/*
+includeWithName ':conference-impl-fixed', 'tweetwallfx-conference-impl-fixed'
+*/
 
 includeWithName ':generic2d', 'tweetwallfx-generic2d'
 
