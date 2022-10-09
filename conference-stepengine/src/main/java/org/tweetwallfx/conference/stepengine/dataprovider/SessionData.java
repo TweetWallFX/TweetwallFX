@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tweetwallfx.conference.api.Room;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
@@ -42,11 +43,10 @@ import org.tweetwallfx.conference.api.Talk;
 public class SessionData {
 
     private static final Logger LOG = LogManager.getLogger(SessionData.class);
-//    private static final Comparator<SessionData> COMP = Comparator.comparing(SessionData::getRoomSetup)
-//            .reversed()
-//            .thenComparing(SessionData::getRoom, StringNumberComparator.INSTANCE);
+    private static final Comparator<SessionData> COMP = Comparator
+            .comparing(SessionData::getRoom, Comparator.comparing(Room::getWeight));
 
-    public final String room;
+    public final Room room;
     public final List<String> speakers;
     public final String title;
     public final Instant beginTime;
@@ -56,7 +56,7 @@ public class SessionData {
     public final String trackImageUrl;
 
     private SessionData(final ScheduleSlot slot) {
-        this.room = slot.getRoom().getName();
+        this.room = slot.getRoom();
         // session data for schedule slots with talks only
         Talk talk = slot.getTalk().get();
         this.speakerObjects = List.copyOf(talk.getSpeakers());
@@ -77,7 +77,7 @@ public class SessionData {
                 .entrySet().stream()
                 .map(entry -> entry.getValue().get(0))
                 .map(SessionData::new)
-                //.sorted(SessionData.COMP) // TODO: figure out Conference Client specific room type sorting
+                .sorted(SessionData.COMP)
                 .toList();
         final Optional<Instant> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
         if (min.isPresent()) {
@@ -86,6 +86,10 @@ public class SessionData {
 
         LOG.info("Possible Next Sessions ({}):\n {}", sessionData.size(), sessionData);
         return sessionData;
+    }
+
+    private Room getRoom() {
+        return room;
     }
 
     @Override

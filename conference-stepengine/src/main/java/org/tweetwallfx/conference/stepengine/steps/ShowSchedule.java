@@ -24,9 +24,14 @@
 package org.tweetwallfx.conference.stepengine.steps;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.time.Instant;
+import java.time.OffsetTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -61,6 +66,10 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 public class ShowSchedule implements Step {
 
     private static final Logger LOGGER = LogManager.getLogger(ShowSchedule.class);
+    private static final ZoneId ZONE_ID = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.zone"))
+                .map(ZoneId::of)
+                .orElseGet(ZoneId::systemDefault);
+    private static final DateTimeFormatter HOUR_MINUTES = DateTimeFormatter.ofPattern("HH:mm");
     private final Config config;
 
     private ShowSchedule(Config config) {
@@ -146,10 +155,12 @@ public class ShowSchedule implements Step {
         speakerNames.setTextAlignment(TextAlignment.RIGHT);
         speakerNames.getStyleClass().add("speakerName");
 
-        var room = new Label(sessionData.room);
+        var room = new Label(sessionData.room.getName());
         room.getStyleClass().add("room");
 
-        var times = new Label(sessionData.beginTime + " - " + sessionData.endTime);
+        var times = new Label(String.format("%s - %s",
+                HOUR_MINUTES.format(OffsetTime.ofInstant(sessionData.beginTime, ZONE_ID)),
+                HOUR_MINUTES.format(OffsetTime.ofInstant(sessionData.endTime, ZONE_ID))));
         times.getStyleClass().add("times");
 
         var topLeftVBox = new VBox(4, room, times);

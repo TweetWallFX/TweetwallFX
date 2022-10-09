@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.tweetwallfx.devoxx.cfp.stepengine.dataprovider;
+package org.tweetwallfx.conference.stepengine.dataprovider;
 
-import org.tweetwallfx.conference.stepengine.dataprovider.SessionData;
 import org.junit.jupiter.api.Test;
 import org.tweetwallfx.util.JsonDataConverter;
 
