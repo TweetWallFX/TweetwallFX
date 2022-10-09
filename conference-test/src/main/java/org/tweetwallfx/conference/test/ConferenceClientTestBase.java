@@ -327,7 +327,7 @@ public abstract class ConferenceClientTestBase {
         final ConferenceClient client = getConferenceClient();
 
         final Map<Boolean, List<Speaker>> avatarsLoadable = client.getSpeakers().stream().collect(Collectors.partitioningBy(speaker -> {
-            System.out.println("Checking avator for " + speaker.getFirstName() + ' ' + speaker.getLastName() + " at '" + speaker.getAvatarURL() + "'");
+            System.out.println("Checking avator for " + speaker.getFullName() + " at '" + speaker.getAvatarURL() + "'");
             try (final InputStream is = new URL(speaker.getAvatarURL()).openStream()) {
                 System.out.println("Succeeded");
                 return null != is;
