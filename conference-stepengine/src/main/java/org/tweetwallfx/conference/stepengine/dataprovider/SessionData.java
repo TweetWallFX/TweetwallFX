@@ -60,7 +60,7 @@ public class SessionData {
         // session data for schedule slots with talks only
         Talk talk = slot.getTalk().get();
         this.speakerObjects = List.copyOf(talk.getSpeakers());
-        this.speakers = speakerObjects.stream().map(speaker -> speaker.getFirstName() + ' ' + speaker.getLastName()).toList();
+        this.speakers = speakerObjects.stream().map(Speaker::getFullName).toList();
         this.title = talk.getName();
         this.beginTime = slot.getDateTimeRange().getStart();
         this.endTime = slot.getDateTimeRange().getEnd();
