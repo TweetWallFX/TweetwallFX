@@ -32,8 +32,10 @@ import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.cloud.vision.v1.ImageAnnotatorSettings;
 import com.google.cloud.vision.v1.ImageSource;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,17 +70,32 @@ public final class GoogleVisionCache {
     private volatile ImageAnnotatorClient client;
 
     private GoogleVisionCache() {
-        if (null == GOOGLE_SETTINGS.credentialFilePath()) {
-            LOG.warn("File path of Google Credentials not configured. Bypassing all analysis requests.");
-            this.imageAnnotatorSettings = null;
-        } else {
-            try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
-                final GoogleCredentials credentials = GoogleCredentials.fromStream(fis);
-                this.imageAnnotatorSettings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
-            } catch (final IOException ex) {
-                LOG.error(ex, ex);
-                throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
+        try {
+            final GoogleCredentials credentials;
+
+            if (null != GOOGLE_SETTINGS.credentialBase64()) {
+                final ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(GOOGLE_SETTINGS.credentialBase64()));
+                try {
+                    credentials = GoogleCredentials.fromStream(bais);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from BASE64 encoded credential data", ex);
+                }
+            } else if (null != GOOGLE_SETTINGS.credentialFilePath()) {
+                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
+                    credentials = GoogleCredentials.fromStream(fis);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
+                }
+            } else {
+                credentials = null;
             }
+
+            this.imageAnnotatorSettings = null == credentials
+                    ? null
+                    : ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
+        } catch (final IOException ex) {
+            LOG.error(ex, ex);
+            throw new IllegalStateException("Failed loading ImageAnnotatorSettings with google credentials", ex);
         }
 
         cache = CacheManagerProvider.getCache(
