@@ -107,15 +107,15 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         for (int i = 0; i< config.columns; i++) {
             var pane = createInfinitePane(wordleSkin, "infiniteStream." + i);
 
-            pane.setLayoutX(config.layoutX + i * (config.tweetWidth + 64 + 10 +5 + config.columnGap));
+            pane.setLayoutX(config.layoutX + i * (config.tweetWidth + config.profileImageSize + 10 + 5 + config.columnGap));
             pane.setLayoutY(config.layoutY);
-            pane.setMinWidth(config.tweetWidth + 64 + 10 +5);
+            pane.setMinWidth(config.tweetWidth + config.profileImageSize + 10 + 5);
             pane.setMinHeight(config.height);
-            pane.setMaxWidth(config.tweetWidth + 64 + 10 + 5);
+            pane.setMaxWidth(config.tweetWidth + config.profileImageSize + 10 + 5);
             pane.setMaxHeight(config.height);
-            pane.setPrefWidth(config.tweetWidth + 64 + 10 + 5);
+            pane.setPrefWidth(config.tweetWidth + config.profileImageSize + 10 + 5);
             pane.setPrefHeight(config.height);
-            pane.setClip(new Rectangle(config.tweetWidth + 64 + 10 + 10, config.height));
+            pane.setClip(new Rectangle(config.tweetWidth + config.profileImageSize + 10 + 10, config.height));
 
             initializePane(pane);
         }
@@ -256,13 +256,14 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         text.setCacheHint(config.tweetTextNode.cacheHint);
         text.getStyleClass().add("tweetText");
         Node profileImageView = createProfileImageView(displayTweet);
-        TextFlow flow = new TextFlow(text);
-        flow.getStyleClass().add("tweetFlow");
-        flow.setCache(config.tweetFlowNode.isCacheEnabled);
-        flow.setCacheHint(config.tweetFlowNode.cacheHint);
-        flow.setMinWidth(config.tweetWidth);
-        flow.setMaxWidth(config.tweetWidth);
-        flow.setPrefWidth(config.tweetWidth);
+
+        TextFlow tweetFlow = new TextFlow(text);
+        tweetFlow.getStyleClass().add("tweetFlow");
+        tweetFlow.setCache(config.tweetFlowNode.isCacheEnabled);
+        tweetFlow.setCacheHint(config.tweetFlowNode.cacheHint);
+        tweetFlow.setMinWidth(config.tweetWidth);
+        tweetFlow.setMaxWidth(config.tweetWidth);
+        tweetFlow.setPrefWidth(config.tweetWidth);
         Text name = new Text(displayTweet.getUser().getName());
         name.getStyleClass().add("tweetUsername");
         name.setCache(config.speakerNameNode.isCacheEnabled);
@@ -270,42 +271,42 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         TextFlow nameFlow = new TextFlow(name);
         nameFlow.setCache(config.tweetFlowNode.isCacheEnabled);
         nameFlow.setCacheHint(config.tweetFlowNode.cacheHint);
+
         Label naturalTime = new Label(Humanize.naturalTime(displayTweet.getCreatedAt(), Locale.ENGLISH));
         naturalTime.getStyleClass().add("tweetTime");
-        var vbox = new VBox(nameFlow, naturalTime, flow);
+        naturalTime.setMinWidth(config.tweetWidth);
+        naturalTime.setMaxWidth(config.tweetWidth);
+        naturalTime.setPrefWidth(config.tweetWidth);
+        naturalTime.applyCss();
+        var vbox = new VBox(nameFlow, naturalTime, tweetFlow);
         vbox.applyCss();
         vbox.layout();
         HBox tweet = new HBox(profileImageView, vbox);
-        tweet.setMaxWidth(config.tweetWidth + 64 + 10);
-        tweet.setPrefWidth(config.tweetWidth + 64 + 10);
+        tweet.setMaxWidth(config.tweetWidth + config.profileImageSize + 10);
+        tweet.setPrefWidth(config.tweetWidth + config.profileImageSize + 10);
 
-        VBox.setMargin(nameFlow, new Insets(0,0,5,0));
+        VBox.setMargin(nameFlow, new Insets(5, 0,0, 0));
+        VBox.setMargin(naturalTime, new Insets(2, 5,5, 0));
         tweet.setCache(config.tweetOverallNode.isCacheEnabled);
         tweet.setCacheHint(config.tweetOverallNode.cacheHint);
 
         Pane pane = tweet;
 
-        Optional<MediaTweetEntry> maybeImageEntry = Arrays.stream(displayTweet.getMediaEntries()).filter(e -> e.getType().equals(MediaTweetEntryType.photo)).findFirst();
-        if(maybeImageEntry.isPresent()) {
-            var image = photoImageMediaEntryDataProvider.getImage(maybeImageEntry.get());
-            var iv = new ImageView(image);
-            iv.setPreserveRatio(true);
-            iv.setFitWidth(config.tweetWidth + 64 + 5);
-            iv.setCache(config.tweetImageNode.isCacheEnabled);
-            iv.setCacheHint(config.tweetImageNode.cacheHint);
-            var box = new VBox(iv, tweet);
+        Optional<Node> mediaNode = createMediaNode(displayTweet);
+        if (mediaNode.isPresent()) {
+            var iv = mediaNode.get();
+            var box = config.mediaPosition.isTop() ? new VBox(iv, tweet) : new VBox(tweet, iv);
             box.setAlignment(Pos.CENTER_LEFT);
-            VBox.setMargin(iv, new Insets(5,5,5,5));
-            HBox.setMargin(profileImageView, new Insets(0,5,5,5));
-            HBox.setMargin(vbox, new Insets(0,5,5,0));
+            VBox.setMargin(iv, new Insets(5, 5, 5, 5));
+            HBox.setMargin(profileImageView, new Insets(5, 5, 5, 5));
             box.getStyleClass().add("tweetDisplay");
             box.setCache(config.tweetOverallNode.isCacheEnabled);
             box.setCacheHint(config.tweetOverallNode.cacheHint);
             pane = box;
         } else {
             tweet.getStyleClass().add("tweetDisplay");
-            HBox.setMargin(profileImageView, new Insets(5,5,5,5));
-            HBox.setMargin(vbox, new Insets(5,5,5,0));
+            HBox.setMargin(profileImageView, new Insets(5, 5, 5, 5));
+            HBox.setMargin(vbox, new Insets(0, 5, 5, 0));
         }
 
         return pane;
@@ -322,6 +323,25 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
             profileImageView.setClip(clip);
         }
         return profileImageView;
+    }
+
+    private Optional<Node> createMediaNode(Tweet displayTweet) {
+        Optional<MediaTweetEntry> maybeImageEntry =
+            Arrays.stream(displayTweet.getMediaEntries())
+                .filter(e -> e.getType().equals(MediaTweetEntryType.photo)).findFirst();
+        return maybeImageEntry.flatMap(entry -> {
+            var image = photoImageMediaEntryDataProvider.getImage(entry);
+            ImageView iv = new ImageView(image);
+            iv.setPreserveRatio(true);
+            iv.setFitWidth(config.tweetWidth + config.profileImageSize + 10);
+            Rectangle rectangle = new Rectangle(0,0,iv.getBoundsInLocal().getWidth(),iv.getBoundsInLocal().getHeight());
+            rectangle.setArcHeight(20);
+            rectangle.setArcWidth(20);
+            iv.setClip(rectangle);
+            iv.setCache(config.tweetImageNode.isCacheEnabled);
+            iv.setCacheHint(config.tweetImageNode.cacheHint);
+            return Optional.of(iv);
+        });
     }
 
     @Override
@@ -392,6 +412,21 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
     public static class Config {
 
+        public static enum MediaPosition {
+            TOP(true),
+            BOTTOM(false);
+
+            private final boolean isTop;
+
+            MediaPosition(boolean isTop) {
+                this.isTop = isTop;
+            }
+
+            final public boolean isTop() {
+                return isTop;
+            }
+        }
+
         public long stepDuration = 1;
         public double layoutX = 0;
         public double layoutY = 0;
@@ -405,6 +440,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         public String stepIdentifier = InfiniteScrollingTweetsStep.class.getName();
         public boolean respectLineFeeds = true;
         public double vOffset = 0;
+        public MediaPosition mediaPosition = MediaPosition.BOTTOM;
         public int profileImageSize = 64;
         public boolean circularProfileImage = true;
 
