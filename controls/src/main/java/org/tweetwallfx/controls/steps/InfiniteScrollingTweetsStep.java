@@ -49,6 +49,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -254,11 +255,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         text.setCache(config.tweetTextNode.isCacheEnabled);
         text.setCacheHint(config.tweetTextNode.cacheHint);
         text.getStyleClass().add("tweetText");
-        Image profileImage = tweetUserProfileImageDataProvider.getImageBig(displayTweet.getUser());
-        ImageView profileImageView = new ImageView(profileImage);
-        profileImageView.setSmooth(true);
-        profileImageView.setCache(config.speakerImageNode.isCacheEnabled);
-        profileImageView.setCacheHint(config.speakerImageNode.cacheHint);
+        Node profileImageView = createProfileImageView(displayTweet);
         TextFlow flow = new TextFlow(text);
         flow.getStyleClass().add("tweetFlow");
         flow.setCache(config.tweetFlowNode.isCacheEnabled);
@@ -312,6 +309,19 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         }
 
         return pane;
+    }
+
+    private Node createProfileImageView(Tweet displayTweet) {
+        Image profileImage = tweetUserProfileImageDataProvider.getImageBig(displayTweet.getUser());
+        ImageView profileImageView = new ImageView(profileImage);
+        profileImageView.setSmooth(true);
+        profileImageView.setCache(config.speakerImageNode.isCacheEnabled);
+        profileImageView.setCacheHint(config.speakerImageNode.cacheHint);
+        if (config.circularProfileImage) {
+            final Circle clip = new Circle(config.profileImageSize / 2f , config.profileImageSize / 2f, config.profileImageSize / 2f);
+            profileImageView.setClip(clip);
+        }
+        return profileImageView;
     }
 
     @Override
@@ -390,6 +400,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         public String stepIdentifier = InfiniteScrollingTweetsStep.class.getName();
         public boolean respectLineFeeds = true;
         public double vOffset = 0;
+        public int profileImageSize = 64;
+        public boolean circularProfileImage = true;
 
         public NodeCacheConfig speakerNameNode = new NodeCacheConfig();
         public NodeCacheConfig speakerImageNode = new NodeCacheConfig();
