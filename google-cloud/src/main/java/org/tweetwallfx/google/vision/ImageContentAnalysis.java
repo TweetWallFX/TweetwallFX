@@ -75,7 +75,9 @@ public record ImageContentAnalysis(
         }
 
         private static AnalysisError of(final Status error) {
-            if (null == error) {
+            if (null == error
+                    || null == error.getMessage()
+                    || error.getMessage().isBlank()) {
                 return null;
             }
 
