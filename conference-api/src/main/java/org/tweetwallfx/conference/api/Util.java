@@ -25,10 +25,11 @@ package org.tweetwallfx.conference.api;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicReference;
 
 final class Util {
 
-    private static final ThreadLocal<ConferenceClient> CACHED_CLIENT = new ThreadLocal<>();
+    private static final AtomicReference<ConferenceClient> CACHED_CLIENT = new AtomicReference<>(null);
 
     static ConferenceClient getClient() {
         ConferenceClient client = CACHED_CLIENT.get();
