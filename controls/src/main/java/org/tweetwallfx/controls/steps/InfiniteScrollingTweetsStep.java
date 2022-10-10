@@ -334,23 +334,28 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         shutdownCountdown = new CountDownLatch(2);
         this.isTerminated = true;
         Platform.runLater(() -> {
-            wordleSkin.getPane().getChildren().stream().map(p -> (Pane) p).filter(p -> p.getId() != null && p.getId().startsWith("infiniteStream")).forEach(pane -> {
-                LOG.info("Shutting down " + pane.getId());
-                for (Node nodeToFadeOut : pane.getChildren()) {
-                    var fadeOut = new FadeTransition(Duration.millis(1500), nodeToFadeOut);
-                    fadeOut.setFromValue(1);
-                    fadeOut.setToValue(0);
-                    fadeOut.setOnFinished(e -> {
-                        pane.getChildren().remove(nodeToFadeOut);
-                        if (pane.getChildren().isEmpty()) {
-                            wordleSkin.getPane().getChildren().remove(pane);
-                            LOG.info("Shutting down - removed " + pane.getId() + " from wordle");
-                            shutdownCountdown.countDown();
-                        }
-                    });
-                    fadeOut.play();
-                }
-            });
+            wordleSkin.getPane().getChildren()
+                .stream()
+                .filter(p -> p instanceof Pane)
+                .map(p -> (Pane) p)
+                .filter(p -> p.getId() != null && p.getId().startsWith("infiniteStream"))
+                .forEach(pane -> {
+                    LOG.info("Shutting down " + pane.getId());
+                    for (Node nodeToFadeOut : pane.getChildren()) {
+                        var fadeOut = new FadeTransition(Duration.millis(1500), nodeToFadeOut);
+                        fadeOut.setFromValue(1);
+                        fadeOut.setToValue(0);
+                        fadeOut.setOnFinished(e -> {
+                            pane.getChildren().remove(nodeToFadeOut);
+                            if (pane.getChildren().isEmpty()) {
+                                wordleSkin.getPane().getChildren().remove(pane);
+                                LOG.info("Shutting down - removed " + pane.getId() + " from wordle");
+                                shutdownCountdown.countDown();
+                            }
+                        });
+                        fadeOut.play();
+                    }
+                });
         });
         try {
             shutdownCountdown.await();
