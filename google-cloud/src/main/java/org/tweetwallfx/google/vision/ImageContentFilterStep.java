@@ -24,9 +24,7 @@
 package org.tweetwallfx.google.vision;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -53,18 +51,11 @@ import static org.tweetwallfx.util.Nullable.valueOrDefault;
 public class ImageContentFilterStep implements FilterStep<Tweet> {
 
     private static final Logger LOG = LogManager.getLogger(ImageContentFilterStep.class);
-    private static final Map<Integer, Function<MediaTweetEntry, String>> MTE_SIZE_TO_URL_FUNCTIONS;
-
-    static {
-        final Map<Integer, Function<MediaTweetEntry, String>> tmp = new HashMap<>();
-
-        tmp.put(0, mte -> mte.getMediaUrl() + ":thumb");
-        tmp.put(1, mte -> mte.getMediaUrl() + ":small");
-        tmp.put(2, mte -> mte.getMediaUrl() + ":medium");
-        tmp.put(3, mte -> mte.getMediaUrl() + ":large");
-
-        MTE_SIZE_TO_URL_FUNCTIONS = Collections.unmodifiableMap(tmp);
-    }
+    private static final Map<Integer, Function<MediaTweetEntry, String>> MTE_SIZE_TO_URL_FUNCTIONS = Map.of(
+            0, mte -> mte.getMediaUrl() + ":thumb",
+            1, mte -> mte.getMediaUrl() + ":small",
+            2, mte -> mte.getMediaUrl() + ":medium",
+            3, mte -> mte.getMediaUrl() + ":large");
 
     private final Config config;
     private final ImageContentAnalysis.SafeSearch requiredSafeSearch;
@@ -174,6 +165,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
                 "spoof", ImageContentAnalysis.SafeSearch::spoof,
                 "violence", ImageContentAnalysis.SafeSearch::violence)
                 .entrySet().stream()
+                .filter(e -> GoogleLikelihood.UNKNOWN != e.getValue().apply(actual))
                 .filter(e -> e.getValue().apply(actual).compareTo(e.getValue().apply(required)) > 0)
                 .map(e
                         -> String.format(

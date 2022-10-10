@@ -256,6 +256,8 @@ allprojects {
             jvmArgs getJvmModulePath()
             jvmArgs '--add-modules'
             jvmArgs getJvmAdditionalModules()
+            jvmArgs '--add-opens'
+            jvmArgs 'java.base/jdk.internal.misc=ALL-UNNAMED'
         }
 
         tasks.withType(Test).configureEach {
