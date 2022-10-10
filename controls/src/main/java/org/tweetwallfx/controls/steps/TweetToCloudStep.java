@@ -74,8 +74,10 @@ public class TweetToCloudStep implements Step {
         }
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).toList();
-        limitedWords.sort(Comparator.reverseOrder());
+        List<Word> limitedWords = sortedWords.stream()
+                .limit(wordleSkin.getDisplayCloudTags())
+                .sorted(Comparator.reverseOrder())
+                .toList();
 
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
 
