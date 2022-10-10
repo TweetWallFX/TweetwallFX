@@ -68,6 +68,7 @@ import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+import org.tweetwallfx.emoji.control.EmojiFlow;
 
 /**
  * Infinite TweetStream Animation Step
@@ -251,24 +252,22 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
             final Tweet displayTweet) {
 
         String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
-        Text text = new Text(textWithoutMediaUrls.replaceAll("[\n\r]+", config.respectLineFeeds ? "\n": "|"));
-        text.setCache(config.tweetTextNode.isCacheEnabled);
-        text.setCacheHint(config.tweetTextNode.cacheHint);
-        text.getStyleClass().add("tweetText");
+        String text = textWithoutMediaUrls.replaceAll("[\n\r]+", config.respectLineFeeds ? "\n": "|");
         Node profileImageView = createProfileImageView(displayTweet);
 
-        TextFlow tweetFlow = new TextFlow(text);
+        EmojiFlow tweetFlow = new EmojiFlow();
         tweetFlow.getStyleClass().add("tweetFlow");
+        tweetFlow.setText(text);
         tweetFlow.setCache(config.tweetFlowNode.isCacheEnabled);
         tweetFlow.setCacheHint(config.tweetFlowNode.cacheHint);
         tweetFlow.setMinWidth(config.tweetWidth);
         tweetFlow.setMaxWidth(config.tweetWidth);
         tweetFlow.setPrefWidth(config.tweetWidth);
-        Text name = new Text(displayTweet.getUser().getName());
-        name.getStyleClass().add("tweetUsername");
-        name.setCache(config.speakerNameNode.isCacheEnabled);
-        name.setCacheHint(config.speakerNameNode.cacheHint);
-        TextFlow nameFlow = new TextFlow(name);
+
+        String name = displayTweet.getUser().getName();
+        EmojiFlow nameFlow = new EmojiFlow();
+        nameFlow.getStyleClass().add("tweetUsername");
+        nameFlow.setText(name);
         nameFlow.setCache(config.tweetFlowNode.isCacheEnabled);
         nameFlow.setCacheHint(config.tweetFlowNode.cacheHint);
 

@@ -1,0 +1,28 @@
+{
+    "cacheConfiguration": {
+        "caches": {
+            "emojiImage": {
+                "keyType": "java.lang.String",
+                "valueType": "org.tweetwallfx.cache.URLContent",
+                "contentLoaderThreads": 1,
+                "expiry": {
+                    "type": "TIME_TO_IDLE",
+                    "amount": 10,
+                    "unit": "DAYS"
+                },
+                "cacheResources": [
+                    {
+                        "type": "HEAP",
+                        "amount": 100,
+                        "unit": "MB"
+                    },
+                    {
+                        "type": "DISK",
+                        "amount": 1,
+                        "unit": "GB"
+                    }
+                ]
+            }
+        }
+    }
+}

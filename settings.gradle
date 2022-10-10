@@ -36,6 +36,7 @@ def includeWithName(String path, String name) {
 
 includeWithName ':cache', 'tweetwallfx-cache'
 includeWithName ':config', 'tweetwallfx-configuration'
+includeWithName ':emoji', 'tweetwallfx-emoji'
 includeWithName ':filterchain', 'tweetwallfx-filterchain'
 includeWithName ':stepengine-api', 'tweetwallfx-stepengine-api'
 includeWithName ':stepengine-dataproviders', 'tweetwallfx-stepengine-dataproviders'

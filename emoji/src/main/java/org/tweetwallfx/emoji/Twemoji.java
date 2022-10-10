@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.emoji;
 
-dependencies {
-    implementation 'com.github.mfornos:humanize-slim:1.2.2'
-    implementation 'de.jensd:fontawesomefx-commons:11.0'
-    implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
-    implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
-    implementation project(':tweetwallfx-core')
-    implementation project(':tweetwallfx-emoji')
-    implementation project(':tweetwallfx-stepengine-dataproviders')
-    implementation project(':tweetwallfx-transitions')
+public record Twemoji(String hex) {
 }
