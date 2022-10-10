@@ -30,8 +30,9 @@ import org.tweetwallfx.google.vision.CloudVisionSettings;
  * POJO for reading Settings Google APIs.
  */
 public record GoogleSettings(
-    String credentialFilePath,
-    CloudVisionSettings cloudVision) {
+        String credentialFilePath,
+        String credentialBase64,
+        CloudVisionSettings cloudVision) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
