@@ -28,7 +28,6 @@ import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,10 +78,6 @@ public class SessionData {
                 .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .toList();
-        final Optional<Instant> min = sessionData.stream().map(sd -> sd.beginTime).min(Comparator.naturalOrder());
-        if (min.isPresent()) {
-            sessionData = sessionData.stream().filter(sd -> sd.beginTime.equals(min.get())).toList();
-        }
 
         LOG.info("Possible Next Sessions ({}):\n {}", sessionData.size(), sessionData);
         return sessionData;
