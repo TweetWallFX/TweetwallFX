@@ -42,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -179,10 +180,15 @@ public class ShowSchedule implements Step {
                     })
                     .peek(img -> {
                         // avatar image clipping
-                        Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
-                        clip.setArcWidth(config.avatarArcSize);
-                        clip.setArcHeight(config.avatarArcSize);
-                        img.setClip(clip);
+                        if (config.circularAvatar) {
+                            Circle circle = new Circle(config.avatarSize/2f, config.avatarSize/2f, config.avatarSize/2f);
+                            img.setClip(circle);
+                        } else {
+                            Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
+                            clip.setArcWidth(config.avatarArcSize);
+                            clip.setArcHeight(config.avatarArcSize);
+                            img.setClip(clip);
+                        }
                     })
                     .toArray(Node[]::new)
             );
@@ -281,5 +287,6 @@ public class ShowSchedule implements Step {
         public double sessionHGap = 10;
         public double sessionHeight = 200;
         public boolean showTrackAvatar = true;
+        public boolean circularAvatar = true;
     }
 }
