@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tweetwallfx.conference.api.ConferenceClient;
@@ -52,7 +53,7 @@ import static org.tweetwallfx.util.ToString.map;
 public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
 
     private static final Logger LOG = LogManager.getLogger(AcceptFromSpeakersFilterStep.class);
-    private static final ThreadLocal<SpeakerTwitterHandles> speakerHandles = new ThreadLocal<>();
+    private static final AtomicReference<SpeakerTwitterHandles> SPEAKER_HANDLES = new AtomicReference<>(null);
 
     private final Config config;
 
@@ -88,7 +89,7 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
     }
 
     private SpeakerTwitterHandles getSpeakerTwitterHandles() {
-        SpeakerTwitterHandles speakerTwitterHandles = speakerHandles.get();
+        SpeakerTwitterHandles speakerTwitterHandles = SPEAKER_HANDLES.get();
 
         if (null == speakerTwitterHandles) {
             speakerTwitterHandles = new SpeakerTwitterHandles(ConferenceClient.getClient().getSpeakers().stream()
@@ -96,7 +97,7 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
                     .map(m -> m.get("TWITTER"))
                     .filter(Objects::nonNull)
                     .toList());
-            speakerHandles.set(speakerTwitterHandles);
+            SPEAKER_HANDLES.set(speakerTwitterHandles);
         }
 
         return speakerTwitterHandles;
