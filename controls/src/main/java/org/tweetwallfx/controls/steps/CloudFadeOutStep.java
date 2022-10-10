@@ -65,6 +65,14 @@ public class CloudFadeOutStep implements Step {
         });
         wordleSkin.word2TextMap.clear();
 
+        wordleSkin.getNode().lookupAll("#blurredCopy").stream().forEach( node -> {
+            FadeTransition ft = new FadeTransition(defaultDuration, node);
+            ft.setToValue(0);
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(node));
+            fadeOutTransitions.add(ft);
+        });
+
         ParallelTransition fadeLOuts = new ParallelTransition();
 
         fadeLOuts.getChildren().addAll(fadeOutTransitions);
