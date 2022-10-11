@@ -38,12 +38,14 @@ import org.junit.jupiter.api.condition.EnabledIf;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Disabled;
 import org.tweetwallfx.conference.api.ConferenceClient;
+import org.tweetwallfx.conference.api.RatingClient;
 import org.tweetwallfx.conference.api.Room;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.SessionType;
@@ -295,29 +297,27 @@ public abstract class ConferenceClientTestBase {
         assertThat(talks).isNotEmpty();
     }
 
-//    @Test
-//    @EnabledIf("serverReachable")
-//    void votingResultsOverallAreRetrievable() {
-//        LOG.warn("##### Start: {}", "votingResultsOverallAreRetrievable");
-//        final ConferenceClient client = getConferenceClient();
-//        assertThat(client.canGetVotingResults()).isTrue();
-//
-//        final VotingResults votingResults = client.getVotingResultsOverall()
-//                .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
-//        LOG.info("votingResults: {}", votingResults);
-//    }
-//
-//    @Test
-//    @EnabledIf("serverReachable")
-//    void votingResultsDailyAreRetrievable() {
-//        LOG.warn("##### Start: {}", "votingResultsDailyAreRetrievable");
-//        final ConferenceClient client = getConferenceClient();
-//        assertThat(client.canGetVotingResults()).isTrue();
-//
-//        final VotingResults votingResults = client.getVotingResultsDaily(getConferenceDay())
-//                .orElseThrow(() -> new IllegalStateException("VotingResults unretrievable"));
-//        LOG.info("votingResults: {}", votingResults);
-//    }
+    @Test
+    @EnabledIf("serverReachable")
+    void votingResultsOverallAreRetrievable() {
+        LOG.warn("##### Start: {}", "votingResultsOverallAreRetrievable");
+        final Optional<RatingClient> opClient = getConferenceClient().getRatingClient();
+        assertThat(opClient).isPresent();
+
+        opClient.get().getRatedTalksOverall()
+                .forEach(o -> LOG.info("rated talk: {}", o));
+    }
+
+    @Test
+    @EnabledIf("serverReachable")
+    void votingResultsDailyAreRetrievable() {
+        LOG.warn("##### Start: {}", "votingResultsDailyAreRetrievable");
+        final Optional<RatingClient> opClient = getConferenceClient().getRatingClient();
+        assertThat(opClient).isPresent();
+
+        opClient.get().getRatedTalks("tuesday")
+                .forEach(o -> LOG.info("rated talk: {}", o));
+    }
 
     @Test
     @Disabled

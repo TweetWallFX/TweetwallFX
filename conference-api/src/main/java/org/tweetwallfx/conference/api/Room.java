@@ -26,7 +26,7 @@ package org.tweetwallfx.conference.api;
 /**
  * POJO of a room.
  */
-public interface Room extends Identifiable {
+public interface Room extends Identifiable, Comparable<Room> {
 
     /**
      * Returns the name of this room.
@@ -48,4 +48,9 @@ public interface Room extends Identifiable {
      * @return the weight
      */
     double getWeight();
+
+    @Override
+    public default int compareTo(final Room o) {
+        return Double.compare(this.getWeight(), o.getWeight());
+    }
 }

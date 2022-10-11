@@ -31,7 +31,7 @@ public final class RatedTalkImpl implements RatedTalk {
 
     private final Talk talk;
     private final double averageRating;
-    private final double totalRating;
+    private final int totalRating;
 
     private RatedTalkImpl(final Builder builder) {
         this.talk = Objects.requireNonNull(builder.talk, "talk must not be null");
@@ -50,7 +50,7 @@ public final class RatedTalkImpl implements RatedTalk {
     }
 
     @Override
-    public double getTotalRating() {
+    public int getTotalRating() {
         return totalRating;
     }
 
@@ -73,7 +73,7 @@ public final class RatedTalkImpl implements RatedTalk {
 
         private Talk talk;
         private Double averageRating;
-        private Double totalRating;
+        private Integer totalRating;
 
         private Builder() {
         }
@@ -88,7 +88,7 @@ public final class RatedTalkImpl implements RatedTalk {
             return this;
         }
 
-        public Builder withTotalRating(final double totalRating) {
+        public Builder withTotalRating(final int totalRating) {
             this.totalRating = totalRating;
             return this;
         }

@@ -55,7 +55,7 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.FlipInXTransition;
 
 /**
- * Devox 2019 Show Top Rated Talks (Flip In) Animation Step
+ * Show Top Rated Talks (Flip In) Animation Step
  */
 public class ShowTopRated implements Step {
 

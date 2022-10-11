@@ -23,10 +23,12 @@
  */
 package org.tweetwallfx.conference.api;
 
+import java.util.Comparator;
+
 /**
  * POJO of a rated talk.
  */
-public interface RatedTalk {
+public interface RatedTalk extends Comparable<RatedTalk> {
 
     /**
      * Returns the {@link Talk} that has been rated.
@@ -47,5 +49,13 @@ public interface RatedTalk {
      *
      * @return the total rating
      */
-    double getTotalRating();
+    int getTotalRating();
+
+    @Override
+    public default int compareTo(final RatedTalk o) {
+        return Comparator
+                .comparing(RatedTalk::getAverageRating)
+                .thenComparing(RatedTalk::getTotalRating)
+                .compare(this, o);
+    }
 }
