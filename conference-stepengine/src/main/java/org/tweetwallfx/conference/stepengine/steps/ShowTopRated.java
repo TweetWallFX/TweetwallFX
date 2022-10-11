@@ -197,7 +197,7 @@ public class ShowTopRated implements Step {
 
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
-            final FlipOutTopTalks.TopVotedType topVotedType = stepDefinition.getConfig(FlipOutTopTalks.Config.class).getTopVotedType();
+            final ShowTopRated.TopVotedType topVotedType = stepDefinition.getConfig(ShowTopRated.Config.class).getTopVotedType();
 
             switch (topVotedType) {
                 case TODAY:
