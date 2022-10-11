@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -71,6 +72,9 @@ public record URLContent(
     public static URLContent of(final String urlString) throws IOException {
         try (InputStream in = new URL(urlString).openStream()) {
             return of(in);
+        } catch (FileNotFoundException fne) {
+            LOG.warn("No data found for {}", urlString, fne);
+            return NO_CONTENT;
         }
     }
 
