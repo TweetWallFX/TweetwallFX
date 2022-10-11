@@ -31,7 +31,7 @@ plugins {
     id 'com.google.osdetector' version '1.7.1'
     id 'nebula.info-dependencies' version '11.4.1' apply false
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
-    id 'net.ltgt.errorprone' version '2.0.2' apply false
+    id 'net.ltgt.errorprone' version '3.0.0' apply false
     id 'org.sonarqube' version '3.4.0.2513'
     id 'com.autonomousapps.dependency-analysis' version '1.13.1'
 }
