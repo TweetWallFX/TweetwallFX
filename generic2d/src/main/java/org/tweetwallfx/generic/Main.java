@@ -43,10 +43,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
 
 public class Main extends Application {
-
-    private static final String STARTUP = "org.tweetwallfx.startup";
     private static final Logger LOG = LogManager.getLogger(Main.class);
-    private static final Logger LOGGER = LogManager.getLogger(STARTUP);
 
     @Override
     public void start(Stage primaryStage) {
@@ -64,14 +61,8 @@ public class Main extends Application {
         Optional.ofNullable(tweetwallSettings.stylesheetFile())
                 .ifPresent(scene.getStylesheets()::add);
 
-        StringPropertyAppender spa = new StringPropertyAppender();
-
-        LoggerContext context = LoggerContext.getContext(false);
-        org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
+        final StringPropertyAppender spa = new StringPropertyAppender();
         spa.start();
-        LoggerConfig slc = config.getLoggerConfig(LOGGER.getName());
-        slc.setLevel(Level.TRACE);
-        slc.addAppender(spa, Level.TRACE, null);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
@@ -82,12 +73,17 @@ public class Main extends Application {
         final TagTweets tweetsTask = new TagTweets(borderPane);
         Platform.runLater(tweetsTask::start);
 
+        final org.apache.logging.log4j.core.config.Configuration config = LoggerContext.getContext().getConfiguration();
+        final LoggerConfig rootLogger = config.getRootLogger();
+
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isMetaDown() && event.getCharacter().equals("d")) {
                 if (null == statusLineHost.getParent()) {
                     borderPane.setBottom(statusLineHost);
+                    rootLogger.addAppender(spa, Level.TRACE, null);
                 } else {
                     borderPane.getChildren().remove(statusLineHost);
+                    rootLogger.removeAppender(spa.getName());
                 }
             }
         });
