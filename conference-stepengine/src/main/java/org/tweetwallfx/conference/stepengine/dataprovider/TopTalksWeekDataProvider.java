@@ -118,10 +118,10 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
                 final ScheduleType scheduleType,
                 final Long initialDelay,
                 final Long scheduleDuration) {
-            if (nrVotes < 0) {
+            this.nrVotes = valueOrDefault(nrVotes, 5);
+            if (this.nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
             }
-            this.nrVotes = valueOrDefault(nrVotes, 5);
             this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
             this.initialDelay = valueOrDefault(initialDelay, 0L);
             this.scheduleDuration = valueOrDefault(scheduleDuration, 300L);
