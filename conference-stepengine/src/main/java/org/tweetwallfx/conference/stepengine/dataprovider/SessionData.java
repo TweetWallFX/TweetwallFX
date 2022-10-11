@@ -43,7 +43,7 @@ public class SessionData {
 
     private static final Logger LOG = LogManager.getLogger(SessionData.class);
     private static final Comparator<SessionData> COMP = Comparator
-            .comparing(SessionData::getRoom, Comparator.comparing(Room::getWeight));
+            .comparing(SessionData::getRoom);
 
     public final Room room;
     public final List<String> speakers;
