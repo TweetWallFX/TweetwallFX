@@ -70,7 +70,9 @@ public class UpdateCloudStep implements Step {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).toList();
+        List<Word> limitedWords = sortedWords.stream()
+                .limit(wordleSkin.getDisplayCloudTags())
+                .collect(Collectors.toList());
         List<Word> additionalTagCloudWords = context.getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
 
         double minWeight = limitedWords.stream().mapToDouble(Word::getWeight).min().orElse(-2d);
