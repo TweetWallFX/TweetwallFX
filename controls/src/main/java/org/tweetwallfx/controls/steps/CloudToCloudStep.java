@@ -66,8 +66,10 @@ public class CloudToCloudStep implements Step {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).toList();
-        limitedWords.sort(Comparator.reverseOrder());
+        List<Word> limitedWords = sortedWords.stream()
+                .limit(wordleSkin.getDisplayCloudTags())
+                .sorted(Comparator.reverseOrder())
+                .toList();
 
         WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
