@@ -81,6 +81,7 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                 .replaceAll("['“”‘’\"()]", " "))
+                .map(StopList::trimTail)
                 .filter(l -> l.length() > 2)
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
