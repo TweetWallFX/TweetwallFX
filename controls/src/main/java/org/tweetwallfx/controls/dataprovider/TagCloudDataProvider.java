@@ -50,12 +50,16 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
 
     @Override
     public void processNewTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     @Override
     public void processHistoryTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     public void setAdditionalTweetWords(final List<Word> newWordList) {
