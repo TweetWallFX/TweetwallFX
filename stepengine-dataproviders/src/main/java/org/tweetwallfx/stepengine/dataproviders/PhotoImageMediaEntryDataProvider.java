@@ -23,20 +23,22 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.util.Arrays;
 import javafx.scene.image.Image;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+
+import java.util.Arrays;
+
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
-    private static final Logger LOG = LogManager.getLogger(PhotoImageMediaEntryDataProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PhotoImageMediaEntryDataProvider.class);
     private final Config config;
 
     private PhotoImageMediaEntryDataProvider(final Config config) {

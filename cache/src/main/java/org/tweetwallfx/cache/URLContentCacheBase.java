@@ -33,8 +33,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 
 import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
@@ -45,7 +45,7 @@ import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 public abstract class URLContentCacheBase {
 
     private static final String MESSAGE_LOAD_FAILED = "{}: Failed to load content from {}";
-    private static final Logger LOG = LogManager.getLogger(URLContentCacheBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(URLContentCacheBase.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("URLContentCache");
     private final String cacheName;
     private final Executor contentLoader;

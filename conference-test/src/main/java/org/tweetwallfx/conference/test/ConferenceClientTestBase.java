@@ -27,23 +27,11 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.Disabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.RatingClient;
 import org.tweetwallfx.conference.api.Room;
@@ -52,9 +40,21 @@ import org.tweetwallfx.conference.api.SessionType;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public abstract class ConferenceClientTestBase {
 
-    private static final Logger LOG = LogManager.getLogger(ConferenceClientTestBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConferenceClientTestBase.class);
     private static final AtomicBoolean CONFERENCE_REACHABLE = new AtomicBoolean(false);
 
     private final Class<? extends ConferenceClient> expectedConferenceClient;
@@ -93,7 +93,7 @@ public abstract class ConferenceClientTestBase {
                     .getStatusInfo()
                     .getFamily());
         } catch (final ProcessingException pe) {
-            LogManager.getLogger(ConferenceClientTestBase.class).error(pe, pe);
+            LoggerFactory.getLogger(ConferenceClientTestBase.class).error("{}", pe, pe);
         }
     }
 
@@ -115,7 +115,7 @@ public abstract class ConferenceClientTestBase {
 
     private ConferenceClient getConferenceClient() {
         final ConferenceClient client = ConferenceClient.getClient();
-        LOG.info("client: " + client);
+        LOG.info("client: {}", client);
         assertThat(client).isNotNull();
 
         return client;

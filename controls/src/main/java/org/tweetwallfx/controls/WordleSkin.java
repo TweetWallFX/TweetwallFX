@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,14 +36,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.stepengine.api.StepEngine;
 
 public class WordleSkin extends SkinBase<Wordle> {
 
-    private static final Logger LOG = LogManager.getLogger("org.tweetwallfx.startup");
-    private static final Logger LOGGER = LogManager.getLogger(WordleSkin.class);
+    private static final Logger LOG = LoggerFactory.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOGGER = LoggerFactory.getLogger(WordleSkin.class);
     public final Map<Word, Text> word2TextMap = new HashMap<>();
     // used for Tweet Display
     public final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
@@ -168,7 +168,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             pane.getChildren().remove(logo);
             logo = null;
         }
-        LOGGER.trace("Logo: " + newLogo);
+        LOGGER.trace("Logo: {}", newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             logo = new ImageView(newLogo);
             logo.getStyleClass().add("logo");
@@ -190,7 +190,7 @@ public class WordleSkin extends SkinBase<Wordle> {
             pane.getChildren().remove(secondLogo);
             secondLogo = null;
         }
-        LOGGER.trace("SecondLogo: " + newLogo);
+        LOGGER.trace("SecondLogo: {}", newLogo);
         if (null != newLogo && !newLogo.isEmpty()) {
             secondLogo = new ImageView(newLogo);
             secondLogo.getStyleClass().add("secondlogo");

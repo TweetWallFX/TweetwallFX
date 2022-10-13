@@ -45,8 +45,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.util.JsonDataConverter;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
@@ -59,7 +59,7 @@ public final class Configuration {
 
     private static final String STANDARD_CONFIG_FILENAME = "tweetwallConfig.json";
     private static final String CUSTOM_CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName");
-    private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
     private static final Collection<Class<?>> MERGE_BY_OVERWRITE_TYPES
             = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     java.lang.Boolean.class,
@@ -195,7 +195,7 @@ public final class Configuration {
     }
 
     private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification) {
-        LOGGER.info("Processing config file: " + url);
+        LOGGER.info("Processing config file: {}", url);
 
         try (final InputStream is = url.openStream()) {
             return readConfiguration(is, dataSourceIdentification);

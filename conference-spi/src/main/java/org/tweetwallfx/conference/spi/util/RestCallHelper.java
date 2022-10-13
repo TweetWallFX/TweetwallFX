@@ -23,11 +23,6 @@
  */
 package org.tweetwallfx.conference.spi.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -35,12 +30,18 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class RestCallHelper {
 
-    private static final Logger LOGGER = LogManager.getLogger(RestCallHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestCallHelper.class);
 
     private RestCallHelper() {
         // prevent instantiation

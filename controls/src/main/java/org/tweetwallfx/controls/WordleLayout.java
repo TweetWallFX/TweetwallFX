@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,12 +37,12 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class WordleLayout {
 
-    private static final Logger LOG = LogManager.getLogger(WordleLayout.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WordleLayout.class);
     private static final double RADIUS = 5.0;
     private static final int DEG = 10;
 
@@ -208,8 +208,8 @@ public final class WordleLayout {
             final DoubleSummaryStatistics weightSummary = words.stream().mapToDouble(Word::getWeight).summaryStatistics();
             this.minWeight = weightSummary.getMin();
             this.maxWeight = weightSummary.getMax();
-            LOG.info("MaxWeight: " + maxWeight);
-            LOG.info("MiWeight: " + minWeight);
+            LOG.info("MaxWeight: {}", maxWeight);
+            LOG.info("MiWeight: {}", minWeight);
         }
 
         public void setBlockedAreaBounds(final Bounds... blockedAreaBounds) {

@@ -28,8 +28,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.filterchain.FilterChainSettings;
@@ -52,7 +52,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(AcceptFromSpeakersFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AcceptFromSpeakersFilterStep.class);
     private static final AtomicReference<SpeakerTwitterHandles> SPEAKER_HANDLES = new AtomicReference<>(null);
 
     private final Config config;

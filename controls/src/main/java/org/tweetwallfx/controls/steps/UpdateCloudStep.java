@@ -36,8 +36,8 @@ import javafx.animation.Transition;
 import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
@@ -54,7 +54,7 @@ public class UpdateCloudStep implements Step {
         // prevent external instantiation
     }
 
-    private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateCloudStep.class);
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
@@ -105,7 +105,7 @@ public class UpdateCloudStep implements Step {
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
 
-        LOGGER.info("Unused words in cloud: " + unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("Unused words in cloud: {}", unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
 
         unusedWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.remove(word);
@@ -125,7 +125,7 @@ public class UpdateCloudStep implements Step {
                 .filter(wordleSkin.word2TextMap::containsKey)
                 .toList();
 
-        LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("Existing words in cloud: {}", existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.get(word);
             cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
@@ -145,7 +145,7 @@ public class UpdateCloudStep implements Step {
                 .toList();
 
         List<Text> newTextNodes = new ArrayList<>();
-        LOGGER.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("New words in cloud: {}", newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         newWords.forEach(word -> {
             Text textNode = cloudWordleLayout.createTextNode(word);
             wordleSkin.word2TextMap.put(word, textNode);

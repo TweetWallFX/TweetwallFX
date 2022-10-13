@@ -34,15 +34,15 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Resolver of URLs.
  */
 public class URLHelper {
 
-    private static final Logger LOGGER = LogManager.getLogger(URLHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(URLHelper.class);
     private static final int MAX_CACHE_SIZE = Integer.getInteger("org.tweetwall.urlResolver.cacheSize", 2048);
     private static final Map<String, String> UNSHORTENED_LINKS = new LinkedHashMap<>();
     private static final Pattern SLASH_SPLITTER = Pattern.compile("/");
@@ -71,9 +71,9 @@ public class URLHelper {
         }
 
         if (urlString.equals(resolvedURL)) {
-            LOGGER.info("URL: '" + urlString + "' was not redirected");
+            LOGGER.info("URL: '{}' was not redirected", urlString);
         } else {
-            LOGGER.info("URL: '" + urlString + "' was resolved as '" + resolvedURL + "'");
+            LOGGER.info("URL: '{}' was resolved as '{}'", urlString, resolvedURL);
         }
 
         if (MAX_CACHE_SIZE > UNSHORTENED_LINKS.size()) {
@@ -103,7 +103,7 @@ public class URLHelper {
                     if (null == redirected) {
                         return urlString;
                     } else {
-                        LOGGER.info("URL '" + urlString + "' is redirected to '" + redirected + "'");
+                        LOGGER.info("URL '{}' is redirected to '{}'", urlString, redirected);
                         return resolve(redirected);
                     }
                 }
@@ -123,10 +123,10 @@ public class URLHelper {
                     .map(part -> URLEncoder.encode(part, StandardCharsets.UTF_8))
                     .collect(Collectors.joining("/"));
 
-            LOGGER.info("encodedURL of '" + urlString + "' is '" + encodedURL + "'");
+            LOGGER.info("encodedURL of '{}' is '{}'", urlString, encodedURL);
             return encodedURL;
         } catch (final RuntimeException ex) {
-            LOGGER.warn("Encoding URL to UTF-8 failed. URL='" + urlString + "'", ex);
+            LOGGER.warn("Encoding URL to UTF-8 failed. URL='{}'", urlString, ex);
             return urlString;
         }
     }

@@ -27,8 +27,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -47,7 +47,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(AcceptFromSenderFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AcceptFromSenderFilterStep.class);
     private final Config config;
 
     private AcceptFromSenderFilterStep(final Config config) {

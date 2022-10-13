@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
@@ -45,7 +45,7 @@ import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
-    private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageMosaicDataProvider.class);
     private final CopyOnWriteArrayList<ImageStore> images = new CopyOnWriteArrayList<>();
     private final Config config;
 

@@ -41,8 +41,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider;
@@ -60,7 +60,7 @@ import org.tweetwallfx.transitions.FlipInXTransition;
  */
 public class ShowTopRated implements Step {
 
-    private static final Logger LOGGER = LogManager.getLogger(ShowTopRated.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowTopRated.class);
     private final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter;
     private final Config config;
     private final String lookupId;
@@ -113,7 +113,7 @@ public class ShowTopRated implements Step {
                 row += 1;
             }
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            LOGGER.error("{}", ex);
         }
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
@@ -149,7 +149,7 @@ public class ShowTopRated implements Step {
             }
             return session;
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            LOGGER.error("{}", ex);
             throw new IllegalStateException(ex);
         }
     }
