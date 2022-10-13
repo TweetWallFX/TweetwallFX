@@ -23,6 +23,15 @@
  */
 package org.tweetwallfx.google.vision;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.filterchain.FilterChainSettings;
+import org.tweetwallfx.filterchain.FilterStep;
+import org.tweetwallfx.google.GoogleLikelihood;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -30,14 +39,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.filterchain.FilterChainSettings;
-import org.tweetwallfx.filterchain.FilterStep;
-import org.tweetwallfx.google.GoogleLikelihood;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
@@ -50,7 +52,7 @@ import static org.tweetwallfx.util.Nullable.valueOrDefault;
  */
 public class ImageContentFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(ImageContentFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageContentFilterStep.class);
     private static final Map<Integer, Function<MediaTweetEntry, String>> MTE_SIZE_TO_URL_FUNCTIONS = Map.of(
             0, mte -> mte.getMediaUrl() + ":thumb",
             1, mte -> mte.getMediaUrl() + ":small",
@@ -108,10 +110,9 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         try {
             visionAnalysis = GoogleVisionCache.INSTANCE.getCachedOrLoad(imageUrlStrings.stream());
         } catch (final IOException ex) {
-            LOG.warn(String.format(
-                    "Tweet(id:%s): Tweet(id:%s) failed analysation of its photos -> REJECTED",
+            LOG.warn("Tweet(id:{}): Tweet(id:{}) failed analysation of its photos -> REJECTED",
                     tweet.getId(),
-                    t.getId()),
+                    t.getId(),
                     ex);
             return Result.REJECTED;
         }

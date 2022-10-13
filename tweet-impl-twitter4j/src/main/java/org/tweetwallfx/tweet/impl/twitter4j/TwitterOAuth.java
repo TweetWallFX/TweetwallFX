@@ -27,8 +27,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.tweet.api.config.TwitterSettings;
 import twitter4j.Twitter;
@@ -59,7 +59,7 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 final class TwitterOAuth {
 
-    private static final Logger LOGGER = LogManager.getLogger(TwitterOAuth.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TwitterOAuth.class);
     private static Configuration configuration = null;
     private static final AtomicBoolean INITIATED = new AtomicBoolean(false);
     private static final ReadOnlyObjectWrapper<Exception> EXCEPTION = new ReadOnlyObjectWrapper<>(null);
@@ -118,13 +118,13 @@ final class TwitterOAuth {
             Twitter twitter = new TwitterFactory(conf).getInstance();
             try {
                 User user = twitter.verifyCredentials();
-                LOGGER.info("User " + user.getName() + " validated");
+                LOGGER.info("User {} validated", user.getName());
             } catch (TwitterException ex) {
                 EXCEPTION.set(ex);
                 //  statusCode=400, message=Bad Authentication data -> wrong token
                 //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
                 int statusCode = ex.getStatusCode();
-                LOGGER.error("Error statusCode=" + statusCode + " " + (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
+                LOGGER.error("Error statusCode={} {}", statusCode, (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
                 conf = null;
             }
         } else {

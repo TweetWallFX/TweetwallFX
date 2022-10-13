@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.dataprovider.TagCloudDataProvider;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -45,7 +45,7 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 public class AddTweetToCloudStep implements Step {
 
-    private static final Logger LOGGER = LogManager.getLogger(AddTweetToCloudStep.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddTweetToCloudStep.class);
 
     private AddTweetToCloudStep() {
         // prevent external instantiation
@@ -70,7 +70,7 @@ public class AddTweetToCloudStep implements Step {
         List<Word> words = context.getDataProvider(TagCloudDataProvider.class).getWords();
         tweetWords.removeAll(words);
 
-        LOGGER.info("Adding words to cloud dataset for rendering: " + tweetWords);
+        LOGGER.info("Adding words to cloud dataset for rendering: {}", tweetWords);
 
         context.getDataProvider(TagCloudDataProvider.class).setAdditionalTweetWords(words);
         context.proceed();

@@ -23,17 +23,9 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javafx.scene.image.Image;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -42,6 +34,16 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
@@ -50,7 +52,7 @@ import static org.tweetwallfx.util.Nullable.valueOrDefault;
  */
 public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
-    private static final Logger LOGGER = LogManager.getLogger(TweetStreamDataProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TweetStreamDataProvider.class);
     private final ReadWriteLock tweetListLock = new ReentrantReadWriteLock();
     private final String searchText = Configuration.getInstance()
             .getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class)
@@ -98,7 +100,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
 
     private void addTweet(final Tweet tweet, boolean prepend) {
         if (tweet.isRetweet() && config.hideRetweets()) {
-            LOGGER.info("Tweet " + tweet.getId() + " is a retweet and retweets are currently not allowed");
+            LOGGER.info("Tweet {} is a retweet and retweets are currently not allowed", tweet.getId());
             return;
         }
         LOGGER.info("Add tweet {}", tweet.getId());
@@ -139,7 +141,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private List<Tweet> getLatestHistory() {
-        LOGGER.info("Reinit the history");
+        LOGGER.info("Reinitialize history");
         return Tweeter.getInstance()
                 .search(new TweetQuery()
                         .query(searchText)

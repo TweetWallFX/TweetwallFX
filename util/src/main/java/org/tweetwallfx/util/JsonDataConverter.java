@@ -26,19 +26,19 @@ package org.tweetwallfx.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ParameterizedMessage;
 
 /**
  * Converts data from an input into a typesafe object.
  */
 public class JsonDataConverter {
 
-    private static final Logger LOG = LogManager.getLogger(JsonDataConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonDataConverter.class);
     private static final ObjectMapper OM = new JsonMapper()
             .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -79,7 +79,7 @@ public class JsonDataConverter {
         try {
             return OM.readValue(inputStream, typeClass);
         } catch (final IOException ex) {
-            LOG.error(new ParameterizedMessage("Failed to convert to {} from {}", typeClass, inputStream), ex);
+            LOG.error("Failed to convert to {} from {}", typeClass, inputStream, ex);
             throw new UncheckedIOException(ex);
         }
     }
@@ -100,7 +100,7 @@ public class JsonDataConverter {
         try {
             return OM.readValue(jsonString, typeClass);
         } catch (final IOException ex) {
-            LOG.error(new ParameterizedMessage("Failed to convert to {}: {}", typeClass, jsonString), ex);
+            LOG.error("Failed to convert to {}: {}", typeClass, jsonString, ex);
             throw new UncheckedIOException(ex);
         }
     }
@@ -116,7 +116,7 @@ public class JsonDataConverter {
         try {
             return OM.writeValueAsString(object);
         } catch (final IOException ex) {
-            LOG.error(new ParameterizedMessage("Failed to convert to {}: {}", String.class, object), ex);
+            LOG.error("Failed to convert to {}: {}", String.class, object, ex);
             throw new UncheckedIOException(ex);
         }
     }

@@ -54,8 +54,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.stepengine.dataproviders.TweetStreamDataProvider;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -75,7 +75,7 @@ import org.tweetwallfx.emoji.control.EmojiFlow;
  */
 public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
-    private static final Logger LOG = LogManager.getLogger(InfiniteScrollingTweetsStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InfiniteScrollingTweetsStep.class);
 
     private final Config config;
 
@@ -125,7 +125,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
     private void updateTweetList() {
         tweetsRef.set(new CopyOnWriteArrayList<>(tweetStreamDataProvider.getTweets()));
-        LOG.info("Updated tweet list to be streamed. Now contains " + tweetsRef.get().size());
+        LOG.info("Updated tweet list to be streamed. Now contains {}", tweetsRef.get().size());
         next.set(0);
     }
 
@@ -359,7 +359,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
                 .map(p -> (Pane) p)
                 .filter(p -> p.getId() != null && p.getId().startsWith("infiniteStream"))
                 .forEach(pane -> {
-                    LOG.info("Shutting down " + pane.getId());
+                    LOG.info("Shutting down {}", pane.getId());
                     for (Node nodeToFadeOut : pane.getChildren()) {
                         var fadeOut = new FadeTransition(Duration.millis(1500), nodeToFadeOut);
                         fadeOut.setFromValue(1);
@@ -368,7 +368,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
                             pane.getChildren().remove(nodeToFadeOut);
                             if (pane.getChildren().isEmpty()) {
                                 wordleSkin.getPane().getChildren().remove(pane);
-                                LOG.info("Shutting down - removed " + pane.getId() + " from wordle");
+                                LOG.info("Shutting down - removed {} from wordle", pane.getId());
                                 shutdownCountdown.countDown();
                             }
                         });

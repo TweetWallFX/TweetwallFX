@@ -24,8 +24,8 @@
 package org.tweetwallfx.config.testcase;
 
 import java.util.ServiceLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
@@ -35,12 +35,12 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
  */
 public class ConfigurationConverterLoadable implements RunnableTestCase {
 
-    private static final Logger LOG = LogManager.getLogger(ConfigurationConverterLoadable.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationConverterLoadable.class);
 
     @Override
     public void execute() {
         for (final ConfigurationConverter o : ServiceLoader.load(ConfigurationConverter.class)) {
-            LOG.info("loaded " + o.getClass());
+            LOG.info("loaded {}", o.getClass());
         }
     }
 }

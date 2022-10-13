@@ -46,8 +46,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
@@ -58,8 +58,8 @@ import org.tweetwallfx.tweet.api.Tweeter;
 
 public final class StepEngine {
 
-    private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
-    private static final Logger LOG = LogManager.getLogger(StepEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOG = LoggerFactory.getLogger(StepEngine.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("StepEngine");
     private volatile boolean terminated = false;
     private final Phaser asyncProceed = new Phaser(2);
@@ -94,7 +94,7 @@ public final class StepEngine {
         LOGGER.info("init DataProviders");
 
         final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
-        LOGGER.info("query: " + searchText);
+        LOGGER.info("query: {}", searchText);
 
         LOGGER.info("create DataProviders");
         final Map<String, StepEngineSettings.DataProviderSetting> dataProviderSettings = Configuration.getInstance()
@@ -113,7 +113,7 @@ public final class StepEngine {
                         -> dpf.create(dataProviderSettings.getOrDefault(
                         dpf.getDataProviderClass().getName(),
                         new StepEngineSettings.DataProviderSetting())))
-                .peek(dataProvider -> LOG.info("created " + dataProvider))
+                .peek(dataProvider -> LOG.info("created {}", dataProvider))
                 .toList();
 
         requiredDataProviders.stream()
@@ -167,7 +167,7 @@ public final class StepEngine {
                 scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
-            LOGGER.fatal("failed to initializing Scheduled: {}", scheduled, re);
+            LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
             throw re;
         }
     }
@@ -246,8 +246,7 @@ public final class StepEngine {
                     try {
                         stepToExecute.doStep(context);
                     } catch (RuntimeException | Error e) {
-                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
-                        LOG.fatal("caused by", e);
+                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
                         // enforce that animation continues
                         context.proceed();
                     }
@@ -256,8 +255,7 @@ public final class StepEngine {
                     try {
                         stepToExecute.doStep(context);
                     } catch (RuntimeException | Error e) {
-                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
-                        LOG.fatal("caused by", e);
+                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
                         // enforce that animation continues
                         context.proceed();
                     }

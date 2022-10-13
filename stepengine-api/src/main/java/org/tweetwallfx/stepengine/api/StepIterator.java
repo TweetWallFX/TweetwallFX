@@ -36,14 +36,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 class StepIterator {
 
-    private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepIterator.class);
     private int stepIndex = 0;
     private final List<Step> steps;
     private final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders;

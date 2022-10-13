@@ -48,8 +48,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.ScheduleDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
@@ -66,7 +66,7 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
  */
 public class ShowSchedule implements Step {
 
-    private static final Logger LOGGER = LogManager.getLogger(ShowSchedule.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowSchedule.class);
     private static final ZoneId ZONE_ID = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.zone"))
                 .map(ZoneId::of)
                 .orElseGet(ZoneId::systemDefault);

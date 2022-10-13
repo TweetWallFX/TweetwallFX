@@ -28,8 +28,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -40,7 +40,7 @@ import org.tweetwallfx.tweet.api.Tweeter;
 
 public class TweetDataProvider implements DataProvider.NewTweetAware {
 
-    private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 50;
     private final Random rand = new SecureRandom();
     private volatile Tweet tweet;

@@ -23,14 +23,6 @@
  */
 package org.tweetwallfx.cache;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ehcache.config.Builder;
 import org.ehcache.config.ResourcePools;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -44,8 +36,17 @@ import org.ehcache.event.EventOrdering;
 import org.ehcache.event.EventType;
 import org.ehcache.expiry.ExpiryPolicy;
 import org.ehcache.impl.config.persistence.CacheManagerPersistenceConfiguration;
-import org.tweetwallfx.config.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.CacheSettings.CacheResource;
+import org.tweetwallfx.config.Configuration;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 
 public final class CacheManagerProvider {
 
@@ -54,7 +55,7 @@ public final class CacheManagerProvider {
      * in the configuration data map.
      */
     private static final Collection<String> LISTENERS_ADDED_TO_CACHES = new HashSet<>(4);
-    private static final Logger LOG = LogManager.getLogger(CacheManagerProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CacheManagerProvider.class);
     private static final org.ehcache.CacheManager CACHE_MANAGER = createCacheManager();
 
     private CacheManagerProvider() {

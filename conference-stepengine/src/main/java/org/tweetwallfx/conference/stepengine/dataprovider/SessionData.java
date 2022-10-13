@@ -29,8 +29,8 @@ import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.Room;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.Speaker;
@@ -41,7 +41,7 @@ import org.tweetwallfx.conference.api.Talk;
  */
 public class SessionData {
 
-    private static final Logger LOG = LogManager.getLogger(SessionData.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SessionData.class);
     private static final Comparator<SessionData> COMP = Comparator
             .comparing(SessionData::getRoom);
 
