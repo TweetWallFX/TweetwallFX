@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -138,10 +139,14 @@ public class ShowTopRated implements Step {
             speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
             speakerImage.setFitHeight(64);
             speakerImage.setFitWidth(64);
-            Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
-            clip.setArcWidth(20);
-            clip.setArcHeight(20);
-            speakerImage.setClip(clip);
+            if (config.circularAvatar) {
+                Circle clip = new Circle(speakerImage.getFitWidth() /2f, speakerImage.getFitHeight()/2f, speakerImage.getFitWidth() /2f);
+                speakerImage.setClip(clip);
+            } else {
+                Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
+                clip.setArcWidth(20);
+                clip.setArcHeight(20);
+            }
             return session;
         } catch (IOException ex) {
             LOGGER.error(ex);
@@ -221,6 +226,7 @@ public class ShowTopRated implements Step {
         private TopVotedType topVotedType = null;
         public double layoutX = 0;
         public double layoutY = 0;
+        public boolean circularAvatar = true;
 
         /**
          * Provides the type of the Top Voted display to flip out.
