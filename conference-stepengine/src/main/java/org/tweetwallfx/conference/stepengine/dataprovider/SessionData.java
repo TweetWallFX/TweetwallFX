@@ -63,7 +63,7 @@ public class SessionData {
         this.title = talk.getName();
         this.beginTime = slot.getDateTimeRange().getStart();
         this.endTime = slot.getDateTimeRange().getEnd();
-        // session data for schedule woth talk always has its favorite count
+        // session data for schedule with talk always has its favorite count
         this.favouritesCount = slot.getFavoriteCount().getAsInt();
         this.trackImageUrl = talk.getTrack().getAvatarURL();
     }
