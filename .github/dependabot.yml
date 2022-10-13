@@ -78,6 +78,62 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
+    directory: "/conference-api"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/conference-spi"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/conference-stepengine"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/conference-test"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
     directory: "/config"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
@@ -107,62 +163,6 @@ updates:
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
     directory: "/core"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    reviewers:
-       - "TweetWallFX/tweetwallfx-admins"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
-    directory: "/devoxx-api-cfp"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    reviewers:
-       - "TweetWallFX/tweetwallfx-admins"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
-    directory: "/devoxx-cfp-impl"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    reviewers:
-       - "TweetWallFX/tweetwallfx-admins"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
-    directory: "/devoxx-cfp-stepengine"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    reviewers:
-       - "TweetWallFX/tweetwallfx-admins"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
-    directory: "/devoxx-cfp-test"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
     schedule:
