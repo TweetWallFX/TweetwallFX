@@ -73,18 +73,18 @@ public final class GoogleVisionCache {
         try {
             final GoogleCredentials credentials;
 
-            if (null != GOOGLE_SETTINGS.credentialBase64()) {
+            if (null != GOOGLE_SETTINGS.credentialFilePath()) {
+                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
+                    credentials = GoogleCredentials.fromStream(fis);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
+                }
+            } else if (null != GOOGLE_SETTINGS.credentialBase64()) {
                 final ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(GOOGLE_SETTINGS.credentialBase64()));
                 try {
                     credentials = GoogleCredentials.fromStream(bais);
                 } catch (final IOException ex) {
                     throw new IOException("Failed loading Google Credentials from BASE64 encoded credential data", ex);
-                }
-            } else if (null != GOOGLE_SETTINGS.credentialFilePath()) {
-                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
-                    credentials = GoogleCredentials.fromStream(fis);
-                } catch (final IOException ex) {
-                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
                 }
             } else {
                 credentials = null;
