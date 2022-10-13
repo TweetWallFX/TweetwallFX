@@ -35,7 +35,7 @@ public class VotedTalk {
 
     public final String speakers;
     public final double ratingAverageScore;
-    public final double ratingTotalVotes;
+    public final int ratingTotalVotes;
     public final Speaker speaker;
     public final Talk talk;
 
