@@ -25,6 +25,7 @@ package org.tweetwallfx.conference.spi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.SessionType;
 import org.tweetwallfx.conference.api.Speaker;
@@ -34,7 +35,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import org.tweetwallfx.conference.api.ConferenceClient;
+import org.tweetwallfx.conference.api.DateTimeRange;
 
 public final class TalkImpl implements Talk {
 
@@ -138,9 +142,13 @@ public final class TalkImpl implements Talk {
         private String audienceLevel;
         private SessionType sessionType;
         private Locale language;
-        private List<ScheduleSlot> scheduleSlots = new ArrayList<>();
-        private List<Speaker> speakers = new ArrayList<>();
-        private List<String> tags = new ArrayList<>();
+        private Set<ScheduleSlot> scheduleSlots = new TreeSet<>(Comparator
+                .comparing(ScheduleSlot::getDateTimeRange, Comparator.comparing(DateTimeRange::getStart))
+                .thenComparing(ScheduleSlot::getRoom));
+        private Set<Speaker> speakers = new TreeSet<>(Comparator
+                .comparing(Speaker::getFullName));
+        private Set<String> tags = new TreeSet<>(Comparator
+                .comparing(s -> s.toLowerCase(Locale.ENGLISH)));
         private Track track;
 
         private Builder() {
