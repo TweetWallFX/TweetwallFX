@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,87 +23,74 @@
  */
 package org.tweetwallfx.cache;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Externalizable;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.net.URL;
-import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Arrays;
+import java.util.HexFormat;
+import java.util.Objects;
 
-public final class URLContent implements Externalizable {
+public record URLContent(
+        byte[] data,
+        String digest) implements Serializable {
 
-    private static final Logger LOG = LogManager.getLogger(URLContent.class);
-    private static final long serialVersionUID = 1L;
-    private static final byte[] NO_DATA = new byte[0];
-    private byte[] data;
-    private String digest;
+    public static final URLContent NO_CONTENT = new URLContent(new byte[0], "d41d8cd98f00b204e9800998ecf8427e");
 
-    public URLContent(final InputStream in) throws IOException {
+    private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
+
+    public URLContent(
+            final byte[] data,
+            final String digest) {
+        this.data = Arrays.copyOf(data, data.length);
+        this.digest = digest;
+    }
+
+    public static URLContent of(final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
-        InputStream in2 = in;
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        in.transferTo(bout);
+        byte[] bytes = bout.toByteArray();
+        String digest = null;
         try {
-            in2 = new DigestInputStream(in, MessageDigest.getInstance("md5"));
+            digest = HexFormat.of().formatHex(MessageDigest.getInstance("md5").digest(bytes));
+            LOG.info("MD5: {}", digest);
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
-        data = readFully(in2);
-        digest = in2 instanceof DigestInputStream
-                ? javax.xml.bind.DatatypeConverter.printHexBinary(((DigestInputStream) in2).getMessageDigest().digest())
-                : null;
-        LOG.info("MD5: {}", digest);
+        return new URLContent(bytes, digest);
     }
 
-    public URLContent(final String urlString) throws IOException {
-        this(new URL(urlString).openStream());
-    }
-
-    public URLContent() {
-        data = NO_DATA;
-    }
-
-    private static byte[] readFully(final InputStream in) throws IOException {
-        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[4096];
-
-        int read;
-        while ((read = in.read(buffer)) > -1) {
-            bout.write(buffer, 0, read);
+    public static URLContent of(final String urlString) throws IOException {
+        try (InputStream in = new URL(urlString).openStream()) {
+            return of(in);
+        } catch (FileNotFoundException fne) {
+            LOG.warn("No data found for {}", urlString, fne);
+            return NO_CONTENT;
         }
+    }
 
-        return bout.toByteArray();
+    @Override
+    public byte[] data() {
+        return Arrays.copyOf(data, data.length);
     }
 
     public InputStream getInputStream() {
         return new ByteArrayInputStream(data);
     }
 
-    public String getDigest() {
-        return digest;
-    }
-
     @Override
-    public void writeExternal(final ObjectOutput out) throws IOException {
-        // digest
-        out.writeUTF(digest);
-        // data
-        out.writeInt(data.length);
-        out.write(data);
-    }
-
-    @Override
-    public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-        // digest
-        digest = in.readUTF();
-        // data
-        final int size = in.readInt();
-        data = new byte[size];
-        in.readFully(data);
+    public boolean equals(final Object obj) {
+        return obj instanceof URLContent other
+                && Objects.equals(digest, other.digest)
+                && Arrays.equals(data, other.data);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.tweetwallfx.tweet.api;
 import java.util.Arrays;
 import java.util.Objects;
 
+@SuppressWarnings("CanIgnoreReturnValueSuggester")
 public final class TweetFilterQuery {
 
     private int count = 0;
@@ -112,20 +113,13 @@ public final class TweetFilterQuery {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TweetFilterQuery that = (TweetFilterQuery) o;
-
-        return this.count == that.count
-                && Arrays.equals(follow, that.follow)
-                && Arrays.equals(track, that.track)
-                && Arrays.equals(language, that.language)
-                && Objects.equals(filterLevel, that.filterLevel);
+    public boolean equals(final Object obj) {
+        return obj instanceof TweetFilterQuery other
+                && this.count == other.count
+                && Arrays.equals(follow, other.follow)
+                && Arrays.equals(track, other.track)
+                && Arrays.equals(language, other.language)
+                && Objects.equals(filterLevel, other.filterLevel);
     }
 
     @Override

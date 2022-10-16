@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,16 @@
  */
 package org.tweetwallfx.tweet;
 
+import com.vdurmont.emoji.EmojiParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.config.TweetwallSettings;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,17 +40,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.vdurmont.emoji.EmojiParser;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.config.TweetwallSettings;
 
 /**
  * StopList consists of a list containing twitter related stop words, a list
@@ -49,7 +49,7 @@ import org.tweetwallfx.config.TweetwallSettings;
  */
 public final class StopList {
 
-    private static final Logger LOG = LogManager.getLogger(StopList.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StopList.class);
     private static final Set<String> TWITTER_LIST = new HashSet<>(
             Arrays.asList(
                     //twitter related
@@ -66,12 +66,16 @@ public final class StopList {
     //TODO: Add I18N support
     static {
         //extract Hashtags from complex query and add to StopList
-        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+        final TweetwallSettings tweetwallSettings = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
+        final String searchText = tweetwallSettings.query();
         final Matcher m = Pattern.compile("#[\\S]+").matcher(searchText);
 
         while (m.find()) {
             StopList.add(m.group(0));
         }
+
+        tweetwallSettings.additionalStopWords()
+                .forEach(StopList::add);
     }
 
     private StopList() {
@@ -123,10 +127,10 @@ public final class StopList {
     }
 
     private static Set<String> readStopListResource(String resourceName) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName), StandardCharsets.UTF_8))) {
             return reader.lines().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toSet());
         } catch (IOException e) {
-            LOG.error("Unable to load stoplist resource: " + resourceName, e);
+            LOG.error("Unable to load stoplist resource: {}", resourceName, e);
         }
         return Collections.emptySet();
     }

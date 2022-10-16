@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,12 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -46,7 +47,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(AcceptFromSenderFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AcceptFromSenderFilterStep.class);
     private final Config config;
 
     private AcceptFromSenderFilterStep(final Config config) {
@@ -58,18 +59,25 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
-            if (config.getUserHandles().contains(t.getUser().getScreenName())) {
-                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is whitelisted -> ACCEPTED", t.getId(), tweet.getId());
+            if (config.getUserHandles().contains(t.getUser().getScreenName().toLowerCase(Locale.ENGLISH))) {
+                LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is whitelisted -> ACCEPTED",
+                        tweet.getId(),
+                        t.getId());
                 return Result.ACCEPTED;
             }
 
-            LOG.info("Tweet(id:{}): User handle for Tweet(id:{}) is not whitelisted", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): User handle for Tweet(id:{}) is not whitelisted",
+                    t.getId(),
+                    tweet.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 
@@ -100,7 +108,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
      */
     public static final class Config {
 
-        private Set<String> userHandles = Collections.emptySet();
+        private Set<String> userHandles = Set.of();
         private boolean checkRetweeted = false;
 
         /**
@@ -111,7 +119,7 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
          * send by them is automatically accepted
          */
         public Set<String> getUserHandles() {
-            return userHandles;
+            return Set.copyOf(userHandles);
         }
 
         /**
@@ -122,7 +130,9 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
          */
         public void setUserHandles(final Set<String> userHandles) {
             Objects.requireNonNull(userHandles, "userHandles must not be null!");
-            this.userHandles = userHandles;
+            this.userHandles = userHandles.stream()
+                    .map(s -> s.toLowerCase(Locale.ENGLISH))
+                    .collect(Collectors.toSet());
         }
 
         /**

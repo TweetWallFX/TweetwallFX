@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -41,12 +40,12 @@ import org.tweetwallfx.tweet.api.Tweeter;
 
 public class TweetDataProvider implements DataProvider.NewTweetAware {
 
-    private static final Logger LOGGER = LogManager.getLogger(TweetDataProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TweetDataProvider.class);
     private static final int HISTORY_SIZE = 50;
     private final Random rand = new SecureRandom();
     private volatile Tweet tweet;
     private volatile Tweet nextTweet;
-    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
+    private final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
     private final Deque<Long> history = new ArrayDeque<>();
     private volatile List<Tweet> lastTweetCollection;
 
@@ -70,7 +69,7 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         return Tweeter.getInstance().search(new TweetQuery()
                 .query(searchText)
                 .count(HISTORY_SIZE))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Tweet nextTweet() {

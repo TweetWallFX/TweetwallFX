@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,76 +29,64 @@ import java.util.Map;
 import java.util.Objects;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConfigurationConverter;
-import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
+import org.tweetwallfx.stepengine.api.Visualization;
 import org.tweetwallfx.util.ConfigurableObjectBase;
 import org.tweetwallfx.util.JsonDataConverter;
+import static org.tweetwallfx.util.Nullable.nullable;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
 /**
  * POJO for reading Settings concerning the {@link StepEngine}.
+ *
+ * <p>
+ * Param {@code steps} list containing the definitions for the steps in the
+ * {@link StepEngine}
+ *
+ * <p>
+ * Param {@code dataProviderSettings} list of settings for {@link DataProvider}
+ * instances
+ *
+ * <p>
+ * Param {@code visualizationSettings} list of settings for
+ * {@link Visualization} instances
  */
-public final class StepEngineSettings {
+public record StepEngineSettings(
+        List<StepDefinition> steps,
+        List<DataProviderSetting> dataProviderSettings,
+        Map<String, VisualizationSetting> visualizationSettings) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "stepEngine";
-    private List<StepDefinition> steps = Collections.emptyList();
-    private List<DataProviderSetting> dataProviderSettings = Collections.emptyList();
 
-    /**
-     * Returns a list containing the definitions for the steps in the
-     * {@link StepEngine}.
-     *
-     * @return a list containing the definitions for the steps in the
-     * {@link StepEngine}
-     */
-    public List<StepDefinition> getSteps() {
-        return steps;
-    }
-
-    /**
-     * Sets a list containing the definitions for the steps in the
-     * {@link StepEngine}.
-     *
-     * @param steps a list containing the definitions for the steps in the
-     * {@link StepEngine}
-     */
-    public void setSteps(final List<StepDefinition> steps) {
-        Objects.requireNonNull(steps, "steps must not be null!");
-        this.steps = steps;
-    }
-
-    /**
-     * Returns a list of settings for {@link DataProvider} instances.
-     *
-     * @return a list of settings for {@link DataProvider} instances
-     */
-    public List<DataProviderSetting> getDataProviderSettings() {
-        return dataProviderSettings;
-    }
-
-    /**
-     * Sets a list of settings for {@link DataProvider} instances.
-     *
-     * @param dataProviderSettings a list of settings for {@link DataProvider}
-     * instances
-     */
-    public void setDataProviderSettings(final List<DataProviderSetting> dataProviderSettings) {
-        this.dataProviderSettings = dataProviderSettings;
+    public StepEngineSettings(
+            final List<StepDefinition> steps,
+            final List<DataProviderSetting> dataProviderSettings,
+            final Map<String, VisualizationSetting> visualizationSettings) {
+        this.steps = List.copyOf(Objects.requireNonNull(steps, "steps must not be null"));
+        this.dataProviderSettings = nullable(dataProviderSettings);
+        this.visualizationSettings = nullable(visualizationSettings);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "dataProviderSettings", getDataProviderSettings(),
-                "steps", getSteps()
-        ), super.toString());
+    public List<StepDefinition> steps() {
+        return List.copyOf(steps);
+    }
+
+    @Override
+    public List<DataProviderSetting> dataProviderSettings() {
+        return List.copyOf(dataProviderSettings);
+    }
+
+    @Override
+    public Map<String, VisualizationSetting> visualizationSettings() {
+        return Map.copyOf(visualizationSettings);
     }
 
     /**
@@ -200,6 +188,49 @@ public final class StepEngineSettings {
         public String toString() {
             return createToString(this, map(
                     "dataProviderClassName", getDataProviderClassName(),
+                    "config", getConfig()
+            ), super.toString());
+        }
+    }
+
+    /**
+     * Configurable object containing configuration data (via
+     * {@link #getConfig()} or {@link #getConfig(java.lang.Class)}) for a
+     * {@link Visualization} instance (identified via
+     * {@link #getVisualizationClassName()}.
+     *
+     * <p>
+     * Configuration can be extended by configuring the properties of the
+     * {@code config} section of this definition on the root level of the
+     * Configuration.
+     */
+    public static final class VisualizationSetting extends ConfigurableObjectBase {
+
+        private String visualizationClassName;
+
+        /**
+         * Returns the class name of the {@link Visualization}.
+         *
+         * @return the class name of the {@link Visualization}
+         */
+        public String getVisualizationClassName() {
+            return visualizationClassName;
+        }
+
+        /**
+         * Sets the class name of the {@link Visualization}
+         *
+         * @param visualizationClassName the class name of the
+         * {@link Visualization}
+         */
+        public void setVisualizationClassName(final String visualizationClassName) {
+            this.visualizationClassName = visualizationClassName;
+        }
+
+        @Override
+        public String toString() {
+            return createToString(this, map(
+                    "visualizationClassName", getVisualizationClassName(),
                     "config", getConfig()
             ), super.toString());
         }

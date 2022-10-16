@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -67,8 +66,10 @@ public class CloudToCloudStep implements Step {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
-        limitedWords.sort(Comparator.reverseOrder());
+        List<Word> limitedWords = sortedWords.stream()
+                .limit(wordleSkin.getDisplayCloudTags())
+                .sorted(Comparator.reverseOrder())
+                .toList();
 
         WordleLayout.Configuration configuration = new WordleLayout.Configuration(limitedWords, wordleSkin.getFont(), wordleSkin.getFontSizeMax(), layoutBounds);
         if (null != wordleSkin.getLogo()) {
@@ -79,7 +80,9 @@ public class CloudToCloudStep implements Step {
         }
 
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
-        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());
+        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream()
+                .filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word))
+                .toList();
 
         Duration defaultDuration = Duration.seconds(1.5);
 
@@ -105,7 +108,7 @@ public class CloudToCloudStep implements Step {
 
         List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
                 .filter(wordleSkin.word2TextMap::containsKey)
-                .collect(Collectors.toList());
+                .toList();
 
         existingWords.forEach(word -> {
 
@@ -122,7 +125,9 @@ public class CloudToCloudStep implements Step {
         moves.getChildren().addAll(moveTransitions);
         morph.getChildren().add(moves);
 
-        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(word -> !wordleSkin.word2TextMap.containsKey(word))
+                .toList();
 
         List<Text> newTextNodes = new ArrayList<>();
         newWords.forEach(word -> {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,8 @@ import javafx.animation.Transition;
 import javafx.geometry.Bounds;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
@@ -54,7 +54,7 @@ public class UpdateCloudStep implements Step {
         // prevent external instantiation
     }
 
-    private static final Logger LOGGER = LogManager.getLogger(UpdateCloudStep.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateCloudStep.class);
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
@@ -70,7 +70,9 @@ public class UpdateCloudStep implements Step {
 
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
         Bounds layoutBounds = wordleSkin.getPane().getLayoutBounds();
-        List<Word> limitedWords = sortedWords.stream().limit(wordleSkin.getDisplayCloudTags()).collect(Collectors.toList());
+        List<Word> limitedWords = sortedWords.stream()
+                .limit(wordleSkin.getDisplayCloudTags())
+                .collect(Collectors.toList());
         List<Word> additionalTagCloudWords = context.getDataProvider(TagCloudDataProvider.class).getAdditionalTweetWords();
 
         double minWeight = limitedWords.stream().mapToDouble(Word::getWeight).min().orElse(-2d);
@@ -91,7 +93,9 @@ public class UpdateCloudStep implements Step {
         }
 
         WordleLayout cloudWordleLayout = WordleLayout.createWordleLayout(configuration);
-        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream().filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word)).collect(Collectors.toList());
+        List<Word> unusedWords = wordleSkin.word2TextMap.keySet().stream()
+                .filter(word -> !cloudWordleLayout.getWordLayoutInfo().containsKey(word))
+                .toList();
 
         Duration defaultDuration = Duration.seconds(1.5);
 
@@ -101,7 +105,7 @@ public class UpdateCloudStep implements Step {
         List<Transition> moveTransitions = new ArrayList<>();
         List<Transition> fadeInTransitions = new ArrayList<>();
 
-        LOGGER.info("Unused words in cloud: " + unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("Unused words in cloud: {}", unusedWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
 
         unusedWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.remove(word);
@@ -119,9 +123,9 @@ public class UpdateCloudStep implements Step {
 
         List<Word> existingWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
                 .filter(wordleSkin.word2TextMap::containsKey)
-                .collect(Collectors.toList());
+                .toList();
 
-        LOGGER.info("Existing words in cloud: " + existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("Existing words in cloud: {}", existingWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         existingWords.forEach(word -> {
             Text textNode = wordleSkin.word2TextMap.get(word);
             cloudWordleLayout.fontSizeAdaption(textNode, word.getWeight());
@@ -136,10 +140,12 @@ public class UpdateCloudStep implements Step {
         moves.getChildren().addAll(moveTransitions);
         morph.getChildren().add(moves);
 
-        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream().filter(word -> !wordleSkin.word2TextMap.containsKey(word)).collect(Collectors.toList());
+        List<Word> newWords = cloudWordleLayout.getWordLayoutInfo().keySet().stream()
+                .filter(word -> !wordleSkin.word2TextMap.containsKey(word))
+                .toList();
 
         List<Text> newTextNodes = new ArrayList<>();
-        LOGGER.info("New words in cloud: " + newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
+        LOGGER.info("New words in cloud: {}", newWords.stream().map(Word::getText).collect(Collectors.joining(", ")));
         newWords.forEach(word -> {
             Text textNode = cloudWordleLayout.createTextNode(word);
             wordleSkin.word2TextMap.put(word, textNode);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetStream;
@@ -41,7 +41,7 @@ import twitter4j.conf.Configuration;
 
 final class TwitterTweetStream implements TweetStream {
 
-    private static final Logger LOG = LogManager.getLogger(TwitterTweetStream.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TwitterTweetStream.class);
 
     private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
 
@@ -58,9 +58,9 @@ final class TwitterTweetStream implements TweetStream {
     @Override
     public void onTweet(final Consumer<Tweet> tweetConsumer) {
         synchronized (this) {
-            LOG.info("Adding tweetConsumer: " + tweetConsumer);
+            LOG.info("Adding tweetConsumer: {}", tweetConsumer);
             this.tweetConsumerList.add(tweetConsumer);
-            LOG.info("List of tweetConsumers is now: " + tweetConsumerList);
+            LOG.info("List of tweetConsumers is now: {}", tweetConsumerList);
         }
     }
 
@@ -79,7 +79,7 @@ final class TwitterTweetStream implements TweetStream {
 
                 if (tweetFilter.test(twitterTweet)) {
                     synchronized (TwitterTweetStream.this) {
-                        LOG.info("redispatching new received tweet to " + tweetConsumerList);
+                        LOG.info("redispatching new received tweet to {}", tweetConsumerList);
                         tweetConsumerList.stream().forEach(consumer -> consumer.accept(twitterTweet));
                     }
                 }

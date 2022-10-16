@@ -13,7 +13,8 @@
                 "cacheResources": [
                     {
                         "type": "HEAP",
-                        "amount": 100
+                        "amount": 20,
+                        "unit": "MB"
                     },
                     {
                         "type": "DISK",

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,18 @@ import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.cloud.vision.v1.ImageAnnotatorSettings;
 import com.google.cloud.vision.v1.ImageSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.cache.Cache;
+import org.tweetwallfx.cache.CacheManagerProvider;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.google.GoogleSettings;
+import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
+
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,15 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
-import org.tweetwallfx.cache.CacheManagerProvider;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.google.GoogleSettings;
-import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
 
 /**
  * Caches the content analysis performed via Google Vision API via the medias
@@ -57,7 +59,7 @@ import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
  */
 public final class GoogleVisionCache {
 
-    private static final Logger LOG = LogManager.getLogger(GoogleVisionCache.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GoogleVisionCache.class);
     private static final GoogleSettings GOOGLE_SETTINGS = Configuration.getInstance()
             .getConfigTyped(GoogleSettings.CONFIG_KEY, GoogleSettings.class);
     /**
@@ -69,17 +71,32 @@ public final class GoogleVisionCache {
     private volatile ImageAnnotatorClient client;
 
     private GoogleVisionCache() {
-        if (null == GOOGLE_SETTINGS.getCredentialFilePath()) {
-            LOG.warn("File path of Google Credentials not configured. Bypassing all analysis requests.");
-            this.imageAnnotatorSettings = null;
-        } else {
-            try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.getCredentialFilePath())) {
-                final GoogleCredentials credentials = GoogleCredentials.fromStream(fis);
-                this.imageAnnotatorSettings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
-            } catch (final IOException ex) {
-                LOG.error(ex, ex);
-                throw new IllegalStateException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.getCredentialFilePath() + "'", ex);
+        try {
+            final GoogleCredentials credentials;
+
+            if (null != GOOGLE_SETTINGS.credentialFilePath()) {
+                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
+                    credentials = GoogleCredentials.fromStream(fis);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
+                }
+            } else if (null != GOOGLE_SETTINGS.credentialBase64()) {
+                final ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(GOOGLE_SETTINGS.credentialBase64()));
+                try {
+                    credentials = GoogleCredentials.fromStream(bais);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from BASE64 encoded credential data", ex);
+                }
+            } else {
+                credentials = null;
             }
+
+            this.imageAnnotatorSettings = null == credentials
+                    ? null
+                    : ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
+        } catch (final IOException ex) {
+            LOG.error("Failed loading ImageAnnotatorSettings with google credentials", ex);
+            throw new IllegalStateException("Failed loading ImageAnnotatorSettings with google credentials", ex);
         }
 
         cache = CacheManagerProvider.getCache(
@@ -89,32 +106,19 @@ public final class GoogleVisionCache {
     }
 
     private static Feature.Type convertFeatureType(final FeatureType featureType) {
-        switch (featureType) {
-            case CROP_HINTS:
-                return Feature.Type.CROP_HINTS;
-            case DOCUMENT_TEXT_DETECTION:
-                return Feature.Type.DOCUMENT_TEXT_DETECTION;
-            case FACE_DETECTION:
-                return Feature.Type.FACE_DETECTION;
-            case IMAGE_PROPERTIES:
-                return Feature.Type.IMAGE_PROPERTIES;
-            case LABEL_DETECTION:
-                return Feature.Type.LABEL_DETECTION;
-            case LANDMARK_DETECTION:
-                return Feature.Type.LANDMARK_DETECTION;
-            case LOGO_DETECTION:
-                return Feature.Type.LOGO_DETECTION;
-            case OBJECT_LOCALIZATION:
-                return Feature.Type.OBJECT_LOCALIZATION;
-            case SAFE_SEARCH_DETECTION:
-                return Feature.Type.SAFE_SEARCH_DETECTION;
-            case TEXT_DETECTION:
-                return Feature.Type.TEXT_DETECTION;
-            case WEB_DETECTION:
-                return Feature.Type.WEB_DETECTION;
-            default:
-                throw new IllegalArgumentException("FeatureType '" + featureType.name() + "' not supported.");
-        }
+        return switch (featureType) {
+            case CROP_HINTS -> Feature.Type.CROP_HINTS;
+            case DOCUMENT_TEXT_DETECTION -> Feature.Type.DOCUMENT_TEXT_DETECTION;
+            case FACE_DETECTION -> Feature.Type.FACE_DETECTION;
+            case IMAGE_PROPERTIES -> Feature.Type.IMAGE_PROPERTIES;
+            case LABEL_DETECTION -> Feature.Type.LABEL_DETECTION;
+            case LANDMARK_DETECTION -> Feature.Type.LANDMARK_DETECTION;
+            case LOGO_DETECTION -> Feature.Type.LOGO_DETECTION;
+            case OBJECT_LOCALIZATION -> Feature.Type.OBJECT_LOCALIZATION;
+            case SAFE_SEARCH_DETECTION -> Feature.Type.SAFE_SEARCH_DETECTION;
+            case TEXT_DETECTION -> Feature.Type.TEXT_DETECTION;
+            case WEB_DETECTION -> Feature.Type.WEB_DETECTION;
+        };
     }
 
     public Map<String, ImageContentAnalysis> getCachedOrLoad(final Stream<String> imageUris) throws IOException {
@@ -144,7 +148,7 @@ public final class GoogleVisionCache {
                 .distinct()
                 .map(this::createImageRequest)
                 .peek(air -> LOG.info("Prepared {}", air))
-                .collect(Collectors.toList());
+                .toList();
 
         if (requests.isEmpty()) {
             return Collections.emptyMap();
@@ -161,7 +165,7 @@ public final class GoogleVisionCache {
             final AnnotateImageResponse response = itResponse.next();
 
             final String uri = request.getImage().getSource().getImageUri();
-            final ImageContentAnalysis ica = new ImageContentAnalysis(response);
+            final ImageContentAnalysis ica = ImageContentAnalysis.of(response);
             LOG.info("Image('{}') was evaluated as {}", uri, ica);
             result.put(uri, ica);
             cache.put(uri, ica);
@@ -182,7 +186,7 @@ public final class GoogleVisionCache {
                         .setSource(ImageSource.newBuilder()
                                 .setImageUri(imageUri)));
 
-        GOOGLE_SETTINGS.getCloudVision().getFeatureTypes().stream()
+        GOOGLE_SETTINGS.cloudVision().featureTypes().stream()
                 .map(GoogleVisionCache::convertFeatureType)
                 .forEach(builder.addFeaturesBuilder()::setType);
 

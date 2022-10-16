@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,6 @@ import org.tweetwallfx.tweet.api.Tweet;
 
 /**
  * A Provider of data. The type of data is implementation specific.
- *
- * @author Sven Reimers
  */
 public interface DataProvider {
 
@@ -110,7 +108,7 @@ public interface DataProvider {
          *
          * @return the type of scheduling
          */
-        ScheduleType getScheduleType();
+        ScheduleType scheduleType();
 
         /**
          * Returns the number of seconds before the first execution of the
@@ -118,7 +116,7 @@ public interface DataProvider {
          *
          * @return the number of seconds before the first execution
          */
-        long getInitialDelay();
+        Long initialDelay();
 
         /**
          * Returns the number of seconds for either delay/fixed rate between
@@ -127,7 +125,7 @@ public interface DataProvider {
          * @return the number of seconds for either delay/fixed rate between
          * executions
          */
-        long getScheduleDuration();
+        Long scheduleDuration();
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,8 @@ package org.tweetwallfx.tweet.api.filter;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -47,7 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(MaxHashtagLengthFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MaxHashtagLengthFilterStep.class);
     private final Config config;
 
     private MaxHashtagLengthFilterStep(Config config) {
@@ -59,22 +58,30 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
         Tweet t = tweet;
 
         do {
-            LOG.info("Tweet(id:{}): Checking for Tweet(id:{}) ...", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Checking for Tweet(id:{}) ...",
+                    tweet.getId(),
+                    t.getId());
 
             final List<HashtagTweetEntry> htes = Arrays.stream(t.getHashtagEntries())
                     .filter(hte -> hte.getText().length() > config.getMaxLength())
-                    .collect(Collectors.toList());
+                    .toList();
 
             if (!htes.isEmpty()) {
-                LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length -> REJECTED", t.getId(), tweet.getId());
+                LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) exceed allowed length of {} -> REJECTED",
+                        tweet.getId(),
+                        t.getId(),
+                        config.getMaxLength());
                 return Result.REJECTED;
             }
 
-            LOG.info("Tweet(id:{}): Hashtags in Tweet(id:{}) do not exeed allowed limit", t.getId(), tweet.getId());
+            LOG.debug("Tweet(id:{}): Hashtags in Tweet(id:{}) do not exeed allowed limit",
+                    tweet.getId(),
+                    t.getId());
             t = t.getRetweetedTweet();
         } while (config.isCheckRetweeted() && null != t);
 
-        LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+        LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                tweet.getId());
         return Result.NOTHING_DEFINITE;
     }
 

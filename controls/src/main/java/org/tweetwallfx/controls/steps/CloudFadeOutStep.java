@@ -35,9 +35,6 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 public class CloudFadeOutStep implements Step {
 
     private CloudFadeOutStep() {
@@ -67,6 +64,14 @@ public class CloudFadeOutStep implements Step {
             fadeOutTransitions.add(ft);
         });
         wordleSkin.word2TextMap.clear();
+
+        wordleSkin.getNode().lookupAll("#blurredCopy").stream().forEach( node -> {
+            FadeTransition ft = new FadeTransition(defaultDuration, node);
+            ft.setToValue(0);
+            ft.setOnFinished(event
+                    -> wordleSkin.getPane().getChildren().remove(node));
+            fadeOutTransitions.add(ft);
+        });
 
         ParallelTransition fadeLOuts = new ParallelTransition();
 

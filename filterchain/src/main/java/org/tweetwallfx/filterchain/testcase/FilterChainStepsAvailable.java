@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
 public class FilterChainStepsAvailable implements RunnableTestCase {
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         final Map<String, List<FilterStep.Factory>> filterStepFactories = StreamSupport
                 .stream(ServiceLoader.load(FilterStep.Factory.class).spliterator(), false)
                 .collect(Collectors.groupingBy(fsf -> fsf.getFilterStepClass().getCanonicalName()));
@@ -51,10 +51,10 @@ public class FilterChainStepsAvailable implements RunnableTestCase {
                 .getConfigTyped(
                         FilterChainSettings.CONFIG_KEY,
                         FilterChainSettings.class)
-                .getChains()
+                .chains()
                 .entrySet().stream()
                 .map(Map.Entry::getValue)
-                .map(FilterChainSettings.FilterChainDefinition::getFilterSteps)
+                .map(FilterChainSettings.FilterChainDefinition::filterSteps)
                 .flatMap(Collection::stream)
                 .map(FilterStepDefinition::getStepClassName)
                 .collect(Collectors.groupingBy(filterStepFactories::containsKey))

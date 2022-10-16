@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,11 +59,8 @@ public final class Word implements Comparable<Word> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        } else {
-            return this.text.equalsIgnoreCase(((Word) obj).text);
-        }
+    public boolean equals(final Object obj) {
+        return obj instanceof Word other
+                && this.text.equalsIgnoreCase(other.text);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import javafx.concurrent.Task;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
+
+import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 
 /**
  * Caches the content urlString to their urlString.
@@ -44,24 +45,36 @@ import org.tweetwallfx.config.Configuration;
 public abstract class URLContentCacheBase {
 
     private static final String MESSAGE_LOAD_FAILED = "{}: Failed to load content from {}";
-    private static final Logger LOG = LogManager.getLogger(URLContentCacheBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(URLContentCacheBase.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("URLContentCache");
     private final String cacheName;
     private final Executor contentLoader;
     private final Cache<String, URLContent> urlContentCache;
 
     protected URLContentCacheBase(final String cacheName) {
+        this(cacheName, initializeCache(cacheName), initializeExecutor(cacheName));
+    }
+
+    URLContentCacheBase(final String cacheName, final Cache<String, URLContent> urlContentCache, final Executor contentLoader) {
         this.cacheName = cacheName;
-        urlContentCache = CacheManagerProvider.getCache(
+        this.urlContentCache = urlContentCache;
+        this.contentLoader = contentLoader;
+    }
+
+    private static Cache<String, URLContent> initializeCache(String cacheName) {
+        return CacheManagerProvider.getCache(
                 cacheName,
                 String.class,
                 URLContent.class);
-        contentLoader = createExecutor(
+    }
+
+    private static Executor initializeExecutor(String cacheName) {
+        return createExecutor(
                 Configuration.getInstance()
                         .getConfigTyped(CacheSettings.CONFIG_KEY, CacheSettings.class)
-                        .getCaches()
+                        .caches()
                         .get(cacheName)
-                        .getContentLoaderThreads(),
+                        .contentLoaderThreads(),
                 cacheName);
     }
 
@@ -112,7 +125,7 @@ public abstract class URLContentCacheBase {
             return getCachedOrLoadSync(urlString);
         } catch (IOException ex) {
             LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ex);
-            return null;
+            return NO_CONTENT;
         }
     }
 
@@ -127,26 +140,22 @@ public abstract class URLContentCacheBase {
      */
     public final void getCachedOrLoad(final String urlString, final Consumer<URLContent> contentConsumer) {
         Objects.requireNonNull(contentConsumer, "contentConsumer must not be null");
-        final Task<URLContent> task = new Task<URLContent>() {
 
-            @Override
-            protected URLContent call() throws Exception {
-                return getCachedOrLoadSync(urlString);
+        contentLoader.execute(() -> {
+            try {
+                final URLContent content = getCachedOrLoadSync(urlString);
+                contentConsumer.accept(content);
+            } catch (final IOException ioe) {
+                LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ioe);
             }
-        };
-
-        task.setOnSucceeded(event
-                -> contentConsumer.accept(task.getValue()));
-        task.setOnFailed(event
-                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
-        contentLoader.execute(task);
+        });
     }
 
     private URLContent getCachedOrLoadSync(final String urlString) throws IOException {
         URLContent urlc = urlContentCache.get(urlString);
 
         if (null == urlc) {
-            urlc = new URLContent(urlString);
+            urlc = URLContent.of(urlString);
             putCachedContent(urlString, urlc);
         }
 
@@ -162,7 +171,7 @@ public abstract class URLContentCacheBase {
      */
     public final void putCachedContent(final String urlString, final InputStream content) {
         try {
-            putCachedContent(urlString, new URLContent(content));
+            putCachedContent(urlString, URLContent.of(content));
         } catch (IOException ex) {
             LOG.error("{}: Failed to read content from InputStream for {}", cacheName, urlString, ex);
         }
@@ -197,24 +206,18 @@ public abstract class URLContentCacheBase {
     }
 
     private void putCachedContentAsync(final String urlString, final Consumer<URLContent> contentConsumer) {
-        final Task<URLContent> task = new Task<URLContent>() {
+        contentLoader.execute(() -> {
+            try {
+                final URLContent content = URLContent.of(urlString);
+                putCachedContent(urlString, content);
 
-            @Override
-            protected URLContent call() throws Exception {
-                return new URLContent(urlString);
-            }
-        };
-
-        task.setOnSucceeded(event -> {
-            putCachedContent(urlString, task.getValue());
-
-            if (null != contentConsumer) {
-                contentConsumer.accept(task.getValue());
+                if (null != contentConsumer) {
+                    contentConsumer.accept(content);
+                }
+            } catch (final IOException ioe) {
+                LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, ioe);
             }
         });
-        task.setOnFailed(event
-                -> LOG.error(MESSAGE_LOAD_FAILED, cacheName, urlString, task.getException()));
-        contentLoader.execute(task);
     }
 
     public static URLContentCacheBase getDefault() {

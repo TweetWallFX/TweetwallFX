@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ package org.tweetwallfx.twod;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.controls.Wordle;
@@ -39,14 +39,11 @@ import org.tweetwallfx.controls.Wordle;
  * Tasks to perform a search on Twitter for some hashtag, create an HBox with
  * each tweets, crate a snapshot and then load the image as diffuseMap of a
  * segmented torus Tasks and blockingQueues take care of this complex process
- *
- * @author José Pereda
- * @author Sven Reimers
  */
 public class TagTweets {
 
     private static final String STARTUP = "org.tweetwallfx.startup";
-    private static final Logger LOGGER = LogManager.getLogger(STARTUP);
+    private static final Logger LOGGER = LoggerFactory.getLogger(STARTUP);
 
     private final BorderPane root;
     private final HBox hWordle = new HBox();
@@ -62,8 +59,8 @@ public class TagTweets {
         hWordle.prefHeightProperty().bind(root.heightProperty());
 
         root.setCenter(hWordle);
-        String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-        LOGGER.trace("** 1. Creating Tag Cloud for " + searchText);
+        String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
+        LOGGER.trace("** 1. Creating Tag Cloud for {}", searchText);
 
         LOGGER.trace("** create wordle");
 
@@ -73,6 +70,6 @@ public class TagTweets {
         wordle.prefHeightProperty().bind(hWordle.heightProperty());
 
         LOGGER.trace("** create wordle done");
-        LOGGER.trace("** 2. Starting new Tweets search for " + searchText);
+        LOGGER.trace("** 2. Starting new Tweets search for {}", searchText);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
  */
 
 dependencies {
-    compile group: 'org.twitter4j', name: 'twitter4j-core', version: versionTwitter4j
-    compile group: 'org.twitter4j', name: 'twitter4j-stream', version: versionTwitter4j
-    compile project(':tweetwallfx-tweet-api')
-    compile project(':tweetwallfx-tweet-impl-twitter4j-oauth')
-    compile project(':tweetwallfx-configuration')
+    api 'org.twitter4j:twitter4j-core:4.0.7'
+    api project(':tweetwallfx-tweet-api')
+
+    implementation 'org.slf4j:slf4j-api:2.0.3'
+    implementation 'org.twitter4j:twitter4j-stream:4.0.7'
 }

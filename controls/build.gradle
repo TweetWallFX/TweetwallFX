@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,13 @@
  */
 
 dependencies {
-    compile project(':tweetwallfx-core')
-    compile project(':tweetwallfx-stepengine-steps')
-    compile project(':tweetwallfx-transitions')
+    implementation 'com.github.mfornos:humanize-slim:1.2.2'
+    implementation 'de.jensd:fontawesomefx-commons:11.0'
+    implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
+    implementation 'org.slf4j:slf4j-api:2.0.3'
+    implementation 'io.github.encryptorcode:pluralize:1.0.0'
+    implementation project(':tweetwallfx-core')
+    implementation project(':tweetwallfx-emoji')
+    implementation project(':tweetwallfx-stepengine-dataproviders')
+    implementation project(':tweetwallfx-transitions')
 }

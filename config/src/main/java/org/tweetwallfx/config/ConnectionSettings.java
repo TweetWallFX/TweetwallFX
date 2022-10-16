@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,44 +23,22 @@
  */
 package org.tweetwallfx.config;
 
-import static org.tweetwallfx.util.ToString.*;
+import java.util.Objects;
 
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
+ *
+ * <p>
+ * Param {@code proxy} the Proxy settings to use with HTTP connections
  */
-public final class ConnectionSettings {
+public record ConnectionSettings(
+        Proxy proxy) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "connectionSettings";
-    private Proxy proxy;
-
-    /**
-     * Returns the Proxy settings to use with HTTP connections.
-     *
-     * @return the Proxy settings to use with HTTP connections
-     */
-    public Proxy getProxy() {
-        return proxy;
-    }
-
-    /**
-     * Sets the Proxy settings to use with HTTP connections.
-     *
-     * @param proxy the Proxy settings to use with HTTP connections
-     */
-    public void setProxy(final Proxy proxy) {
-        this.proxy = proxy;
-    }
-
-    @Override
-    public String toString() {
-        return createToString(this, map(
-                "proxy", getProxy()
-        )) + " extends " + super.toString();
-    }
 
     /**
      * Service implementation converting the configuration data of the root key
@@ -82,94 +60,32 @@ public final class ConnectionSettings {
     /**
      * POJO containing the proxy setting to use when working with HTTP
      * Connections.
+     *
+     * <p>
+     * Param {@code host} the host of proxy server to use
+     *
+     * <p>
+     * Param {@code port} the port number of the proxy server to use
+     *
+     * <p>
+     * Param {@code user} the user name to use for the proxy connection
+     *
+     * <p>
+     * Param {@code password} the password to use for the proxy connection
      */
-    public static final class Proxy {
+    public static record Proxy(
+            String host,
+            Integer port,
+            String user,
+            String password) {
 
-        private String host = "";
-        private int port = -1;
-        private String user = "";
-        private String password = "";
+        public Proxy    {
+            Objects.requireNonNull(host, "host must not be null");
+            Objects.requireNonNull(port, "port must not be null");
 
-        /**
-         * Returns the host of proxy server to use.
-         *
-         * @return the host of proxy server to use
-         */
-        public String getHost() {
-            return host;
-        }
-
-        /**
-         * Sets the host of proxy server to use.
-         *
-         * @param host the host of proxy server to use
-         */
-        public void setHost(final String host) {
-            this.host = host;
-        }
-
-        /**
-         * Returns the port number of the proxy server to use.
-         *
-         * @return the port number of the proxy server to use
-         */
-        public int getPort() {
-            return port;
-        }
-
-        /**
-         * Sets the port number of the proxy server to use.
-         *
-         * @param port the port number of the proxy server to use
-         */
-        public void setPort(final int port) {
-            this.port = port;
-        }
-
-        /**
-         * Returns the user name to use for the proxy connection.
-         *
-         * @return the user name to use for the proxy connection
-         */
-        public String getUser() {
-            return user;
-        }
-
-        /**
-         * Sets the user name to use for the proxy connection.
-         *
-         * @param user the user name to use for the proxy connection
-         */
-        public void setUser(final String user) {
-            this.user = user;
-        }
-
-        /**
-         * Returns the password to use for the proxy connection.
-         *
-         * @return the password to use for the proxy connection
-         */
-        public String getPassword() {
-            return password;
-        }
-
-        /**
-         * Sets the password to use for the proxy connection.
-         *
-         * @param password the password to use for the proxy connection
-         */
-        public void setPassword(final String password) {
-            this.password = password;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "host", getHost(),
-                    "port", getPort(),
-                    "user", getUser(),
-                    "password", getPassword()
-            )) + " extends " + super.toString();
+            if (Objects.nonNull(user) ^ Objects.nonNull(password)) {
+                throw new IllegalArgumentException("user and password values have to be set or unset at the sametime");
+            }
         }
     }
 }

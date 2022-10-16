@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.stepengine.api;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
@@ -45,8 +46,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
@@ -55,13 +56,10 @@ import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
-/**
- * @author Jörg Michelberger
- */
 public final class StepEngine {
 
-    private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
-    private static final Logger LOG = LogManager.getLogger(StepEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger("org.tweetwallfx.startup");
+    private static final Logger LOG = LoggerFactory.getLogger(StepEngine.class);
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("StepEngine");
     private volatile boolean terminated = false;
     private final Phaser asyncProceed = new Phaser(2);
@@ -86,6 +84,7 @@ public final class StepEngine {
         stepIterator.applyWith(step -> step.initStep(context));
     }
 
+    @SuppressFBWarnings
     public MachineContext getContext() {
         return context;
     }
@@ -94,13 +93,13 @@ public final class StepEngine {
         final Set<Class<? extends DataProvider>> requiredDataProviders = stepIterator.getRequiredDataProviders();
         LOGGER.info("init DataProviders");
 
-        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).getQuery();
-        LOGGER.info("query: " + searchText);
+        final String searchText = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class).query();
+        LOGGER.info("query: {}", searchText);
 
         LOGGER.info("create DataProviders");
         final Map<String, StepEngineSettings.DataProviderSetting> dataProviderSettings = Configuration.getInstance()
                 .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
-                .getDataProviderSettings()
+                .dataProviderSettings()
                 .stream()
                 .collect(Collectors.toMap(
                         StepEngineSettings.DataProviderSetting::getDataProviderClassName,
@@ -114,8 +113,8 @@ public final class StepEngine {
                         -> dpf.create(dataProviderSettings.getOrDefault(
                         dpf.getDataProviderClass().getName(),
                         new StepEngineSettings.DataProviderSetting())))
-                .peek(dataProvider -> LOG.info("created " + dataProvider))
-                .collect(Collectors.toList());
+                .peek(dataProvider -> LOG.info("created {}", dataProvider))
+                .toList();
 
         requiredDataProviders.stream()
                 .filter(rdpc -> providers.stream().noneMatch(rdpc::isInstance))
@@ -127,11 +126,11 @@ public final class StepEngine {
         final List<DataProvider.NewTweetAware> newTweetAwareProviders = providers.stream()
                 .filter(DataProvider.NewTweetAware.class::isInstance)
                 .map(DataProvider.NewTweetAware.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         final List<DataProvider.HistoryAware> historyAwareProviders = providers.stream()
                 .filter(DataProvider.HistoryAware.class::isInstance)
                 .map(DataProvider.HistoryAware.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         providers.stream()
                 .filter(DataProvider.Scheduled.class::isInstance)
                 .map(DataProvider.Scheduled.class::cast)
@@ -162,13 +161,13 @@ public final class StepEngine {
         final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
 
         try {
-            if (DataProvider.ScheduleType.FIXED_DELAY == sc.getScheduleType()) {
-                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+            if (DataProvider.ScheduleType.FIXED_DELAY == sc.scheduleType()) {
+                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             } else {
-                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.getInitialDelay(), sc.getScheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
-            LOGGER.fatal("failed to initializing Scheduled: {}", scheduled, re);
+            LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
             throw re;
         }
     }
@@ -247,8 +246,7 @@ public final class StepEngine {
                     try {
                         stepToExecute.doStep(context);
                     } catch (RuntimeException | Error e) {
-                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
-                        LOG.fatal("caused by", e);
+                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
                         // enforce that animation continues
                         context.proceed();
                     }
@@ -257,8 +255,7 @@ public final class StepEngine {
                     try {
                         stepToExecute.doStep(context);
                     } catch (RuntimeException | Error e) {
-                        LOG.fatal("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName());
-                        LOG.fatal("caused by", e);
+                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
                         // enforce that animation continues
                         context.proceed();
                     }

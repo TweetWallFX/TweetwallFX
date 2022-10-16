@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package org.tweetwallfx.stepengine.api.testcase;
 
 import java.util.ServiceLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 import org.tweetwallfx.stepengine.api.Step;
 
@@ -35,12 +35,12 @@ import org.tweetwallfx.stepengine.api.Step;
  */
 public class StepFactoryLoadable implements RunnableTestCase {
 
-    private static final Logger LOG = LogManager.getLogger(StepFactoryLoadable.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StepFactoryLoadable.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         for (final Step.Factory o : ServiceLoader.load(Step.Factory.class)) {
-            LOG.info("loaded " + o.getClass());
+            LOG.info("loaded {}", o.getClass());
         }
     }
 }

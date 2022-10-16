@@ -1,0 +1,68 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Check for Updates
+
+on:
+  push:
+    branches:
+      - master
+      - release
+  pull_request:
+    branches:
+      - master
+      - release
+
+jobs:
+  checkUpdates:
+    name: Check for available updates
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out sources
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+
+      # Validate wrapper
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v1.0.4
+
+      # Setup JDK environment for the next steps
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+
+      # Run dependencyUpdates task
+      - name: Run dependencyUpdates task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: --no-daemon --refresh-dependencies dependencyUpdates
+
+      # Store dependencyUpdates result files
+      - name: Store dependencyUpdates result files
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependencyUpdates results
+          path: build/dependencyUpdates/
+          retention-days: 3
+
+      # Run dependency-analysis task
+      - name: Run dependency-analysis task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: --no-daemon --refresh-dependencies buildHealth
+
+      # Store dependency-analysis result files
+      - name: Store dependency-analysis result files
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-analysis results
+          path: build/reports/dependency-analysis/
+          retention-days: 3

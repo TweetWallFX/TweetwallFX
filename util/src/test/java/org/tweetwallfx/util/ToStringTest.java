@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,21 @@
  */
 package org.tweetwallfx.util;
 
+import org.assertj.core.data.MapEntry;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeSet;
-import static org.assertj.core.api.Assertions.*;
-import org.assertj.core.data.MapEntry;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import static org.tweetwallfx.util.ToString.*;
 
-public class ToStringTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.ToString.mapEntry;
+import static org.tweetwallfx.util.ToString.mapOf;
 
-    @Rule
-    public TestName testName = new TestName();
+class ToStringTest {
     private static final String KEY1 = "one";
     private static final Object VALUE1 = 1L;
     private static final String KEY2 = "deux";
@@ -51,18 +49,8 @@ public class ToStringTest {
     private static final String KEY5 = "quinque";
     private static final Object VALUE5 = "0x101";
 
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
-    }
-
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
-    }
-
     @Test
-    public void testMapKeyValue_2args() {
+    void testMapKeyValue_2args() {
         final Map<String, Object> result = map(
                 KEY1, VALUE1);
 
@@ -72,7 +60,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapKeyValue_4args() {
+    void testMapKeyValue_4args() {
         final Map<String, Object> result = map(
                 KEY1, VALUE1,
                 KEY2, VALUE2);
@@ -84,7 +72,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapKeyValue_6args() {
+    void testMapKeyValue_6args() {
         final Map<String, Object> result = map(
                 KEY1, VALUE1,
                 KEY2, VALUE2,
@@ -98,7 +86,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapKeyValue_8args() {
+    void testMapKeyValue_8args() {
         final Map<String, Object> result = map(
                 KEY1, VALUE1,
                 KEY2, VALUE2,
@@ -114,7 +102,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapKeyValue_10args() {
+    void testMapKeyValue_10args() {
         final Map<String, Object> result = map(
                 KEY1, VALUE1,
                 KEY2, VALUE2,
@@ -132,21 +120,21 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapEntry_Null() {
+    void testMapEntry_Null() {
         final Map<String, Object> result = mapOf((Map.Entry<String, Object>[]) null);
 
         assertThat(result).isEmpty();
     }
 
     @Test
-    public void testMapEntry_0args() {
+    void testMapEntry_0args() {
         final Map<String, Object> result = mapOf();
 
         assertThat(result).isEmpty();
     }
 
     @Test
-    public void testMapEntry_1arg() {
+    void testMapEntry_1arg() {
         final Map<String, Object> result = mapOf(
                 mapEntry(KEY1, VALUE1));
 
@@ -156,7 +144,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testMapEntry_2args() {
+    void testMapEntry_2args() {
         final Map<String, Object> result = mapOf(
                 mapEntry(KEY1, VALUE1),
                 mapEntry(KEY2, VALUE2)
@@ -169,31 +157,32 @@ public class ToStringTest {
     }
 
     @Test
-    public void testToStringParamsMapNull() {
+    void testToStringParamsMapNull() {
         final String ts = createToString(this, null);
         assertThat(ts).isEqualTo("ToStringTest");
     }
 
     @Test
-    public void testToStringParamsMapEmpty() {
+    void testToStringParamsMapEmpty() {
         final String ts = createToString(this, Collections.emptyMap());
         assertThat(ts).isEqualTo("ToStringTest");
     }
 
     @Test
-    public void testToStringParamsMapSimpleEntries1() {
+    void testToStringParamsMapSimpleEntries1() {
         final String string = createToString(this, Collections.singletonMap(
                 KEY1, VALUE1
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    one: 1"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    one: 1
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapSimpleEntries2() {
+    void testToStringParamsMapSimpleEntries2() {
         final String string = createToString(this, map(
                 KEY1, VALUE1,
                 KEY3, VALUE3
@@ -207,7 +196,7 @@ public class ToStringTest {
     }
 
     @Test
-    public void testToStringParamsMapSimpleEntries3() {
+    void testToStringParamsMapSimpleEntries3() {
         final String string = createToString(this, map(
                 KEY1, VALUE1,
                 KEY3, VALUE3,
@@ -223,42 +212,44 @@ public class ToStringTest {
     }
 
     @Test
-    public void testToStringParamsMapObjectEntry() {
+    void testToStringParamsMapObjectEntry() {
         final String string = createToString(this, map("flag", true,
                 "object", new TSImpl(map("one", 1, "false", false))
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    object: TSImpl {"
-                + "\n        one: 1,"
-                + "\n        false: false"
-                + "\n    }"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    object: TSImpl {
+                        one: 1,
+                        false: false
+                    }
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapListEntry() {
+    void testToStringParamsMapListEntry() {
         final String string = createToString(this, map(
                 "flag", true,
                 "list", Arrays.asList("one", 2, false, "quatro")
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    list: ["
-                + "\n        one,"
-                + "\n        2,"
-                + "\n        false,"
-                + "\n        quatro"
-                + "\n    ]"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    list: [
+                        one,
+                        2,
+                        false,
+                        quatro
+                    ]
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapSetEntry() {
+    void testToStringParamsMapSetEntry() {
         final String string = createToString(this, map(
                 "flag", true,
                 "set", new TreeSet<>(Arrays.asList(
@@ -268,17 +259,18 @@ public class ToStringTest {
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    set: ["
-                + "\n        one,"
-                + "\n        quatro"
-                + "\n    ]"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    set: [
+                        one,
+                        quatro
+                    ]
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapArrayEntry() {
+    void testToStringParamsMapArrayEntry() {
         final String string = createToString(this, map(
                 "flag", true,
                 "array", new Object[]{
@@ -288,19 +280,20 @@ public class ToStringTest {
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    array: ["
-                + "\n        one,"
-                + "\n        2,"
-                + "\n        false,"
-                + "\n        quatro"
-                + "\n    ]"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    array: [
+                        one,
+                        2,
+                        false,
+                        quatro
+                    ]
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapMapEntry() {
+    void testToStringParamsMapMapEntry() {
         final String string = createToString(this, map("flag", true,
                 "map", map(
                         "one", 1,
@@ -309,17 +302,18 @@ public class ToStringTest {
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    map: {"
-                + "\n        one: 1,"
-                + "\n        two: 2"
-                + "\n    }"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    map: {
+                        one: 1,
+                        two: 2
+                    }
+                }""");
     }
 
     @Test
-    public void testToStringParamsMapMapEntry2() {
+    void testToStringParamsMapMapEntry2() {
         final String string = createToString(this, map("flag", true,
                 "map", mapOf(
                         mapEntry("simple", 1),
@@ -342,25 +336,26 @@ public class ToStringTest {
         ));
 
         System.out.println(string);
-        assertThat(string).isEqualTo("ToStringTest {"
-                + "\n    flag: true,"
-                + "\n    map: {"
-                + "\n        simple: 1,"
-                + "\n        map: {"
-                + "\n            uno: one,"
-                + "\n            due: two"
-                + "\n        },"
-                + "\n        object: TSImpl {"
-                + "\n            eins: 0.1,"
-                + "\n            zwei: 0.2,"
-                + "\n            null: null"
-                + "\n        },"
-                + "\n        emptyArray: [],"
-                + "\n        emptyList: [],"
-                + "\n        emptySet: [],"
-                + "\n        emptyMap: {}"
-                + "\n    }"
-                + "\n}");
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    flag: true,
+                    map: {
+                        simple: 1,
+                        map: {
+                            uno: one,
+                            due: two
+                        },
+                        object: TSImpl {
+                            eins: 0.1,
+                            zwei: 0.2,
+                            null: null
+                        },
+                        emptyArray: [],
+                        emptyList: [],
+                        emptySet: [],
+                        emptyMap: {}
+                    }
+                }""");
     }
 
     private static class TSImpl {

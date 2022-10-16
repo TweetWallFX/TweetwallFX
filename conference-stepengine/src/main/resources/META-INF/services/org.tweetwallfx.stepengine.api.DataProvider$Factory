@@ -1,0 +1,5 @@
+org.tweetwallfx.conference.stepengine.dataprovider.ScheduleDataProvider$FactoryImpl
+org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider$FactoryImpl
+org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider$FactoryImpl
+org.tweetwallfx.conference.stepengine.dataprovider.TopTalksWeekDataProvider$FactoryImpl
+org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider$FactoryImpl

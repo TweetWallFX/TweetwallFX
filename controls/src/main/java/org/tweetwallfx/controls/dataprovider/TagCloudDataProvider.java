@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import io.github.encryptorcode.pluralize.Pluralize;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
@@ -51,12 +51,16 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
 
     @Override
     public void processNewTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     @Override
     public void processHistoryTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     public void setAdditionalTweetWords(final List<Word> newWordList) {
@@ -70,7 +74,9 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
     public List<Word> getWords() {
         return tree.entrySet().stream()
                 .sorted(COMPARATOR.reversed())
-                .limit(NUM_MAX_WORDS).map(entry -> new Word(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+                .limit(NUM_MAX_WORDS)
+                .map(entry -> new Word(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     private void updateTree(final Tweet tweet) {
@@ -80,12 +86,17 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                 .replaceAll("['“”‘’\"()]", " "))
+                .map(StopList::removeEmojis)
+                .map(StopList::trimTail)
+                .map(s -> s.replaceAll("^#+", ""))
+                .map(String::trim)
                 .filter(l -> l.length() > 2)
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
-                .map(StopList::removeEmojis)
+                .map(Pluralize::singular)
+                .distinct()
                 .filter(StopList::notIn)
-                .forEach(w -> tree.put(w, (tree.containsKey(w) ? tree.get(w) : 0) + 1L));
+                .forEach(w -> tree.merge(w, 1L, (oldValue, newValue) -> oldValue + newValue));
     }
 
     public static class FactoryImpl implements DataProvider.Factory {

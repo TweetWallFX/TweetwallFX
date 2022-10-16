@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,8 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.Tweeter;
@@ -45,20 +36,12 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.TweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
-public class TwitterTweeterTest {
+import java.util.Arrays;
+import java.util.List;
 
-    @Rule
-    public TestName testName = new TestName();
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
-    }
-
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
-    }
+class TwitterTweeterTest {
 
     private Tweeter getTweeter() {
         final Tweeter tweeter = Tweeter.getInstance();
@@ -66,31 +49,29 @@ public class TwitterTweeterTest {
         return tweeter;
     }
 
-    private static void skipIfOauthisNotConfigured() {
+    static boolean oauthIsConfigured() {
         final TwitterSettings twitterSettings = Configuration.getInstance()
                 .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
-        Assume.assumeNotNull(twitterSettings);
-        Assume.assumeNotNull(twitterSettings.getOauth());
-        Assume.assumeNotNull(
-                twitterSettings.getOauth().getAccessToken(),
-                twitterSettings.getOauth().getAccessTokenSecret(),
-                twitterSettings.getOauth().getConsumerKey(),
-                twitterSettings.getOauth().getConsumerSecret());
+        return twitterSettings != null &&
+               twitterSettings.oauth() != null &&
+               twitterSettings.oauth().accessToken() != null &&
+               twitterSettings.oauth().accessTokenSecret() != null &&
+               twitterSettings.oauth().consumerKey() != null &&
+               twitterSettings.oauth().consumerSecret() != null;
     }
 
     @Test
-    public void gettingInstanceFromTweeter() {
-        assertNotNull(getTweeter());
+    void gettingInstanceFromTweeter() {
+        assertThat(getTweeter()).isNotNull();
     }
 
     private void testTextFiltering(final long id, final Class<? extends TweetEntry> tweetEntryClass, final String filteredString) {
         final Tweeter tweeter = getTweeter();
-        assertNotNull(tweeter);
-        skipIfOauthisNotConfigured();
+        assertThat(tweeter).isNotNull();
 
         final Tweet tweet = tweeter.getTweet(id);
         System.out.println("tweet: " + tweet);
-        assertNotNull(tweet);
+        assertThat(tweet).isNotNull();
         System.out.println("tweet.text: " + tweet.getText());
 
         final String textWOEmojis = tweet.getTextWithout(EmojiTweetEntry.class).get();
@@ -99,11 +80,12 @@ public class TwitterTweeterTest {
         final String textWOEmojisAndEntry = tweet.getTextWithout(EmojiTweetEntry.class).getTextWithout(tweetEntryClass).get();
         System.out.println("textWOEmojisAndEntry: " + textWOEmojisAndEntry);
         System.out.println("filteredString: " + filteredString);
-        assertEquals(filteredString, textWOEmojisAndEntry);
+        assertThat(textWOEmojisAndEntry).isEqualTo(filteredString);
     }
 
     @Test
-    public void tweetTextFilteringWorks_therealdanvega_925199490776293376() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetTextFilteringWorks_therealdanvega_925199490776293376() {
         // https://twitter.com/therealdanvega/status/925199490776293376
         testTextFiltering(
                 925199490776293376L,
@@ -112,7 +94,8 @@ public class TwitterTweeterTest {
     }
 
     @Test
-    public void tweetTextFilteringWorks_vbrabant_925750697861279745() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetTextFilteringWorks_vbrabant_925750697861279745() {
         // https://twitter.com/vbrabant/status/925750697861279745
         testTextFiltering(
                 925750697861279745L,
@@ -121,7 +104,8 @@ public class TwitterTweeterTest {
     }
 
     @Test
-    public void tweetTextFilteringWorks_mraible_925080175091552256() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetTextFilteringWorks_mraible_925080175091552256() {
         // https://twitter.com/mraible/status/925080175091552256
         testTextFiltering(
                 925080175091552256L,
@@ -130,13 +114,9 @@ public class TwitterTweeterTest {
     }
 
     private void testEnhancedText(final long id, final String... shallNotContain) {
-        final Tweeter tweeter = getTweeter();
-        assertNotNull(tweeter);
-        skipIfOauthisNotConfigured();
-
-        final Tweet tweet = tweeter.getTweet(id);
+        final Tweet tweet = getTweeter().getTweet(id);
         System.out.println("tweet: " + tweet);
-        assertNotNull(tweet);
+        assertThat(tweet).isNotNull();
 
         final String text = tweet.getText();
         System.out.println("text: " + text);
@@ -144,11 +124,12 @@ public class TwitterTweeterTest {
         String displayEnhancedText = tweet.getDisplayEnhancedText();
         System.out.println("displayEnhancedText: " + displayEnhancedText);
         Arrays.stream(shallNotContain).forEach(s -> System.out.println("shallNotContain: " + s));
-        Arrays.stream(shallNotContain).forEach(s -> assertFalse(displayEnhancedText.contains(s)));
+        Arrays.stream(shallNotContain).forEach(s -> assertThat(displayEnhancedText.contains(s)).isFalse());
     }
 
     @Test
-    public void tweetDisplayEnhancedText_vbrabant_925750697861279745() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetDisplayEnhancedText_vbrabant_925750697861279745() {
         // https://twitter.com/vbrabant/status/925750697861279745
         testEnhancedText(
                 925750697861279745L,
@@ -156,40 +137,34 @@ public class TwitterTweeterTest {
     }
 
     @Test
-    @Ignore
-    public void tweetGetFriends() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetGetFriends() {
         final Tweeter tweeter = getTweeter();
-        assertNotNull(tweeter);
-        skipIfOauthisNotConfigured();
-
         List<String> users = tweeter
                 .getFriends("Devoxx")
                 .map(User::getScreenName)
                 .limit(1000)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("users.size: " + users.size());
         users.forEach(System.out::println);
-        assertFalse("Did not find any Users", users.isEmpty());
+        assertThat(users).withFailMessage("Did not find any Users").isNotEmpty();
     }
 
     @Test
-    @Ignore
-    public void tweetGetFollowers() {
+    @EnabledIf("oauthIsConfigured")
+    void tweetGetFollowers() {
         final Tweeter tweeter = getTweeter();
-        assertNotNull(tweeter);
-        skipIfOauthisNotConfigured();
-
         List<String> users = tweeter
                 .getFollowers("Devoxx")
                 .map(User::getScreenName)
                 .limit(1000)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("users.size: " + users.size());
         users.forEach(System.out::println);
-        assertFalse("Did not find any Users", users.isEmpty());
+        assertThat(users).withFailMessage("Did not find any Users").isNotEmpty();
     }
 }

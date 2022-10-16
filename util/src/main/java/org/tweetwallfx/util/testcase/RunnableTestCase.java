@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,6 @@ public interface RunnableTestCase {
 
     /**
      * Performs the actual test. May cause an exception to be thrown.
-     *
-     * @throws Exception an exception that might be caused in the test casae
      */
-    void execute() throws Exception;
+    void execute();
 }

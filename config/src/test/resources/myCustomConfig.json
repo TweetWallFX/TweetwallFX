@@ -1,4 +1,10 @@
 {
+    "connectionSettings": {
+    },
+    "tweetwall": {
+        "title": "my custom test title",
+        "query": "daily joke"
+    },
     "test" : {
         "fileName": "myCustomConfig.json"
     }

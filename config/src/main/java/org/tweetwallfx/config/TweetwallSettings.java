@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2019 TweetWallFX
+ * Copyright (c) 2017-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,112 +24,59 @@
 package org.tweetwallfx.config;
 
 import java.util.Objects;
-import static org.tweetwallfx.util.ToString.*;
+import java.util.Set;
+import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * POJO for reading Settings concerning the Tweetwall itself.
+ *
+ * <p>
+ * Param {@code title} the title of the Tweetwall
+ *
+ * <p>
+ * Param {@code stylesheetResource} the resource path containing stylesheet to
+ * be read from the Classpath
+ *
+ * <p>
+ * Param {@code stylesheetFile} the resource path containing stylesheet to be
+ * read from the filesystem
+ *
+ * <p>
+ * Param {@code query} the Query String that is to provide Tweets for this
+ * Tweetwall
+ *
+ * <p>
+ * Param {@code additionalStopWords} the additional stop words to employ
  */
-public final class TweetwallSettings {
+public record TweetwallSettings(
+        String title,
+        String stylesheetResource,
+        String stylesheetFile,
+        String query,
+        Set<String> additionalStopWords) {
 
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "tweetwall";
-    private String title;
-    private String stylesheetResource;
-    private String stylesheetFile;
-    private String query;
 
-    /**
-     * Return the title of the Tweetwall.
-     *
-     * @return the title
-     */
-    public String getTitle() {
-        return Objects.requireNonNull(title, "title must not be null!");
-    }
-
-    /**
-     * Sets the title of the Tweetwall.
-     *
-     * @param title the new title
-     */
-    public void setTitle(final String title) {
+    public TweetwallSettings(
+            final String title,
+            final String stylesheetResource,
+            final String stylesheetFile,
+            final String query,
+            final Set<String> additionalStopWords) {
         this.title = Objects.requireNonNull(title, "title must not be null!");
-    }
-
-    /**
-     * Returns the resource path containing stylesheet to be read from the
-     * Classpath.
-     *
-     * @return the resource path containing stylesheet to be read from the
-     * Classpath
-     */
-    public String getStylesheetResource() {
-        return stylesheetResource;
-    }
-
-    /**
-     * Sets the resource path containing stylesheet to be read from the
-     * Classpath.
-     *
-     * @param stylesheetResource the resource path containing stylesheet to be
-     * read from the Classpath
-     */
-    public void setStylesheetResource(final String stylesheetResource) {
         this.stylesheetResource = stylesheetResource;
-    }
-
-    /**
-     * Returns the resource path containing stylesheet to be read from
-     * the filesystem.
-     *
-     * @return the resource path containing stylesheet to be read from
-     * the filesystem
-     */
-    public String getStylesheetFile() {
-        return stylesheetFile;
-    }
-
-    /**
-     * Sets the resource path containing stylesheet to be read from
-     * the filesystem.
-     *
-     * @param stylesheetFile the resource path containing stylesheet to be read from
-     * the filesystem
-     */
-    public void setStylesheetFile(final String stylesheetFile) {
         this.stylesheetFile = stylesheetFile;
-    }
-
-    /**
-     * Returns the Query String that is to provide Tweets for this Tweetwall.
-     *
-     * @return the Query String that is to provide Tweets for this Tweetwall
-     */
-    public String getQuery() {
-        return Objects.requireNonNull(query, "query must not be null!");
-    }
-
-    /**
-     * Sets the Query String that is to provide Tweets for this Tweetwall.
-     *
-     * @param query the Query String that is to provide Tweets for this
-     * Tweetwall
-     */
-    public void setQuery(final String query) {
         this.query = Objects.requireNonNull(query, "query must not be null!");
+        this.additionalStopWords = nullable(additionalStopWords);
     }
 
     @Override
-    public String toString() {
-        return createToString(this, map(
-                "title", getTitle(),
-                "stylesheetResource", getStylesheetResource(),
-                "stylesheetFile", getStylesheetFile(),
-                "query", getQuery()
-        )) + " extends " + super.toString();
+    public Set<String> additionalStopWords() {
+        return nullable(additionalStopWords);
     }
 
     /**

@@ -29,52 +29,51 @@
 }
 
 .wordle .tag {
-    -fx-fill: DarkBlue;     
+    -fx-fill: DarkBlue;
 }
 
 .wordle .name {
-    -fx-font: 36px "Calibri"; 
-    -fx-text-fill: darkgray; 
-    -fx-font-weight: bold;    
+    -fx-font: 36px "Calibri";
+    -fx-text-fill: darkgray;
+    -fx-font-weight: bold;
 }
 
 .wordle .retweetName {
-    -fx-font: 18px "Calibri"; 
-    -fx-text-fill: darkgray; 
-    -fx-font-weight: bold;    
+    -fx-font: 18px "Calibri";
+    -fx-text-fill: darkgray;
+    -fx-font-weight: bold;
 }
 
 .wordle .handle {
     -fx-font: 28px "Calibri";
-    -fx-text-fill: #8899A6;   
+    -fx-text-fill: #8899A6;
 }
 
 .favoriteCount{
     -glyph-name: "THUMBS_UP";
     -glyph-size: 24px;
-    -fx-fill: #8899A6;   
+    -fx-fill: #8899A6;
 }
 
 .retweetCount{
     -glyph-name: "RETWEET";
     -glyph-size: 24px;
-    -fx-fill: #8899A6;   
+    -fx-fill: #8899A6;
 }
 
 .verifiedAccount{
     -glyph-name: "CHECK_CIRCLE";
     -glyph-size: 24px;
-    -fx-fill: #8899A6;   
+    -fx-fill: #8899A6;
 }
 
 .retweetBack{
-    -glyph-name: "SQUARE"; 
-    -glyph-size: 22px;    
-    -fx-fill: yellowgreen; 
+    -glyph-name: "SQUARE";
+    -glyph-size: 22px;
+    -fx-fill: yellowgreen;
 }
 .retweetFront{
     -glyph-name: "RETWEET";
-    -glyph-size: 16px;    
-    -fx-fill: white; 
+    -glyph-size: 16px;
+    -fx-fill: white;
 }
-

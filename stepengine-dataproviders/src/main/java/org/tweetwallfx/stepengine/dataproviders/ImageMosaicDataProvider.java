@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,20 +33,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
-    private static final Logger LOG = LogManager.getLogger(ImageMosaicDataProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageMosaicDataProvider.class);
     private final CopyOnWriteArrayList<ImageStore> images = new CopyOnWriteArrayList<>();
     private final Config config;
 
@@ -62,7 +62,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
     public void processHistoryTweet(final Tweet tweet) {
         LOG.info("new Tweet received: {}", tweet.getId());
         if (null == tweet.getMediaEntries()
-                || (tweet.isRetweet() && !config.isIncludeRetweets())) {
+                || (tweet.isRetweet() && !config.includeRetweets())) {
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
@@ -80,7 +80,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             if (images.addIfAbsent(new ImageStore(urlc, date.toInstant()))) {
                 LOG.info("Added ImageStore for mediaID: {}", mte.getId());
             }
-            if (config.getMaxCacheSize() < images.size()) {
+            if (config.maxCacheSize() < images.size()) {
                 images.sort(Comparator.comparing(ImageStore::getInstant));
                 images.remove(0);
             }
@@ -100,33 +100,16 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         }
     }
 
-    public static class Config {
+    private static record Config(
+            Boolean includeRetweets,
+            Integer maxCacheSize) {
 
-        private boolean includeRetweets = false;
-        private int maxCacheSize = 40;
-
-        public boolean isIncludeRetweets() {
-            return includeRetweets;
-        }
-
-        public void setIncludeRetweets(final boolean includeRetweets) {
-            this.includeRetweets = includeRetweets;
-        }
-
-        public int getMaxCacheSize() {
-            return maxCacheSize;
-        }
-
-        public void setMaxCacheSize(final int maxCacheSize) {
-            this.maxCacheSize = maxCacheSize;
-        }
-
-        @Override
-        public String toString() {
-            return createToString(this, map(
-                    "includeRetweets", isIncludeRetweets(),
-                    "maxCacheSize", getMaxCacheSize()
-            )) + " extends " + super.toString();
+        @SuppressWarnings("unused")
+        public Config(
+                final Boolean includeRetweets,
+                final Integer maxCacheSize) {
+            this.includeRetweets = valueOrDefault(includeRetweets, false);
+            this.maxCacheSize = valueOrDefault(maxCacheSize, 40);
         }
     }
 
@@ -137,7 +120,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         private final Instant instant;
 
         public ImageStore(final URLContent urlc, final Instant instant) {
-            this.digest = urlc.getDigest();
+            this.digest = urlc.digest();
             this.image = new Image(urlc.getInputStream());
             this.instant = instant;
         }
@@ -150,6 +133,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             return instant;
         }
 
+        @SuppressFBWarnings
         public Image getImage() {
             return image;
         }
@@ -163,20 +147,10 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
 
         @Override
         public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (null == obj || getClass() != obj.getClass()) {
-                return false;
-            }
-
-            final ImageStore other = (ImageStore) obj;
-            boolean result = true;
-
-            result &= Objects.nonNull(this.digest);
-            result &= Objects.nonNull(other.digest);
-            result &= Objects.equals(this.digest, other.digest);
-
-            return result;
+            return obj instanceof ImageStore other
+                    && Objects.nonNull(this.digest)
+                    && Objects.nonNull(other.digest)
+                    && Objects.equals(this.digest, other.digest);
         }
     }
 }

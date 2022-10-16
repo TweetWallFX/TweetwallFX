@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,6 @@
  */
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':TweetWallFX-Core')
+//    implementation fileTree(dir: 'libs', include: '*.jar')
+//    implementation project(':TweetWallFX-Core')
 }

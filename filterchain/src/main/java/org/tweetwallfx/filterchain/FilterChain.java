@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 
 /**
@@ -46,7 +46,7 @@ import org.tweetwallfx.config.Configuration;
  */
 public class FilterChain<T> {
 
-    private static final Logger LOGGER = LogManager.getLogger(FilterChain.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilterChain.class);
     private static final Map<Class<?>, Map<String, FilterStep.Factory>> FACTORIES = StreamSupport
             .stream(ServiceLoader.load(FilterStep.Factory.class).spliterator(), false)
             .peek(fsf
@@ -91,16 +91,16 @@ public class FilterChain<T> {
                 FilterChainSettings.CONFIG_KEY,
                 FilterChainSettings.class);
 
-        final FilterChainSettings.FilterChainDefinition filterChainDefinition = settings.getChains().get(name);
+        final FilterChainSettings.FilterChainDefinition filterChainDefinition = settings.chains().get(name);
         Objects.requireNonNull(filterChainDefinition, "FilterChainDefinition with name '" + name + "' does not exist!");
 
-        if (!domainObjectClass.getName().equals(filterChainDefinition.getDomainObjectClassName())) {
+        if (!domainObjectClass.getName().equals(filterChainDefinition.domainObjectClassName())) {
             throw new IllegalStateException("The Class name of the domain objects for FilterChainDefinition with name '"
                     + name
                     + "' do not match with requested domainClass (domainClass: '"
                     + domainObjectClass.getName()
                     + "'; filterChainDefinition.domainObjectClassName: '"
-                    + filterChainDefinition.getDomainObjectClassName()
+                    + filterChainDefinition.domainObjectClassName()
                     + "')");
         }
 
@@ -109,7 +109,7 @@ public class FilterChain<T> {
         });
 
         return new FilterChain<>(
-                filterChainDefinition.getFilterSteps().stream()
+                filterChainDefinition.filterSteps().stream()
                         .map(fsd
                                 -> Objects.requireNonNull(
                                 domainObjectFilterStepFactories.get(fsd.getStepClassName()),
@@ -120,8 +120,8 @@ public class FilterChain<T> {
                             final FilterStep<T> fs2 = (FilterStep<T>) fs;
                             return fs2;
                         })
-                        .collect(Collectors.toList()),
-                filterChainDefinition.getDefaultResult()
+                        .toList(),
+                filterChainDefinition.defaultResult()
         );
     }
 
@@ -138,7 +138,7 @@ public class FilterChain<T> {
         return filterSteps.stream()
                 .peek(fs -> LOGGER.info("Checking {} with {}", t.getClass().getName(), fs.getClass().getName()))
                 .map(fs -> fs.check(t))
-                .peek(r -> LOGGER.info("Checking {} determined {}", t.getClass().getName(), r))
+                .peek(r -> LOGGER.debug("Checking {} determined {}", t.getClass().getName(), r))
                 .filter(FilterStep.Result::isTerminal)
                 .peek(r -> LOGGER.info("Checking {} determined terminally {}", t.getClass().getName(), r))
                 .findFirst()

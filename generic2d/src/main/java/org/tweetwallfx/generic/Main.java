@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,21 +33,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
-import org.tweetwallfx.tweet.StringPropertyAppender;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
 
 public class Main extends Application {
-
-    private static final String STARTUP = "org.tweetwallfx.startup";
-    private static final Logger LOG = LogManager.getLogger(Main.class);
-    private static final Logger LOGGER = LogManager.getLogger(STARTUP);
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     @Override
     public void start(Stage primaryStage) {
@@ -58,21 +54,15 @@ public class Main extends Application {
         final TweetwallSettings tweetwallSettings
                 = Configuration.getInstance().getConfigTyped(TweetwallSettings.CONFIG_KEY, TweetwallSettings.class);
 
-        Optional.ofNullable(tweetwallSettings.getStylesheetResource())
+        Optional.ofNullable(tweetwallSettings.stylesheetResource())
                 .map(ClassLoader.getSystemClassLoader()::getResource)
                 .map(java.net.URL::toExternalForm)
                 .ifPresent(scene.getStylesheets()::add);
-        Optional.ofNullable(tweetwallSettings.getStylesheetFile())
+        Optional.ofNullable(tweetwallSettings.stylesheetFile())
                 .ifPresent(scene.getStylesheets()::add);
 
-        StringPropertyAppender spa = new StringPropertyAppender();
-
-        LoggerContext context = LoggerContext.getContext(false);
-        org.apache.logging.log4j.core.config.Configuration config = context.getConfiguration();
+        final StringPropertyAppender spa = new StringPropertyAppender();
         spa.start();
-        LoggerConfig slc = config.getLoggerConfig(LOGGER.getName());
-        slc.setLevel(Level.TRACE);
-        slc.addAppender(spa, Level.TRACE, null);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
@@ -83,17 +73,22 @@ public class Main extends Application {
         final TagTweets tweetsTask = new TagTweets(borderPane);
         Platform.runLater(tweetsTask::start);
 
+        final org.apache.logging.log4j.core.config.Configuration config = LoggerContext.getContext().getConfiguration();
+        final LoggerConfig rootLogger = config.getRootLogger();
+
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isMetaDown() && event.getCharacter().equals("d")) {
                 if (null == statusLineHost.getParent()) {
                     borderPane.setBottom(statusLineHost);
+                    rootLogger.addAppender(spa, Level.TRACE, null);
                 } else {
                     borderPane.getChildren().remove(statusLineHost);
+                    rootLogger.removeAppender(spa.getName());
                 }
             }
         });
 
-        primaryStage.setTitle(tweetwallSettings.getTitle());
+        primaryStage.setTitle(tweetwallSettings.title());
         primaryStage.setScene(scene);
 
         primaryStage.show();
@@ -107,6 +102,8 @@ public class Main extends Application {
     }
 
     /**
+     * Runs the generic 2d tweetwall.
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {

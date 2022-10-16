@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,319 +22,359 @@
  * THE SOFTWARE.
  */
 
-buildscript {
-    repositories {
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-        jcenter()
-    }
-
-    dependencies {
-        classpath group: 'com.diffplug.spotless', name: 'spotless-plugin-gradle', version: versionSpotless
-        classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: versionGradleVersionsPlugin
-        classpath group: 'com.jfrog.bintray.gradle', name: 'gradle-bintray-plugin', version: versionGradleBintrayPlugin
-        classpath group: 'com.netflix.nebula', name: 'gradle-info-plugin', version: versionGradleInfoPlugin
-        classpath group: 'com.netflix.nebula', name: 'nebula-publishing-plugin', version: versionNebulaPublishingPlugin
-        classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: versionSpotbugs
-
-        if (JavaVersion.current().isJava11Compatible()) {
-            classpath group: 'net.ltgt.gradle', name: 'gradle-errorprone-plugin', version: versionGradleErrorpronePlugin4Java11AndLater
-        } else {
-            throw new GradleException("Building with Java major version prior to 11 is not supported.")
-        }
-
-        // VCS dependency required by plugin 'gradle-info-plugin'
-        classpath group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: versionJGit
-        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: versionSonarqubeGradlePlugin
-        classpath group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: versionOsdetectorGradlePlugin
-    }
+plugins {
+    id 'base'
+    id 'build-dashboard'
+    id 'com.diffplug.spotless' version '6.11.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
+    id 'com.github.spotbugs' version '5.0.12' apply false
+    id 'com.google.osdetector' version '1.7.1'
+    id 'nebula.info-dependencies' version '11.4.1' apply false
+    id 'nebula.maven-nebula-publish' version '18.4.0' apply false
+    id 'net.ltgt.errorprone' version '3.0.1' apply false
+    id 'org.sonarqube' version '3.4.0.2513'
+    id 'com.autonomousapps.dependency-analysis' version '1.13.1'
 }
 
-apply plugin: 'build-dashboard'
-apply plugin: 'org.sonarqube'
-apply plugin: 'com.google.osdetector'
-
-// applying Versions plugin
-apply plugin: 'com.github.ben-manes.versions'
-
 ext {
-    releaseDate = new Date()
-    bintrayEnabled = \
-        ('false' != System.getenv('TRAVIS_PULL_REQUEST')) &&
-        null != findProperty('BINTRAY_USER') &&
-        null != findProperty('BINTRAY_KEY')
     javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+    javaFxPlatform = osdetector.arch == 'aarch_64' ? javaFxPlatform + '-aarch64' : javaFxPlatform
 }
 
 allprojects {
     group = 'org.tweetwallfx'
-    version = currentVersion
+    version = VersionNumber.parse(currentVersion).with {
+        if ('release' == System.getenv('GITHUB_REF_NAME')) {
+            return String.format('%d.%d.%d', major, minor, micro)
+        } else {
+            return String.format('%d.%d-SNAPSHOT', major, minor)
+        }
+    }
     description = 'JavaFX based Tweetwall (' + name + ')'
 
     repositories {
+        mavenCentral()
         jcenter()
     }
 
     // configuring Spotless
-    apply plugin: "com.diffplug.gradle.spotless"
-
-    spotless {
-        format 'textBasedFiles', {
-            target fileTree(project.rootDir) {
-                include '**/*.gradle'
-                include '**/*.asciidoc'
-                include '**/*.adoc'
-                include '**/*.asc'
-                include '**/*.json'
-                include '**/*.md'
-                include '**/*.properties'
-                include '**/.gitignore'
-                exclude '**/.gradle/**'
-                exclude '**/build/**'
-            }
-
-            trimTrailingWhitespace()
-            indentWithSpaces(4)
-            endWithNewline()
-        }
-        format 'javaFiles', {
-            target fileTree(project.rootDir) {
-                include '**/*.java'
-                include '**/*.groovy'
-            }
-
-            trimTrailingWhitespace()
-            indentWithSpaces(4)
-            endWithNewline()
-            custom('noMultipleEmptyLines', {fileContent -> fileContent.replaceAll('\n{3,}', '\n\n')})
-            custom('noEmptyLineBeforeClosingBrace', {fileContent -> fileContent.replaceAll(/\n+(\n *[\}])/, '$1')})
-        }
-    }
+    apply plugin: 'com.diffplug.spotless'
 
     afterEvaluate {
-        check.dependsOn(spotlessCheck)
+        spotless {
+            if (!System.env.CI) {
+                // https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+                // only format files which have changed since this ref
+                // TODO: Figure out a way to get this working in CI (i.e. Github Workflows)
+                ratchetFrom 'origin/master'
+            }
+
+            format 'textBasedFiles', {
+                target(
+                    '*.gradle',
+                    '**/*.asciidoc',
+                    '**/*.adoc',
+                    '**/*.asc',
+                    '**/*.css',
+                    '**/*.json',
+                    '**/*.md',
+                    '**/*.properties',
+                    '.gitignore',
+                )
+
+                trimTrailingWhitespace()
+                indentWithSpaces(4)
+                endWithNewline()
+            }
+
+            def closure = {
+                trimTrailingWhitespace()
+                indentWithSpaces(4)
+                endWithNewline()
+//                importOrder(
+//                    '\\#',    // static imports
+//                    'java',   // classes from java root package
+//                    'javax',  // classes from javax root package
+//                    '',       // any other import
+//                )
+                replaceRegex 'noStarImports', /\nimport (static )?[a-zA-Z0-9.]*[.][\*];\n/, '\n'
+                replaceRegex 'noMultipleEmptyLines', '\n{3,}', '\n\n'
+                replaceRegex 'Remove @author javadoc taglets.', '\n\\s*\\*\\s*@author.*', ''
+                replaceRegex 'Remove trailing empty comment lines.', '\n\\s*\\*(\n\\s*\\*/\n)', '$1'
+                replaceRegex 'Remove empty javadoc', '\n\\s*/\\*\\*\n\\s*\\*/\n', '\n\n'
+                replaceRegex 'Remove empty lines before end of block', '\\n[\\n]+(\\s*})(?=\\n)', '\n$1'
+                licenseHeaderFile rootProject.file('LICENSE.spotlessTemplate')
+            }
+
+            if (plugins.hasPlugin(GroovyPlugin)) {
+                groovy(closure)
+            } else if (plugins.hasPlugin(JavaPlugin)) {
+                java(closure)
+            }
+        }
+
+        tasks.named('check') {
+            dependsOn spotlessCheck
+        }
     }
 
-    // now configuring for projects that coontain code not just structuring the project
+    // configuring dependencyAnalysis
+    plugins.withType(com.autonomousapps.DependencyAnalysisPlugin) {
+        if (rootProject == project) {
+            dependencyAnalysis {
+                issues {
+                    all { // applies to all projects
+                        onUsedTransitiveDependencies {
+                            severity 'ignore'
+                        }
+                        onUnusedDependencies {
+                            severity 'warn' // default
+                        }
+                        onRedundantPlugins {
+                            severity 'fail'
+                        }
+                    }
+                }
+            }
+
+            afterEvaluate {
+                tasks.named('buildHealth').configure {
+                    printBuildHealth = true
+                }
+            }
+        }
+    }
+
+    // now configuring for projects that contain code not just structuring the project
     if (childProjects.isEmpty()) {
         // configuring standard java project
-        apply plugin: 'java'
+        apply plugin: 'java-library'
         apply plugin: 'idea'
         apply plugin: 'jacoco'
         apply plugin: 'eclipse'
         apply plugin: 'nebula.info'
         apply plugin: 'maven-publish'
 
+        java {
+            withJavadocJar()
+            withSourcesJar()
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '17')))
+            }
+        }
+
+        jacoco {
+            toolVersion = '0.8.8'
+        }
+
         configurations {
-            javafx
+            javafx {
+                description = 'Java FX libraries'
+            }
             jaxb
+
+            all {
+                resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+/*
+                    if (details.requested.group == 'com.fasterxml.jackson' &&
+                        details.requested.name == 'jackson-bom' &&
+                        details.requested.version == '2.13.2.1') {
+                        details.useVersion '2.13.2.20220324'
+                        details.because 'fixes CVE-2020-36518 and resolved version does not (pom) match expectation'
+                    }
+*/
+                }
+            }
+            testFramework {
+                description = 'Libraries for testing'
+                // exclude old junit api
+                exclude group: 'junit'
+            }
+            testImplementation.extendsFrom testFramework
         }
 
         dependencies {
-            javafx group: 'org.openjfx', name: 'javafx-base', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: versionJavaFx, classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: versionJavaFx, classifier: javaFxPlatform
-            jaxb group: 'com.sun.activation', name: 'javax.activation', version: versionJavaActivation
-            jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: versionJaxB
-            jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: versionJaxB
-            testCompile group: 'junit', name: 'junit', version: versionJUnit
-            testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '19', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '19', classifier: javaFxPlatform
+
+            jaxb 'jakarta.activation:jakarta.activation-api:2.1.0'
+            jaxb 'org.eclipse.angus:angus-activation:1.0.0'
+            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.1'
+
+            testFramework 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+            testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.1'
+            testFramework 'org.assertj:assertj-core:3.23.1'
+            testFramework 'org.mockito:mockito-junit-jupiter:4.8.0'
+
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+            testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.9.1'
+            testRuntimeOnly 'org.mockito:mockito-inline:4.8.0'
         }
 
-        jar {
+        ext {
+            getJvmModulePath = { -> (configurations.javafx + configurations.jaxb).asPath}
+            getJvmAdditionalModules = { ->
+                [
+                    'jakarta.activation',
+                    'jakarta.xml.bind',
+                    'javafx.controls',
+                    'javafx.graphics',
+                    'javafx.fxml'
+                ].toUnique().toSorted().join(',')
+            }
+        }
+
+        tasks.named('jar') {
             manifest.attributes provider: 'gradle'
         }
 
-        javadoc {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    options.addStringOption('-module-path', additionalModules.asPath)
-                    options.addStringOption('-add-modules', 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml')
-                }
-            }
+        tasks.named('javadoc') {
+            options.addStringOption('-module-path', getJvmModulePath())
+            options.addStringOption('-add-modules', getJvmAdditionalModules())
+            enabled = false // TODO: re-enable (currently breaks build with ClassCastException)
         }
 
-        tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile).configureEach {
             options.compilerArgs.addAll([
-                    '-Xlint:all',
+                    '-Xlint:-preview',
+                    '--enable-preview',
                     '-Werror',
                     '-proc:none',
+                    '--module-path',
+                    getJvmModulePath(),
+                    '--add-modules',
+                    getJvmAdditionalModules(),
             ])
+        }
 
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    options.compilerArgs.addAll([
-                            '--module-path',
-                            additionalModules.asPath,
-                            '--add-modules',
-                            'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml',
-                    ])
-                }
+        tasks.withType(JavaExec).configureEach {
+            jvmArgs '--enable-preview'
+            jvmArgs '--module-path'
+            jvmArgs getJvmModulePath()
+            jvmArgs '--add-modules'
+            jvmArgs getJvmAdditionalModules()
+            jvmArgs '--add-opens'
+            jvmArgs 'java.base/jdk.internal.misc=ALL-UNNAMED'
+        }
+
+        tasks.withType(Test).configureEach {
+            jvmArgs '--enable-preview'
+            jvmArgs '--module-path'
+            jvmArgs getJvmModulePath()
+            jvmArgs '--add-modules'
+            jvmArgs getJvmAdditionalModules()
+
+            useJUnitPlatform()
+            testLogging {
+                events 'skipped', 'passed', 'failed'
             }
         }
 
-        tasks.withType(JavaExec) {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    jvmArgs '--module-path'
-                    jvmArgs additionalModules.asPath
-                    jvmArgs '--add-modules'
-                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-                }
-            }
+        tasks.named('check') {
+            dependsOn javadoc
         }
 
-        tasks.withType(Test) {
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    def additionalModules = (configurations.javafx + configurations.jaxb)
-                    jvmArgs '--module-path'
-                    jvmArgs additionalModules.asPath
-                    jvmArgs '--add-modules'
-                    jvmArgs 'java.activation,java.xml.bind,javafx.controls,javafx.graphics,javafx.fxml'
-                }
+        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_18)) {
+            // jacoco not yet compatible with JDK18
+            tasks.named('test') {
+                finalizedBy jacocoTestReport
             }
-        }
-
-        check {
-            dependsOn 'javadoc'
         }
 
         // configuring Errorprone
-        if (!JavaVersion.current().isJava12Compatible()) {
-            apply plugin: 'net.ltgt.errorprone'
+        apply plugin: 'net.ltgt.errorprone'
 
-            dependencies {
-                if (JavaVersion.current().isJava11Compatible()) {
-                    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: versionErrorProneCore
-                } else {
-                    throw new GradleException("Building with Java major version prior to 11 is not supported.")
-                }
-            }
+        dependencies {
+            errorprone 'com.google.errorprone:error_prone_core:2.16'
         }
 
         // configuring Spotbugs
         apply plugin: 'com.github.spotbugs'
 
-        spotbugs {
+        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+            // fail build in case a failure was detected
             ignoreFailures = false
-        }
 
-        tasks.withType(com.github.spotbugs.SpotBugsTask) {
-            // Workaround to bug https://github.com/spotbugs/spotbugs/issues/440
-            def sourceSetName = (name - 'spotbugs').uncapitalize()
-            dependsOn( sourceSets[sourceSetName].classesTaskName)
+            jvmArgs.add '--module-path'
+            jvmArgs.add getJvmModulePath()
+            jvmArgs.add '--add-modules'
+            jvmArgs.add getJvmAdditionalModules()
+
+            excludeFilter = rootProject.file('spotbugs-exclude.xml')
 
             reports {
-                xml.enabled = false
-                html.enabled = true
+                xml.required.set(false)
+                html.required.set(true)
             }
 
-            if (JavaVersion.current().isJava11Compatible()) {
-                afterEvaluate {
-                    classpath = (classpath + configurations.javafx)
-                }
-            }
+            auxClassPaths = auxClassPaths + configurations.javafx + configurations.jaxb
         }
 
         // configuring Versions plugin
-        dependencyUpdates {
-            revision = 'release'
+        tasks.withType(com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask).configureEach {
+            outputFormatter = 'plain,html'
+            gradleReleaseChannel = 'current'
 
-            rejectVersionIf { /*ComponentSelection*/ selection ->
-                // version is a non-release version?
-                return ['alpha', 'beta', 'rc', 'cr', 'm', 'ea'].any{qualifier ->
-                     selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*.*/
-                }
-            }
-        }
-
-        apply plugin: 'nebula.maven-publish'
-        apply plugin: 'nebula.javadoc-jar'
-        apply plugin: 'nebula.source-jar'
-        apply plugin: 'nebula.publish-verification'
-
-        // configuring Bintray Upload
-        apply plugin: 'com.jfrog.bintray'
-        bintray {
-            user = findProperty('BINTRAY_USER') // null if not found
-            key = findProperty('BINTRAY_KEY') // null if not found
-
-            dryRun = false //[Default: false] Whether to run this as dry-run, without deploying
-            publish = false //[Default: false] Whether version should be auto published after an upload
-            override = project.version.endsWith('-SNAPSHOT') //[Default: false] Whether to override version artifacts already published
-
-            publications = ['nebula']
-
-            pkg {
-                repo = 'maven'
-                name = rootProject.group
-                userOrg = 'tweetwallfx-team'
-                desc = project.description
-
-                websiteUrl = 'https://github.com/TweetWallFX/TweetwallFX'
-                issueTrackerUrl = 'https://github.com/TweetWallFX/TweetwallFX/issues'
-                vcsUrl = 'https://github.com/TweetWallFX/TweetwallFX.git'
-
-                licenses = ['MIT']
-
-                labels = ['tweetwall', 'javafx']
-                publicDownloadNumbers = false
-                //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
-
-                githubRepo = 'TweetWallFX/TweetwallFX' //Optional Github repository
-                githubReleaseNotesFile = 'README.adoc'      //Optional Github readme file
-
-                version {
-                    name = project.version
-                    desc = "Tweetwall FX ${project.version}"
-                    released = releaseDate
-                    vcsTag = project.version
-                    //attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-
-                    //Optional configuration for Maven Central sync of the version
-                    mavenCentralSync {
-                        sync = false //[Default: true] Determines whether to sync the version to Maven Central.
-                        // user = 'userToken' //OSS user token: mandatory
-                        // password = 'paasword' //OSS user password: mandatory
-                        // close = '1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            resolutionStrategy {
+                def rejectedQualifierParts = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'pr', 'ea']
+                componentSelection { rules ->
+                    rules.all { ComponentSelection selection ->
+                        boolean rejected = rejectedQualifierParts.any { qualifier ->
+                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
+                        }
+                        if (rejected) {
+                            selection.reject('Release candidate')
+                        }
                     }
                 }
             }
         }
 
-        bintrayUpload.enabled = bintrayEnabled
-        bintrayPublish.enabled = bintrayEnabled
-    }
-
-    plugins.withType(org.gradle.api.plugins.GroovyPlugin) {
-        dependencies {
-            compile group: 'org.codehaus.groovy', name: 'groovy-all', version: versionGroovy
-            testCompile group: 'org.spockframework', name: 'spock-core', version: versionSpockFramework
+        plugins.withType(GroovyPlugin) {
+            dependencies {
+                implementation 'org.codehaus.groovy:groovy-all:4.0.2'
+                testFramework 'org.spockframework:spock-core:2.3-groovy-4.0'
+            }
         }
-    }
 
-    tasks.withType(org.gradle.api.tasks.testing.Test) {
-        systemProperty 'org.tweetwallfx.tests.executeCFPClientLiveTests', executeCFPClientLiveTests
+        tasks.withType(Test).configureEach {
+            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
+        }
+
+        apply plugin: 'nebula.maven-publish'
+        apply plugin: 'nebula.publish-verification'
+
+        publishing {
+            repositories {
+                maven {
+                    name = 'GitHubPackages'
+                    url = uri('https://maven.pkg.github.com/' + System.getenv('GITHUB_REPOSITORY'))
+                    credentials {
+                        username = System.getenv('GITHUB_ACTOR')
+                        password = System.getenv('GITHUB_TOKEN')
+                    }
+                }
+            }
+        }
     }
 }
 
-task createFolders(description: 'Creates the folders for the projects and sourceSets should they not exist.') doLast {
+tasks.register('createFolders') {
+    description = 'Creates the folders for the projects and sourceSets should they not exist.'
+
     rootProject.allprojects.each {p ->
         if (!p.getProjectDir().isDirectory()) {
-            println 'Creating project folder: ' + p.getProjectDir()
+            logger.lifecycle 'Creating project folder: {}', p.getProjectDir()
             p.getProjectDir().mkdirs()
         }
 
         if (p.hasProperty('sourceSets')) {
             p.sourceSets*.allSource*.srcDirs*.each { File srcDir ->
                 if (!srcDir.isDirectory()) {
-                    println 'Creating source folder: ' + srcDir
+                    logger.lifecycle 'Creating source folder: {}', srcDir
                     srcDir.mkdirs()
                 }
             }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,17 +36,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
-/**
- * @author Jörg Michelberger
- */
 class StepIterator {
 
-    private static final Logger LOGGER = LogManager.getLogger(StepIterator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepIterator.class);
     private int stepIndex = 0;
     private final List<Step> steps;
     private final Map<Step, Collection<Class<? extends DataProvider>>> requiredDataProviders;
@@ -69,7 +66,7 @@ class StepIterator {
 
         Configuration.getInstance()
                 .getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class)
-                .getSteps()
+                .steps()
                 .forEach(builder::addStep);
 
         return builder.build();
@@ -94,6 +91,7 @@ class StepIterator {
         return steps.get(stepIndex++);
     }
 
+    @SuppressWarnings("CanIgnoreReturnValueSuggester")
     private static class Builder {
 
         private static final Map<String, Step.Factory> FACTORIES = StreamSupport

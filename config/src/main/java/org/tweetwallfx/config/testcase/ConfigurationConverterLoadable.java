@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 package org.tweetwallfx.config.testcase;
 
 import java.util.ServiceLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.ConfigurationConverter;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
@@ -35,12 +35,12 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
  */
 public class ConfigurationConverterLoadable implements RunnableTestCase {
 
-    private static final Logger LOG = LogManager.getLogger(ConfigurationConverterLoadable.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationConverterLoadable.class);
 
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         for (final ConfigurationConverter o : ServiceLoader.load(ConfigurationConverter.class)) {
-            LOG.info("loaded " + o.getClass());
+            LOG.info("loaded {}", o.getClass());
         }
     }
 }

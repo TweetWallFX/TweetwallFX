@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,26 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.cache.URLContent;
+import org.tweetwallfx.cache.URLContentCacheBase;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.apache.logging.log4j.LogManager;
-import org.tweetwallfx.cache.URLContent;
-import org.tweetwallfx.cache.URLContentCacheBase;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 
 /**
  * Cache used to provide images for photos of e.g. a {@link Tweet}.
  */
 public final class PhotoImageCache extends URLContentCacheBase {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PhotoImageCache.class);
     private static final Map<Integer, Function<MediaTweetEntry, String>> MTE_SIZE_TO_URL_FUNCTIONS;
 
     static {
@@ -79,18 +82,14 @@ public final class PhotoImageCache extends URLContentCacheBase {
     }
 
     private String getImageUrlString(final MediaTweetEntry mte) {
-        final String urlString = MTE_SIZE_TO_URL_FUNCTIONS
-                .getOrDefault(
-                        mte.getSizes().keySet().stream().max(Comparator.naturalOrder()).orElse(Integer.MAX_VALUE),
-                        this::unsupportedSize)
+        final String urlString = mte.getSizes().keySet().stream()
+                .max(Comparator.naturalOrder())
+                .map(MTE_SIZE_TO_URL_FUNCTIONS::get)
+                .orElseThrow(() -> new IllegalArgumentException("Illegal value"))
                 .apply(mte);
 
-        LogManager.getLogger(PhotoImageCache.class).info("MediaTweetEntry({}): {}", mte.getId(), urlString);
+        LOG.info("MediaTweetEntry({}): {}", mte.getId(), urlString);
         return urlString;
-    }
-
-    private String unsupportedSize(final MediaTweetEntry mte) {
-        throw new IllegalArgumentException("Illegal value");
     }
 
     private void handleLoadedContent(final URLContent urlc) {

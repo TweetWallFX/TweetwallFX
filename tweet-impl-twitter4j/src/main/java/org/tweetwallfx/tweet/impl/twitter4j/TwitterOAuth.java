@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.ConnectionSettings;
 import org.tweetwallfx.tweet.api.config.TwitterSettings;
 import twitter4j.Twitter;
@@ -56,12 +56,10 @@ import twitter4j.conf.ConfigurationBuilder;
  *
  * Don't share this credentials with anybody, don't commit the properties file
  * to the repo !!
- *
- * @author jpereda
  */
 final class TwitterOAuth {
 
-    private static final Logger LOGGER = LogManager.getLogger(TwitterOAuth.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TwitterOAuth.class);
     private static Configuration configuration = null;
     private static final AtomicBoolean INITIATED = new AtomicBoolean(false);
     private static final ReadOnlyObjectWrapper<Exception> EXCEPTION = new ReadOnlyObjectWrapper<>(null);
@@ -90,24 +88,24 @@ final class TwitterOAuth {
                 .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
 
         ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.setDebugEnabled(twitterSettings.isDebugEnabled());
-        builder.setTweetModeExtended(twitterSettings.isExtendedMode());
+        builder.setDebugEnabled(twitterSettings.debugEnabled());
+        builder.setTweetModeExtended(twitterSettings.extendedMode());
 
-        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.getOauth();
-        builder.setOAuthConsumerKey(twitterOAuthSettings.getConsumerKey());
-        builder.setOAuthConsumerSecret(twitterOAuthSettings.getConsumerSecret());
-        builder.setOAuthAccessToken(twitterOAuthSettings.getAccessToken());
-        builder.setOAuthAccessTokenSecret(twitterOAuthSettings.getAccessTokenSecret());
+        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.oauth();
+        builder.setOAuthConsumerKey(twitterOAuthSettings.consumerKey());
+        builder.setOAuthConsumerSecret(twitterOAuthSettings.consumerSecret());
+        builder.setOAuthAccessToken(twitterOAuthSettings.accessToken());
+        builder.setOAuthAccessTokenSecret(twitterOAuthSettings.accessTokenSecret());
 
         // optional proxy settings
         tweetWallFxConfig.getConfigTypedOptional(ConnectionSettings.CONFIG_KEY, ConnectionSettings.class)
-                .map(ConnectionSettings::getProxy)
-                .filter(proxy -> Objects.nonNull(proxy.getHost()) && !proxy.getHost().isEmpty())
+                .map(ConnectionSettings::proxy)
+                .filter(proxy -> !proxy.host().isEmpty())
                 .ifPresent(proxy -> {
-                    builder.setHttpProxyHost(proxy.getHost());
-                    builder.setHttpProxyPort(proxy.getPort());
-                    builder.setHttpProxyUser(proxy.getUser());
-                    builder.setHttpProxyPassword(proxy.getPassword());
+                    builder.setHttpProxyHost(proxy.host());
+                    builder.setHttpProxyPort(proxy.port());
+                    builder.setHttpProxyUser(proxy.user());
+                    builder.setHttpProxyPassword(proxy.password());
                 });
 
         Configuration conf = builder.build();
@@ -120,13 +118,13 @@ final class TwitterOAuth {
             Twitter twitter = new TwitterFactory(conf).getInstance();
             try {
                 User user = twitter.verifyCredentials();
-                LOGGER.info("User " + user.getName() + " validated");
+                LOGGER.info("User {} validated", user.getName());
             } catch (TwitterException ex) {
                 EXCEPTION.set(ex);
                 //  statusCode=400, message=Bad Authentication data -> wrong token
                 //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
                 int statusCode = ex.getStatusCode();
-                LOGGER.error("Error statusCode=" + statusCode + " " + (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
+                LOGGER.error("Error statusCode={} {}", statusCode, (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
                 conf = null;
             }
         } else {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,6 @@
  */
 package org.tweetwallfx.cache;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.ehcache.Cache;
 import org.ehcache.config.Builder;
 import org.ehcache.config.ResourcePools;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -39,15 +30,23 @@ import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.event.EventFiring;
 import org.ehcache.event.EventOrdering;
 import org.ehcache.event.EventType;
 import org.ehcache.expiry.ExpiryPolicy;
 import org.ehcache.impl.config.persistence.CacheManagerPersistenceConfiguration;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.cache.CacheSettings.CacheExpiryType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.CacheSettings.CacheResource;
-import org.tweetwallfx.cache.CacheSettings.CacheResourceType;
+import org.tweetwallfx.config.Configuration;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 
 public final class CacheManagerProvider {
 
@@ -56,7 +55,7 @@ public final class CacheManagerProvider {
      * in the configuration data map.
      */
     private static final Collection<String> LISTENERS_ADDED_TO_CACHES = new HashSet<>(4);
-    private static final Logger LOG = LogManager.getLogger(CacheManagerProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CacheManagerProvider.class);
     private static final org.ehcache.CacheManager CACHE_MANAGER = createCacheManager();
 
     private CacheManagerProvider() {
@@ -64,7 +63,7 @@ public final class CacheManagerProvider {
     }
 
     public static <K, V> Cache<K, V> getCache(final String alias, final Class<K> keyClass, final Class<V> valueClass) {
-        final Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
+        final org.ehcache.Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
 
         if (null == cache) {
             throw new IllegalArgumentException("No cache named '" + alias + "' exists!");
@@ -77,7 +76,7 @@ public final class CacheManagerProvider {
             );
         }
 
-        return cache;
+        return new Cache<>(cache);
     }
 
     private static org.ehcache.CacheManager createCacheManager() {
@@ -86,20 +85,20 @@ public final class CacheManagerProvider {
                 .newCacheManagerBuilder()
                 .with(new CacheManagerPersistenceConfiguration(new File(
                         System.getProperty("user.home"),
-                        cacheSettings.getPersistenceDirectoryName())));
+                        cacheSettings.persistenceDirectoryName())));
 
-        for (final Map.Entry<String, CacheSettings.CacheSetting> entry : cacheSettings.getCaches().entrySet()) {
+        for (final Map.Entry<String, CacheSettings.CacheSetting> entry : cacheSettings.caches().entrySet()) {
             final String alias = entry.getKey();
             final CacheSettings.CacheSetting cacheSetting = entry.getValue();
 
             CacheConfigurationBuilder<?, ?> builder = CacheConfigurationBuilder
                     .newCacheConfigurationBuilder(
-                            loadClass(cacheSetting.getKeyType()),
-                            loadClass(cacheSetting.getValueType()),
-                            createResourcePoolsBuilder(cacheSetting.getCacheResources()));
+                            loadClass(cacheSetting.keyType()),
+                            loadClass(cacheSetting.valueType()),
+                            createResourcePoolsBuilder(cacheSetting.cacheResources()));
 
-            if (null != cacheSetting.getExpiry()) {
-                builder = builder.withExpiry(createExpiryPolicy(cacheSetting.getExpiry()));
+            if (null != cacheSetting.expiry()) {
+                builder = builder.withExpiry(createExpiryPolicy(cacheSetting.expiry()));
             }
 
             cacheManagerBuilder = cacheManagerBuilder.withCache(alias, builder);
@@ -135,28 +134,29 @@ public final class CacheManagerProvider {
     }
 
     private static ResourcePoolsBuilder addResource(final ResourcePoolsBuilder builder, final CacheResource cacheResource) {
-        switch (cacheResource.getType()) {
-            case DISK:
-                return builder.disk(cacheResource.getAmount(), cacheResource.getUnit(), true);
-            case HEAP:
-                return builder.heap(cacheResource.getAmount(), EntryUnit.ENTRIES);
-            case OFFHEAP:
-                return builder.offheap(cacheResource.getAmount(), cacheResource.getUnit());
-            default:
-                throw new IllegalStateException(CacheResourceType.class.getSimpleName() + "'" + cacheResource.getType() + "' is not supported!");
-        }
+        return switch (cacheResource.type()) {
+            case DISK -> builder.disk(cacheResource.amount(), convert(cacheResource.unit()), true);
+            case HEAP -> builder.heap(cacheResource.amount(), EntryUnit.ENTRIES);
+            case OFFHEAP -> builder.offheap(cacheResource.amount(), convert(cacheResource.unit()));
+        };
     }
 
     private static ExpiryPolicy<Object, Object> createExpiryPolicy(final CacheSettings.CacheExpiry cacheExpiry) {
-        switch (cacheExpiry.getType()) {
-            case NONE:
-                return ExpiryPolicyBuilder.noExpiration();
-            case TIME_TO_IDLE:
-                return ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
-            case TIME_TO_LIVE:
-                return ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());
-            default:
-                throw new IllegalStateException(CacheExpiryType.class.getSimpleName() + " '" + cacheExpiry.getType() + "' is not supported!");
+        return switch (cacheExpiry.type()) {
+            case NONE -> ExpiryPolicyBuilder.noExpiration();
+            case TIME_TO_IDLE -> ExpiryPolicyBuilder.timeToIdleExpiration(cacheExpiry.produceDuration());
+            case TIME_TO_LIVE -> ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiry.produceDuration());
+        };
         }
+
+    private static MemoryUnit convert(final CacheSettings.MemUnit memUnit) {
+        return switch(memUnit) {
+            case B -> MemoryUnit.B;
+            case KB -> MemoryUnit.KB;
+            case MB -> MemoryUnit.MB;
+            case GB -> MemoryUnit.GB;
+            case TB -> MemoryUnit.TB;
+            case PB -> MemoryUnit.PB;
+        };
     }
 }

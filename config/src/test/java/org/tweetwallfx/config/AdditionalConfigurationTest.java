@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,89 +23,61 @@
  */
 package org.tweetwallfx.config;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import java.util.stream.Stream;
 
-@RunWith(value = Parameterized.class)
-public class AdditionalConfigurationTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-    @Rule
-    public TestName testName = new TestName();
+class AdditionalConfigurationTest {
 
-    @Before
-    public void before() {
-        System.out.println("#################### START: " + testName.getMethodName() + " ####################");
+    static Stream<Arguments> parameters() {
+        return Stream.of(
+                arguments(
+                    true,
+                    Map.of(),
+                    Map.of()
+                ),
+                arguments(
+                    true,
+                    Map.of("mykey", "myValue"),
+                    Map.of("mykey", "myValue")
+                ),
+                arguments(
+                    true,
+                    Map.of("configuration",
+                    Map.of("additionalConfigurationURLs", List.of(
+                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString()))),
+                        Map.of("configuration",
+                        Map.of("additionalConfigurationURLs", List.of(
+                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString())),
+                        "loadedConfiguration",
+                        "urlLoadedConfiguration1.json")
+                ),
+                arguments(
+                    false,
+                    Map.of("configuration",
+                    Map.of("additionalConfigurationURLs", List.of(
+                        new File("src/test/resources/notThere.json").toURI().toString()))),
+                    Map.of()
+                )
+        );
     }
 
-    @After
-    public void after() {
-        System.out.println("####################   END: " + testName.getMethodName() + " ####################");
-    }
-
-    @Parameterized.Parameter(0)
-    public boolean successful;
-
-    @Parameterized.Parameter(1)
-    public Map<String, Object> inputMap;
-
-    @Parameterized.Parameter(2)
-    public Map<String, Object> resultMap;
-
-    @Parameterized.Parameters(name = "{1} -({0})> {2}")
-    public static List<Object[]> parameters() {
-        return Arrays.asList(new Object[][]{
-            {
-                true,
-                Map.of(),
-                Map.of()
-            },
-            {
-                true,
-                Map.of("mykey", "myValue"),
-                Map.of("mykey", "myValue")
-            },
-            {
-                true,
-                Map.of("configuration",
-                Map.of("additionalConfigurationURLs", List.of(
-                new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString()))),
-                Map.of("configuration",
-                Map.of("additionalConfigurationURLs", List.of(
-                new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString())),
-                "loadedConfiguration",
-                "urlLoadedConfiguration1.json")
-            },
-            {
-                false,
-                Map.of("configuration",
-                Map.of("additionalConfigurationURLs", List.of(
-                new File("src/test/resources/notThere.json").toURI().toString()))),
-                Map.of()
-            }
-        });
-    }
-
-    @Test
-    public void checkAdditionals() {
+    @ParameterizedTest(name = "{1} -({0})> {2}")
+    @MethodSource("parameters")
+    void checkAdditionals(boolean successful, Map<String, Object> inputMap, Map<String, Object> resultMap) {
         try {
             final Method m = Configuration.class.getDeclaredMethod("mergeWithAdditionalConfigurations", Map.class);
             m.setAccessible(true);
-            Assert.assertThat(
-                    "Result of additional configuration loading failed!",
-                    m.invoke(null, inputMap),
-                    CoreMatchers.equalTo(resultMap));
+            assertThat(m.invoke(null, inputMap)).isEqualTo(resultMap);
             if (!successful) {
                 throw new AssertionError("Additional configuration loading did not fail when it should have");
             }

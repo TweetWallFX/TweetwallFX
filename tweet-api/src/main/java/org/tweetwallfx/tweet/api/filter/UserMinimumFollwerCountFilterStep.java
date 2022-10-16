@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,15 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Objects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
+
+import java.util.Objects;
+
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
@@ -44,7 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(UserMinimumFollwerCountFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserMinimumFollwerCountFilterStep.class);
     private final Config config;
 
     private UserMinimumFollwerCountFilterStep(final Config config) {
@@ -54,10 +56,14 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
     @Override
     public Result check(final Tweet tweet) {
         if (config.getCount() <= tweet.getUser().getFollowersCount()) {
-            LOG.info("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE", tweet.getId());
+            LOG.debug("Tweet(id:{}): No terminal decision found -> NOTHING_DEFINITE",
+                    tweet.getId());
             return Result.NOTHING_DEFINITE;
         } else {
-            LOG.info("Tweet(id:{}): Too few followers -> REJECTED", tweet.getId());
+            LOG.info("Tweet(id:{}): Too few followers (have: {}; need: {}) -> REJECTED",
+                    tweet.getId(),
+                    tweet.getUser().getFollowersCount(),
+                    config.getCount());
             return Result.REJECTED;
         }
     }

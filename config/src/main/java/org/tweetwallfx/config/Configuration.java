@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,10 +45,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.util.JsonDataConverter;
-import static org.tweetwallfx.util.ToString.*;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
 
 /**
  * Configuration store of data enabling influence into the configuration of the
@@ -58,7 +59,7 @@ public final class Configuration {
 
     private static final String STANDARD_CONFIG_FILENAME = "tweetwallConfig.json";
     private static final String CUSTOM_CONFIG_FILENAME = System.getProperty("org.tweetwall.config.fileName");
-    private static final Logger LOGGER = LogManager.getLogger(Configuration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
     private static final Collection<Class<?>> MERGE_BY_OVERWRITE_TYPES
             = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     java.lang.Boolean.class,
@@ -104,14 +105,14 @@ public final class Configuration {
 
         for (Map<String, Object> map : Stream.concat(
                 loadConfigurationDataFromClasspath(STANDARD_CONFIG_FILENAME),
-                loadConfigurationDataFromFilesystem(STANDARD_CONFIG_FILENAME)).collect(Collectors.toList())) {
+                loadConfigurationDataFromFilesystem(STANDARD_CONFIG_FILENAME)).toList()) {
             result = mergeMap(result, map);
         }
 
         if (null != CUSTOM_CONFIG_FILENAME && !STANDARD_CONFIG_FILENAME.equals(CUSTOM_CONFIG_FILENAME)) {
             for (Map<String, Object> map : Stream.concat(
                     loadConfigurationDataFromClasspath(CUSTOM_CONFIG_FILENAME),
-                    loadConfigurationDataFromFilesystem(CUSTOM_CONFIG_FILENAME)).collect(Collectors.toList())) {
+                    loadConfigurationDataFromFilesystem(CUSTOM_CONFIG_FILENAME)).toList()) {
                 result = mergeMap(result, map);
             }
         }
@@ -130,7 +131,7 @@ public final class Configuration {
                 result.getOrDefault(ConfigurationSettings.CONFIG_KEY, Collections.EMPTY_MAP),
                 ConfigurationSettings.class);
 
-        for (String additionalConfigurationURL : cs.getAdditionalConfigurationURLs()) {
+        for (String additionalConfigurationURL : cs.additionalConfigurationURLs()) {
             final URL url;
 
             try {
@@ -194,7 +195,7 @@ public final class Configuration {
     }
 
     private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification) {
-        LOGGER.info("Processing config file: " + url);
+        LOGGER.info("Processing config file: {}", url);
 
         try (final InputStream is = url.openStream()) {
             return readConfiguration(is, dataSourceIdentification);

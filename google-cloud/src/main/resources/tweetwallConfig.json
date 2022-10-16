@@ -21,12 +21,13 @@
                 "cacheResources": [
                     {
                         "type": "HEAP",
-                        "amount": 200
+                        "amount": 20,
+                        "unit": "MB"
                     },
                     {
                         "type": "DISK",
-                        "amount": 512,
-                        "unit": "MB"
+                        "amount": 1,
+                        "unit": "GB"
                     }
                 ]
             }
