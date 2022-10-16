@@ -144,7 +144,8 @@ public final class Configuration {
                     result,
                     readConfiguration(
                             url,
-                            "Additional Configuration URL '" + additionalConfigurationURL + '\''));
+                            "Additional Configuration URL '" + additionalConfigurationURL + '\'',
+                            true));
         }
 
         return result;
@@ -163,7 +164,8 @@ public final class Configuration {
                         result,
                         Stream.of(readConfiguration(
                                 url,
-                                "Classpath entry '" + url.toExternalForm() + '\'')));
+                                "Classpath entry '" + url.toExternalForm() + '\'',
+                                false)));
             }
         } catch (final IOException ioe) {
             throw new IllegalStateException("Error loading configuration data from classpath '/" + configFileName + "'", ioe);
@@ -194,13 +196,19 @@ public final class Configuration {
                 });
     }
 
-    private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification) {
+    private static Map<String, Object> readConfiguration(final URL url, final String dataSourceIdentification, final boolean warnInsteadOfThrow) {
         LOGGER.info("Processing config file: {}", url);
 
         try (final InputStream is = url.openStream()) {
             return readConfiguration(is, dataSourceIdentification);
         } catch (final IOException ioe) {
-            throw new IllegalStateException("Error loading configuration data from " + url.toExternalForm(), ioe);
+            final IllegalStateException ise = new IllegalStateException("Error loading configuration data from " + url.toExternalForm(), ioe);
+            if (warnInsteadOfThrow) {
+                LOGGER.warn("{}", ise, ise);
+                return Map.of();
+            } else {
+                throw ise;
+            }
         }
     }
 

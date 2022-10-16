@@ -41,32 +41,34 @@ class AdditionalConfigurationTest {
     static Stream<Arguments> parameters() {
         return Stream.of(
                 arguments(
-                    true,
-                    Map.of(),
-                    Map.of()
+                        true,
+                        Map.of(),
+                        Map.of()
                 ),
                 arguments(
-                    true,
-                    Map.of("mykey", "myValue"),
-                    Map.of("mykey", "myValue")
+                        true,
+                        Map.of("mykey", "myValue"),
+                        Map.of("mykey", "myValue")
                 ),
                 arguments(
-                    true,
-                    Map.of("configuration",
-                    Map.of("additionalConfigurationURLs", List.of(
-                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString()))),
+                        true,
                         Map.of("configuration",
-                        Map.of("additionalConfigurationURLs", List.of(
-                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString())),
-                        "loadedConfiguration",
-                        "urlLoadedConfiguration1.json")
+                                Map.of("additionalConfigurationURLs", List.of(
+                                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString()))),
+                        Map.of("configuration",
+                                Map.of("additionalConfigurationURLs", List.of(
+                                        new File("src/test/resources/urlLoadedConfiguration1.json").toURI().toString())),
+                                "loadedConfiguration",
+                                "urlLoadedConfiguration1.json")
                 ),
                 arguments(
-                    false,
-                    Map.of("configuration",
-                    Map.of("additionalConfigurationURLs", List.of(
-                        new File("src/test/resources/notThere.json").toURI().toString()))),
-                    Map.of()
+                        true,
+                        Map.of("configuration",
+                                Map.of("additionalConfigurationURLs", List.of(
+                                        new File("src/test/resources/notThere.json").toURI().toString()))),
+                        Map.of("configuration",
+                                Map.of("additionalConfigurationURLs", List.of(
+                                        new File("src/test/resources/notThere.json").toURI().toString())))
                 )
         );
     }
