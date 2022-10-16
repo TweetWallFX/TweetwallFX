@@ -65,17 +65,11 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
                 .map(rc -> rc.getRatedTalks(System.getProperty("org.tweetwallfx.scheduledata.day", actualDayName)))
                 .orElse(Collections.emptyList());
         votedTalks = votingResults.stream()
-                .sorted(Comparator
-                        .comparing(TopTalksTodayDataProvider::averageFormattedVote)
-                        .thenComparing(RatedTalk::getTotalRating)
-                        .reversed())
+                .sorted(Comparator.reverseOrder())
+                .filter(rt -> rt.getTotalRating() >= config.minTotalVotes)
                 .limit(config.nrVotes())
                 .map(VotedTalk::new)
                 .toList();
-    }
-
-    private static String averageFormattedVote(final RatedTalk ratedTalk) {
-        return String.format("%.1f", ratedTalk.getAverageRating());
     }
 
     public List<VotedTalk> getFilteredSessionData() {
@@ -117,19 +111,25 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
      * <p>
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 300L}.
+     *
+     * <p>
+     * Param {@code minTotalVotes} Minimum number of total votes for a rated
+     * talk to be displayed. Defaults to {@code 10}.
      */
     private static record Config(
             Integer nrVotes,
             ScheduleType scheduleType,
             Long initialDelay,
-            Long scheduleDuration) implements ScheduledConfig {
+            Long scheduleDuration,
+            Integer minTotalVotes) implements ScheduledConfig {
 
         @SuppressWarnings("unused")
         public Config(
                 final Integer nrVotes,
                 final ScheduleType scheduleType,
                 final Long initialDelay,
-                final Long scheduleDuration) {
+                final Long scheduleDuration,
+                final Integer minTotalVotes) {
             this.nrVotes = valueOrDefault(nrVotes, 5);
             if (this.nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
@@ -137,6 +137,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
             this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
             this.initialDelay = valueOrDefault(initialDelay, 0L);
             this.scheduleDuration = valueOrDefault(scheduleDuration, 300L);
+            this.minTotalVotes = valueOrDefault(nrVotes, 10);
         }
     }
 }

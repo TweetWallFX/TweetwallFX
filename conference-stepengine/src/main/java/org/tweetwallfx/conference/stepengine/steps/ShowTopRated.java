@@ -38,10 +38,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider;
@@ -59,7 +60,7 @@ import org.tweetwallfx.transitions.FlipInXTransition;
  */
 public class ShowTopRated implements Step {
 
-    private static final Logger LOGGER = LogManager.getLogger(ShowTopRated.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShowTopRated.class);
     private final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter;
     private final Config config;
     private final String lookupId;
@@ -112,7 +113,7 @@ public class ShowTopRated implements Step {
                 row += 1;
             }
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            LOGGER.error("{}", ex);
         }
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
@@ -138,13 +139,17 @@ public class ShowTopRated implements Step {
             speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
             speakerImage.setFitHeight(64);
             speakerImage.setFitWidth(64);
-            Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
-            clip.setArcWidth(20);
-            clip.setArcHeight(20);
-            speakerImage.setClip(clip);
+            if (config.circularAvatar) {
+                Circle clip = new Circle(speakerImage.getFitWidth() /2f, speakerImage.getFitHeight()/2f, speakerImage.getFitWidth() /2f);
+                speakerImage.setClip(clip);
+            } else {
+                Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
+                clip.setArcWidth(20);
+                clip.setArcHeight(20);
+            }
             return session;
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            LOGGER.error("{}", ex);
             throw new IllegalStateException(ex);
         }
     }
@@ -221,6 +226,7 @@ public class ShowTopRated implements Step {
         private TopVotedType topVotedType = null;
         public double layoutX = 0;
         public double layoutY = 0;
+        public boolean circularAvatar = true;
 
         /**
          * Provides the type of the Top Voted display to flip out.

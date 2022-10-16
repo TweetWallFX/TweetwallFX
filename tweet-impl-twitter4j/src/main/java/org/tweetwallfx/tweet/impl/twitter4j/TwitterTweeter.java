@@ -30,8 +30,8 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChain;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
@@ -54,7 +54,7 @@ import twitter4j.conf.Configuration;
 
 public class TwitterTweeter extends Tweeter {
 
-    private static final Logger LOGGER = LogManager.getLogger(TwitterTweeter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TwitterTweeter.class);
     private static final FilterChain<Tweet> FILTER_CHAIN = FilterChain.createFilterChain(Tweet.class, "twitter");
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public class TwitterTweeter extends Tweeter {
         try {
             result = twitter.search(query);
         } catch (TwitterException ex) {
-            LOGGER.error("Error getting QueryResult for " + query, ex);
+            LOGGER.error("Error getting QueryResult for {}", query, ex);
             return Stream.empty();
         }
 
@@ -226,7 +226,7 @@ public class TwitterTweeter extends Tweeter {
 
         private QueryResult queryResult;
         private Iterator<Status> statuses;
-        private static final Logger LOGGER = LogManager.getLogger("org.tweetwallfx.startup");
+        private static final Logger LOGGER = LoggerFactory.getLogger("org.tweetwallfx.startup");
         private int numberOfPages;
 
         public PagedIterator(final Query query, int numberOfPages) {
@@ -248,15 +248,15 @@ public class TwitterTweeter extends Tweeter {
                 final Twitter twitter = new TwitterFactory(configuration).getInstance();
 
                 try {
-                    LOGGER.trace("Querying next page: " + query);
+                    LOGGER.trace("Querying next page: {}", query);
                     queryResult = twitter.search(query);
                     if (null != queryResult) {
                         handleRateLimit(queryResult.getRateLimitStatus());
                         statuses = queryResult.getTweets().iterator();
                     }
                 } catch (TwitterException ex) {
-                    LOGGER.trace("Querying next page failed: " + query, ex);
-                    LOGGER.error("Error getting QueryResult for " + query, ex);
+                    LOGGER.trace("Querying next page failed: {}", query, ex);
+                    LOGGER.error("Error getting QueryResult for {}", query, ex);
                     queryResult = null;
                     statuses = null;
                 }

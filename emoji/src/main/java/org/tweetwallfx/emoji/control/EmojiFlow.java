@@ -33,15 +33,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.emoji.EmojiImageCache;
 import org.tweetwallfx.emoji.Emojify;
 import org.tweetwallfx.emoji.Twemoji;
 
 public class EmojiFlow extends TextFlow {
 
-    private static final Logger LOG = LogManager.getLogger(EmojiFlow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmojiFlow.class);
 
     private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Integer> emojiFitWidthProperty = new SimpleObjectProperty<>();
@@ -75,7 +75,7 @@ public class EmojiFlow extends TextFlow {
                 try {
                     this.getChildren().add(createEmojiImageNode(emoji));
                 } catch (RuntimeException e) {
-                    LOG.error("Image with hex code: " + emoji.hex() + " appear not to exist in resources path", e);
+                    LOG.error("Image with hex code: {} appear not to exist in resources path",emoji.hex(),e);
                     Text textNode = new Text();
                     textNode.setText(emoji.hex());
                     textNode.getStyleClass().add("tweetText");

@@ -25,8 +25,8 @@ package org.tweetwallfx.tweet.api.filter;
 
 import java.util.Arrays;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -46,7 +46,7 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(MaxHashtagLengthFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MaxHashtagLengthFilterStep.class);
     private final Config config;
 
     private MaxHashtagLengthFilterStep(Config config) {

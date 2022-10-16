@@ -35,7 +35,7 @@ public class VotedTalk {
 
     public final String speakers;
     public final double ratingAverageScore;
-    public final double ratingTotalVotes;
+    public final int ratingTotalVotes;
     public final Speaker speaker;
     public final Talk talk;
 
@@ -43,7 +43,7 @@ public class VotedTalk {
         this.talk = ratedTalk.getTalk();
         this.speaker = ratedTalk.getTalk().getSpeakers().iterator().next();
         this.speakers = ratedTalk.getTalk().getSpeakers().stream()
-                .map(sp -> sp.getFirstName() + ' ' + sp.getLastName())
+                .map(Speaker::getFullName)
                 .collect(Collectors.joining(", "));
         this.ratingAverageScore = ratedTalk.getAverageRating();
         this.ratingTotalVotes = ratedTalk.getTotalRating();

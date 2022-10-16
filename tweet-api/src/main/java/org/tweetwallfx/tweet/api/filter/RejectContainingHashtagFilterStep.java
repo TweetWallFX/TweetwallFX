@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
 import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
@@ -48,7 +48,7 @@ import static org.tweetwallfx.util.ToString.createToString;
  */
 public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
 
-    private static final Logger LOG = LogManager.getLogger(RejectFromSenderFilterStep.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RejectFromSenderFilterStep.class);
     private final Config config;
 
     private RejectContainingHashtagFilterStep(final Config config) {

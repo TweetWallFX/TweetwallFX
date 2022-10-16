@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.controls.dataprovider;
 
+import io.github.encryptorcode.pluralize.Pluralize;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +51,16 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
 
     @Override
     public void processNewTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     @Override
     public void processHistoryTweet(final Tweet tweet) {
-        updateTree(tweet);
+        if (!tweet.isRetweet()) {
+            updateTree(tweet);
+        }
     }
 
     public void setAdditionalTweetWords(final List<Word> newWordList) {
@@ -81,11 +86,14 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .get()
                 .replaceAll("[.,!?:´`']((\\s+)|($))", " ")
                 .replaceAll("['“”‘’\"()]", " "))
+                .map(StopList::removeEmojis)
                 .map(StopList::trimTail)
+                .map(s -> s.replaceAll("^#+", ""))
+                .map(String::trim)
                 .filter(l -> l.length() > 2)
                 .filter(StopList.IS_NOT_URL) // no url or part thereof
                 .map(String::toLowerCase)
-                .map(StopList::removeEmojis)
+                .map(Pluralize::singular)
                 .distinct()
                 .filter(StopList::notIn)
                 .forEach(w -> tree.merge(w, 1L, (oldValue, newValue) -> oldValue + newValue));

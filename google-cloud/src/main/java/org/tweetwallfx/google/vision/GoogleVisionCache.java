@@ -32,6 +32,14 @@ import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.cloud.vision.v1.ImageAnnotatorSettings;
 import com.google.cloud.vision.v1.ImageSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.cache.Cache;
+import org.tweetwallfx.cache.CacheManagerProvider;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.google.GoogleSettings;
+import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,13 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tweetwallfx.cache.Cache;
-import org.tweetwallfx.cache.CacheManagerProvider;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.google.GoogleSettings;
-import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
 
 /**
  * Caches the content analysis performed via Google Vision API via the medias
@@ -58,7 +59,7 @@ import org.tweetwallfx.google.vision.CloudVisionSettings.FeatureType;
  */
 public final class GoogleVisionCache {
 
-    private static final Logger LOG = LogManager.getLogger(GoogleVisionCache.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GoogleVisionCache.class);
     private static final GoogleSettings GOOGLE_SETTINGS = Configuration.getInstance()
             .getConfigTyped(GoogleSettings.CONFIG_KEY, GoogleSettings.class);
     /**
@@ -73,18 +74,18 @@ public final class GoogleVisionCache {
         try {
             final GoogleCredentials credentials;
 
-            if (null != GOOGLE_SETTINGS.credentialBase64()) {
+            if (null != GOOGLE_SETTINGS.credentialFilePath()) {
+                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
+                    credentials = GoogleCredentials.fromStream(fis);
+                } catch (final IOException ex) {
+                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
+                }
+            } else if (null != GOOGLE_SETTINGS.credentialBase64()) {
                 final ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(GOOGLE_SETTINGS.credentialBase64()));
                 try {
                     credentials = GoogleCredentials.fromStream(bais);
                 } catch (final IOException ex) {
                     throw new IOException("Failed loading Google Credentials from BASE64 encoded credential data", ex);
-                }
-            } else if (null != GOOGLE_SETTINGS.credentialFilePath()) {
-                try (final FileInputStream fis = new FileInputStream(GOOGLE_SETTINGS.credentialFilePath())) {
-                    credentials = GoogleCredentials.fromStream(fis);
-                } catch (final IOException ex) {
-                    throw new IOException("Failed loading Google Credentials from '" + GOOGLE_SETTINGS.credentialFilePath() + "'", ex);
                 }
             } else {
                 credentials = null;
@@ -94,7 +95,7 @@ public final class GoogleVisionCache {
                     ? null
                     : ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> credentials).build();
         } catch (final IOException ex) {
-            LOG.error(ex, ex);
+            LOG.error("Failed loading ImageAnnotatorSettings with google credentials", ex);
             throw new IllegalStateException("Failed loading ImageAnnotatorSettings with google credentials", ex);
         }
 

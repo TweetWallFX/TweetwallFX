@@ -32,8 +32,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 
 /**
@@ -46,7 +46,7 @@ import org.tweetwallfx.config.Configuration;
  */
 public class FilterChain<T> {
 
-    private static final Logger LOGGER = LogManager.getLogger(FilterChain.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilterChain.class);
     private static final Map<Class<?>, Map<String, FilterStep.Factory>> FACTORIES = StreamSupport
             .stream(ServiceLoader.load(FilterStep.Factory.class).spliterator(), false)
             .peek(fsf

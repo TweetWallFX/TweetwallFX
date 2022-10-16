@@ -23,8 +23,8 @@
  */
 package org.tweetwallfx.cache;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,7 +45,7 @@ public record URLContent(
 
     public static final URLContent NO_CONTENT = new URLContent(new byte[0], "d41d8cd98f00b204e9800998ecf8427e");
 
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
 
     public URLContent(
             final byte[] data,

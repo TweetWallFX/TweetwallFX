@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.conference.api;
 
+import java.util.Comparator;
+
 /**
  * POJO of a room.
  */
@@ -51,6 +53,8 @@ public interface Room extends Identifiable, Comparable<Room> {
 
     @Override
     public default int compareTo(final Room o) {
-        return Double.compare(this.getWeight(), o.getWeight());
+        return Comparator.comparing(Room::getWeight)
+                .thenComparing(Room::getName)
+                .compare(this, o);
     }
 }

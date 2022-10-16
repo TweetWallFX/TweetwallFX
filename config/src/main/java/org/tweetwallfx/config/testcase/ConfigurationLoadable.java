@@ -23,8 +23,8 @@
  */
 package org.tweetwallfx.config.testcase;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.util.testcase.RunnableTestCase;
 
@@ -33,12 +33,12 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
  */
 public class ConfigurationLoadable implements RunnableTestCase {
 
-    private static final Logger LOG = LogManager.getLogger(ConfigurationLoadable.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationLoadable.class);
 
     @Override
     public void execute() {
         final Configuration conf = Configuration.getInstance();
-        LOG.info(conf);
+        LOG.info("{}", conf);
         assert null != conf : "Configuration is not loadable";
     }
 }
