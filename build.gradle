@@ -194,6 +194,8 @@ allprojects {
         }
 
         dependencies {
+            implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
+
             javafx group: 'org.openjfx', name: 'javafx-base', version: '19', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19', classifier: javaFxPlatform
