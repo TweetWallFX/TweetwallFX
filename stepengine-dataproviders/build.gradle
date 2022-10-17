@@ -26,6 +26,6 @@ dependencies {
     api project(':tweetwallfx-cache')
     api project(':tweetwallfx-stepengine-api')
 
-    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.2'
+    implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
     implementation 'org.slf4j:slf4j-api:2.0.3'
 }
