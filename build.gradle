@@ -27,7 +27,7 @@ plugins {
     id 'build-dashboard'
     id 'com.diffplug.spotless' version '6.11.0'
     id 'com.github.ben-manes.versions' version '0.43.0'
-    id 'com.github.spotbugs' version '5.0.12' apply false
+    id 'com.github.spotbugs' version '5.0.13' apply false
     id 'com.google.osdetector' version '1.7.1'
     id 'nebula.info-dependencies' version '11.4.1' apply false
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
