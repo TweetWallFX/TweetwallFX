@@ -34,5 +34,5 @@ dependencies {
     runtimeOnly 'org.glassfish.jersey.core:jersey-client:3.0.8'
     runtimeOnly 'org.glassfish.jersey.inject:jersey-hk2:3.0.8'
     runtimeOnly 'org.glassfish.jersey.media:jersey-media-json-jackson:3.0.8'
-    runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
+    runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
 }
