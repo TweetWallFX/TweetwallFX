@@ -26,7 +26,7 @@ dependencies {
     api project(':tweetwallfx-conference-api')
     api 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
 
-    implementation 'org.slf4j:slf4j-api:2.0.4'
+    implementation 'org.slf4j:slf4j-api:2.0.5'
 
     runtimeOnly 'org.glassfish.jersey.core:jersey-client:3.1.0'
     runtimeOnly 'org.glassfish.jersey.inject:jersey-hk2:3.1.0'
