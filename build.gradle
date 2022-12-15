@@ -213,7 +213,7 @@ allprojects {
 
             testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
             testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.9.1'
-            testRuntimeOnly 'org.mockito:mockito-inline:4.9.0'
+            testRuntimeOnly 'org.mockito:mockito-inline:4.10.0'
         }
 
         ext {
