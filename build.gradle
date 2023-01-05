@@ -290,7 +290,7 @@ allprojects {
         apply plugin: 'net.ltgt.errorprone'
 
         dependencies {
-            errorprone 'com.google.errorprone:error_prone_core:2.16'
+            errorprone 'com.google.errorprone:error_prone_core:2.17.0'
         }
 
         // configuring Spotbugs
