@@ -24,8 +24,6 @@
 
 dependencies {
     api project(':tweetwallfx-utility')
-
-    implementation 'org.slf4j:slf4j-api:2.0.4'
 }
 
 tasks.named('test') {
