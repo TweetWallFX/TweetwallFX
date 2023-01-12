@@ -203,7 +203,7 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '19', classifier: javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.0'
-            jaxb 'org.eclipse.angus:angus-activation:1.0.0'
+            jaxb 'org.eclipse.angus:angus-activation:1.1.0'
             jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
             jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.1'
 
