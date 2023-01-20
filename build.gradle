@@ -28,7 +28,7 @@ plugins {
     id 'com.diffplug.spotless' version '6.12.1'
     id 'com.github.ben-manes.versions' version '0.44.0'
     id 'com.github.spotbugs' version '5.0.13' apply false
-    id 'com.google.osdetector' version '1.7.1'
+    id 'com.google.osdetector' version '1.7.2'
     id 'nebula.info-dependencies' version '11.4.1' apply false
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
     id 'net.ltgt.errorprone' version '3.0.1' apply false
