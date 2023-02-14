@@ -25,6 +25,7 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.filterchain.FilterChain;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetFilterQuery;
@@ -32,7 +33,7 @@ import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.User;
-import org.tweetwallfx.tweet.api.config.TwitterSettings;
+import org.tweetwallfx.tweet.impl.twitter4j.config.TwitterSettings;
 import twitter4j.TwitterException;
 import twitter4j.TwitterResponse;
 import twitter4j.v1.CursorSupport;
@@ -52,12 +53,20 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.tweetwallfx.tweet.impl.twitter4j.TwitterOAuth.instance;
+import static org.tweetwallfx.tweet.impl.twitter4j.config.TwitterSettings.CONFIG_KEY;
 
-public class TwitterTweeter extends Tweeter {
+public class TwitterTweeter implements Tweeter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterTweeter.class);
     private static final FilterChain<Tweet> FILTER_CHAIN = FilterChain.createFilterChain(Tweet.class, "twitter");
+    static final TwitterSettings TWITTER_SETTINGS = Configuration.getInstance().getConfigTyped(CONFIG_KEY, TwitterSettings.class);
+
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
+
+    @Override
+    public boolean isEnabled() {
+        return TWITTER_SETTINGS.enabled();
+    }
 
     @Override
     public TweetStream createTweetStream(final TweetFilterQuery tweetFilterQuery) {
@@ -294,10 +303,7 @@ public class TwitterTweeter extends Tweeter {
                     rateLimitStatus.getLimit(),
                     rateLimitStatus.getSecondsUntilReset());
 
-            final TwitterSettings twitterSettings = org.tweetwallfx.config.Configuration.getInstance()
-                    .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
-
-            if (twitterSettings.ignoreRateLimit()) {
+            if (TWITTER_SETTINGS.ignoreRateLimit()) {
                 return;
             }
 
@@ -313,7 +319,6 @@ public class TwitterTweeter extends Tweeter {
     }
 
     private static class PagedEntityIterator<T extends TwitterResponse, R> extends RateLimitIterator<R> {
-
         private Iterator<T> iterator;
         private long cursorId = CursorSupport.START;
         private final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction;
