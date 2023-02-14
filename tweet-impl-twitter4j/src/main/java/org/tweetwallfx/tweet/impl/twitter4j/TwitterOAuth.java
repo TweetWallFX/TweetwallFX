@@ -29,13 +29,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConnectionSettings;
-import org.tweetwallfx.tweet.api.config.TwitterSettings;
+import org.tweetwallfx.tweet.impl.twitter4j.config.TwitterSettings;
 import twitter4j.Twitter;
 import twitter4j.v1.Status;
 import twitter4j.v1.TwitterV1;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+
+import static org.tweetwallfx.tweet.impl.twitter4j.TwitterTweeter.TWITTER_SETTINGS;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
@@ -67,14 +69,12 @@ final class TwitterOAuth {
 
     private TwitterOAuth() {
         final Configuration tweetWallFxConfig = Configuration.getInstance();
-        final TwitterSettings twitterSettings = Configuration.getInstance()
-                .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
         final Twitter.TwitterBuilder builder = Twitter.newBuilder();
 
-        builder.prettyDebugEnabled(twitterSettings.debugEnabled());
-        builder.tweetModeExtended(twitterSettings.extendedMode());
+        builder.prettyDebugEnabled(TWITTER_SETTINGS.debugEnabled());
+        builder.tweetModeExtended(TWITTER_SETTINGS.extendedMode());
 
-        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.oauth();
+        TwitterSettings.OAuth twitterOAuthSettings = TWITTER_SETTINGS.oauth();
         builder.oAuthConsumer(twitterOAuthSettings.consumerKey(), twitterOAuthSettings.consumerSecret());
         builder.oAuthAccessToken(twitterOAuthSettings.accessToken(), twitterOAuthSettings.accessTokenSecret());
 
