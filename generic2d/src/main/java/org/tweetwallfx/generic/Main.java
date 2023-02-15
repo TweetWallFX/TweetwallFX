@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,18 +73,14 @@ public class Main extends Application {
         final TagTweets tweetsTask = new TagTweets(borderPane);
         Platform.runLater(tweetsTask::start);
 
-        final org.apache.logging.log4j.core.config.Configuration config = LoggerContext.getContext().getConfiguration();
-        final LoggerConfig rootLogger = config.getRootLogger();
-
         scene.setOnKeyTyped((KeyEvent event) -> {
-            if (event.isMetaDown() && event.getCharacter().equals("d")) {
-                if (null == statusLineHost.getParent()) {
-                    borderPane.setBottom(statusLineHost);
-                    rootLogger.addAppender(spa, Level.TRACE, null);
-                } else {
-                    borderPane.getChildren().remove(statusLineHost);
-                    rootLogger.removeAppender(spa.getName());
-                }
+            if (event.isMetaDown()) {
+                switch (event.getCharacter()) {
+                    case "d" -> toggleStatusLine(borderPane, spa, statusLineHost);
+                    case "f" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());
+                    case "x" -> Platform.exit();
+                    default -> {}
+                };
             }
         });
 
@@ -93,6 +89,17 @@ public class Main extends Application {
 
         primaryStage.show();
         primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
+    }
+
+    private static void toggleStatusLine(BorderPane borderPane, StringPropertyAppender spa, HBox statusLineHost) {
+        LoggerConfig rootLogger = LoggerContext.getContext().getConfiguration().getRootLogger();
+        if (null == statusLineHost.getParent()) {
+            borderPane.setBottom(statusLineHost);
+            rootLogger.addAppender(spa, Level.TRACE, null);
+        } else {
+            borderPane.getChildren().remove(statusLineHost);
+            rootLogger.removeAppender(spa.getName());
+        }
     }
 
     @Override
