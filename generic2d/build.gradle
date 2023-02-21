@@ -26,5 +26,5 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation project(':tweetwallfx-2d')
     implementation project(':tweetwallfx-tweet-api')
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
 }
