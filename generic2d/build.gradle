@@ -21,10 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation project(':tweetwallfx-2d')
     implementation project(':tweetwallfx-tweet-api')
     runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0'
+}
+
+javafx {
+    modules = [ 'javafx.graphics' ]
 }

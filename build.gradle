@@ -28,17 +28,16 @@ plugins {
     id 'com.diffplug.spotless' version '6.15.0'
     id 'com.github.ben-manes.versions' version '0.45.0'
     id 'com.github.spotbugs' version '5.0.13' apply false
-    id 'com.google.osdetector' version '1.7.3'
     id 'nebula.info-dependencies' version '11.4.1' apply false
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
     id 'net.ltgt.errorprone' version '3.0.1' apply false
+    id 'org.openjfx.javafxplugin' version '0.0.13' apply false
     id 'org.sonarqube' version '3.5.0.2730'
     id 'com.autonomousapps.dependency-analysis' version '1.19.0'
 }
 
 ext {
-    javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
-    javaFxPlatform = osdetector.arch == 'aarch_64' ? javaFxPlatform + '-aarch64' : javaFxPlatform
+    javafxVersion = '20-ea+11'
 }
 
 allprojects {
@@ -197,15 +196,10 @@ allprojects {
             implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
             implementation 'org.slf4j:slf4j-api:2.0.6'
 
-            javafx group: 'org.openjfx', name: 'javafx-base', version: '19.0.2.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19.0.2.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19.0.2.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: '19.0.2.1', classifier: javaFxPlatform
-
-            jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
-            jaxb 'org.eclipse.angus:angus-activation:2.0.0'
-            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
-            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
+//            jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
+//            jaxb 'org.eclipse.angus:angus-activation:2.0.0'
+//            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+//            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
 
             testFramework 'org.junit.jupiter:junit-jupiter-api:5.9.2'
             testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.2'
@@ -217,26 +211,11 @@ allprojects {
             testRuntimeOnly 'org.mockito:mockito-inline:5.1.1'
         }
 
-        ext {
-            getJvmModulePath = { -> (configurations.javafx + configurations.jaxb).asPath}
-            getJvmAdditionalModules = { ->
-                [
-                    'jakarta.activation',
-                    'jakarta.xml.bind',
-                    'javafx.controls',
-                    'javafx.graphics',
-                    'javafx.fxml'
-                ].toUnique().toSorted().join(',')
-            }
-        }
-
         tasks.named('jar') {
             manifest.attributes provider: 'gradle'
         }
 
         tasks.named('javadoc') {
-            options.addStringOption('-module-path', getJvmModulePath())
-            options.addStringOption('-add-modules', getJvmAdditionalModules())
             enabled = false // TODO: re-enable (currently breaks build with ClassCastException)
         }
 
@@ -246,29 +225,17 @@ allprojects {
                     '--enable-preview',
                     '-Werror',
                     '-proc:none',
-                    '--module-path',
-                    getJvmModulePath(),
-                    '--add-modules',
-                    getJvmAdditionalModules(),
             ])
         }
 
         tasks.withType(JavaExec).configureEach {
             jvmArgs '--enable-preview'
-            jvmArgs '--module-path'
-            jvmArgs getJvmModulePath()
-            jvmArgs '--add-modules'
-            jvmArgs getJvmAdditionalModules()
             jvmArgs '--add-opens'
             jvmArgs 'java.base/jdk.internal.misc=ALL-UNNAMED'
         }
 
         tasks.withType(Test).configureEach {
             jvmArgs '--enable-preview'
-            jvmArgs '--module-path'
-            jvmArgs getJvmModulePath()
-            jvmArgs '--add-modules'
-            jvmArgs getJvmAdditionalModules()
 
             useJUnitPlatform()
             testLogging {
@@ -300,11 +267,6 @@ allprojects {
         tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
             // fail build in case a failure was detected
             ignoreFailures = false
-
-            jvmArgs.add '--module-path'
-            jvmArgs.add getJvmModulePath()
-            jvmArgs.add '--add-modules'
-            jvmArgs.add getJvmAdditionalModules()
 
             excludeFilter = rootProject.file('spotbugs-exclude.xml')
 

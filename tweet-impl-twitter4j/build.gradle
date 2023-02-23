@@ -22,9 +22,15 @@
  * THE SOFTWARE.
  */
 
+apply plugin: 'org.openjfx.javafxplugin'
+
 dependencies {
     api 'org.twitter4j:twitter4j-core:4.0.7'
     api project(':tweetwallfx-tweet-api')
 
     implementation 'org.twitter4j:twitter4j-stream:4.0.7'
+}
+
+javafx {
+    modules = [ 'javafx.base' ]
 }

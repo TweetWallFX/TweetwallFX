@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2023-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-apply plugin: 'org.openjfx.javafxplugin'
-
-dependencies {
-    implementation project(':tweetwallfx-configuration')
-    implementation project(':tweetwallfx-controls')
-}
-
-javafx {
-    modules = [ 'javafx.controls', 'javafx.graphics' ]
+module org.tweetwallfx.config {
+    requires org.slf4j;
+    requires org.tweetwallfx.util;
+    exports org.tweetwallfx.config;
+    exports org.tweetwallfx.config.testcase;
 }

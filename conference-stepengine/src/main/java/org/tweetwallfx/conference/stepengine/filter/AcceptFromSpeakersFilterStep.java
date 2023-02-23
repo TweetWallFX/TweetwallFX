@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,6 @@
  */
 package org.tweetwallfx.conference.stepengine.filter;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.ConferenceClient;
@@ -37,6 +32,13 @@ import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
 import org.tweetwallfx.tweet.api.filter.AcceptFromSenderFilterStep;
+
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
@@ -46,7 +48,6 @@ import static org.tweetwallfx.util.ToString.map;
  * twitter handle is one of the conferences speakers handles.
  *
  * In case {@link User#getName()} is one of the names configured in
- * {@link Config#getUserHandles()} it is terminally accepted with
  * {@link Result#ACCEPTED}. Otherwise it is evaluated as
  * {@link Result#NOTHING_DEFINITE}.
  */

@@ -22,7 +22,13 @@
  * THE SOFTWARE.
  */
 
+apply plugin: 'org.openjfx.javafxplugin'
+
 dependencies {
     api project(':tweetwallfx-cache')
     api project(':tweetwallfx-stepengine-api')
+}
+
+javafx {
+    modules = [ 'javafx.graphics' ]
 }
