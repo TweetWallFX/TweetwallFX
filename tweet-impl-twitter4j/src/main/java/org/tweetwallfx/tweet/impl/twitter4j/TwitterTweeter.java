@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,16 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.filterchain.FilterChain;
+import org.tweetwallfx.tweet.api.User;
+import org.tweetwallfx.tweet.api.*;
+import org.tweetwallfx.tweet.api.config.TwitterSettings;
+import twitter4j.TwitterException;
+import twitter4j.TwitterResponse;
+import twitter4j.v1.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,37 +40,14 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tweetwallfx.filterchain.FilterChain;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetFilterQuery;
-import org.tweetwallfx.tweet.api.TweetStream;
-import org.tweetwallfx.tweet.api.Tweeter;
-import org.tweetwallfx.tweet.api.TweetQuery;
-import org.tweetwallfx.tweet.api.User;
-import org.tweetwallfx.tweet.api.config.TwitterSettings;
-import twitter4j.CursorSupport;
-import twitter4j.PagableResponseList;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.RateLimitStatus;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.TwitterResponse;
-import twitter4j.conf.Configuration;
+
+import static org.tweetwallfx.tweet.impl.twitter4j.TwitterOAuth.instance;
 
 public class TwitterTweeter extends Tweeter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterTweeter.class);
     private static final FilterChain<Tweet> FILTER_CHAIN = FilterChain.createFilterChain(Tweet.class, "twitter");
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
-
-    private static Twitter getTwitter() {
-        return new TwitterFactory(TwitterOAuth.getConfiguration()).getInstance();
-    }
 
     @Override
     public TweetStream createTweetStream(final TweetFilterQuery tweetFilterQuery) {
@@ -71,9 +58,8 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Tweet getTweet(long tweetId) {
-        final Twitter twitter = getTwitter();
         try {
-            return new TwitterTweet(twitter.showStatus(tweetId));
+            return new TwitterTweet(instance().twitterV1().tweets().showStatus(tweetId));
         } catch (TwitterException ex) {
             throw new IllegalArgumentException("Error getting Status for " + tweetId, ex);
         }
@@ -81,10 +67,8 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public User getUser(final String userId) {
-        final Twitter twitter = getTwitter();
-
         try {
-            return new TwitterUser(twitter.showUser(userId));
+            return new TwitterUser(instance().twitterV1().users().showUser(userId));
         } catch (TwitterException ex) {
             throw new IllegalArgumentException("Error getting User for " + userId, ex);
         }
@@ -97,20 +81,16 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Stream<User> getFriends(final String userScreenName) {
-        final Twitter twitter = getTwitter();
-
         return pagedListAsStream(
-                cursorId -> twitter.getFriendsList(userScreenName, cursorId, 200),
+                cursorId -> instance().twitterV1().friendsFollowers().getFriendsList(userScreenName, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting friends for User(screenName:" + userScreenName + ")", te),
                 TwitterUser::new);
     }
 
     @Override
     public Stream<User> getFriends(final long userId) {
-        final Twitter twitter = getTwitter();
-
         return pagedListAsStream(
-                cursorId -> twitter.getFriendsList(userId, cursorId, 200),
+                cursorId -> instance().twitterV1().friendsFollowers().getFriendsList(userId, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting friends for User(id:" + userId + ")", te),
                 TwitterUser::new);
     }
@@ -122,20 +102,16 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Stream<User> getFollowers(final String userScreenName) {
-        final Twitter twitter = getTwitter();
-
         return pagedListAsStream(
-                cursorId -> twitter.getFollowersList(userScreenName, cursorId, 200),
+                cursorId -> instance().twitterV1().friendsFollowers().getFollowersList(userScreenName, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting followers for User(screenName:" + userScreenName + ")", te),
                 TwitterUser::new);
     }
 
     @Override
     public Stream<User> getFollowers(final long userId) {
-        final Twitter twitter = getTwitter();
-
         return pagedListAsStream(
-                cursorId -> twitter.getFollowersList(userId, cursorId, 200),
+                cursorId -> instance().twitterV1().friendsFollowers().getFollowersList(userId, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting followers for User(id:" + userId + ")", te),
                 TwitterUser::new);
     }
@@ -155,12 +131,11 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Stream<Tweet> search(final TweetQuery tweetQuery) {
-        final Twitter twitter = getTwitter();
         final Query query = getQuery(tweetQuery);
         final QueryResult result;
 
         try {
-            result = twitter.search(query);
+            result = instance().twitterV1().search().search(query);
         } catch (TwitterException ex) {
             LOGGER.error("Error getting QueryResult for {}", query, ex);
             return Stream.empty();
@@ -181,42 +156,38 @@ public class TwitterTweeter extends Tweeter {
     }
 
     private static Query getQuery(final TweetQuery tweetQuery) {
-        final Query query = new Query();
+        final Query query = Query.of(tweetQuery.getQuery());
 
         if (null != tweetQuery.getCount()) {
-            query.setCount(tweetQuery.getCount());
+            query.count(tweetQuery.getCount());
         }
 
         if (null != tweetQuery.getLang()) {
-            query.setLang(tweetQuery.getLang());
+            query.lang(tweetQuery.getLang());
         }
 
         if (null != tweetQuery.getLocale()) {
-            query.setLocale(tweetQuery.getLocale());
+            query.locale(tweetQuery.getLocale());
         }
 
         if (null != tweetQuery.getMaxId()) {
-            query.setMaxId(tweetQuery.getMaxId());
-        }
-
-        if (null != tweetQuery.getQuery()) {
-            query.setQuery(tweetQuery.getQuery());
+            query.maxId(tweetQuery.getMaxId());
         }
 
         if (null != tweetQuery.getResultType()) {
-            query.setResultType(Query.ResultType.valueOf(tweetQuery.getResultType().name()));
+            query.resultType(Query.ResultType.valueOf(tweetQuery.getResultType().name()));
         }
 
         if (null != tweetQuery.getSince()) {
-            query.setSince(tweetQuery.getSince());
+            query.since(tweetQuery.getSince());
         }
 
         if (null != tweetQuery.getSinceId()) {
-            query.setSinceId(tweetQuery.getSinceId());
+            query.sinceId(tweetQuery.getSinceId());
         }
 
         if (null != tweetQuery.getUntil()) {
-            query.setUntil(tweetQuery.getUntil());
+            query.until(tweetQuery.getUntil());
         }
 
         return query;
@@ -239,17 +210,9 @@ public class TwitterTweeter extends Tweeter {
             if (null == query) {
                 statuses = null;
             } else {
-                Configuration configuration = TwitterOAuth.getConfiguration();
-                if (null == configuration) {
-                    queryResult = null;
-                    statuses = null;
-                    return;
-                }
-                final Twitter twitter = new TwitterFactory(configuration).getInstance();
-
                 try {
                     LOGGER.trace("Querying next page: {}", query);
-                    queryResult = twitter.search(query);
+                    queryResult = instance().twitterV1().search().search(query);
                     if (null != queryResult) {
                         handleRateLimit(queryResult.getRateLimitStatus());
                         statuses = queryResult.getTweets().iterator();

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import twitter4j.v1.URLEntity;
+
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
-import twitter4j.URLEntity;
 
 final class TwitterUrlTweetEntry extends BaseTwitterTweetEntry<URLEntity> implements UrlTweetEntry {
 

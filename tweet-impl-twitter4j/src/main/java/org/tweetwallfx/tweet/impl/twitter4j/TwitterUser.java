@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,9 @@ import org.tweetwallfx.tweet.api.User;
 
 public class TwitterUser implements User {
 
-    private final twitter4j.User user;
+    private final twitter4j.v1.User user;
 
-    public TwitterUser(final twitter4j.User user) {
+    public TwitterUser(final twitter4j.v1.User user) {
         this.user = user;
     }
 

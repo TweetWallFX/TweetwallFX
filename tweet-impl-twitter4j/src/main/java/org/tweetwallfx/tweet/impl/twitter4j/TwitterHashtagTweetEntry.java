@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
-import twitter4j.HashtagEntity;
+import twitter4j.v1.HashtagEntity;
 
 final class TwitterHashtagTweetEntry extends BaseTwitterTweetEntry<HashtagEntity> implements HashtagTweetEntry {
 

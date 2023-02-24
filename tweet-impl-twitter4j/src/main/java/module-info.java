@@ -28,6 +28,5 @@ module org.tweetwallfx.tweet.impl.twitter4j {
     requires org.tweetwallfx.filterchain;
     requires org.tweetwallfx.tweet.api;
     requires org.tweetwallfx.util;
-    requires twitter4j.stream;
-    requires org.twitter4j.core;
+    requires org.twitter4j;
 }
