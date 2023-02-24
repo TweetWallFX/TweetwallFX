@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,7 @@
  */
 package org.tweetwallfx.tweet.api;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import org.tweetwallfx.tweet.api.entry.BasicEntry;
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-import static java.util.stream.Collectors.toCollection;
-import java.util.stream.IntStream;
 import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
@@ -40,9 +32,19 @@ import org.tweetwallfx.tweet.api.entry.TweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toCollection;
+
 public interface Tweet extends BasicEntry {
 
-    Date getCreatedAt();
+    LocalDateTime getCreatedAt();
 
     int getFavoriteCount();
 

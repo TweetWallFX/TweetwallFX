@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Arrays;
-import java.util.Date;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
 import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
@@ -32,12 +30,15 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.SymbolTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
-import twitter4j.HashtagEntity;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
-import twitter4j.SymbolEntity;
-import twitter4j.URLEntity;
-import twitter4j.UserMentionEntity;
+import twitter4j.v1.HashtagEntity;
+import twitter4j.v1.MediaEntity;
+import twitter4j.v1.Status;
+import twitter4j.v1.SymbolEntity;
+import twitter4j.v1.URLEntity;
+import twitter4j.v1.UserMentionEntity;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 final class TwitterTweet implements Tweet {
 
@@ -115,7 +116,7 @@ final class TwitterTweet implements Tweet {
     }
 
     @Override
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return status.getCreatedAt();
     }
 
