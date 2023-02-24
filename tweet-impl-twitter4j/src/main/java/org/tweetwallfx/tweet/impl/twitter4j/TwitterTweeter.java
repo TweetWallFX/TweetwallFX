@@ -26,12 +26,22 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChain;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
+import org.tweetwallfx.tweet.api.TweetQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.User;
-import org.tweetwallfx.tweet.api.*;
 import org.tweetwallfx.tweet.api.config.TwitterSettings;
 import twitter4j.TwitterException;
 import twitter4j.TwitterResponse;
-import twitter4j.v1.*;
+import twitter4j.v1.CursorSupport;
+import twitter4j.v1.FriendsFollowersResources;
+import twitter4j.v1.PagableResponseList;
+import twitter4j.v1.Query;
+import twitter4j.v1.QueryResult;
+import twitter4j.v1.RateLimitStatus;
+import twitter4j.v1.Status;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -81,16 +91,18 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Stream<User> getFriends(final String userScreenName) {
+        final FriendsFollowersResources friendsFollowersResources = instance().twitterV1().friendsFollowers();
         return pagedListAsStream(
-                cursorId -> instance().twitterV1().friendsFollowers().getFriendsList(userScreenName, cursorId, 200),
+                cursorId -> friendsFollowersResources.getFriendsList(userScreenName, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting friends for User(screenName:" + userScreenName + ")", te),
                 TwitterUser::new);
     }
 
     @Override
     public Stream<User> getFriends(final long userId) {
+        final FriendsFollowersResources friendsFollowersResources = instance().twitterV1().friendsFollowers();
         return pagedListAsStream(
-                cursorId -> instance().twitterV1().friendsFollowers().getFriendsList(userId, cursorId, 200),
+                cursorId -> friendsFollowersResources.getFriendsList(userId, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting friends for User(id:" + userId + ")", te),
                 TwitterUser::new);
     }
@@ -102,16 +114,18 @@ public class TwitterTweeter extends Tweeter {
 
     @Override
     public Stream<User> getFollowers(final String userScreenName) {
+        final FriendsFollowersResources friendsFollowersResources = instance().twitterV1().friendsFollowers();
         return pagedListAsStream(
-                cursorId -> instance().twitterV1().friendsFollowers().getFollowersList(userScreenName, cursorId, 200),
+                cursorId -> friendsFollowersResources.getFollowersList(userScreenName, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting followers for User(screenName:" + userScreenName + ")", te),
                 TwitterUser::new);
     }
 
     @Override
     public Stream<User> getFollowers(final long userId) {
+        final FriendsFollowersResources friendsFollowersResources = instance().twitterV1().friendsFollowers();
         return pagedListAsStream(
-                cursorId -> instance().twitterV1().friendsFollowers().getFollowersList(userId, cursorId, 200),
+                cursorId -> friendsFollowersResources.getFollowersList(userId, cursorId, 200),
                 te -> new IllegalArgumentException("Error getting followers for User(id:" + userId + ")", te),
                 TwitterUser::new);
     }

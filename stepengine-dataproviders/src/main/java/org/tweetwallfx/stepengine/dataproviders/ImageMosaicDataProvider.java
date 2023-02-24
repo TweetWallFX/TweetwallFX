@@ -37,7 +37,11 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.tweetwallfx.util.Nullable.valueOrDefault;

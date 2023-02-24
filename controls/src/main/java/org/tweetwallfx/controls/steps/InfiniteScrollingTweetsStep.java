@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022, 2023 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,8 +58,14 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
+import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,7 +80,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
     private final Config config;
 
-    private final AtomicReference<List<Tweet>> tweetsRef = new AtomicReference<>(Collections.emptyList());
+    private final AtomicReference<List<Tweet>> tweetsRef = new AtomicReference<>(List.of());
 
     private TweetUserProfileImageDataProvider tweetUserProfileImageDataProvider;
     private PhotoImageMediaEntryDataProvider photoImageMediaEntryDataProvider;
@@ -266,8 +272,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         nameFlow.setCache(config.tweetFlowNode.isCacheEnabled);
         nameFlow.setCacheHint(config.tweetFlowNode.cacheHint);
 
-        Date date = new Date(displayTweet.getCreatedAt().toInstant(ZoneOffset.UTC).toEpochMilli());
-        Label naturalTime = new Label(Humanize.naturalTime(date, Locale.ENGLISH));
+        Instant createdAt = displayTweet.getCreatedAt().toInstant(ZoneOffset.UTC);
+        Label naturalTime = new Label(Humanize.naturalTime(Date.from(createdAt), Locale.ENGLISH));
         naturalTime.getStyleClass().add("tweetTime");
         naturalTime.setMinWidth(config.tweetWidth);
         naturalTime.setMaxWidth(config.tweetWidth);

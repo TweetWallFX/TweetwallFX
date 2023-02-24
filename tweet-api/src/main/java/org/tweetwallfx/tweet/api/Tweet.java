@@ -23,7 +23,14 @@
  */
 package org.tweetwallfx.tweet.api;
 
-import org.tweetwallfx.tweet.api.entry.*;
+import org.tweetwallfx.tweet.api.entry.BasicEntry;
+import org.tweetwallfx.tweet.api.entry.EmojiTweetEntry;
+import org.tweetwallfx.tweet.api.entry.HashtagTweetEntry;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.SymbolTweetEntry;
+import org.tweetwallfx.tweet.api.entry.TweetEntry;
+import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
+import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
