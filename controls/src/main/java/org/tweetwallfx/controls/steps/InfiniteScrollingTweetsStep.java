@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,7 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import org.tweetwallfx.stepengine.api.Controllable;
 import humanize.Humanize;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -51,24 +40,36 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.stepengine.dataproviders.TweetStreamDataProvider;
+import org.tweetwallfx.emoji.control.EmojiFlow;
+import org.tweetwallfx.stepengine.api.Controllable;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.PhotoImageMediaEntryDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetStreamDataProvider;
 import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-import org.tweetwallfx.emoji.control.EmojiFlow;
+
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Infinite TweetStream Animation Step
@@ -79,7 +80,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
     private final Config config;
 
-    private final AtomicReference<List<Tweet>> tweetsRef = new AtomicReference<>(Collections.emptyList());
+    private final AtomicReference<List<Tweet>> tweetsRef = new AtomicReference<>(List.of());
 
     private TweetUserProfileImageDataProvider tweetUserProfileImageDataProvider;
     private PhotoImageMediaEntryDataProvider photoImageMediaEntryDataProvider;
@@ -271,7 +272,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         nameFlow.setCache(config.tweetFlowNode.isCacheEnabled);
         nameFlow.setCacheHint(config.tweetFlowNode.cacheHint);
 
-        Label naturalTime = new Label(Humanize.naturalTime(displayTweet.getCreatedAt(), Locale.ENGLISH));
+        Instant createdAt = displayTweet.getCreatedAt().toInstant(ZoneOffset.UTC);
+        Label naturalTime = new Label(Humanize.naturalTime(Date.from(createdAt), Locale.ENGLISH));
         naturalTime.getStyleClass().add("tweetTime");
         naturalTime.setMinWidth(config.tweetWidth);
         naturalTime.setMaxWidth(config.tweetWidth);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,26 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetFilterQuery;
+import org.tweetwallfx.tweet.api.TweetStream;
+import twitter4j.v1.FilterQuery;
+import twitter4j.v1.Status;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tweetwallfx.tweet.api.TweetFilterQuery;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.TweetStream;
-import twitter4j.FilterQuery;
-import twitter4j.Status;
-import twitter4j.StatusAdapter;
-import twitter4j.TwitterStream;
-import twitter4j.TwitterStreamFactory;
-import twitter4j.conf.Configuration;
 
-final class TwitterTweetStream implements TweetStream {
+final class TwitterTweetStream implements TweetStream, Consumer<Status> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterTweetStream.class);
 
     private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
 
     private final TweetFilterQuery filterQuery;
-    private TwitterStream twitterStream;
     private final Predicate<Tweet> tweetFilter;
 
     public TwitterTweetStream(final TweetFilterQuery filterQuery, final Predicate<Tweet> tweetFilter) {
@@ -64,37 +60,26 @@ final class TwitterTweetStream implements TweetStream {
         }
     }
 
-    private void activateStream() {
-        Configuration configuration = TwitterOAuth.getConfiguration();
-        if (null == configuration) {
-            return;
-        }
-
-        twitterStream = new TwitterStreamFactory(configuration).getInstance();
-        twitterStream.addListener(new StatusAdapter() {
-
-            @Override
-            public void onStatus(final Status status) {
-                TwitterTweet twitterTweet = new TwitterTweet(status);
-
-                if (tweetFilter.test(twitterTweet)) {
-                    synchronized (TwitterTweetStream.this) {
-                        LOG.info("redispatching new received tweet to {}", tweetConsumerList);
-                        tweetConsumerList.stream().forEach(consumer -> consumer.accept(twitterTweet));
-                    }
-                }
+    @Override
+    public void accept(Status status) {
+        TwitterTweet twitterTweet = new TwitterTweet(status);
+        if (tweetFilter.test(twitterTweet)) {
+            synchronized (TwitterTweetStream.this) {
+                LOG.info("redispatching new received tweet to {}", tweetConsumerList);
+                tweetConsumerList.stream().forEach(consumer -> consumer.accept(twitterTweet));
             }
-        });
-        twitterStream.filter(getFilterQuery(filterQuery));
+        }
+    }
+
+    private void activateStream() {
+        TwitterOAuth.instance().statusConsumer(this).twitterV1().stream().filter(getFilterQuery(filterQuery));
     }
 
     private static FilterQuery getFilterQuery(final TweetFilterQuery tweetFilterQuery) {
-        return new FilterQuery()
-                .count(tweetFilterQuery.getCount())
-                .track(tweetFilterQuery.getTrack());
+        return FilterQuery.ofTrack(tweetFilterQuery.getTrack()).count(tweetFilterQuery.getCount());
     }
 
     void shutdown() {
-        twitterStream.shutdown();
+        TwitterOAuth.instance().statusConsumer(null).twitterV1().stream().shutdown();;
     }
 }

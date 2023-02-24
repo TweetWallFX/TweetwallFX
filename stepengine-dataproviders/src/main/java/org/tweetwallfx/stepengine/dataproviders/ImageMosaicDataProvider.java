@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,6 @@
 package org.tweetwallfx.stepengine.dataproviders;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +33,17 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
@@ -75,9 +78,9 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         return Collections.<ImageStore>unmodifiableList(images);
     }
 
-    private void addImage(final MediaTweetEntry mte, final Date date) {
+    private void addImage(final MediaTweetEntry mte, final LocalDateTime date) {
         PhotoImageCache.INSTANCE.getCachedOrLoad(mte, urlc -> {
-            if (images.addIfAbsent(new ImageStore(urlc, date.toInstant()))) {
+            if (images.addIfAbsent(new ImageStore(urlc, date.toInstant(ZoneOffset.UTC)))) {
                 LOG.info("Added ImageStore for mediaID: {}", mte.getId());
             }
             if (config.maxCacheSize() < images.size()) {
