@@ -1,7 +1,7 @@
 <!--
  The MIT License (MIT)
 
- Copyright (c) 2022 TweetWallFX
+ Copyright (c) 2022-2023 TweetWallFX
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -65,5 +65,9 @@
             <Package name="org.tweetwallfx.devoxx.api.cfp.client" />
         </Or>
         <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="org.tweetwallfx.tweet.impl.twitter4j.TwitterTweeter" />
+        <Bug code="RV" />
     </Match>
 </FindBugsFilter>
