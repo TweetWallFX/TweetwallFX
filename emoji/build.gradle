@@ -25,7 +25,7 @@ apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
     api project(':tweetwallfx-cache')
-    implementation 'com.vdurmont:emoji-java:5.1.1'
+    implementation 'com.vdurmont:emoji-java:5.1.2'
 }
 
 javafx {

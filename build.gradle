@@ -53,7 +53,7 @@ allprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
+        mavenLocal()
     }
 
     // configuring Spotless

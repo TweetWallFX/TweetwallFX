@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 module org.tweetwallfx.emoji {
-    exports org.tweetwallfx.emoji.control;
+    requires com.vdurmont.emoji;
     requires javafx.graphics;
     requires org.slf4j;
     requires org.tweetwallfx.cache;
-    requires emoji.java;
+    exports org.tweetwallfx.emoji.control;
 }

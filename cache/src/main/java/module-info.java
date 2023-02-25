@@ -23,7 +23,8 @@
  */
 module org.tweetwallfx.cache {
     requires com.github.spotbugs.annotations;
-    requires ehcache;
+    requires org.ehcache.api;
+    requires org.ehcache.impl;
     requires org.slf4j;
     requires org.tweetwallfx.config;
     requires org.tweetwallfx.util;

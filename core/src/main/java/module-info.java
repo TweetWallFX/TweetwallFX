@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  */
 module org.tweetwallfx.core {
-    exports org.tweetwallfx.tweet;
-    requires emoji.java;
+    requires com.vdurmont.emoji;
     requires org.slf4j;
     requires org.tweetwallfx.config;
+    exports org.tweetwallfx.tweet;
 }
