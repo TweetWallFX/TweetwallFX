@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-dependencies {
-    api project(':tweetwallfx-filterchain')
+package org.tweetwallfx.tweet.api;
 
-    testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+
+final class CompositeTweetStream implements TweetStream, Consumer<Tweet> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTweetStream.class);
+
+    private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
+
+    @Override
+    public void onTweet(Consumer<Tweet> tweetConsumer) {
+        synchronized (this) {
+            LOGGER.info("Adding tweetConsumer: {}", tweetConsumer);
+            tweetConsumerList.add(tweetConsumer);
+            LOGGER.info("List of tweetConsumers is now: {}", tweetConsumerList);
+        }
+    }
+
+    @Override
+    public void accept(Tweet tweet) {
+        synchronized (this) {
+            LOGGER.info("Redispatching new received tweet to {}", tweetConsumerList);
+            tweetConsumerList.stream().forEach(consumer -> consumer.accept(tweet));
+        }
+    }
 }
