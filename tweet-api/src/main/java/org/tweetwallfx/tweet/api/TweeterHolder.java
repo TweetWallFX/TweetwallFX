@@ -37,15 +37,15 @@ final class TweeterHolder {
     static Tweeter instance() {
         if (null == instance) {
             synchronized (TweeterHolder.class) {
-                createInstance();
+                instance = createInstance(ServiceLoader.load(Tweeter.class));
             }
         }
         return instance;
     }
 
-    private static void createInstance() {
+    static Tweeter createInstance(Iterable<Tweeter> tweeterIterable) {
         final List<Tweeter> tweeters = new ArrayList<>(2);
-        for (Tweeter tweeter : ServiceLoader.load(Tweeter.class)) {
+        for (Tweeter tweeter : tweeterIterable) {
             if (tweeter.isEnabled()) {
                 LOGGER.info("Found enabled tweeter {}", tweeter);
                 tweeters.add(tweeter);
@@ -55,9 +55,9 @@ final class TweeterHolder {
         }
         final int tweetersAmount = tweeters.size();
         if (tweetersAmount == 1) {
-            instance = tweeters.get(0);
+            return tweeters.get(0);
         } else if (tweetersAmount > 1) {
-            instance = new CompositeTweeter(tweeters);
+            return new CompositeTweeter(tweeters);
         } else {
             throw new IllegalStateException("No implementation of Tweeter found!");
         }
