@@ -27,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -51,12 +49,8 @@ public final class CompositeTweeter implements Tweeter {
         return null;
     }
 
-    <T> Stream<T> flatMap(Function<Tweeter, Stream<T>> action) {
-        Stream<T> result = Stream.empty();
-        for (Tweeter tweeter : tweeters) {
-            result = Stream.concat(result, action.apply(tweeter));
-        }
-        return result;
+    <T> Stream<T> getJoined(Function<Tweeter, Stream<T>> action) {
+        return tweeters.stream().flatMap(action);
     }
 
     @Override
@@ -89,42 +83,42 @@ public final class CompositeTweeter implements Tweeter {
 
     @Override
     public Stream<User> getFriends(User user) {
-        return flatMap(tweeter -> tweeter.getFollowers(user));
+        return getJoined(tweeter -> tweeter.getFriends(user));
     }
 
     @Override
     public Stream<User> getFriends(String userScreenName) {
-        return flatMap(tweeter -> tweeter.getFriends(userScreenName));
+        return getJoined(tweeter -> tweeter.getFriends(userScreenName));
     }
 
     @Override
     public Stream<User> getFriends(long userId) {
-        return flatMap(tweeter -> tweeter.getFriends(userId));
+        return getJoined(tweeter -> tweeter.getFriends(userId));
     }
 
     @Override
     public Stream<User> getFollowers(User user) {
-        return flatMap(tweeter -> tweeter.getFollowers(user));
+        return getJoined(tweeter -> tweeter.getFollowers(user));
     }
 
     @Override
     public Stream<User> getFollowers(String userScreenName) {
-        return flatMap(tweeter -> tweeter.getFollowers(userScreenName));
+        return getJoined(tweeter -> tweeter.getFollowers(userScreenName));
     }
 
     @Override
     public Stream<User> getFollowers(long userId) {
-        return flatMap(tweeter -> tweeter.getFollowers(userId));
+        return getJoined(tweeter -> tweeter.getFollowers(userId));
     }
 
     @Override
     public Stream<Tweet> search(TweetQuery tweetQuery) {
-        return flatMap(tweeter -> tweeter.search(tweetQuery));
+        return getJoined(tweeter -> tweeter.search(tweetQuery));
     }
 
     @Override
     public Stream<Tweet> searchPaged(TweetQuery tweetQuery, int numberOfPages) {
-        return flatMap(tweeter -> tweeter.searchPaged(tweetQuery, numberOfPages));
+        return getJoined(tweeter -> tweeter.searchPaged(tweetQuery, numberOfPages));
     }
 
     @Override
@@ -134,29 +128,6 @@ public final class CompositeTweeter implements Tweeter {
                 tweeter.shutdown();
             } catch (Throwable t) {
                 LOGGER.error("Failed to shutdown tweeter {}", tweeter, t);
-            }
-        }
-    }
-
-    static final class CompositeTweetStream implements TweetStream, Consumer<Tweet> {
-        private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTweetStream.class);
-
-        private final List<Consumer<Tweet>> tweetConsumerList = new CopyOnWriteArrayList<>();
-
-        @Override
-        public void onTweet(Consumer<Tweet> tweetConsumer) {
-            synchronized (this) {
-                LOGGER.info("Adding tweetConsumer: {}", tweetConsumer);
-                this.tweetConsumerList.add(tweetConsumer);
-                LOGGER.info("List of tweetConsumers is now: {}", tweetConsumerList);
-            }
-        }
-
-        @Override
-        public void accept(Tweet tweet) {
-            synchronized (this) {
-                LOGGER.info("Redispatching new received tweet to {}", tweetConsumerList);
-                tweetConsumerList.stream().forEach(consumer -> consumer.accept(tweet));
             }
         }
     }

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public interface Tweeter {
 
-    public static Tweeter getInstance() {
+    static Tweeter getInstance() {
         return TweeterHolder.instance();
     }
 
