@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.tweet.impl.mastodon4j;
 
-dependencies {
-    api project(':tweetwallfx-tweet-api')
+import org.mastodon4j.core.api.entities.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.TweetStream;
 
-    implementation 'org.eclipse:yasson:3.0.0'
-    implementation 'org.jsoup:jsoup:1.15.4'
-    implementation 'org.mastodon4j:mastodon4j-core:0.9.0'
-    implementation 'org.slf4j:slf4j-api:2.0.4'
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
-    testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
+public final class StatusStream implements TweetStream, Consumer<Status> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatusStream.class);
+
+    private final CopyOnWriteArrayList<Consumer<Tweet>> consumers;
+
+    StatusStream() {
+        consumers = new CopyOnWriteArrayList<>();
+    }
+
+    @Override
+    public void onTweet(Consumer<Tweet> tweetConsumer) {
+        LOGGER.debug("onTweet({})", tweetConsumer);
+        consumers.add(tweetConsumer);
+    }
+
+    @Override
+    public void accept(Status status) {
+        LOGGER.debug("Notify status:\n{}", status);
+        final MastodonStatus mastodonStatus = new MastodonStatus(status);
+        consumers.forEach(tweetConsumer -> tweetConsumer.accept(mastodonStatus));
+    }
 }
