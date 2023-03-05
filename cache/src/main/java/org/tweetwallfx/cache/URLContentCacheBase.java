@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -139,6 +139,7 @@ public abstract class URLContentCacheBase {
      * @param contentConsumer the Consumer processing the content
      */
     public final void getCachedOrLoad(final String urlString, final Consumer<URLContent> contentConsumer) {
+        Objects.requireNonNull(urlString, "urlString must not be null");
         Objects.requireNonNull(contentConsumer, "contentConsumer must not be null");
 
         contentLoader.execute(() -> {
@@ -152,6 +153,7 @@ public abstract class URLContentCacheBase {
     }
 
     private URLContent getCachedOrLoadSync(final String urlString) throws IOException {
+        Objects.requireNonNull(urlString, "urlString must not be null");
         URLContent urlc = urlContentCache.get(urlString);
 
         if (null == urlc) {
