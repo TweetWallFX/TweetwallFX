@@ -62,7 +62,7 @@ public class Main extends Application {
                 .ifPresent(scene.getStylesheets()::add);
 
         final StringPropertyAppender spa = new StringPropertyAppender();
-        spa.start();
+        Platform.runLater(spa::start);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
@@ -74,12 +74,13 @@ public class Main extends Application {
         Platform.runLater(tweetsTask::start);
 
         scene.setOnKeyTyped((KeyEvent event) -> {
-            if (event.isMetaDown()) {
-                switch (event.getCharacter()) {
-                    case "d" -> toggleStatusLine(borderPane, spa, statusLineHost);
-                    case "f" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());
-                    case "x" -> Platform.exit();
-                    default -> {}
+            if (event.isShortcutDown()) {
+                final String character = event.getCharacter().toUpperCase();
+                switch (character) {
+                    case "D" -> toggleStatusLine(borderPane, spa, statusLineHost);
+                    case "F" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());
+                    case "X", "Q" -> Platform.exit();
+                    default -> LOG.warn("Unknown character: '{}'", character);
                 };
             }
         });
@@ -92,10 +93,10 @@ public class Main extends Application {
     }
 
     private static void toggleStatusLine(BorderPane borderPane, StringPropertyAppender spa, HBox statusLineHost) {
-        LoggerConfig rootLogger = LoggerContext.getContext().getConfiguration().getRootLogger();
+        final LoggerConfig rootLogger = LoggerContext.getContext(false).getConfiguration().getRootLogger();
         if (null == statusLineHost.getParent()) {
             borderPane.setBottom(statusLineHost);
-            rootLogger.addAppender(spa, Level.TRACE, null);
+            rootLogger.addAppender(spa, null, null);
         } else {
             borderPane.getChildren().remove(statusLineHost);
             rootLogger.removeAppender(spa.getName());
@@ -109,7 +110,7 @@ public class Main extends Application {
     }
 
     /**
-     * Runs the generic 2d tweetwall.
+     * Starts the Tweetwall from command line.
      *
      * @param args the command line arguments
      */
