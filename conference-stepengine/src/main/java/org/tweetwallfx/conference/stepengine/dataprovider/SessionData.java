@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,8 @@ public class SessionData {
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionData.class);
     private static final Comparator<SessionData> COMP = Comparator
-            .comparing(SessionData::getRoom);
+            .comparing(SessionData::getBeginTime)
+            .thenComparing(SessionData::getRoom);
 
     public final Room room;
     public final List<String> speakers;
@@ -85,6 +86,10 @@ public class SessionData {
 
     private Room getRoom() {
         return room;
+    }
+
+    private Instant getBeginTime() {
+        return beginTime;
     }
 
     @Override
