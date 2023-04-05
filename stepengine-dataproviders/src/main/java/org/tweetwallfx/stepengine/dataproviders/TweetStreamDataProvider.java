@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -178,7 +178,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
      * Param {@code hideRetweets} Is accepting retweets into the datastore of
      * the DataProvider acceptable? Defaults to {@code false}.
      */
-    private static record Config(
+    public record Config(
             Integer historySize,
             Integer maxTweets,
             Boolean hideRetweets) {

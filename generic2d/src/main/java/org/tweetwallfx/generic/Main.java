@@ -24,6 +24,7 @@
 package org.tweetwallfx.generic;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -39,16 +40,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.TweetwallSettings;
+import org.tweetwallfx.mqtt.MqttProcess;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
 
+import static org.tweetwallfx.mqtt.MqttEvent.RESTART;
+import static org.tweetwallfx.mqtt.MqttEvent.STOP;
+
 public class Main extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final AtomicInteger RC = new AtomicInteger();
+
+    final MqttProcess mqttProcess = new MqttProcess();
 
     @Override
     public void start(Stage primaryStage) {
+        new Thread(mqttProcess).start();
+        mqttProcess.addMqttEventHandler(e ->  {
+            if (STOP.equals(e.getEventType())) {
+                exitApplication(0);  // normal exit
+            } else if (RESTART.equals(e.getEventType())) {
+                exitApplication(42); // restart
+            }
+        });
+
         BorderPane borderPane = new BorderPane();
-        Scene scene = new Scene(borderPane, 1920, 1280);
+        Scene scene = new Scene(borderPane, 1920, 1080);
         borderPane.getStyleClass().add("splash");
 
         final TweetwallSettings tweetwallSettings
@@ -79,7 +96,8 @@ public class Main extends Application {
                 switch (character) {
                     case "D" -> toggleStatusLine(borderPane, spa, statusLineHost);
                     case "F" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());
-                    case "X", "Q" -> Platform.exit();
+                    case "R" -> exitApplication(42); // restart
+                    case "X", "Q" -> exitApplication(0); // normal exit
                     default -> LOG.warn("Unknown character: '{}'", character);
                 };
             }
@@ -90,6 +108,12 @@ public class Main extends Application {
 
         primaryStage.show();
         primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
+    }
+
+    private void exitApplication(int exitCode) {
+        LOG.info("Exit application with rc={}", exitCode);
+        RC.set(exitCode);
+        Platform.exit();
     }
 
     private static void toggleStatusLine(BorderPane borderPane, StringPropertyAppender spa, HBox statusLineHost) {
@@ -107,6 +131,7 @@ public class Main extends Application {
     public void stop() {
         LOG.info("closing...");
         Tweeter.getInstance().shutdown();
+        mqttProcess.stop();
     }
 
     /**
@@ -116,5 +141,6 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+        System.exit(RC.get());
     }
 }

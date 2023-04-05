@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.mqtt;
 
-dependencies {
-    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
-    implementation project(':tweetwallfx-2d')
-    implementation project(':tweetwallfx-mqtt')
-    implementation project(':tweetwallfx-tweet-api')
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
+import java.time.ZonedDateTime;
+
+import static java.time.Clock.systemUTC;
+
+public record State(String name, ZonedDateTime zonedDateTime, Object payload) {
+    static State stopping() {
+        return new State("stopping", getNow(), null);
+    }
+
+    static State starting(Object payload) {
+        return new State("starting", getNow(), payload);
+    }
+
+    static State alive() {
+        return new State("alive", getNow(), null);
+    }
+
+    static State info(Object payload) {
+        return new State("info", getNow(), payload);
+    }
+
+    private static ZonedDateTime getNow() {
+        return ZonedDateTime.now(systemUTC());
+    }
 }
