@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -108,7 +108,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         }
     }
 
-    private static record Config(
+    public record Config(
             Integer profileWidth,
             Integer profileHeight,
             Boolean preserveRation,

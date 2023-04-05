@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -104,7 +104,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 300L}.
      */
-    private static record Config(
+    public record Config(
             ScheduleType scheduleType,
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {

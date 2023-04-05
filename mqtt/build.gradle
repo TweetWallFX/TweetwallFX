@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * The MIT License
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright 2023-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,7 @@
  */
 
 dependencies {
-    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
-    implementation project(':tweetwallfx-2d')
-    implementation project(':tweetwallfx-mqtt')
-    implementation project(':tweetwallfx-tweet-api')
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
+    implementation project(':tweetwallfx-configuration')
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+    implementation 'org.slf4j:slf4j-api:2.0.6'
 }
