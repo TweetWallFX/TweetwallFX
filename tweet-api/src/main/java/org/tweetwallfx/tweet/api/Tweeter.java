@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,61 +23,37 @@
  */
 package org.tweetwallfx.tweet.api;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-public abstract class Tweeter {
+public interface Tweeter {
 
-    private static Tweeter instance;
-
-    public static final Tweeter getInstance() {
-        if (null == instance) {
-            synchronized (Tweeter.class) {
-                createInstance();
-            }
-        }
-
-        return instance;
+    static Tweeter getInstance() {
+        return TweeterHolder.instance();
     }
 
-    private static void createInstance() {
-        final Iterator<Tweeter> itTweeter = ServiceLoader.load(Tweeter.class).iterator();
+    boolean isEnabled();
 
-        if (itTweeter.hasNext()) {
-            instance = itTweeter.next();
-        } else {
-            throw new IllegalStateException("No implementation of Tweeter found!");
-        }
-    }
+    TweetStream createTweetStream(TweetFilterQuery filterQuery);
 
-    public abstract TweetStream createTweetStream(TweetFilterQuery filterQuery);
+    Tweet getTweet(final long tweetId);
 
-    public abstract Tweet getTweet(final long tweetId);
+    User getUser(final String userId);
 
-    public abstract User getUser(final String userId);
+    Stream<User> getFriends(final User user);
 
-    public abstract Stream<User> getFriends(final User user);
+    Stream<User> getFriends(final String userScreenName);
 
-    public abstract Stream<User> getFriends(final String userScreenName);
+    Stream<User> getFriends(final long userId);
 
-    public abstract Stream<User> getFriends(final long userId);
+    Stream<User> getFollowers(final User user);
 
-    public abstract Stream<User> getFollowers(final User user);
+    Stream<User> getFollowers(final String userScreenName);
 
-    public abstract Stream<User> getFollowers(final String userScreenName);
+    Stream<User> getFollowers(final long userId);
 
-    public abstract Stream<User> getFollowers(final long userId);
+    Stream<Tweet> search(final TweetQuery tweetQuery);
 
-    public abstract Stream<Tweet> search(final TweetQuery tweetQuery);
+    Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages);
 
-    public abstract Stream<Tweet> searchPaged(final TweetQuery tweetQuery, int numberOfPages);
-
-    public void createTweetStream() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void shutdown() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    void shutdown();
 }

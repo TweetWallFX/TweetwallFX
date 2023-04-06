@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public class Main extends Application {
                 .ifPresent(scene.getStylesheets()::add);
 
         final StringPropertyAppender spa = new StringPropertyAppender();
-        spa.start();
+        Platform.runLater(spa::start);
 
         HBox statusLineHost = new HBox();
         Text statusLineText = new Text();
@@ -73,18 +73,15 @@ public class Main extends Application {
         final TagTweets tweetsTask = new TagTweets(borderPane);
         Platform.runLater(tweetsTask::start);
 
-        final org.apache.logging.log4j.core.config.Configuration config = LoggerContext.getContext().getConfiguration();
-        final LoggerConfig rootLogger = config.getRootLogger();
-
         scene.setOnKeyTyped((KeyEvent event) -> {
-            if (event.isMetaDown() && event.getCharacter().equals("d")) {
-                if (null == statusLineHost.getParent()) {
-                    borderPane.setBottom(statusLineHost);
-                    rootLogger.addAppender(spa, Level.TRACE, null);
-                } else {
-                    borderPane.getChildren().remove(statusLineHost);
-                    rootLogger.removeAppender(spa.getName());
-                }
+            if (event.isShortcutDown()) {
+                final String character = event.getCharacter().toUpperCase();
+                switch (character) {
+                    case "D" -> toggleStatusLine(borderPane, spa, statusLineHost);
+                    case "F" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());
+                    case "X", "Q" -> Platform.exit();
+                    default -> LOG.warn("Unknown character: '{}'", character);
+                };
             }
         });
 
@@ -95,6 +92,17 @@ public class Main extends Application {
         primaryStage.setFullScreen(!Boolean.getBoolean("org.tweetwallfx.disable-full-screen"));
     }
 
+    private static void toggleStatusLine(BorderPane borderPane, StringPropertyAppender spa, HBox statusLineHost) {
+        final LoggerConfig rootLogger = LoggerContext.getContext(false).getConfiguration().getRootLogger();
+        if (null == statusLineHost.getParent()) {
+            borderPane.setBottom(statusLineHost);
+            rootLogger.addAppender(spa, null, null);
+        } else {
+            borderPane.getChildren().remove(statusLineHost);
+            rootLogger.removeAppender(spa.getName());
+        }
+    }
+
     @Override
     public void stop() {
         LOG.info("closing...");
@@ -102,7 +110,7 @@ public class Main extends Application {
     }
 
     /**
-     * Runs the generic 2d tweetwall.
+     * Starts the Tweetwall from command line.
      *
      * @param args the command line arguments
      */

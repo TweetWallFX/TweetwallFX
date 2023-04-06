@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,15 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Map;
-import java.util.TreeMap;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
+import twitter4j.v1.MediaEntity;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
-import twitter4j.MediaEntity;
 
 final class TwitterMediaTweetEntry extends BaseTwitterTweetEntry<MediaEntity> implements MediaTweetEntry {
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +23,28 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j;
 
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConnectionSettings;
-import org.tweetwallfx.tweet.api.config.TwitterSettings;
+import org.tweetwallfx.tweet.impl.twitter4j.config.TwitterSettings;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.User;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.v1.Status;
+import twitter4j.v1.TwitterV1;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+
+import static org.tweetwallfx.tweet.impl.twitter4j.TwitterTweeter.TWITTER_SETTINGS;
 
 /**
  * TweetWallFX - Devoxx 2014 {@literal @}johanvos {@literal @}SvenNB
  * {@literal @}SeanMiPhillips {@literal @}jdub1581 {@literal @}JPeredaDnr
- *
+ * <p>
  * Place your oauth credentials in a properties file:
- *
+ * <p>
  * # Step 1. Sign in in https://dev.twitter.com # Step 2. Create an app in
  * https://apps.twitter.com # 2.1 Name: DevoxxTweetWall # 2.2 Description:
  * JavaFX based application for displaying 3D rotating tweets at Devoxx 2014 #
@@ -53,84 +54,79 @@ import twitter4j.conf.ConfigurationBuilder;
  * oauth.consumerSecret # Step 4. Click on create an Access token. Two new keys
  * are generated: # Step 4.1 Assign Access token to oauth.accessToken # Step 4.2
  * Assign Acces token secret to oauth.accessTokenSecret
- *
+ * <p>
  * Don't share this credentials with anybody, don't commit the properties file
  * to the repo !!
  */
 final class TwitterOAuth {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterOAuth.class);
-    private static Configuration configuration = null;
-    private static final AtomicBoolean INITIATED = new AtomicBoolean(false);
+    private static final AtomicReference<TwitterOAuth> INSTANCE_REFERENCE = new AtomicReference<>();
     private static final ReadOnlyObjectWrapper<Exception> EXCEPTION = new ReadOnlyObjectWrapper<>(null);
 
+    private final TwitterV1 twitter;
+    private Consumer<Status> statusConsumer;
+
     private TwitterOAuth() {
-        // prevent instantiation
-    }
+        final Configuration tweetWallFxConfig = Configuration.getInstance();
+        final Twitter.TwitterBuilder builder = Twitter.newBuilder();
 
-    public static ReadOnlyObjectProperty<Exception> exception() {
-        return EXCEPTION.getReadOnlyProperty();
-    }
+        builder.prettyDebugEnabled(TWITTER_SETTINGS.debugEnabled());
+        builder.tweetModeExtended(TWITTER_SETTINGS.extendedMode());
 
-    public static Configuration getConfiguration() {
-        synchronized (TwitterOAuth.class) {
-            if (INITIATED.compareAndSet(false, true)) {
-                configuration = createConfiguration();
-            }
-        }
-
-        return configuration;
-    }
-
-    private static Configuration createConfiguration() {
-        final org.tweetwallfx.config.Configuration tweetWallFxConfig = org.tweetwallfx.config.Configuration.getInstance();
-        final TwitterSettings twitterSettings = org.tweetwallfx.config.Configuration.getInstance()
-                .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
-
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.setDebugEnabled(twitterSettings.debugEnabled());
-        builder.setTweetModeExtended(twitterSettings.extendedMode());
-
-        TwitterSettings.OAuth twitterOAuthSettings = twitterSettings.oauth();
-        builder.setOAuthConsumerKey(twitterOAuthSettings.consumerKey());
-        builder.setOAuthConsumerSecret(twitterOAuthSettings.consumerSecret());
-        builder.setOAuthAccessToken(twitterOAuthSettings.accessToken());
-        builder.setOAuthAccessTokenSecret(twitterOAuthSettings.accessTokenSecret());
+        TwitterSettings.OAuth twitterOAuthSettings = TWITTER_SETTINGS.oauth();
+        builder.oAuthConsumer(twitterOAuthSettings.consumerKey(), twitterOAuthSettings.consumerSecret());
+        builder.oAuthAccessToken(twitterOAuthSettings.accessToken(), twitterOAuthSettings.accessTokenSecret());
 
         // optional proxy settings
         tweetWallFxConfig.getConfigTypedOptional(ConnectionSettings.CONFIG_KEY, ConnectionSettings.class)
                 .map(ConnectionSettings::proxy)
                 .filter(proxy -> !proxy.host().isEmpty())
                 .ifPresent(proxy -> {
-                    builder.setHttpProxyHost(proxy.host());
-                    builder.setHttpProxyPort(proxy.port());
-                    builder.setHttpProxyUser(proxy.user());
-                    builder.setHttpProxyPassword(proxy.password());
+                    builder.httpProxyHost(proxy.host());
+                    builder.httpProxyPort(proxy.port());
+                    builder.httpProxyUser(proxy.user());
+                    builder.httpProxyPassword(proxy.password());
                 });
 
-        Configuration conf = builder.build();
+        builder.onException(failure -> {
+            EXCEPTION.set(failure);
+            LOGGER.error("Error on twitter backend", failure);
+        });
+        builder.onStatus(this::onStatus);
 
-        // check Configuration
-        if (conf.getOAuthConsumerKey() != null && !conf.getOAuthConsumerKey().isEmpty()
-                && conf.getOAuthConsumerSecret() != null && !conf.getOAuthConsumerSecret().isEmpty()
-                && conf.getOAuthAccessToken() != null && !conf.getOAuthAccessToken().isEmpty()
-                && conf.getOAuthAccessTokenSecret() != null && !conf.getOAuthAccessTokenSecret().isEmpty()) {
-            Twitter twitter = new TwitterFactory(conf).getInstance();
-            try {
-                User user = twitter.verifyCredentials();
-                LOGGER.info("User {} validated", user.getName());
-            } catch (TwitterException ex) {
-                EXCEPTION.set(ex);
-                //  statusCode=400, message=Bad Authentication data -> wrong token
-                //  statusCode=401, message=Could not authenticate you ->wrong consumerkey
-                int statusCode = ex.getStatusCode();
-                LOGGER.error("Error statusCode={} {}", statusCode, (statusCode > 0 ? ex.getErrorMessage() : ex.getMessage()));
-                conf = null;
-            }
-        } else {
-            EXCEPTION.set(new IllegalStateException("Missing credentials!"));
+        twitter = builder.build().v1();
+    }
+
+    private static TwitterOAuth checkOrInitialize(TwitterOAuth oldValue) {
+        if (oldValue == null) {
+            return new TwitterOAuth();
         }
+        return oldValue;
+    }
 
-        return conf;
+    private void onStatus(Status status) {
+        if (statusConsumer == null) {
+            LOGGER.debug("Not handled status: {}", status);
+        } else {
+            statusConsumer.accept(status);
+        }
+    }
+
+    public TwitterV1 twitterV1() {
+        return twitter;
+    }
+
+    public TwitterOAuth statusConsumer(Consumer<Status> statusConsumer) {
+        this.statusConsumer = statusConsumer;
+        return this;
+    }
+
+    public static ReadOnlyObjectProperty<Exception> exception() {
+        return EXCEPTION.getReadOnlyProperty();
+    }
+
+    public static TwitterOAuth instance() {
+        return INSTANCE_REFERENCE.updateAndGet(TwitterOAuth::checkOrInitialize);
     }
 }
