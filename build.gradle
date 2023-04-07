@@ -195,7 +195,7 @@ allprojects {
 
         dependencies {
             implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
-            implementation 'org.slf4j:slf4j-api:2.0.6'
+            implementation 'org.slf4j:slf4j-api:2.0.7'
 
             javafx group: 'org.openjfx', name: 'javafx-base', version: '19.0.2.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19.0.2.1', classifier: javaFxPlatform
