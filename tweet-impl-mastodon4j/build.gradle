@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.eclipse:yasson:3.0.0'
     implementation 'org.jsoup:jsoup:1.15.4'
     implementation 'org.mastodon4j:mastodon4j-core:0.9.0'
-    implementation 'org.slf4j:slf4j-api:2.0.4'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 
     testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
 }
