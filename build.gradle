@@ -200,7 +200,7 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-base', version: '19.0.2.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19.0.2.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19.0.2.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '20', classifier: javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
             jaxb 'org.eclipse.angus:angus-activation:2.0.0'
