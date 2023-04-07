@@ -67,7 +67,4 @@ includeWithName ':generic2d', 'tweetwallfx-generic2d'
 // disabled subproject for future reference
 //includeWithName ':3d', 'tweetwallfx-3d'
 
-def mastodon4jProject = new File(rootDir, '../Mastodon4J')
-if (mastodon4jProject.isDirectory()) {
-    includeBuild mastodon4jProject
-}
+//rootProject.file('../Mastodon4J').with{mastodon4jProject -> { if (mastodon4jProject.isDirectory()) includeBuild mastodon4jProject }}
