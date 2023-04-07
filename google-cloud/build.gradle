@@ -26,6 +26,6 @@ dependencies {
     api project(':tweetwallfx-tweet-api')
 
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.16.0'
-    implementation 'com.google.cloud:google-cloud-vision:3.11.0'
+    implementation 'com.google.cloud:google-cloud-vision:3.12.0'
     implementation project(':tweetwallfx-cache')
 }
