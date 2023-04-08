@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,7 @@ includeWithName ':transitions', 'tweetwallfx-transitions'
 includeWithName ':tweet-api', 'tweetwallfx-tweet-api'
 includeWithName ':tweet-impl-twitter4j', 'tweetwallfx-tweet-impl-twitter4j'
 includeWithName ':tweet-impl-mastodon4j', 'tweetwallfx-tweet-impl-mastodon4j'
+includeWithName ':mqtt', 'tweetwallfx-mqtt'
 includeWithName ':util', 'tweetwallfx-utility'
 
 includeWithName ':controls', 'tweetwallfx-controls'

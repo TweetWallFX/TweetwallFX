@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * The MIT License
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright 2023-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,7 @@
  */
 
 dependencies {
-    api project(':tweetwallfx-tweet-api')
-
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.16.1'
-    implementation 'com.google.cloud:google-cloud-vision:3.12.0'
-    implementation project(':tweetwallfx-cache')
+    implementation project(':tweetwallfx-configuration')
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 }

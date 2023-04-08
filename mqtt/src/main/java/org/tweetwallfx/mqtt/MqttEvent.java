@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.mqtt;
 
-dependencies {
-    api project(':tweetwallfx-tweet-api')
+import javafx.event.Event;
+import javafx.event.EventType;
 
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.16.1'
-    implementation 'com.google.cloud:google-cloud-vision:3.12.0'
-    implementation project(':tweetwallfx-cache')
+public class MqttEvent extends Event {
+    public static final EventType<MqttEvent> ANY = new EventType<>(Event.ANY, "ANY");
+    public static final EventType<MqttEvent> RESTART = new EventType<>(Event.ANY, "RESTART");
+    public static final EventType<MqttEvent> STOP = new EventType<>(Event.ANY, "STOP");
+
+    public MqttEvent(Object source, EventType<? extends Event> eventType) {
+        super(source, null, eventType);
+    }
 }
