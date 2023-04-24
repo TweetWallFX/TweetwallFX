@@ -44,11 +44,11 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.6
 
       # Setup JDK environment for the next steps
-      - name: Setup ${{ matrix.distribution }} JDK 17 for gradle
+      - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
         uses: actions/setup-java@v3
         with:
           distribution: ${{ matrix.distribution }}
-          java-version: 17
+          java-version: ${{ matrix.jdk }}
           cache: gradle
 
       # Run assemble tasks
