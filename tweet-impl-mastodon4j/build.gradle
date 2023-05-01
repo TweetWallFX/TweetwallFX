@@ -25,7 +25,7 @@
 dependencies {
     api project(':tweetwallfx-tweet-api')
 
-    implementation 'org.jsoup:jsoup:1.15.4'
+    implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'org.mastodon4j:mastodon4j-core:0.9.0'
 
     testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
