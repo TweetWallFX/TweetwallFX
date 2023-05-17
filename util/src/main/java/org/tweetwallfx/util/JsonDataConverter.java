@@ -75,6 +75,7 @@ public class JsonDataConverter {
      *
      * @return the converted object
      */
+    @SuppressWarnings("try")
     public static <T> T convertFromInputStream(final InputStream inputStream, final Class<T> typeClass) {
         try (Jsonb jsonb = JsonbBuilder.create(readConfig())) {
             return jsonb.fromJson(inputStream, typeClass);
@@ -96,6 +97,7 @@ public class JsonDataConverter {
      *
      * @return the converted object
      */
+    @SuppressWarnings("try")
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
         try (Jsonb jsonb = JsonbBuilder.create(readConfig())) {
             return jsonb.fromJson(jsonString, typeClass);
@@ -112,6 +114,7 @@ public class JsonDataConverter {
      *
      * @return the converted String
      */
+    @SuppressWarnings("try")
     public static String convertToString(final Object object) {
         try (Jsonb jsonb = JsonbBuilder.create()) {
             return jsonb.toJson(object);

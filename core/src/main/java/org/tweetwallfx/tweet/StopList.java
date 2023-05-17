@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -88,7 +89,7 @@ public final class StopList {
      * @param stopword to add.
      */
     public static void add(final String stopword) {
-        CUSTOM_LIST.add(stopword.toLowerCase());
+        CUSTOM_LIST.add(stopword.toLowerCase(Locale.ENGLISH));
     }
 
     /**
@@ -97,7 +98,7 @@ public final class StopList {
      * @param stopwords to add.
      */
     public static void add(final String... stopwords) {
-        Arrays.stream(stopwords).map(String::toLowerCase).forEach(CUSTOM_LIST::add);
+        Arrays.stream(stopwords).forEach(StopList::add);
     }
 
     /**
@@ -107,7 +108,7 @@ public final class StopList {
      * @return true if contained.
      */
     public static boolean notIn(final String word) {
-        String lowerWord = word.toLowerCase();
+        String lowerWord = word.toLowerCase(Locale.ENGLISH);
         return !TWITTER_LIST.contains(lowerWord)
                 && !STOP_LIST.contains(lowerWord)
                 && !CUSTOM_LIST.contains(lowerWord);
