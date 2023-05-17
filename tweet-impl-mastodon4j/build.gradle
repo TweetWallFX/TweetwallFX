@@ -27,6 +27,7 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'org.mastodon4j:mastodon4j-core:0.9.0'
+    implementation 'org.slf4j:slf4j-api'
 
-    testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
+    testImplementation 'org.simplify4u:slf4j2-mock'
 }
