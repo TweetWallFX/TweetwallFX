@@ -24,5 +24,7 @@
 dependencies {
     api project(':tweetwallfx-filterchain')
 
-    testImplementation 'org.simplify4u:slf4j2-mock:2.3.0'
+    implementation 'org.slf4j:slf4j-api'
+
+    testImplementation 'org.simplify4u:slf4j2-mock'
 }

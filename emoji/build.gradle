@@ -24,5 +24,7 @@
 
 dependencies {
     api project(':tweetwallfx-cache')
-    implementation 'com.vdurmont:emoji-java:5.1.1'
+
+    implementation 'com.vdurmont:emoji-java'
+    implementation 'org.slf4j:slf4j-api'
 }
