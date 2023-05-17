@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,53 +40,4 @@ public interface User {
     int getFollowersCount();
 
     boolean isVerified();
-    /**
-     * Available but not implemented. {@code
-     *
-     * String              getBiggerProfileImageUrlHttps();
-     * Date                getCreatedAt();
-     * String              getDescription();
-     * UrlTweetEntry[]     getDescriptionUrlEntries();
-     * int                 getFavouritesCount();
-     * int                 getFollowersCount();
-     * int                 getFriendsCount();
-     * int                 getListedCount();
-     * String              getLocation();
-     * String              getMiniProfileImageUrl();
-     * String              getMiniProfileImageUrlHttps();
-     * String              getOriginalProfileImageUrl();
-     * String              getOriginalProfileImageUrlHttps();
-     * String              getProfileBackgroundColor();
-     * String              getProfileBackgroundImageUrl();
-     * String              getProfileBackgroundImageUrlHttps();
-     * String              getProfileBannerIPadUrl();
-     * String              getProfileBannerIPadRetinaUrl();
-     * String              getProfileBannerMobileUrl();
-     * String              getProfileBannerMobileRetinaUrl();
-     * String              getProfileBannerRetinaUrl();
-     * String              getProfileBannerUrl();
-     * String              getProfileImageUrlHttps();
-     * String              getProfileLinkColor();
-     * String              getProfileSidebarBorderColor();
-     * String              getProfileSidebarFillColor();
-     * String              getProfileTextColor();
-     * String              getTimeZone();
-     * Tweet               getTweet();
-     * int                 getTweetCount();
-     * String              getUrl();
-     * UrlTweetEntry       getUrlEntry();
-     * int                 getUtcOffset();
-     * String[]            getWithheldInCountries();
-     * boolean             isContributorsEnabled();
-     * boolean             isDefaultProfile();
-     * boolean             isDefaultProfileImage();
-     * boolean             isFollowRequestSent();
-     * boolean             isGeoEnabled();
-     * boolean             isProfileBackgroundTiled();
-     * boolean             isProfileUseBackgroundImage();
-     * boolean             isProtected();
-     * boolean             isShowAllInlineMedia();
-     * boolean             isTranslator();
-     * }
-     */
 }

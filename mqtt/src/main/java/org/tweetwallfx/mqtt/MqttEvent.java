@@ -27,6 +27,8 @@ import javafx.event.Event;
 import javafx.event.EventType;
 
 public class MqttEvent extends Event {
+
+    private static final long serialVersionUID = 1L;
     public static final EventType<MqttEvent> ANY = new EventType<>(Event.ANY, "ANY");
     public static final EventType<MqttEvent> RESTART = new EventType<>(Event.ANY, "RESTART");
     public static final EventType<MqttEvent> STOP = new EventType<>(Event.ANY, "STOP");

@@ -228,21 +228,4 @@ public interface Tweet extends BasicEntry {
                     .trim();
         }
     }
-
-    /**
-     * Available but not implemented. {@code
-     *
-     * long         getCurrentUserRetweetId();
-     * long[]       getContributors();
-     * GeoLocation  getGeoLocation();
-     * Place        getPlace();
-     * Scopes       getScopes();
-     * String       getSource();
-     * String[]     getWithheldInCountries();
-     * boolean      isRetweetedByMe();
-     * boolean      isPossiblySensitive();
-     * boolean      isFavorited();
-     * boolean      isRetweeted();
-     * }
-     */
 }

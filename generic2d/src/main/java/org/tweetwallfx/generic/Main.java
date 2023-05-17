@@ -23,6 +23,7 @@
  */
 package org.tweetwallfx.generic;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Application;
@@ -92,7 +93,7 @@ public class Main extends Application {
 
         scene.setOnKeyTyped((KeyEvent event) -> {
             if (event.isShortcutDown()) {
-                final String character = event.getCharacter().toUpperCase();
+                final String character = event.getCharacter().toUpperCase(Locale.ENGLISH);
                 switch (character) {
                     case "D" -> toggleStatusLine(borderPane, spa, statusLineHost);
                     case "F" -> primaryStage.setFullScreen(!primaryStage.isFullScreen());

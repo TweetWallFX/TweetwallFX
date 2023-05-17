@@ -23,12 +23,11 @@
  */
 package org.tweetwallfx.tweet.impl.mastodon4j;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import org.mastodon4j.core.api.entities.Event;
 import org.mastodon4j.core.api.entities.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tweetwallfx.util.JsonDataConverter;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -50,8 +49,8 @@ public class EventStatusConsumer implements Consumer<Event> {
 
     private void notifyStatusPayload(String payload) {
         LOGGER.debug("Processing payload:\n{}", payload);
-        try (Jsonb jsonb = JsonbBuilder.create()) {
-            final Status status = jsonb.fromJson(payload, Status.class);
+        try {
+            final Status status = JsonDataConverter.convertFromString(payload, Status.class);
             if (statusPredicate.test(status)) {
                 statusConsumer.accept(status);
             } else {

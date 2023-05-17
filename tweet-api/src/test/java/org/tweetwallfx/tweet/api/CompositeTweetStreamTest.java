@@ -56,7 +56,7 @@ public class CompositeTweetStreamTest {
 
     @Test
     void acceptWithoutConsumers() {
-        doNothing().when(logger).info("Redispatching new received tweet to {}", new CopyOnWriteArrayList());
+        doNothing().when(logger).info("Redispatching new received tweet to {}", new CopyOnWriteArrayList<>());
         assertThatNoException().isThrownBy(() -> compositeTweetStream.accept(tweet));
     }
 
