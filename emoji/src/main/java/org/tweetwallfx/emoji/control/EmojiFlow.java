@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +41,10 @@ public class EmojiFlow extends TextFlow {
     private static final Logger LOG = LoggerFactory.getLogger(EmojiFlow.class);
 
     private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<Integer> emojiFitWidthProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<Integer> emojiFitHeightProperty = new SimpleObjectProperty<>();
+    private final int emojiFitWidthProperty = 12;
+    private final int emojiFitHeightProperty = 12;
 
     public EmojiFlow() {
-        this.emojiFitWidthProperty.set(12);
-        this.emojiFitHeightProperty.set(12);
         this.textProperty.addListener((o, old, text) -> updateContent(text));
     }
 
@@ -65,32 +60,30 @@ public class EmojiFlow extends TextFlow {
         List<Object> obs = Emojify.tokenizeStringToTextAndEmoji(message);
         for (Object ob : obs) {
             if (ob instanceof String s) {
-                Text textNode = new Text();
-                textNode.setText(s);
-                textNode.getStyleClass().add("tweetText");
-                textNode.applyCss();
-                this.getChildren().add(textNode);
-                continue;
+                this.getChildren().add(createTextNode(s));
             } else if (ob instanceof Twemoji emoji) {
                 try {
                     this.getChildren().add(createEmojiImageNode(emoji));
                 } catch (RuntimeException e) {
-                    LOG.error("Image with hex code: {} appear not to exist in resources path",emoji.hex(),e);
-                    Text textNode = new Text();
-                    textNode.setText(emoji.hex());
-                    textNode.getStyleClass().add("tweetText");
-                    textNode.applyCss();
-                    this.getChildren().add(textNode);
+                    LOG.error("Image with hex code: {} appear not to exist in resources path", emoji.hex(), e);
+                    this.getChildren().add(createTextNode(emoji.hex()));
                 }
             }
         }
     }
 
+    private Text createTextNode(String text) {
+        Text textNode = new Text();
+        textNode.setText(text);
+        textNode.getStyleClass().add("tweetText");
+        textNode.applyCss();
+        return textNode;
+    }
+
     private ImageView createEmojiImageNode(Twemoji emoji) throws NullPointerException {
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(emojiFitWidthProperty.get());
-        imageView.setFitHeight(emojiFitHeightProperty.get());
-
+        imageView.setFitWidth(emojiFitWidthProperty);
+        imageView.setFitHeight(emojiFitHeightProperty);
         imageView.setImage(new Image(EmojiImageCache.INSTANCE.get(emoji.hex()).getInputStream()));
         return imageView;
     }
