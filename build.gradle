@@ -64,14 +64,11 @@ dependencies {
 }
 
 allprojects {
+    int[] versionSplit = currentVersion.split('[.]').collect{it as int}
+    assert 3 == versionSplit.length : 'currentVersion property requires all three version parts (major, minor, patch)'
+
     group = 'org.tweetwallfx'
-    version = VersionNumber.parse(currentVersion).with {
-        if ('release' == System.getenv('GITHUB_REF_NAME')) {
-            return String.format('%d.%d.%d', major, minor, micro)
-        } else {
-            return String.format('%d.%d-SNAPSHOT', major, minor)
-        }
-    }
+    version = String.format('release' == System.getenv('GITHUB_REF_NAME') ? '%d.%d.%d' : '%d.%d-SNAPSHOT', versionSplit)
     description = 'JavaFX based Tweetwall (' + name + ')'
 
     repositories {
