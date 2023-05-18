@@ -38,10 +38,11 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class MastodonStatus implements Tweet {
+final class MastodonStatus implements Tweet {
+
     private final Status status;
 
-    MastodonStatus(Status status) {
+    public MastodonStatus(Status status) {
         this.status = status;
     }
 

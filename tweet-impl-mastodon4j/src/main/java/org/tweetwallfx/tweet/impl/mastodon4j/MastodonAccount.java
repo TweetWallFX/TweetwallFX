@@ -29,7 +29,7 @@ import org.tweetwallfx.tweet.api.User;
 
 import java.util.Objects;
 
-public class MastodonAccount implements User {
+final class MastodonAccount implements User {
     private final Account account;
 
     public MastodonAccount(Account account) {

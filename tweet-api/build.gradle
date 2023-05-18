@@ -26,5 +26,5 @@ dependencies {
 
     implementation 'org.slf4j:slf4j-api'
 
-    testImplementation 'org.simplify4u:slf4j2-mock'
+    testRuntimeOnly 'org.simplify4u:slf4j2-mock'
 }

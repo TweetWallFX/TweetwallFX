@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.tweet.impl.mastodon4j;
 
-import org.mastodon4j.core.api.entities.Account;
 import org.mastodon4j.core.api.entities.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class AccountPredicate implements Predicate<Status> {
+final class AccountPredicate implements Predicate<Status> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountPredicate.class);
     private final Set<String> userList;
 

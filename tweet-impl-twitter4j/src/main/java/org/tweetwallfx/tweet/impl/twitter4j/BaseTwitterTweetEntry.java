@@ -29,7 +29,7 @@ import twitter4j.v1.TweetEntity;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
-public class BaseTwitterTweetEntry<T extends TweetEntity> implements TweetEntry {
+class BaseTwitterTweetEntry<T extends TweetEntity> implements TweetEntry {
 
     private final T t;
 

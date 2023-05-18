@@ -190,7 +190,9 @@ allprojects {
             javafx {
                 description = 'Java FX libraries'
             }
-            jaxb
+            jaxb {
+                description = 'JAXB libraries'
+            }
 
             all {
                 resolutionStrategy.eachDependency { DependencyResolveDetails details ->
