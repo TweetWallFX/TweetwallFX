@@ -56,8 +56,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.mastodon4j.core.api.BaseMastodonApi.QueryOptions.Type.ACCOUNTS;
-import static org.mastodon4j.core.api.BaseMastodonApi.QueryOptions.Type.HASHTAGS;
 import static org.tweetwallfx.tweet.impl.mastodon4j.config.MastodonSettings.CONFIG_KEY;
 
 public class MastodonTweeter implements Tweeter {
@@ -234,7 +232,7 @@ public class MastodonTweeter implements Tweeter {
 
     private Stream<Status> queryAccount(BaseMastodonApi.QueryOptions queryOptions) {
         try {
-            return client.search(queryOptions.type(ACCOUNTS)).accounts().stream()
+            return client.search(queryOptions.type(BaseMastodonApi.QueryOptions.Type.ACCOUNTS)).accounts().stream()
                     .flatMap(account -> client.accounts().statuses(account.id()).stream());
         } catch (RuntimeException e) {
             LOGGER.error("Unexpected failure on backend", e);
@@ -244,7 +242,7 @@ public class MastodonTweeter implements Tweeter {
 
     private Stream<Status> queryHashtag(BaseMastodonApi.QueryOptions queryOptions) {
         try {
-            return client.search(queryOptions.type(HASHTAGS)).hashtags().stream()
+            return client.search(queryOptions.type(BaseMastodonApi.QueryOptions.Type.HASHTAGS)).hashtags().stream()
                     .flatMap(hashtag -> client.timelines().tag(hashtag.name()).stream());
         } catch (RuntimeException e) {
             LOGGER.error("Unexpected failure on backend", e);

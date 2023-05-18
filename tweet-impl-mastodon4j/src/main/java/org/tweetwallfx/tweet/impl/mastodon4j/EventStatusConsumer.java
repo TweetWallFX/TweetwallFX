@@ -33,16 +33,16 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class EventStatusConsumer implements Consumer<Event> {
+final class EventStatusConsumer implements Consumer<Event> {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventStatusConsumer.class);
     private final Consumer<Status> statusConsumer;
     private final Predicate<Status> statusPredicate;
 
-    EventStatusConsumer(Consumer<Status> statusConsumer) {
+    public EventStatusConsumer(Consumer<Status> statusConsumer) {
         this(statusConsumer, status -> true);
     }
 
-    EventStatusConsumer(Consumer<Status> statusConsumer, Predicate<Status> statusPredicate) {
+    public EventStatusConsumer(Consumer<Status> statusConsumer, Predicate<Status> statusPredicate) {
         this.statusConsumer = Objects.requireNonNull(statusConsumer, "statusConsumer must not be null");
         this.statusPredicate = Objects.requireNonNull(statusPredicate, "statusPredicate must not be null");
     }

@@ -25,7 +25,7 @@ package org.tweetwallfx.tweet.impl.twitter4j;
 
 import org.tweetwallfx.tweet.api.User;
 
-public class TwitterUser implements User {
+final class TwitterUser implements User {
 
     private final twitter4j.v1.User user;
 

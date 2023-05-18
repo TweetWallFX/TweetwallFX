@@ -34,7 +34,8 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class UserMentionPredicate implements Predicate<Status> {
+final class UserMentionPredicate implements Predicate<Status> {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMentionPredicate.class);
     private final Set<String> userList;
 

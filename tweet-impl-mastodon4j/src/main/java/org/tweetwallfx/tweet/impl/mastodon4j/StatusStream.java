@@ -32,7 +32,7 @@ import org.tweetwallfx.tweet.api.TweetStream;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public final class StatusStream implements TweetStream, Consumer<Status> {
+final class StatusStream implements TweetStream, Consumer<Status> {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusStream.class);
 
     private final CopyOnWriteArrayList<Consumer<Tweet>> consumers;
