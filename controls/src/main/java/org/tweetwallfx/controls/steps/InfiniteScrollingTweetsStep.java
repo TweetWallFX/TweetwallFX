@@ -23,7 +23,17 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import humanize.Humanize;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -41,9 +51,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.controls.util.TimeFormatter;
 import org.tweetwallfx.emoji.control.EmojiFlow;
 import org.tweetwallfx.stepengine.api.Controllable;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -57,19 +69,6 @@ import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Infinite TweetStream Animation Step
@@ -273,7 +272,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         nameFlow.setCacheHint(config.tweetFlowNode.cacheHint);
 
         Instant createdAt = displayTweet.getCreatedAt().toInstant(ZoneOffset.UTC);
-        Label naturalTime = new Label(Humanize.naturalTime(Date.from(createdAt), Locale.ENGLISH));
+        Label naturalTime = new Label(TimeFormatter.formatNatural(createdAt, Locale.ENGLISH));
         naturalTime.getStyleClass().add("tweetTime");
         naturalTime.setMinWidth(config.tweetWidth);
         naturalTime.setMaxWidth(config.tweetWidth);
