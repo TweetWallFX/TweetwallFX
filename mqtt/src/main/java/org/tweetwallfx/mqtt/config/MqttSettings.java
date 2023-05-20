@@ -23,12 +23,11 @@
  */
 package org.tweetwallfx.mqtt.config;
 
-import org.tweetwallfx.config.ConfigurationConverter;
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
-import java.net.URL;
 import java.util.UUID;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
+import org.tweetwallfx.config.ConfigurationConverter;
 
 /**
  * POJO for reading Settings concerning the MQTT client.

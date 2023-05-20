@@ -23,7 +23,10 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
+
 import javafx.scene.image.Image;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.URLContent;
@@ -31,8 +34,6 @@ import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
-
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -114,7 +115,6 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
             Boolean preserveRation,
             Boolean smooth) {
 
-        @SuppressWarnings("unused")
         public Config(
                 final Integer profileWidth,
                 final Integer profileHeight,

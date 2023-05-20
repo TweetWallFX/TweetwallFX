@@ -23,7 +23,18 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javafx.scene.image.Image;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.config.Configuration;
@@ -34,17 +45,6 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * Provides an always current list of tweets based on the configured query. The
@@ -183,7 +183,6 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             Integer maxTweets,
             Boolean hideRetweets) {
 
-        @SuppressWarnings("unused")
         public Config(
                 final Integer historySize,
                 final Integer maxTweets,
