@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,22 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import org.tweetwallfx.conference.api.ScheduleSlot;
-import org.tweetwallfx.conference.api.SessionType;
-import org.tweetwallfx.conference.api.Speaker;
-import org.tweetwallfx.conference.api.Talk;
-import org.tweetwallfx.conference.api.Track;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.DateTimeRange;
+import org.tweetwallfx.conference.api.ScheduleSlot;
+import org.tweetwallfx.conference.api.SessionType;
+import org.tweetwallfx.conference.api.Speaker;
+import org.tweetwallfx.conference.api.Talk;
+import org.tweetwallfx.conference.api.Track;
 
 public final class TalkImpl implements Talk {
 

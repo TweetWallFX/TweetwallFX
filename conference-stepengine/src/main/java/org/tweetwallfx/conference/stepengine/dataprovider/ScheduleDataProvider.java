@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.Nullable.valueOrDefault;
+
 import java.time.LocalDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
@@ -31,11 +33,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Schedule Data
@@ -109,7 +111,6 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {
 
-        @SuppressWarnings("unused")
         public Config(
                 final ScheduleType scheduleType,
                 final Long initialDelay,

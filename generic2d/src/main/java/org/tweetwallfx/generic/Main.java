@@ -23,6 +23,9 @@
  */
 package org.tweetwallfx.generic;
 
+import static org.tweetwallfx.mqtt.MqttEvent.RESTART;
+import static org.tweetwallfx.mqtt.MqttEvent.STOP;
+
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +37,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.Level;
+
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.slf4j.Logger;
@@ -44,9 +47,6 @@ import org.tweetwallfx.config.TweetwallSettings;
 import org.tweetwallfx.mqtt.MqttProcess;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
-
-import static org.tweetwallfx.mqtt.MqttEvent.RESTART;
-import static org.tweetwallfx.mqtt.MqttEvent.STOP;
 
 public class Main extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
