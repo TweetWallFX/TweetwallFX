@@ -23,13 +23,12 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -190,12 +189,12 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             if (historySize < 0) {
                 throw new IllegalArgumentException("property 'historySize' must not be a negative number");
             }
-            this.historySize = valueOrDefault(historySize, 50);
+            this.historySize = Objects.requireNonNullElse(historySize, 50);
             if (maxTweets < 0) {
                 throw new IllegalArgumentException("property 'maxTweets' must not be a negative number");
             }
-            this.maxTweets = valueOrDefault(maxTweets, 4);
-            this.hideRetweets = valueOrDefault(hideRetweets, false);
+            this.maxTweets = Objects.requireNonNullElse(maxTweets, 4);
+            this.hideRetweets = Objects.requireNonNullElse(hideRetweets, false);
         }
     }
 }

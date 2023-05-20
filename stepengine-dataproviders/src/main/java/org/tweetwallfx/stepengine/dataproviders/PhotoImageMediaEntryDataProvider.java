@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,10 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import java.util.Arrays;
+import java.util.Objects;
 import javafx.scene.image.Image;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.stepengine.api.DataProvider;
@@ -31,10 +34,6 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-
-import java.util.Arrays;
-
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -92,7 +91,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
         @SuppressWarnings("unused")
         public Config(
                 final Boolean includeRetweets) {
-            this.includeRetweets = valueOrDefault(includeRetweets, false);
+            this.includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
         }
     }
 }

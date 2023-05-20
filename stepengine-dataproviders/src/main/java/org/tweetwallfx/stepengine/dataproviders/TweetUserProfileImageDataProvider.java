@@ -23,8 +23,7 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
-
+import java.util.Objects;
 import javafx.scene.image.Image;
 
 import org.slf4j.Logger;
@@ -120,10 +119,10 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
                 final Integer profileHeight,
                 final Boolean preserveRation,
                 final Boolean smooth) {
-            this.profileWidth = valueOrDefault(profileWidth, 64);
-            this.profileHeight = valueOrDefault(profileHeight, 64);
-            this.preserveRation = valueOrDefault(preserveRation, true);
-            this.smooth = valueOrDefault(smooth, false);
+            this.profileWidth = Objects.requireNonNullElse(profileWidth, 64);
+            this.profileHeight = Objects.requireNonNullElse(profileHeight, 64);
+            this.preserveRation = Objects.requireNonNullElse(preserveRation, true);
+            this.smooth = Objects.requireNonNullElse(smooth, false);
         }
     }
 }

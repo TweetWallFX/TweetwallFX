@@ -23,10 +23,12 @@
  */
 package org.tweetwallfx.tweet.impl.twitter4j.config;
 
-import java.util.Map;
-import org.tweetwallfx.config.ConfigurationConverter;
 import static org.tweetwallfx.util.Nullable.nullable;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
+
+import java.util.Map;
+import java.util.Objects;
+
+import org.tweetwallfx.config.ConfigurationConverter;
 
 /**
  * POJO for reading Settings concerning the twitter client.
@@ -75,12 +77,12 @@ public record TwitterSettings(
             final Boolean extendedMode,
             final OAuth oauth,
             final Boolean ignoreRateLimit) {
-        this.debugEnabled = valueOrDefault(debugEnabled, false);
-        this.enabled = valueOrDefault(enabled, true);
+        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        this.enabled = Objects.requireNonNullElse(enabled, true);
         this.extendedConfig = nullable(extendedConfig);
-        this.extendedMode = valueOrDefault(extendedMode, false);
+        this.extendedMode = Objects.requireNonNullElse(extendedMode, false);
         this.oauth = oauth;
-        this.ignoreRateLimit = valueOrDefault(ignoreRateLimit, true);
+        this.ignoreRateLimit = Objects.requireNonNullElse(ignoreRateLimit, true);
     }
 
     @Override

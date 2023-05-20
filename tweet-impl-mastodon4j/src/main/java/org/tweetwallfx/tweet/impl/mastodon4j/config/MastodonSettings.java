@@ -23,9 +23,9 @@
  */
 package org.tweetwallfx.tweet.impl.mastodon4j.config;
 
-import org.tweetwallfx.config.ConfigurationConverter;
+import java.util.Objects;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
+import org.tweetwallfx.config.ConfigurationConverter;
 
 /**
  * POJO for reading Settings concerning the mastodon client.
@@ -56,8 +56,8 @@ public record MastodonSettings(
             final Boolean enabled,
             final String restUrl,
             final OAuth oauth) {
-        this.debugEnabled = valueOrDefault(debugEnabled, false);
-        this.enabled = valueOrDefault(enabled, true);
+        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        this.enabled = Objects.requireNonNullElse(enabled, true);
         this.restUrl = restUrl;
         this.oauth = oauth;
     }

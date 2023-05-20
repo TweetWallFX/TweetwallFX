@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package org.tweetwallfx.util;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -39,24 +40,6 @@ public final class Nullable {
     }
 
     /**
-     * Produces the given {@code value} if it is non-null or the provided
-     * {@code defaultValue} otherwise.
-     *
-     * @param <T> the type of the value(s)
-     *
-     * @param value the value to turn nullable
-     *
-     * @param defaultValue the non-null default value
-     *
-     * @return the non-null value
-     */
-    public static <T> T valueOrDefault(final T value, final T defaultValue) {
-        return null == value
-                ? defaultValue
-                : value;
-    }
-
-    /**
      * Produces a non-null unmodifiable List from the given {@code list}.
      *
      * @param <T> the type of the list elements
@@ -66,7 +49,7 @@ public final class Nullable {
      * @return the non-null unmodifiable List
      */
     public static <T> List<T> nullable(final List<T> list) {
-        return List.copyOf(valueOrDefault(list, List.of()));
+        return List.copyOf(Objects.requireNonNullElseGet(list, List::of));
     }
 
     /**
@@ -79,7 +62,7 @@ public final class Nullable {
      * @return the non-null unmodifiable Set
      */
     public static <T> Set<T> nullable(final Set<T> set) {
-        return Set.copyOf(valueOrDefault(set, Set.of()));
+        return Set.copyOf(Objects.requireNonNullElseGet(set, Set::of));
     }
 
     /**
@@ -94,6 +77,6 @@ public final class Nullable {
      * @return the non-null unmodifiable Map
      */
     public static <K, V> Map<K, V> nullable(final Map<K, V> map) {
-        return Map.copyOf(valueOrDefault(map, Map.of()));
+        return Map.copyOf(Objects.requireNonNullElseGet(map, Map::of));
     }
 }

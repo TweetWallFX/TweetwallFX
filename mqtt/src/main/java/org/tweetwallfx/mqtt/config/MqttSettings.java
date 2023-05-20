@@ -23,8 +23,7 @@
  */
 package org.tweetwallfx.mqtt.config;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
-
+import java.util.Objects;
 import java.util.UUID;
 
 import org.tweetwallfx.config.ConfigurationConverter;
@@ -65,11 +64,11 @@ public record MqttSettings(
             final String clientId,
             Integer heartbeatSeconds,
             final Auth auth) {
-        this.enabled = valueOrDefault(enabled, true);
-        this.debugEnabled = valueOrDefault(debugEnabled, false);
-        this.brokerUrl = valueOrDefault(brokerUrl, "tcp://127.0.0.1:1883");
-        this.clientId = valueOrDefault(clientId, UUID.randomUUID().toString());
-        this.heartbeatSeconds = checkValue(valueOrDefault(heartbeatSeconds, Integer.valueOf(5)));
+        this.enabled = Objects.requireNonNullElse(enabled, true);
+        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        this.brokerUrl = Objects.requireNonNullElse(brokerUrl, "tcp://127.0.0.1:1883");
+        this.clientId = Objects.requireNonNullElse(clientId, UUID.randomUUID().toString());
+        this.heartbeatSeconds = checkValue(Objects.requireNonNullElse(heartbeatSeconds, 5));
         this.auth = auth;
     }
 
