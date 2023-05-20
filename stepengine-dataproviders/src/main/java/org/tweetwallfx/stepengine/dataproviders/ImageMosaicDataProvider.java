@@ -23,17 +23,6 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import javafx.scene.image.Image;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tweetwallfx.cache.URLContent;
-import org.tweetwallfx.stepengine.api.DataProvider;
-import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -43,8 +32,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javafx.scene.image.Image;
 
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.cache.URLContent;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.tweet.api.Tweet;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
+import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
@@ -111,8 +109,8 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         public Config(
                 final Boolean includeRetweets,
                 final Integer maxCacheSize) {
-            this.includeRetweets = valueOrDefault(includeRetweets, false);
-            this.maxCacheSize = valueOrDefault(maxCacheSize, 40);
+            this.includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
+            this.maxCacheSize = Objects.requireNonNullElse(maxCacheSize, 40);
         }
     }
 

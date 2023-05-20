@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,11 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import java.util.Objects;
 import javafx.scene.image.Image;
+
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public class TrackImageDataProvider implements DataProvider {
 
@@ -70,10 +71,10 @@ public class TrackImageDataProvider implements DataProvider {
                 final Integer profileHeight,
                 final Boolean preserveRation,
                 final Boolean smooth) {
-            this.profileWidth = valueOrDefault(profileWidth, 32);
-            this.profileHeight = valueOrDefault(profileHeight, 32);
-            this.preserveRation = valueOrDefault(preserveRation, true);
-            this.smooth = valueOrDefault(smooth, true);
+            this.profileWidth = Objects.requireNonNullElse(profileWidth, 32);
+            this.profileHeight = Objects.requireNonNullElse(profileHeight, 32);
+            this.preserveRation = Objects.requireNonNullElse(preserveRation, true);
+            this.smooth = Objects.requireNonNullElse(smooth, true);
         }
     }
 }

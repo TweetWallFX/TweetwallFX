@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.Nullable.nullable;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.RatedTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.Nullable.nullable;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Top Talks Week
@@ -118,14 +120,14 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
                 final Long initialDelay,
                 final Long scheduleDuration,
                 final Integer minTotalVotes) {
-            this.nrVotes = valueOrDefault(nrVotes, 5);
+            this.nrVotes = Objects.requireNonNullElse(nrVotes, 5);
             if (this.nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
             }
-            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = valueOrDefault(initialDelay, 0L);
-            this.scheduleDuration = valueOrDefault(scheduleDuration, 300L);
-            this.minTotalVotes = valueOrDefault(nrVotes, 10);
+            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 300L);
+            this.minTotalVotes = Objects.requireNonNullElse(nrVotes, 10);
         }
     }
 }
