@@ -56,19 +56,19 @@ jobs:
       - name: Run assemble tasks with toolchain JDK ${{ matrix.jdk }}
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --refresh-dependencies --warning-mode all assemble
+          arguments: --no-daemon --refresh-dependencies --scan --warning-mode all assemble
 
       # Run test tasks
       - name: Run test tasks with toolchain JDK ${{ matrix.jdk }}
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --warning-mode all test
+          arguments: --no-daemon --scan --warning-mode all test
 
       # Run check tasks
       - name: Run check tasks with toolchain JDK ${{ matrix.jdk }}
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --warning-mode all check
+          arguments: --no-daemon --scan --warning-mode all check
 
       # Archive test reports
       - name: Archive build logs
@@ -87,6 +87,6 @@ jobs:
         if: ${{ (matrix.jdk == '17') && (github.event_name == 'push') && success() }}
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --warning-mode all publish
+          arguments: --no-daemon --scan --warning-mode all publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

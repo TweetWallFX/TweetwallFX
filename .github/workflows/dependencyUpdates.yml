@@ -43,7 +43,7 @@ jobs:
       - name: Run dependencyUpdates task
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --refresh-dependencies dependencyUpdates
+          arguments: --no-daemon --refresh-dependencies --scan dependencyUpdates
 
       # Store dependencyUpdates result files
       - name: Store dependencyUpdates result files
@@ -57,7 +57,7 @@ jobs:
       - name: Run dependency-analysis task
         uses: gradle/gradle-build-action@v2.4.2
         with:
-          arguments: --no-daemon --refresh-dependencies buildHealth
+          arguments: --no-daemon --refresh-dependencies --scan buildHealth
 
       # Store dependency-analysis result files
       - name: Store dependency-analysis result files
