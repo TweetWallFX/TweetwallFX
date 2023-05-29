@@ -386,6 +386,13 @@ allprojects {
     }
 }
 
+if (System.env.CI) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}
+
 tasks.register('createFolders') {
     description = 'Creates the folders for the projects and sourceSets should they not exist.'
 
