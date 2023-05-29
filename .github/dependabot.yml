@@ -176,6 +176,20 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
+    directory: "/emoji"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
     directory: "/filterchain"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
@@ -218,20 +232,6 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
-    directory: "/stepengine-api"
-    # Raise pull requests for version updates on `master` branch
-    target-branch: "master"
-    schedule:
-      interval: "daily"
-      # Check for npm updates at 0815hrs UTC
-      time: "08:15"
-    reviewers:
-       - "TweetWallFX/tweetwallfx-admins"
-    # Allow up to N open pull requests (independant of source)
-    open-pull-requests-limit: 50
-
-  - package-ecosystem: "gradle"
-    # Any gradle based dependencies
     directory: "/mqtt"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
@@ -241,6 +241,20 @@ updates:
       time: "08:15"
     reviewers:
       - "TweetWallFX/tweetwallfx-admins"
+    # Allow up to N open pull requests (independant of source)
+    open-pull-requests-limit: 50
+
+  - package-ecosystem: "gradle"
+    # Any gradle based dependencies
+    directory: "/stepengine-api"
+    # Raise pull requests for version updates on `master` branch
+    target-branch: "master"
+    schedule:
+      interval: "daily"
+      # Check for npm updates at 0815hrs UTC
+      time: "08:15"
+    reviewers:
+       - "TweetWallFX/tweetwallfx-admins"
     # Allow up to N open pull requests (independant of source)
     open-pull-requests-limit: 50
 
@@ -302,7 +316,7 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
-    directory: "/tweet-impl-twitter4j"
+    directory: "/tweet-impl-mastodon4j"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
     schedule:
@@ -316,7 +330,7 @@ updates:
 
   - package-ecosystem: "gradle"
     # Any gradle based dependencies
-    directory: "/tweet-impl-mastodon4j"
+    directory: "/tweet-impl-twitter4j"
     # Raise pull requests for version updates on `master` branch
     target-branch: "master"
     schedule:
