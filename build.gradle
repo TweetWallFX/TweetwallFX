@@ -220,7 +220,7 @@ allprojects {
 
             javafx group: 'org.openjfx', name: 'javafx-base', version: '20.0.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-graphics', version: '20.0.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '20.0.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '20.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '20.0.1', classifier: javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.2'
