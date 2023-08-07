@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,19 +23,19 @@
  */
 package org.tweetwallfx.util;
 
-import org.assertj.core.data.MapEntry;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+import static org.tweetwallfx.util.ToString.mapEntry;
+import static org.tweetwallfx.util.ToString.mapOf;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
-import static org.tweetwallfx.util.ToString.mapEntry;
-import static org.tweetwallfx.util.ToString.mapOf;
+import org.assertj.core.data.MapEntry;
+import org.junit.jupiter.api.Test;
 
 class ToStringTest {
     private static final String KEY1 = "one";
@@ -182,6 +182,19 @@ class ToStringTest {
     }
 
     @Test
+    void testToStringParamsMapSimpleEntries1WithNullSuper() {
+        final String string = createToString(this, Collections.singletonMap(
+                KEY1, VALUE1
+        ), null);
+
+        System.out.println(string);
+        assertThat(string).isEqualTo("""
+                ToStringTest {
+                    one: 1
+                }""");
+    }
+
+    @Test
     void testToStringParamsMapSimpleEntries2() {
         final String string = createToString(this, map(
                 KEY1, VALUE1,
@@ -310,6 +323,19 @@ class ToStringTest {
                         two: 2
                     }
                 }""");
+    }
+
+    @Test
+    void testToStringParamsMapMapEntrySingleLine() {
+        final String string = createToString(this, map("flag", true,
+                "map", map(
+                        "one", 1,
+                        "two", 2
+                )
+        ), "HelloWorld", true);
+
+        System.out.println(string);
+        assertThat(string).isEqualTo("ToStringTest {flag: true, map: {one: 1, two: 2}} extends HelloWorld");
     }
 
     @Test

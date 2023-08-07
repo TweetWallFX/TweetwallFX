@@ -23,12 +23,16 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.time.Instant;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.Room;
@@ -94,13 +98,13 @@ public class SessionData {
 
     @Override
     public String toString() {
-        return new StringBuilder("SessionData")
-                .append("{room=").append(room)
-                .append(", speakers=").append(speakers)
-                .append(", title=").append(title)
-                .append(", beginTime=").append(beginTime)
-                .append(", endTime=").append(endTime)
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "room", getRoom(),
+                "speakers", speakers,
+                "title", title,
+                "beginTime", getBeginTime(),
+                "endTime", endTime
+            ),
+            true);
     }
 }

@@ -26,6 +26,7 @@ dependencies {
     api project(':tweetwallfx-conference-api')
     api 'jakarta.ws.rs:jakarta.ws.rs-api'
 
+    implementation project(':tweetwallfx-utility')
     implementation 'org.slf4j:slf4j-api'
 
     runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'

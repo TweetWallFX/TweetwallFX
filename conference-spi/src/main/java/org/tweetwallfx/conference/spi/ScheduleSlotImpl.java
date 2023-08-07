@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,17 @@
  */
 package org.tweetwallfx.conference.spi;
 
+import static org.tweetwallfx.util.ToString.createToString;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+
 import org.tweetwallfx.conference.api.DateTimeRange;
 import org.tweetwallfx.conference.api.Room;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.Talk;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 public final class ScheduleSlotImpl implements ScheduleSlot {
 
@@ -81,15 +85,14 @@ public final class ScheduleSlotImpl implements ScheduleSlot {
 
     @Override
     public String toString() {
-        return new StringBuilder("ScheduleSlotImpl")
-                .append("{id=").append(getId())
-                .append(", overflow=").append(isOverflow())
-                .append(", dateTimeRange=").append(getDateTimeRange())
-                .append(", favoriteCount=").append(getFavoriteCount())
-                .append(", room=").append(getRoom())
-                .append(", talk=").append(getTalk())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "overflow", isOverflow(),
+                "dateTimeRange", getDateTimeRange(),
+                "favoriteCount", getFavoriteCount(),
+                "room", getRoom(),
+                "talk", getTalk()
+            ), true);
     }
 
     public static Builder builder() {

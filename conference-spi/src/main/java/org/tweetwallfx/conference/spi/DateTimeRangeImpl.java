@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,13 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.DateTimeRange;
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.time.Instant;
+import java.util.Map;
 import java.util.Objects;
+
+import org.tweetwallfx.conference.api.DateTimeRange;
 
 /**
  * POJO of a date/time range.
@@ -52,11 +56,10 @@ public final class DateTimeRangeImpl implements DateTimeRange {
 
     @Override
     public String toString() {
-        return new StringBuilder("DateTimeRangeImpl")
-                .append("{end=").append(getEnd())
-                .append(", start=").append(getStart())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "end", getEnd(),
+                "start", getStart()
+            ), true);
     }
 
     public static Builder builder() {

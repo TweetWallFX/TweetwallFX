@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,15 @@
  */
 package org.tweetwallfx.conference.stepengine.filter;
 
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.ConferenceClient;
@@ -37,8 +41,6 @@ import org.tweetwallfx.filterchain.FilterStep;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
 import org.tweetwallfx.tweet.api.filter.AcceptFromSenderFilterStep;
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking the sending
@@ -157,7 +159,7 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
         public String toString() {
             return createToString(this, map(
                     "checkRetweeted", isCheckRetweeted()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 

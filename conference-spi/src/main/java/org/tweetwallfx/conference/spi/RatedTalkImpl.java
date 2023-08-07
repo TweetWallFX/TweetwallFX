@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,11 @@
  */
 package org.tweetwallfx.conference.spi;
 
+import static org.tweetwallfx.util.ToString.createToString;
+
+import java.util.Map;
 import java.util.Objects;
+
 import org.tweetwallfx.conference.api.RatedTalk;
 import org.tweetwallfx.conference.api.Talk;
 
@@ -56,12 +60,11 @@ public final class RatedTalkImpl implements RatedTalk {
 
     @Override
     public String toString() {
-        return new StringBuilder("RatedTalkImpl")
-                .append("{averageRating=").append(getAverageRating())
-                .append(", totalRating=").append(getTotalRating())
-                .append(", talk=").append(getTalk())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "averageRating", getAverageRating(),
+                "totalRating", getTotalRating(),
+                "talk", getTalk()
+            ), true);
     }
 
     public static Builder builder() {

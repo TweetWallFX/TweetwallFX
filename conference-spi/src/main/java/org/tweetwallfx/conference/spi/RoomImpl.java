@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,12 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.Room;
+import static org.tweetwallfx.util.ToString.createToString;
+
+import java.util.Map;
 import java.util.Objects;
+
+import org.tweetwallfx.conference.api.Room;
 
 public final class RoomImpl implements Room {
 
@@ -62,13 +66,13 @@ public final class RoomImpl implements Room {
 
     @Override
     public String toString() {
-        return new StringBuilder("RoomImpl")
-                .append("{id=").append(getId())
-                .append(", name=").append(getName())
-                .append(", capacity=").append(getCapacity())
-                .append(", weight=").append(getWeight())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "name", getName(),
+                "capacity", getCapacity(),
+                "weight", getWeight()
+            ),
+            true);
     }
 
     public static Builder builder() {
