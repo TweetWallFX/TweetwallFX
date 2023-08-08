@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,14 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.SessionType;
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.tweetwallfx.conference.api.SessionType;
 
 public final class SessionTypeImpl implements SessionType {
 
@@ -78,15 +82,15 @@ public final class SessionTypeImpl implements SessionType {
 
     @Override
     public String toString() {
-        return new StringBuilder("SessionTypeImpl")
-                .append("{id=").append(getId())
-                .append(", title=").append(getName())
-                .append(", description=").append(getDescription())
-                .append(", duration=").append(getDuration())
-                .append(", pause=").append(isPause())
-                .append(", color=").append(getColor())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "title", getName(),
+                "description", getDescription(),
+                "duration", getDuration(),
+                "pause", isPause(),
+                "color", getColor()
+            ),
+            true);
     }
 
     public static Builder builder() {

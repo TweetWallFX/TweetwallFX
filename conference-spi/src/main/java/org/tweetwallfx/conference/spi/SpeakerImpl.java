@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,8 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.ConferenceClient;
-import org.tweetwallfx.conference.api.Speaker;
-import org.tweetwallfx.conference.api.Talk;
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +33,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
+
+import org.tweetwallfx.conference.api.ConferenceClient;
+import org.tweetwallfx.conference.api.Speaker;
+import org.tweetwallfx.conference.api.Talk;
 
 public final class SpeakerImpl implements Speaker {
 
@@ -97,16 +100,16 @@ public final class SpeakerImpl implements Speaker {
 
     @Override
     public String toString() {
-        return new StringBuilder("SpeakerImpl")
-                .append("{id=").append(getId())
-                .append(", firstName=").append(getFirstName())
-                .append(", fullName=").append(getFullName())
-                .append(", lastName=").append(getLastName())
-                .append(", avatarURL=").append(getAvatarURL())
-                .append(", socialMedia=").append(getSocialMedia())
-                .append(", talks=").append(getTalks())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "firstName", getFirstName(),
+                "fullName", getFullName(),
+                "lastName", getLastName(),
+                "avatarURL", getAvatarURL(),
+                "socialMedia", getSocialMedia(),
+                "talks", getTalks()
+            ),
+            true);
     }
 
     public static Builder builder() {

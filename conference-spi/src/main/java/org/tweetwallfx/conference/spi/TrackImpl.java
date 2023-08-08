@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,12 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.Track;
+import static org.tweetwallfx.util.ToString.createToString;
+
+import java.util.Map;
 import java.util.Objects;
+
+import org.tweetwallfx.conference.api.Track;
 
 public final class TrackImpl implements Track {
 
@@ -62,13 +66,13 @@ public final class TrackImpl implements Track {
 
     @Override
     public String toString() {
-        return new StringBuilder("TrackImpl")
-                .append("{id=").append(getId())
-                .append(", name=").append(getName())
-                .append(", description=").append(getDescription())
-                .append(", avatarURL=").append(getAvatarURL())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "name", getName(),
+                "description", getDescription(),
+                "avatarURL", getAvatarURL()
+            ),
+            true);
     }
 
     public static Builder builder() {

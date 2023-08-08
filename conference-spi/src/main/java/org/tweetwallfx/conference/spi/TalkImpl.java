@@ -23,10 +23,13 @@
  */
 package org.tweetwallfx.conference.spi;
 
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -116,18 +119,18 @@ public final class TalkImpl implements Talk {
 
     @Override
     public String toString() {
-        return new StringBuilder("TalkImpl")
-                .append("{id=").append(getId())
-                .append(", name=").append(getName())
-                .append(", audienceLevel=").append(getAudienceLevel())
-                .append(", sessionType=").append(getSessionType())
-                .append(", language=").append(getLanguage())
-                .append(", scheduleSlots=").append(getScheduleSlots())
-                .append(", speakers=").append(getSpeakers())
-                .append(", tags=").append(getTags())
-                .append(", track=").append(getTrack())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "name", getName(),
+                "audienceLevel", getAudienceLevel(),
+                "sessionType", getSessionType(),
+                "language", getLanguage(),
+                "scheduleSlots", getScheduleSlots(),
+                "speakers", getSpeakers(),
+                "tags", getTags(),
+                "track", getTrack()
+            ),
+            true);
     }
 
     public static Builder builder() {
