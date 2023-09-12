@@ -163,7 +163,7 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
         }
     }
 
-    private static class SpeakerTwitterHandles {
+    public static class SpeakerTwitterHandles {
 
         private final Set<String> twitterHandles;
 

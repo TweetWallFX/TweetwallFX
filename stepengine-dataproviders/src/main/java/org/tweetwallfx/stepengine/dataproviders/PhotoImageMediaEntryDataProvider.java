@@ -85,7 +85,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
         }
     }
 
-    private static record Config(
+    public static record Config(
             Boolean includeRetweets) {
 
         @SuppressWarnings("unused")

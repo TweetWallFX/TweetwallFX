@@ -139,7 +139,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 1800L}.
      */
-    private static record Config(
+    public static record Config(
             String noImageResource,
             Map<String, String> urlReplacements,
             ScheduleType scheduleType,
