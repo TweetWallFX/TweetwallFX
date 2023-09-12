@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +69,12 @@ public class SessionData {
         this.title = talk.getName();
         this.beginTime = slot.getDateTimeRange().getStart();
         this.endTime = slot.getDateTimeRange().getEnd();
-        // session data for schedule with talk always has its favorite count
-        this.favouritesCount = slot.getFavoriteCount().getAsInt();
+        // session data for schedule with talk may have a favorite count as well as the talk itself may have a favorite count
+        this.favouritesCount = IntStream
+                .concat(slot.getFavoriteCount().stream(), talk.getFavoriteCount().stream())
+                .filter(i -> i > 0)
+                .findFirst()
+                .orElse(0);
         this.trackImageUrl = talk.getTrack().getAvatarURL();
     }
 

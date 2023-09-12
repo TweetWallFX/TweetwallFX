@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -49,6 +50,7 @@ public final class TalkImpl implements Talk {
     private final String name;
     private final String audienceLevel;
     private final SessionType sessionType;
+    private final OptionalInt favoriteCount;
     private final Locale language;
     private final List<ScheduleSlot> scheduleSlots;
     private final List<Speaker> speakers;
@@ -60,6 +62,7 @@ public final class TalkImpl implements Talk {
         this.name = Objects.requireNonNull(builder.name, "name must not be null");
         this.audienceLevel = Objects.requireNonNull(builder.audienceLevel, "audienceLevel must not be null");
         this.sessionType = Objects.requireNonNull(builder.sessionType, "sessionType must not be null");
+        this.favoriteCount = null == builder.favoriteCount ? OptionalInt.empty() : OptionalInt.of(builder.favoriteCount);
         this.language = Objects.requireNonNull(builder.language, "language must not be null");
         this.scheduleSlots = List.copyOf(builder.scheduleSlots);
         this.speakers = List.copyOf(builder.speakers);
@@ -85,6 +88,11 @@ public final class TalkImpl implements Talk {
     @Override
     public SessionType getSessionType() {
         return sessionType;
+    }
+
+    @Override
+    public OptionalInt getFavoriteCount() {
+        return favoriteCount;
     }
 
     @Override
@@ -124,6 +132,7 @@ public final class TalkImpl implements Talk {
                 "name", getName(),
                 "audienceLevel", getAudienceLevel(),
                 "sessionType", getSessionType(),
+                "favoriteCount", getFavoriteCount(),
                 "language", getLanguage(),
                 "scheduleSlots", getScheduleSlots(),
                 "speakers", getSpeakers(),
@@ -144,6 +153,7 @@ public final class TalkImpl implements Talk {
         private String name;
         private String audienceLevel;
         private SessionType sessionType;
+        private Integer favoriteCount;
         private Locale language;
         private Set<ScheduleSlot> scheduleSlots = new TreeSet<>(Comparator
                 .comparing(ScheduleSlot::getDateTimeRange, Comparator.comparing(DateTimeRange::getStart))
@@ -189,6 +199,11 @@ public final class TalkImpl implements Talk {
 
         public Builder withSessionType(final SessionType sessionType) {
             this.sessionType = Objects.requireNonNull(sessionType, "sessionType must not be null");
+            return this;
+        }
+
+        public Builder withFavoriteCount(final Integer favoriteCount) {
+            this.favoriteCount = favoriteCount;
             return this;
         }
 
