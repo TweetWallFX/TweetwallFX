@@ -205,7 +205,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
      * Param {@code checkRetweeted} a boolean flag controlling whether for a
      * retweet the retweeted Tweet is also checked
      */
-    private static record Config(
+    public static record Config(
             Boolean checkRetweeted,
             SafeTypeConfig adult,
             SafeTypeConfig medical,
@@ -230,7 +230,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         }
     }
 
-    private static record SafeTypeConfig(
+    public static record SafeTypeConfig(
             GoogleLikelihood acceptableLikelyhood) {
 
         public SafeTypeConfig(final GoogleLikelihood acceptableLikelyhood) {

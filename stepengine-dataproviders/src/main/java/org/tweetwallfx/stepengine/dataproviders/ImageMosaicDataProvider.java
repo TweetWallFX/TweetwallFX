@@ -101,7 +101,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         }
     }
 
-    private static record Config(
+    public static record Config(
             Boolean includeRetweets,
             Integer maxCacheSize) {
 

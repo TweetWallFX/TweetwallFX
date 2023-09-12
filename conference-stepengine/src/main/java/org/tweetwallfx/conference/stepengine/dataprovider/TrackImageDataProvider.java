@@ -59,7 +59,7 @@ public class TrackImageDataProvider implements DataProvider {
         }
     }
 
-    private static record Config(
+    public static record Config(
             Integer profileWidth,
             Integer profileHeight,
             Boolean preserveRation,

@@ -106,7 +106,7 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
      * Param {@code minTotalVotes} Minimum number of total votes for a rated
      * talk to be displayed. Defaults to {@code 10}.
      */
-    private static record Config(
+    public static record Config(
             Integer nrVotes,
             ScheduleType scheduleType,
             Long initialDelay,

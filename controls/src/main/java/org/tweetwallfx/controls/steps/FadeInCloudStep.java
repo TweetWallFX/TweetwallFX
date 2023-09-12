@@ -168,7 +168,7 @@ public class FadeInCloudStep implements Step {
         }
     }
 
-    private static class Config extends AbstractConfig {
+    public static class Config extends AbstractConfig {
         public double layoutX = 0;
         public double layoutY = 0;
         public double width = 0;
