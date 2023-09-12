@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.tweetwallfx.conference.api;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * POJO of a talk.
@@ -52,6 +53,11 @@ public interface Talk extends Identifiable {
      * @return the {@link SessionType}
      */
     SessionType getSessionType();
+
+    /**
+     * {@return the number of times this talk was marked as a favorite}
+     */
+    OptionalInt getFavoriteCount();
 
     /**
      * Returns the {@link Locale} of the language the talk will be held in.
