@@ -44,6 +44,7 @@ public final class SpeakerImpl implements Speaker {
     private final String firstName;
     private final String fullName;
     private final String lastName;
+    private final Optional<String> company;
     private final String avatarURL;
     private final Map<String, String> socialMedia;
     private final List<Talk> talks;
@@ -53,6 +54,7 @@ public final class SpeakerImpl implements Speaker {
         this.firstName = Objects.requireNonNull(builder.firstName, "firstName must not be null");
         this.fullName = Objects.requireNonNull(builder.fullName, "fullName must not be null");
         this.lastName = Objects.requireNonNull(builder.lastName, "lastName must not be null");
+        this.company = Optional.ofNullable(builder.company);
         this.avatarURL = Objects.requireNonNull(builder.avatarURL, "avatarURL must not be null");
         this.socialMedia = Map.copyOf(builder.socialMedia);
         this.talks = List.copyOf(builder.talks);
@@ -89,6 +91,11 @@ public final class SpeakerImpl implements Speaker {
     }
 
     @Override
+    public Optional<String> getCompany() {
+        return company;
+    }
+
+    @Override
     public String getAvatarURL() {
         return avatarURL;
     }
@@ -105,6 +112,7 @@ public final class SpeakerImpl implements Speaker {
                 "firstName", getFirstName(),
                 "fullName", getFullName(),
                 "lastName", getLastName(),
+                "company", getCompany(),
                 "avatarURL", getAvatarURL(),
                 "socialMedia", getSocialMedia(),
                 "talks", getTalks()
@@ -125,6 +133,7 @@ public final class SpeakerImpl implements Speaker {
         private Map<String, String> socialMedia = new TreeMap<>();
         private List<Talk> talks = new ArrayList<>();
         private String id;
+        private String company;
         private String avatarURL;
 
         private Builder() {
@@ -159,6 +168,11 @@ public final class SpeakerImpl implements Speaker {
 
         public Builder withLastName(final String lastName) {
             this.lastName = Objects.requireNonNull(lastName, "lastName must not be null");
+            return this;
+        }
+
+        public Builder withCompany(final String company) {
+            this.company = company;
             return this;
         }
 

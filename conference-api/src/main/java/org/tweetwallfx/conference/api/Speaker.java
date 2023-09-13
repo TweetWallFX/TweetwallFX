@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,11 @@ public interface Speaker extends Identifiable, Avatar {
      * @return the last name
      */
     String getLastName();
+
+    /**
+     * {@return the company name of this speaker}
+     */
+    Optional<String> getCompany();
 
     /**
      * Returns the social media ids of this speaker.
