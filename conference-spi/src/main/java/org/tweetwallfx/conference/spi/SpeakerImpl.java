@@ -37,6 +37,7 @@ import java.util.TreeMap;
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
+import org.tweetwallfx.conference.spi.util.Optionals;
 
 public final class SpeakerImpl implements Speaker {
 
@@ -54,7 +55,7 @@ public final class SpeakerImpl implements Speaker {
         this.firstName = Objects.requireNonNull(builder.firstName, "firstName must not be null");
         this.fullName = Objects.requireNonNull(builder.fullName, "fullName must not be null");
         this.lastName = Objects.requireNonNull(builder.lastName, "lastName must not be null");
-        this.company = Optional.ofNullable(builder.company);
+        this.company = Optionals.nonEmptyString(builder.company);
         this.avatarURL = Objects.requireNonNull(builder.avatarURL, "avatarURL must not be null");
         this.socialMedia = Map.copyOf(builder.socialMedia);
         this.talks = List.copyOf(builder.talks);

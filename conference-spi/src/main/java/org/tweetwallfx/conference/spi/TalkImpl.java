@@ -43,6 +43,7 @@ import org.tweetwallfx.conference.api.SessionType;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
 import org.tweetwallfx.conference.api.Track;
+import org.tweetwallfx.conference.spi.util.Optionals;
 
 public final class TalkImpl implements Talk {
 
@@ -62,7 +63,7 @@ public final class TalkImpl implements Talk {
         this.name = Objects.requireNonNull(builder.name, "name must not be null");
         this.audienceLevel = Objects.requireNonNull(builder.audienceLevel, "audienceLevel must not be null");
         this.sessionType = Objects.requireNonNull(builder.sessionType, "sessionType must not be null");
-        this.favoriteCount = null == builder.favoriteCount ? OptionalInt.empty() : OptionalInt.of(builder.favoriteCount);
+        this.favoriteCount = Optionals.integer(builder.favoriteCount);
         this.language = Objects.requireNonNull(builder.language, "language must not be null");
         this.scheduleSlots = List.copyOf(builder.scheduleSlots);
         this.speakers = List.copyOf(builder.speakers);
