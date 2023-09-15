@@ -34,6 +34,7 @@ import org.tweetwallfx.conference.api.DateTimeRange;
 import org.tweetwallfx.conference.api.Room;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.Talk;
+import org.tweetwallfx.conference.spi.util.Optionals;
 
 public final class ScheduleSlotImpl implements ScheduleSlot {
 
@@ -48,7 +49,7 @@ public final class ScheduleSlotImpl implements ScheduleSlot {
         this.id = Objects.requireNonNull(builder.id, "id must not be null");
         this.overflow = Objects.requireNonNull(builder.overflow, "overflow must not be null");
         this.dateTimeRange = Objects.requireNonNull(builder.dateTimeRange, "dateTimeRange must not be null");
-        this.favoriteCount = null == builder.favoriteCount ? OptionalInt.empty() : OptionalInt.of(builder.favoriteCount);
+        this.favoriteCount = Optionals.integer(builder.favoriteCount);
         this.room = Objects.requireNonNull(builder.room, "room must not be null");
         this.talk = Optional.ofNullable(builder.talk);
     }

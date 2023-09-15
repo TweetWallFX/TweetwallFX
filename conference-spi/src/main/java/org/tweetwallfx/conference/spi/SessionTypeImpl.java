@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.tweetwallfx.conference.api.SessionType;
+import org.tweetwallfx.conference.spi.util.Optionals;
 
 public final class SessionTypeImpl implements SessionType {
 
@@ -44,8 +45,8 @@ public final class SessionTypeImpl implements SessionType {
     private SessionTypeImpl(final Builder builder) {
         this.id = Objects.requireNonNull(builder.id, "id must not be null");
         this.name = Objects.requireNonNull(builder.name, "name must not be null");
-        this.description = Optional.ofNullable(builder.description);
-        this.color = Optional.ofNullable(builder.color);
+        this.description = Optionals.nonEmptyString(builder.description);
+        this.color = Optionals.nonEmptyString(builder.color);
         this.duration = Objects.requireNonNull(builder.duration, "duration must not be null");
         this.pause = Objects.requireNonNull(builder.pause, "pause must not be null");
     }
