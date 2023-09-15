@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -39,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -50,11 +50,13 @@ import javafx.util.Duration;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.stepengine.dataprovider.ScheduleDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.SessionData;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
 import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.emoji.control.EmojiFlow;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
@@ -68,8 +70,8 @@ public class ShowSchedule implements Step {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowSchedule.class);
     private static final ZoneId ZONE_ID = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.zone"))
-                .map(ZoneId::of)
-                .orElseGet(ZoneId::systemDefault);
+            .map(ZoneId::of)
+            .orElseGet(ZoneId::systemDefault);
     private static final DateTimeFormatter HOUR_MINUTES = DateTimeFormatter.ofPattern("HH:mm");
     private final Config config;
 
@@ -115,9 +117,18 @@ public class ShowSchedule implements Step {
             int row = 0;
 
             Iterator<SessionData> iterator = dataProvider.getFilteredSessionData().iterator();
+            String oldRoom = null;
             while (iterator.hasNext()) {
-                Pane sessionPane = createSessionNode(context, iterator.next());
-                double sessionWidth = (config.width - config.sessionHGap) / 2.0;
+                var sessionData = iterator.next();
+                if (null == oldRoom) {
+                    oldRoom = sessionData.room.getName();
+                }
+                if (config.autoSeparateRoomTypes && col != 0 && !oldRoom.startsWith(sessionData.room.getName().substring(0, 2))) {
+                    row++;
+                    col = 0;
+                }
+                Pane sessionPane = createSessionNode(context, sessionData);
+                double sessionWidth = (config.width - (config.columns - 1) * config.sessionHGap) / config.columns;
                 sessionPane.setMinWidth(sessionWidth);
                 sessionPane.setMaxWidth(sessionWidth);
                 sessionPane.setPrefWidth(sessionWidth);
@@ -127,10 +138,12 @@ public class ShowSchedule implements Step {
                 sessionPane.setLayoutX(col * (sessionWidth + config.sessionHGap));
                 sessionPane.setLayoutY(config.titleHeight + config.sessionVGap + (config.sessionHeight + config.sessionVGap) * row);
                 scheduleNode.getChildren().add(sessionPane);
-                col = (col == 0) ? 1 : 0;
-                if (col == 0) {
+                col++;
+                if (col == config.columns) {
                     row++;
+                    col = 0;
                 }
+                oldRoom = sessionData.room.getName();
             }
 
             Platform.runLater(() -> {
@@ -151,10 +164,23 @@ public class ShowSchedule implements Step {
     }
 
     private Pane createSessionNode(final MachineContext context, final SessionData sessionData) {
-        var speakerNames = new Label(sessionData.speakers.stream().collect(Collectors.joining(", ")));
-        speakerNames.setWrapText(true);
-        speakerNames.setTextAlignment(TextAlignment.RIGHT);
-        speakerNames.getStyleClass().add("speakerName");
+        var speakerNames = new VBox();
+        speakerNames.getStyleClass().add("speakerNames");
+
+        sessionData.speakerObjects.stream().forEach(speaker -> {
+            var speakerName = new Label(speaker.getFullName());
+            speakerName.setTextAlignment(TextAlignment.RIGHT);
+            speakerName.getStyleClass().add("speakerName");
+            speakerNames.getChildren().add(speakerName);
+            if (config.showCompanyName) {
+                speaker.getCompany().ifPresent(company -> {
+                    var companyName = new Label("(" + company + ")");
+                    companyName.setTextAlignment(TextAlignment.RIGHT);
+                    companyName.getStyleClass().add("companyName");
+                    speakerNames.getChildren().add(companyName);
+                });
+            }
+        });
 
         var room = new Label(sessionData.room.getName());
         room.getStyleClass().add("room");
@@ -169,31 +195,25 @@ public class ShowSchedule implements Step {
 
         if (config.showAvatar) {
             var speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
-            var speakerImages = new HBox(config.avatarSpacing, sessionData.speakerObjects.stream()
-                    .map(speakerImageProvider::getSpeakerImage)
-                    .map(ImageView::new)
-                    .peek(img -> {
-                        // general image sizing
-                        img.getStyleClass().add("speakerImage");
-                        img.setFitHeight(config.avatarSize);
-                        img.setFitWidth(config.avatarSize);
-                    })
-                    .peek(img -> {
-                        // avatar image clipping
-                        if (config.circularAvatar) {
-                            Circle circle = new Circle(config.avatarSize/2f, config.avatarSize/2f, config.avatarSize/2f);
-                            img.setClip(circle);
-                        } else {
-                            Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
-                            clip.setArcWidth(config.avatarArcSize);
-                            clip.setArcHeight(config.avatarArcSize);
-                            img.setClip(clip);
-                        }
-                    })
-                    .toArray(Node[]::new)
-            );
-
-            topLeft = new HBox(4, topLeftVBox, speakerImages);
+            if (config.compressedAvatars && sessionData.speakerObjects.size() >= config.compressedAvatarsLimit) {
+                var speakerImages = new Pane();
+                var images = sessionData.speakerObjects.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize * 3 / 4d + 2));
+                    image.setLayoutY(i % 2 * config.avatarSize / 2d + 2);
+                    speakerImages.getChildren().add(image);
+                }
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            } else {
+                var speakerImages = new HBox(config.avatarSpacing, sessionData.speakerObjects.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toArray(Node[]::new)
+                );
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            }
         }
 
         if (config.showFavourite && sessionData.favouritesCount >= 0) {
@@ -209,9 +229,10 @@ public class ShowSchedule implements Step {
             topLeftVBox.getChildren().add(favourites);
         }
 
-        var title = new Label(sessionData.title);
-        title.setWrapText(true);
-        title.setAlignment(Pos.BOTTOM_LEFT);
+        var title = new EmojiFlow();
+        title.setText(sessionData.title);
+        title.setEmojiFitWidth(15);
+        title.setEmojiFitHeight(15);
         title.getStyleClass().add("title");
         title.setMaxHeight(Double.MAX_VALUE);
 
@@ -236,7 +257,28 @@ public class ShowSchedule implements Step {
         var bpSessionBottomPane = new BorderPane();
         bpSessionBottomPane.getStyleClass().add("sessionBottomPane");
         bpSessionBottomPane.setRight(trackImageView);
-        bpSessionBottomPane.setCenter(bpTitle);
+        if (config.showTags) {
+            var tags = new FlowPane();
+            tags.getStyleClass().add("tags");
+            sessionData.tags.stream().forEach(tag -> {
+                var tagLabel = new Label(tag);
+                tagLabel.getStyleClass().add("tagLabel");
+                tags.getChildren().add(tagLabel);
+            });
+
+            var bpTags = new BorderPane();
+            bpTags.getStyleClass().add("tagPane");
+            BorderPane.setAlignment(tags, Pos.BOTTOM_LEFT);
+            bpTags.setLeft(tags);
+
+            VBox bpCenter = new VBox(bpTitle, bpTags);
+            bpCenter.getStyleClass().add("centerFlow");
+
+            bpSessionBottomPane.setCenter(bpCenter);
+        } else {
+            bpSessionBottomPane.setRight(trackImageView);
+            bpSessionBottomPane.setCenter(bpTitle);
+        }
 
         var bpSessionPane = new BorderPane();
         bpSessionPane.getStyleClass().add("scheduleSession");
@@ -248,6 +290,30 @@ public class ShowSchedule implements Step {
         }
 
         return bpSessionPane;
+    }
+
+    private Node createSpeakerImage(SpeakerImageProvider speakerImageProvider, Speaker speaker) {
+        var image = speakerImageProvider.getSpeakerImage(speaker);
+        var speakerImage = new ImageView(image);
+        speakerImage.getStyleClass().add("speakerImage");
+        speakerImage.setPreserveRatio(true);
+        if (image.getWidth() > image.getHeight()) {
+            speakerImage.setFitHeight(config.avatarSize);
+        } else {
+            speakerImage.setFitWidth(config.avatarSize);
+        }
+
+        // avatar image clipping
+        if (config.circularAvatar) {
+            Circle circle = new Circle(config.avatarSize / 2f, config.avatarSize / 2f, config.avatarSize / 2f);
+            speakerImage.setClip(circle);
+        } else {
+            Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
+            clip.setArcWidth(config.avatarArcSize);
+            clip.setArcHeight(config.avatarArcSize);
+            speakerImage.setClip(clip);
+        }
+        return speakerImage;
     }
 
     /**
@@ -288,5 +354,11 @@ public class ShowSchedule implements Step {
         public double sessionHeight = 200;
         public boolean showTrackAvatar = true;
         public boolean circularAvatar = true;
+        public boolean showTags = false;
+        public boolean compressedAvatars = true;
+        public int compressedAvatarsLimit = 4;
+        public int columns = 2;
+        public boolean autoSeparateRoomTypes = false;
+        public boolean showCompanyName = false;
     }
 }

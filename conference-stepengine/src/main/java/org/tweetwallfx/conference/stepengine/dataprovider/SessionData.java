@@ -59,6 +59,7 @@ public class SessionData {
     public final List<Speaker> speakerObjects;
     public final int favouritesCount;
     public final String trackImageUrl;
+    public final List<String> tags;
 
     private SessionData(final ScheduleSlot slot) {
         this.room = slot.getRoom();
@@ -76,6 +77,7 @@ public class SessionData {
                 .findFirst()
                 .orElse(0);
         this.trackImageUrl = talk.getTrack().getAvatarURL();
+        this.tags = talk.getTags();
     }
 
     public static List<SessionData> from(final List<ScheduleSlot> slots, final OffsetTime now, final ZoneId zoneId) {

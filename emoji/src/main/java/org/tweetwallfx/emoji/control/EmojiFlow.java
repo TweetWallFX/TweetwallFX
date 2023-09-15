@@ -25,6 +25,7 @@ package org.tweetwallfx.emoji.control;
 
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,11 +42,13 @@ public class EmojiFlow extends TextFlow {
     private static final Logger LOG = LoggerFactory.getLogger(EmojiFlow.class);
 
     private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>();
-    private final int emojiFitWidthProperty = 12;
-    private final int emojiFitHeightProperty = 12;
+    private final SimpleDoubleProperty emojiFitWidthProperty = new SimpleDoubleProperty(12);
+    private final SimpleDoubleProperty emojiFitHeightProperty = new SimpleDoubleProperty(12);
 
     public EmojiFlow() {
         this.textProperty.addListener((o, old, text) -> updateContent(text));
+        this.emojiFitWidthProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
+        this.emojiFitHeightProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
     }
 
     public final String getText() {
@@ -56,7 +59,24 @@ public class EmojiFlow extends TextFlow {
         textProperty.set(text);
     }
 
+    public final double getEmojiFitWidth() {
+        return emojiFitWidthProperty.get();
+    }
+
+    public final void setEmojiFitWidth(double fitWidth) {
+        emojiFitWidthProperty.set(fitWidth);
+    }
+
+    public final double getEmojiFitHeight() {
+        return emojiFitHeightProperty.get();
+    }
+
+    public final void setEmojiFitHeight(double fitHeight) {
+        emojiFitHeightProperty.set(fitHeight);
+    }
+
     private void updateContent(String message) {
+        this.getChildren().clear();
         List<Object> obs = Emojify.tokenizeStringToTextAndEmoji(message);
         for (Object ob : obs) {
             if (ob instanceof String s) {
@@ -75,15 +95,15 @@ public class EmojiFlow extends TextFlow {
     private Text createTextNode(String text) {
         Text textNode = new Text();
         textNode.setText(text);
-        textNode.getStyleClass().add("tweetText");
+        textNode.getStyleClass().add("emojiFlow");
         textNode.applyCss();
         return textNode;
     }
 
     private ImageView createEmojiImageNode(Twemoji emoji) throws NullPointerException {
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(emojiFitWidthProperty);
-        imageView.setFitHeight(emojiFitHeightProperty);
+        imageView.setFitWidth(emojiFitWidthProperty.get());
+        imageView.setFitHeight(emojiFitHeightProperty.get());
         imageView.setImage(new Image(EmojiImageCache.INSTANCE.get(emoji.hex()).getInputStream()));
         return imageView;
     }
