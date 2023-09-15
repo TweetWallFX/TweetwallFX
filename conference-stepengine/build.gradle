@@ -28,6 +28,7 @@ dependencies {
     implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
     implementation 'org.slf4j:slf4j-api'
     implementation project(':tweetwallfx-controls')
+    implementation project(':tweetwallfx-emoji')
     implementation project(':tweetwallfx-stepengine-dataproviders')
     implementation project(':tweetwallfx-transitions')
 }
