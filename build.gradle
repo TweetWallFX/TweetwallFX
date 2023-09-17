@@ -304,6 +304,7 @@ allprojects {
             jvmArgs getJvmModulePath()
             jvmArgs '--add-modules'
             jvmArgs getJvmAdditionalModules()
+            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
 
             useJUnitPlatform()
             testLogging {
@@ -376,10 +377,6 @@ allprojects {
                 implementation 'org.codehaus.groovy:groovy-all:4.0.2'
                 testFramework 'org.spockframework:spock-core:2.3-groovy-4.0'
             }
-        }
-
-        tasks.withType(Test).configureEach {
-            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
         }
 
         apply plugin: 'com.netflix.nebula.maven-base-publish'
