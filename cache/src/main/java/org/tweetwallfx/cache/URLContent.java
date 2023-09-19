@@ -32,7 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -74,7 +74,7 @@ public record URLContent(
     }
 
     public static URLContent of(final String urlString) throws IOException {
-        try (InputStream in = new URL(urlString).openStream()) {
+        try (InputStream in = URI.create(urlString).toURL().openStream()) {
             return of(in);
         } catch (FileNotFoundException fne) {
             LOG.warn("No data found for {}", urlString, fne);

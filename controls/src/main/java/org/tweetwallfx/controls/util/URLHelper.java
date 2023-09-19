@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package org.tweetwallfx.controls.util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -85,7 +86,7 @@ public class URLHelper {
 
     private static String unshortenLink(final String urlString) {
         try {
-            final URL url = new URL(urlString);
+            final URL url = URI.create(urlString).toURL();
             final URLConnection connection = url.openConnection();
 
             if (null == connection) {
