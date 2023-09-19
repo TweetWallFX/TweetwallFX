@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ import org.tweetwallfx.conference.api.Talk;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -328,7 +328,7 @@ public abstract class ConferenceClientTestBase {
 
         final Map<Boolean, List<Speaker>> avatarsLoadable = client.getSpeakers().stream().collect(Collectors.partitioningBy(speaker -> {
             System.out.println("Checking avator for " + speaker.getFullName() + " at '" + speaker.getAvatarURL() + "'");
-            try (final InputStream is = new URL(speaker.getAvatarURL()).openStream()) {
+            try (final InputStream is = URI.create(speaker.getAvatarURL()).toURL().openStream()) {
                 System.out.println("Succeeded");
                 return null != is;
             } catch (final IOException ioe) {

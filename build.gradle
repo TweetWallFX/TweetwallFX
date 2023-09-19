@@ -277,7 +277,8 @@ allprojects {
 
         tasks.withType(JavaCompile).configureEach {
             options.compilerArgs.addAll([
-                    '-Xlint:-preview',
+                    // lint everithing except preview (as using preview features would generate a warnig and thus break the build)
+                    '-Xlint:all,-preview',
                     '--enable-preview',
                     '-Werror',
                     '-proc:none',
