@@ -29,6 +29,7 @@ jobs:
           - '18'
           - '19'
           - '20'
+          - '21'
         distribution:
           - 'zulu'
 

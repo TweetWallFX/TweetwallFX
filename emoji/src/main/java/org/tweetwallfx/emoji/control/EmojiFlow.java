@@ -37,7 +37,7 @@ import org.tweetwallfx.emoji.EmojiImageCache;
 import org.tweetwallfx.emoji.Emojify;
 import org.tweetwallfx.emoji.Twemoji;
 
-public class EmojiFlow extends TextFlow {
+public final class EmojiFlow extends TextFlow {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmojiFlow.class);
 
