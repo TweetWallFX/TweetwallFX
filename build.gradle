@@ -205,6 +205,11 @@ allprojects {
 
             all {
                 resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                    if (details.requested.group == 'org.ow2.asm' &&
+                        details.requested.name == 'asm') {
+                        details.useVersion '9.5'
+                        details.because 'workaround for spotbugs not yet supporting JDK 21 class formats'
+                    }
 /*
                     if (details.requested.group == 'com.fasterxml.jackson' &&
                         details.requested.name == 'jackson-bom' &&
