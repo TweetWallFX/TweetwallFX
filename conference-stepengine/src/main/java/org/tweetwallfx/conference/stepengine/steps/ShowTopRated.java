@@ -34,20 +34,29 @@ import java.util.Objects;
 import java.util.function.Function;
 import javafx.animation.ParallelTransition;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksWeekDataProvider;
+import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.VotedTalk;
+import org.tweetwallfx.emoji.control.EmojiFlow;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
@@ -104,12 +113,11 @@ public class ShowTopRated implements Step {
             int row = 0;
 
             Iterator<VotedTalk> iterator = votedTalksConverter.apply(context).iterator();
-            final SpeakerImageProvider speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
             while (iterator.hasNext()) {
-                Node node = createTalkNode(iterator.next(), speakerImageProvider);
-                grid.getChildren().add(node);
-                GridPane.setColumnIndex(node, col);
-                GridPane.setRowIndex(node, row);
+                var pane = createTalkNode(context, iterator.next());
+                grid.getChildren().add(pane);
+                GridPane.setColumnIndex(pane, col);
+                GridPane.setRowIndex(pane, row);
                 row += 1;
             }
         } catch (IOException ex) {
@@ -122,36 +130,142 @@ public class ShowTopRated implements Step {
         flipIns.play();
     }
 
-    private Node createTalkNode(
-            final VotedTalk votingResultTalk,
-            final SpeakerImageProvider speakerImageProvider) {
-        try {
-            Node session = FXMLLoader.<Node>load(this.getClass().getResource("/ratedTalk.fxml"));
-            Text title = (Text) session.lookup("#title");
-            title.setText(votingResultTalk.talk.getName());
-            Text speakers = (Text) session.lookup("#speakers");
-            speakers.setText(votingResultTalk.speakers);
-            Label averageVoting = (Label) session.lookup("#averageVote");
-            averageVoting.setText(String.format("%.1f", votingResultTalk.ratingAverageScore));
-            Label voteCount = (Label) session.lookup("#voteCount");
-            voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
-            ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
-            speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
-            speakerImage.setFitHeight(64);
-            speakerImage.setFitWidth(64);
-            if (config.circularAvatar) {
-                Circle clip = new Circle(speakerImage.getFitWidth() /2f, speakerImage.getFitHeight()/2f, speakerImage.getFitWidth() /2f);
-                speakerImage.setClip(clip);
-            } else {
-                Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
-                clip.setArcWidth(20);
-                clip.setArcHeight(20);
+    private Pane createTalkNode(final MachineContext context, final VotedTalk votedTalk) {
+        var ratingAverageScore = new Label("" + votedTalk.ratingAverageScore);
+        ratingAverageScore.getStyleClass().add("ratingAverageScore");
+
+        var ratingTotalVotes = new Label("" + votedTalk.ratingTotalVotes);
+        ratingTotalVotes.getStyleClass().add("ratingTotalVotes");
+
+        var topLeftVBox = new VBox(4, ratingAverageScore, ratingTotalVotes);
+        Pane topLeft = topLeftVBox;
+
+        var speakerNames = new VBox();
+        speakerNames.getStyleClass().add("speakerNames");
+
+        votedTalk.speakers.stream().forEach(speaker -> {
+            var speakerName = new Label(speaker.getFullName());
+            speakerName.setTextAlignment(TextAlignment.RIGHT);
+            speakerName.getStyleClass().add("speakerName");
+            speakerNames.getChildren().add(speakerName);
+            if (config.showCompanyName) {
+                speaker.getCompany().ifPresent(company -> {
+                    var companyName = new Label("(" + company + ")");
+                    companyName.setTextAlignment(TextAlignment.RIGHT);
+                    companyName.getStyleClass().add("companyName");
+                    speakerNames.getChildren().add(companyName);
+                });
             }
-            return session;
-        } catch (IOException ex) {
-            LOGGER.error("{}", ex);
-            throw new IllegalStateException(ex);
+        });
+
+        if (config.showAvatar) {
+            var speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
+            if (config.compressedAvatars && votedTalk.speakers.size() >= config.compressedAvatarsLimit) {
+                var speakerImages = new Pane();
+                var images = votedTalk.speakers.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize * 3 / 4d + 2));
+                    image.setLayoutY(i % 2 * config.avatarSize / 2d + 2);
+                    speakerImages.getChildren().add(image);
+                }
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            } else {
+                var speakerImages = new HBox(config.avatarSpacing, votedTalk.speakers.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toArray(Node[]::new)
+                );
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            }
         }
+
+        var title = new EmojiFlow();
+        title.setText(votedTalk.talk.getName());
+        title.setEmojiFitWidth(15);
+        title.setEmojiFitHeight(15);
+        title.getStyleClass().add("title");
+        title.setMaxHeight(Double.MAX_VALUE);
+
+        Node trackImageView;
+        if (config.showTrackAvatar && null != votedTalk.trackImageUrl) {
+            var trackImage = context.getDataProvider(TrackImageDataProvider.class).getImage(votedTalk.trackImageUrl);
+            trackImageView = new ImageView(trackImage);
+        } else {
+            trackImageView = null;
+        }
+
+        var bpSessionTopPane = new BorderPane();
+        bpSessionTopPane.getStyleClass().add("sessionTopPane");
+        bpSessionTopPane.setCenter(speakerNames);
+        bpSessionTopPane.setLeft(topLeft);
+        BorderPane.setAlignment(speakerNames, Pos.TOP_RIGHT);
+
+        var bpTitle = new BorderPane();
+        bpTitle.getStyleClass().add("titlePane");
+        bpTitle.setBottom(title);
+
+        var bpSessionBottomPane = new BorderPane();
+        bpSessionBottomPane.getStyleClass().add("sessionBottomPane");
+        bpSessionBottomPane.setRight(trackImageView);
+        if (config.showTags) {
+            var tags = new FlowPane();
+            tags.getStyleClass().add("tags");
+            votedTalk.tags.stream().forEach(tag -> {
+                var tagLabel = new Label(tag);
+                tagLabel.getStyleClass().add("tagLabel");
+                tags.getChildren().add(tagLabel);
+            });
+
+            var bpTags = new BorderPane();
+            bpTags.getStyleClass().add("tagPane");
+            BorderPane.setAlignment(tags, Pos.BOTTOM_LEFT);
+            bpTags.setLeft(tags);
+
+            VBox bpCenter = new VBox(bpTitle, bpTags);
+            bpCenter.getStyleClass().add("centerFlow");
+
+            bpSessionBottomPane.setCenter(bpCenter);
+        } else {
+            bpSessionBottomPane.setRight(trackImageView);
+            bpSessionBottomPane.setCenter(bpTitle);
+        }
+
+        var bpSessionPane = new BorderPane();
+        bpSessionPane.getStyleClass().add("scheduleSession");
+        bpSessionPane.setTop(bpSessionTopPane);
+        bpSessionPane.setBottom(bpSessionBottomPane);
+
+        if (null != trackImageView) {
+            BorderPane.setAlignment(trackImageView, Pos.BOTTOM_RIGHT);
+        }
+
+        return bpSessionPane;
+    }
+
+    private Node createSpeakerImage(SpeakerImageProvider speakerImageProvider, Speaker speaker) {
+        var image = speakerImageProvider.getSpeakerImage(speaker);
+        var speakerImage = new ImageView(image);
+        speakerImage.getStyleClass().add("speakerImage");
+        speakerImage.setPreserveRatio(true);
+        if (image.getWidth() > image.getHeight()) {
+            speakerImage.setFitHeight(config.avatarSize);
+        } else {
+            speakerImage.setFitWidth(config.avatarSize);
+        }
+
+        // avatar image clipping
+        if (config.circularAvatar) {
+            Circle circle = new Circle(config.avatarSize / 2f, config.avatarSize / 2f, config.avatarSize / 2f);
+            speakerImage.setClip(circle);
+        } else {
+            Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
+            clip.setArcWidth(config.avatarArcSize);
+            clip.setArcHeight(config.avatarArcSize);
+            speakerImage.setClip(clip);
+        }
+        return speakerImage;
     }
 
     @Override
@@ -224,9 +338,18 @@ public class ShowTopRated implements Step {
     public static class Config extends AbstractConfig {
 
         private TopVotedType topVotedType = null;
+        public int avatarSize = 64;
+        public int avatarArcSize = 20;
+        public int avatarSpacing = 4;
         public double layoutX = 0;
         public double layoutY = 0;
         public boolean circularAvatar = true;
+        public boolean showCompanyName = false;
+        public boolean showAvatar = true;
+        public boolean showTrackAvatar = true;
+        public boolean compressedAvatars = true;
+        public int compressedAvatarsLimit = 4;
+        public boolean showTags = false;
 
         /**
          * Provides the type of the Top Voted display to flip out.
