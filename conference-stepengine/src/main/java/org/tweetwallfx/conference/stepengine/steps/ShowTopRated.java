@@ -322,12 +322,14 @@ public class ShowTopRated implements Step {
                 case TODAY:
                     return Arrays.asList(
                             TopTalksTodayDataProvider.class,
-                            SpeakerImageProvider.class);
+                            SpeakerImageProvider.class,
+                            TrackImageDataProvider.class);
 
                 case WEEK:
                     return Arrays.asList(
                             TopTalksWeekDataProvider.class,
-                            SpeakerImageProvider.class);
+                            SpeakerImageProvider.class,
+                            TrackImageDataProvider.class);
 
                 default:
                     throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
