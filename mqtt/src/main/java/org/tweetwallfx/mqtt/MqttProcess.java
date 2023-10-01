@@ -81,9 +81,16 @@ public class MqttProcess implements Runnable {
     @Override
     public void run() {
         try {
+            final Optional<MqttSettings> opMqttSettings = Configuration.getInstance()
+                    .getConfigTypedOptional(MqttSettings.CONFIG_KEY, MqttSettings.class);
+
+            if (!opMqttSettings.isPresent()) {
+                LOG.info("MQTT not configured");
+                return;
+            }
+
             Thread.currentThread().setName("MQTT-Command-Dispatcher");
-            final MqttSettings mqttSettings = Configuration.getInstance()
-                    .getConfigTyped(MqttSettings.CONFIG_KEY, MqttSettings.class);
+            final MqttSettings mqttSettings = opMqttSettings.get();
             if (!mqttSettings.enabled()) {
                 LOG.info("MQTT disabled");
                 return;
@@ -93,7 +100,7 @@ public class MqttProcess implements Runnable {
                 final String broker = mqttSettings.brokerUrl();
                 final String clientId = mqttSettings.clientId();
                 try (MqttClientPersistence persistence = new MemoryPersistence();
-                     MqttClient mqttClient = new MqttClient(broker, clientId, persistence)) {
+                        MqttClient mqttClient = new MqttClient(broker, clientId, persistence)) {
                     clientRef.set(mqttClient);
                     MqttConnectOptions connOpts = new MqttConnectOptions();
                     connOpts.setCleanSession(true);
