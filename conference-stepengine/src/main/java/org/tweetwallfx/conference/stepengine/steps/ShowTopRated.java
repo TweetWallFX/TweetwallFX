@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.conference.stepengine.steps;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,22 +32,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import javafx.animation.ParallelTransition;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
@@ -69,17 +65,14 @@ import org.tweetwallfx.transitions.FlipInXTransition;
  */
 public class ShowTopRated implements Step {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShowTopRated.class);
     private final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter;
     private final Config config;
     private final String lookupId;
-    private final String fxmlResourcePath;
 
     private ShowTopRated(
             final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter,
             final Config config,
-            final String lookupId,
-            final String fxmlResourcePath) {
+            final String lookupId) {
         this.votedTalksConverter = Objects.requireNonNull(
                 votedTalksConverter,
                 "votedTalksConverter must not be null");
@@ -89,9 +82,6 @@ public class ShowTopRated implements Step {
         this.lookupId = Objects.requireNonNull(
                 lookupId,
                 "lookupId must not be null");
-        this.fxmlResourcePath = Objects.requireNonNull(
-                fxmlResourcePath,
-                "fxmlResourcePath must not be null");
     }
 
     @Override
@@ -99,29 +89,47 @@ public class ShowTopRated implements Step {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         List<FlipInXTransition> transitions = new ArrayList<>();
-        try {
-            Node scheduleNode = FXMLLoader.<Node>load(this.getClass().getResource(fxmlResourcePath));
-            transitions.add(new FlipInXTransition(scheduleNode));
-            scheduleNode.setLayoutX(config.layoutX);
-            scheduleNode.setLayoutY(config.layoutY);
-//            scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()));
-//            scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()));
-            wordleSkin.getPane().getChildren().add(scheduleNode);
+        if (null == wordleSkin.getNode().lookup("#topRatedeNode")) {
+            Pane topRatedNode = new Pane();
+            topRatedNode.getStyleClass().add("votedTalk");
+            topRatedNode.setId("topRatedeNode");
+            topRatedNode.setOpacity(0);
 
-            GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
-            int col = 0;
-            int row = 0;
+            var title = new Label(config.getTopVotedType().getTitle());
+
+            title.setPrefWidth(config.width);
+            title.getStyleClass().add("title");
+            title.setPrefHeight(config.titleHeight);
+            title.setAlignment(Pos.CENTER);
+
+            topRatedNode.getChildren().add(title);
+
+            transitions.add(new FlipInXTransition(topRatedNode));
+            topRatedNode.setLayoutX(config.layoutX);
+            topRatedNode.setLayoutY(config.layoutY);
+            topRatedNode.setMinWidth(config.width);
+            topRatedNode.setMaxWidth(config.width);
+            topRatedNode.setPrefWidth(config.width);
+            topRatedNode.setCacheHint(CacheHint.SPEED);
+            topRatedNode.setCache(true);
+
+            wordleSkin.getPane().getChildren().add(topRatedNode);
 
             Iterator<VotedTalk> iterator = votedTalksConverter.apply(context).iterator();
+            int row = 0;
             while (iterator.hasNext()) {
-                var pane = createTalkNode(context, iterator.next());
-                grid.getChildren().add(pane);
-                GridPane.setColumnIndex(pane, col);
-                GridPane.setRowIndex(pane, row);
-                row += 1;
+                var talkPane = createTalkNode(context, iterator.next());
+                double talkWidth = config.width;
+                talkPane.setMinWidth(talkWidth);
+                talkPane.setMaxWidth(talkWidth);
+                talkPane.setPrefWidth(talkWidth);
+                talkPane.setMinHeight(config.talkHeight);
+                talkPane.setMaxHeight(config.talkHeight);
+                talkPane.setPrefHeight(config.talkHeight);
+                talkPane.setLayoutY(config.titleHeight + config.talkVGap + (config.talkHeight + config.talkVGap) * row);
+                topRatedNode.getChildren().add(talkPane);
+                row++;
             }
-        } catch (IOException ex) {
-            LOGGER.error("{}", ex);
         }
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
@@ -131,7 +139,7 @@ public class ShowTopRated implements Step {
     }
 
     private Pane createTalkNode(final MachineContext context, final VotedTalk votedTalk) {
-        var ratingAverageScore = new Label("" + votedTalk.ratingAverageScore);
+        var ratingAverageScore = new Label(String.format("%.2f",votedTalk.ratingAverageScore));
         ratingAverageScore.getStyleClass().add("ratingAverageScore");
 
         var ratingTotalVotes = new Label("" + votedTalk.ratingTotalVotes);
@@ -294,15 +302,13 @@ public class ShowTopRated implements Step {
                     return new ShowTopRated(
                             mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
                             stepDefinition.getConfig(Config.class),
-                            "#topRatedToday",
-                            "/topratedtalktoday.fxml");
+                            "#topRatedToday");
 
                 case WEEK:
                     return new ShowTopRated(
                             mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
                             stepDefinition.getConfig(Config.class),
-                            "#topRatedWeek",
-                            "/topratedtalkweek.fxml");
+                            "#topRatedWeek");
 
                 default:
                     throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
@@ -345,6 +351,10 @@ public class ShowTopRated implements Step {
         public int avatarSpacing = 4;
         public double layoutX = 0;
         public double layoutY = 0;
+        public double width = 800;
+        public double titleHeight = 60;
+        public double talkVGap = 10;
+        public double talkHeight = 200;
         public boolean circularAvatar = true;
         public boolean showCompanyName = false;
         public boolean showAvatar = true;
@@ -380,10 +390,20 @@ public class ShowTopRated implements Step {
         /**
          * The Top Voted Session of Today.
          */
-        TODAY,
+        TODAY("Top Rated Talks of the Day"),
         /**
          * The Top Voted Session of the Week.
          */
-        WEEK;
+        WEEK("Top Rated Talks of the Week");
+
+        private final String title;
+
+        TopVotedType(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
     }
 }
