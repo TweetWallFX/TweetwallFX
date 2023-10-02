@@ -28,6 +28,7 @@ import static org.tweetwallfx.util.Nullable.nullable;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javafx.scene.image.Image;
 
 import org.tweetwallfx.cache.URLContent;
@@ -80,6 +81,12 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    public Stream<Image> getImages() {
+        return ConferenceClient.getClient()
+                .getSpeakers()
+                .stream().map(this::getSpeakerImage);
     }
 
     @Override
