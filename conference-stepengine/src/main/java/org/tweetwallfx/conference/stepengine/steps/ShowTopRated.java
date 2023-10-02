@@ -278,8 +278,14 @@ public class ShowTopRated implements Step {
 
     @Override
     public boolean shouldSkip(final MachineContext context) {
-        return votedTalksConverter.apply(context).isEmpty()
+        final boolean skip = votedTalksConverter.apply(context).isEmpty()
                 || null != ((WordleSkin) context.get("WordleSkin")).getNode().lookup(lookupId);
+
+        if (skip) {
+            context.put(SKIP_TOKEN, config.skipTokenValue);
+        }
+
+        return skip;
     }
 
     @Override
@@ -362,6 +368,7 @@ public class ShowTopRated implements Step {
         public boolean compressedAvatars = true;
         public int compressedAvatarsLimit = 4;
         public boolean showTags = false;
+        public String skipTokenValue = null;
 
         /**
          * Provides the type of the Top Voted display to flip out.

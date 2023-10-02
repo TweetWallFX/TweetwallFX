@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,11 @@ import static org.tweetwallfx.util.ToString.map;
 public class PauseStep implements Step {
 
     private final Duration pause;
+    private final String skipWhenSkipped;
 
-    private PauseStep(final Duration pause) {
+    private PauseStep(final Duration pause, final String skipWhenSkipped) {
         this.pause = pause;
+        this.skipWhenSkipped = skipWhenSkipped;
     }
 
     @Override
@@ -55,6 +57,13 @@ public class PauseStep implements Step {
         return false;
     }
 
+    @Override
+    public boolean shouldSkip(final MachineContext context) {
+        return null == skipWhenSkipped
+                ? false
+                : skipWhenSkipped.equals(context.get(Step.SKIP_TOKEN));
+    }
+
     /**
      * Implementation of {@link Step.Factory} as Service implementation creating
      * {@link PauseStep}.
@@ -64,7 +73,7 @@ public class PauseStep implements Step {
         @Override
         public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
-            return new PauseStep(config.getDuration());
+            return new PauseStep(config.getDuration(), config.getSkipWhenSkipped());
         }
 
         @Override
@@ -77,6 +86,7 @@ public class PauseStep implements Step {
 
         private ChronoUnit unit = ChronoUnit.SECONDS;
         private long amount = 5;
+        private String skipWhenSkipped = null;
 
         public ChronoUnit getUnit() {
             return unit;
@@ -98,12 +108,20 @@ public class PauseStep implements Step {
             return Duration.of(getAmount(), getUnit());
         }
 
+        public void setSkipWhenSkipped(String skipWhenSkipped) {
+            this.skipWhenSkipped = Objects.requireNonNull(skipWhenSkipped, "skipWhenSkipped must not be null!");
+        }
+
+        public String getSkipWhenSkipped() {
+            return skipWhenSkipped;
+        }
+
         @Override
         public String toString() {
             return createToString(this, map(
                     "amount", getAmount(),
-                    "unit", getUnit()
-            )) + " extends " + super.toString();
+                    "unit", getUnit(),
+                    "skipWhenSkipped", getSkipWhenSkipped()));
         }
     }
 }
