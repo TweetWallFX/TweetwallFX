@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,14 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
  * that may optionally take a very specific amount of time.
  */
 public interface Step {
+
+    /**
+     * The token a {@link Step} may register with {@link MachineContext} to mark it
+     * has been skipped. Steps following a skipped step may take the presence and
+     * value of such a token into account wehn deciding if their step shall be
+     * skipped.
+     */
+    public static final String SKIP_TOKEN = "skip.token";
 
     /**
      * Initiates this {@link Step} prior to being included in the
@@ -147,7 +155,8 @@ public interface Step {
          * {@link DataProvider DataProviders} required by the created
          * {@link Step}
          */
-        default Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
+        default Collection<Class<? extends DataProvider>> getRequiredDataProviders(
+                final StepEngineSettings.StepDefinition stepDefinition) {
             return Collections.emptyList();
         }
     }

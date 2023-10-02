@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -188,7 +188,12 @@ public final class StepEngine {
         }
 
         public Object put(final String key, final Object value) {
-            return properties.put(key, value);
+            Objects.requireNonNull(key, "key must not be null");
+            if (null == value) {
+                return properties.remove(key);
+            } else {
+                return properties.put(key, value);
+            }
         }
 
         public void proceed() {
@@ -236,6 +241,8 @@ public final class StepEngine {
                 step = stepIterator.next();
                 context.restrictAvailableDataProviders(stepIterator.getRequiredDataProviders(step));
             }
+            // found a step not being skipped. so reset the SKIP_TOKEN
+            context.put(Step.SKIP_TOKEN, null);
             final Step stepToExecute = step;
             final Duration duration = step.preferredStepDuration(context);
 
