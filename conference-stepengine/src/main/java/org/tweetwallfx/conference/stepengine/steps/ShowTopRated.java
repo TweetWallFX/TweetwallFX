@@ -181,10 +181,16 @@ public class ShowTopRated implements Step {
                 }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             } else {
-                var speakerImages = new HBox(config.avatarSpacing, votedTalk.speakers.stream()
+                var speakerImages = new Pane();
+                var images = votedTalk.speakers.stream()
                         .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
-                        .toArray(Node[]::new)
-                );
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize + config.avatarSpacing));
+                    image.setLayoutY(2);
+                    speakerImages.getChildren().add(image);
+                }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             }
         }

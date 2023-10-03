@@ -208,10 +208,16 @@ public class ShowSchedule implements Step {
                 }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             } else {
-                var speakerImages = new HBox(config.avatarSpacing, sessionData.speakerObjects.stream()
+                var speakerImages = new Pane();
+                var images = sessionData.speakerObjects.stream()
                         .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
-                        .toArray(Node[]::new)
-                );
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize + config.avatarSpacing));
+                    image.setLayoutY(2);
+                    speakerImages.getChildren().add(image);
+                }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             }
         }
