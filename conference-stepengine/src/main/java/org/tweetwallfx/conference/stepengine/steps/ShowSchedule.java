@@ -237,8 +237,8 @@ public class ShowSchedule implements Step {
 
         var title = new EmojiFlow();
         title.setText(sessionData.title);
-        title.setEmojiFitWidth(15);
-        title.setEmojiFitHeight(15);
+        title.setEmojiFitWidth(config.titleFontSize);
+        title.setEmojiFitHeight(config.titleFontSize);
         title.getStyleClass().add("title");
         title.setMaxHeight(Double.MAX_VALUE);
 
@@ -366,5 +366,6 @@ public class ShowSchedule implements Step {
         public int columns = 2;
         public boolean autoSeparateRoomTypes = false;
         public boolean showCompanyName = false;
+        public int titleFontSize = 13;
     }
 }
