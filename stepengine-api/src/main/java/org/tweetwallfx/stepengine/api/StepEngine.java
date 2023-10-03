@@ -135,6 +135,12 @@ public final class StepEngine {
                 .filter(DataProvider.Scheduled.class::isInstance)
                 .map(DataProvider.Scheduled.class::cast)
                 .forEach(this::initScheduledDataProvider);
+        // await initialization if neccessary
+        providers.stream()
+                .filter(DataProvider.Scheduled.class::isInstance)
+                .map(DataProvider.Scheduled.class::cast)
+                .filter(DataProvider.Scheduled::requiresInitialization)
+                .forEach(this::awaitScheduledDataProviderInitialization);
 
         if (!newTweetAwareProviders.isEmpty()) {
             LOGGER.info("create TweetStream");
@@ -170,6 +176,20 @@ public final class StepEngine {
             LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
             throw re;
         }
+    }
+
+    private void awaitScheduledDataProviderInitialization(final DataProvider.Scheduled scheduled) {
+        while (!scheduled.isInitialized()) {
+            try {
+                LOG.info("Awaiting initialization for ({} ms) for {}", scheduled.initializationCheckIntervallMS(), scheduled);
+                Thread.sleep(scheduled.initializationCheckIntervallMS());
+            } catch (InterruptedException ex) {
+                LOG.error("Awaiting initialization for {} interrupted!", scheduled, ex);
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        LOG.info("Initialization finished for {}", scheduled);
     }
 
     public final class MachineContext {

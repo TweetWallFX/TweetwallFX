@@ -46,6 +46,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     private List<VotedTalk> votedTalks = Collections.emptyList();
     private final Config config;
+    private boolean initialized = false;
 
     private TopTalksTodayDataProvider(final Config config) {
         this.config = config;
@@ -54,6 +55,16 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    @Override
+    public boolean requiresInitialization() {
+        return true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -72,6 +83,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
                 .limit(config.nrVotes())
                 .map(VotedTalk::new)
                 .toList();
+        initialized = true;
     }
 
     public List<VotedTalk> getFilteredSessionData() {

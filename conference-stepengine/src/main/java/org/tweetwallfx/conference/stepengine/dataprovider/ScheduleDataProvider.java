@@ -45,6 +45,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
 
     private volatile List<ScheduleSlot> scheduleSlots = Collections.emptyList();
     private final Config config;
+    private boolean initialized = false;
 
     private ScheduleDataProvider(final Config config) {
         this.config = config;
@@ -53,6 +54,16 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    @Override
+    public boolean requiresInitialization() {
+        return true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -65,6 +76,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
                                 .getDayOfWeek()
                                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
                                 .toLowerCase(Locale.ENGLISH)));
+        initialized = true;
     }
 
     public List<SessionData> getFilteredSessionData() {
