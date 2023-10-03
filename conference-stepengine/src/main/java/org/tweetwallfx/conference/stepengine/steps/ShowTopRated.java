@@ -197,8 +197,8 @@ public class ShowTopRated implements Step {
 
         var title = new EmojiFlow();
         title.setText(votedTalk.talk.getName());
-        title.setEmojiFitWidth(15);
-        title.setEmojiFitHeight(15);
+        title.setEmojiFitWidth(config.titleFontSize);
+        title.setEmojiFitHeight(config.titleFontSize);
         title.getStyleClass().add("title");
         title.setMaxHeight(Double.MAX_VALUE);
 
@@ -375,6 +375,7 @@ public class ShowTopRated implements Step {
         public int compressedAvatarsLimit = 4;
         public boolean showTags = false;
         public String skipTokenValue = null;
+        public int titleFontSize = 13;
 
         /**
          * Provides the type of the Top Voted display to flip out.
