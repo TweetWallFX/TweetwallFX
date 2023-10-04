@@ -34,6 +34,12 @@ final class TweeterHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TweeterHolder.class);
     private static Tweeter instance;
 
+    static void shutdownTweeter() {
+        if (null != instance) {
+            instance.shutdown();
+        }
+    }
+
     static Tweeter instance() {
         if (null == instance) {
             synchronized (TweeterHolder.class) {

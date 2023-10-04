@@ -27,6 +27,10 @@ import java.util.stream.Stream;
 
 public interface Tweeter {
 
+    static void shutdownTweeter() {
+        TweeterHolder.shutdownTweeter();
+    }
+
     static Tweeter getInstance() {
         return TweeterHolder.instance();
     }

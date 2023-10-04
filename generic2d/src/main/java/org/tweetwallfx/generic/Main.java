@@ -131,7 +131,7 @@ public class Main extends Application {
     @Override
     public void stop() {
         LOG.info("closing...");
-        Tweeter.getInstance().shutdown();
+        Tweeter.shutdownTweeter();
         mqttProcess.stop();
     }
 
