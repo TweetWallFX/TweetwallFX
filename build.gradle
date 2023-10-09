@@ -250,7 +250,7 @@ allprojects {
             testFramework 'org.assertj:assertj-core:3.24.2'
             testFramework 'org.junit.jupiter:junit-jupiter-api'
             testFramework 'org.junit.jupiter:junit-jupiter-params'
-            testFramework 'org.mockito:mockito-junit-jupiter:5.5.0'
+            testFramework 'org.mockito:mockito-junit-jupiter:5.6.0'
 
             testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
             testRuntimeOnly 'org.junit.platform:junit-platform-runner'
