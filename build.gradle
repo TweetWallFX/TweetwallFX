@@ -53,7 +53,7 @@ dependencies {
     api platform('com.fasterxml.jackson:jackson-bom:2.15.2')
 
     constraints {
-        api 'com.github.spotbugs:spotbugs-annotations:4.7.3'
+        api 'com.github.spotbugs:spotbugs-annotations:4.8.0'
         api 'com.vdurmont:emoji-java:5.1.1'
         api 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
         api 'org.eclipse:yasson:3.0.3'
