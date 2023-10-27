@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,5 @@ dependencies {
 
     runtimeOnly 'org.glassfish.jersey.core:jersey-client'
     runtimeOnly 'org.glassfish.jersey.inject:jersey-hk2'
-    runtimeOnly 'org.glassfish.jersey.media:jersey-media-json-jackson'
-    runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    runtimeOnly 'org.glassfish.jersey.media:jersey-media-json-binding'
 }
