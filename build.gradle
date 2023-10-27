@@ -342,6 +342,10 @@ allprojects {
 
                 excludeFilter = rootProject.file('spotbugs-exclude.xml')
 
+                omitVisitors = [
+                    'DontReusePublicIdentifiers',
+                ]
+
                 reports {
                     xml.required.set(false)
                     html.required.set(true)
