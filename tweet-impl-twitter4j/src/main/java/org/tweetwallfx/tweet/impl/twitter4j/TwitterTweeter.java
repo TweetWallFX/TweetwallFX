@@ -318,7 +318,7 @@ public class TwitterTweeter implements Tweeter {
         }
     }
 
-    private static class PagedEntityIterator<T extends TwitterResponse, R> extends RateLimitIterator<R> {
+    private static final class PagedEntityIterator<T extends TwitterResponse, R> extends RateLimitIterator<R> {
         private Iterator<T> iterator;
         private long cursorId = CursorSupport.START;
         private final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction;
@@ -326,7 +326,7 @@ public class TwitterTweeter implements Tweeter {
         private final Function<TwitterException, IllegalArgumentException> exceptionConverter;
         private PagableResponseList<T> prList;
 
-        public PagedEntityIterator(
+        private PagedEntityIterator(
                 final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction,
                 final Function<T, R> objectConverter,
                 final Function<TwitterException, IllegalArgumentException> exceptionConverter) {
