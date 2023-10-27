@@ -23,6 +23,8 @@
  */
 
 dependencies {
+    compileOnly 'org.osgi:osgi.annotation:8.1.0'
+
     implementation project(':tweetwallfx-2d')
     implementation project(':tweetwallfx-mqtt')
     implementation project(':tweetwallfx-tweet-api')
