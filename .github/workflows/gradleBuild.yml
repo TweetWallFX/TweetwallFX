@@ -55,19 +55,19 @@ jobs:
 
       # Run assemble tasks
       - name: Run assemble tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2.9.0
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: --no-daemon --refresh-dependencies --scan --warning-mode all assemble
 
       # Run test tasks
       - name: Run test tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2.9.0
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: --no-daemon --scan --warning-mode all test
 
       # Run check tasks
       - name: Run check tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2.9.0
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: --no-daemon --scan --warning-mode all check
 
@@ -86,7 +86,7 @@ jobs:
       # Run publish task
       - name: Run publish task
         if: ${{ (matrix.jdk == '17') && (github.event_name == 'push') && success() }}
-        uses: gradle/gradle-build-action@v2.9.0
+        uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: --no-daemon --scan --warning-mode all publish
         env:
