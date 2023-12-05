@@ -351,7 +351,7 @@ allprojects {
                     html.required.set(true)
                 }
 
-                auxClassPaths = auxClassPaths + configurations.javafx + configurations.jaxb
+                auxClassPaths.from(configurations.javafx, configurations.jaxb)
             }
         }
 
