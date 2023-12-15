@@ -47,7 +47,7 @@ jobs:
 
       # Store dependencyUpdates result files
       - name: Store dependencyUpdates result files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependencyUpdates results
           path: build/dependencyUpdates/
@@ -61,7 +61,7 @@ jobs:
 
       # Store dependency-analysis result files
       - name: Store dependency-analysis result files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-analysis results
           path: build/reports/dependency-analysis/
