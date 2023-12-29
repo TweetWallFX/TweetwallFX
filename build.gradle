@@ -58,7 +58,7 @@ dependencies {
         api 'org.eclipse:yasson:3.0.3'
         api 'org.ehcache:ehcache:3.10.8'
         api 'org.simplify4u:slf4j2-mock:2.3.0'
-        api 'org.slf4j:slf4j-api:2.0.9'
+        api 'org.slf4j:slf4j-api:2.0.10'
     }
 }
 
