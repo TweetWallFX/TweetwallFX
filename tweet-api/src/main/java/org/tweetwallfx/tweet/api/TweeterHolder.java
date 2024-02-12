@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,9 @@ final class TweeterHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TweeterHolder.class);
     private static Tweeter instance;
 
+    private TweeterHolder() {
+    }
+
     static void shutdownTweeter() {
         if (null != instance) {
             instance.shutdown();
@@ -61,11 +64,12 @@ final class TweeterHolder {
         }
         final int tweetersAmount = tweeters.size();
         if (tweetersAmount == 1) {
-            return tweeters.get(0);
+            return tweeters.getFirst();
         } else if (tweetersAmount > 1) {
             return new CompositeTweeter(tweeters);
         } else {
-            throw new IllegalStateException("No implementation of Tweeter found!");
+            LOGGER.warn("No implementation of Tweeter found! Falling back to no-op implementation.");
+            return new NoOpTweeter();
         }
     }
 }
