@@ -186,7 +186,7 @@ allprojects {
             withJavadocJar()
             withSourcesJar()
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '17')))
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '21')))
             }
         }
 
@@ -273,7 +273,7 @@ allprojects {
 
         tasks.withType(JavaCompile).configureEach {
             options.compilerArgs.addAll([
-                    // lint everithing except preview (as using preview features would generate a warnig and thus break the build)
+                    // lint everything except preview (as using preview features would generate a warning and thus break the build)
                     '-Xlint:all,-preview',
                     '--enable-preview',
                     '-Werror',
@@ -313,8 +313,8 @@ allprojects {
             dependsOn javadoc
         }
 
-        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_18)) {
-            // jacoco not yet compatible with JDK18
+        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
+            // jacoco not yet compatible with JDK21
             tasks.named('test') {
                 finalizedBy jacocoTestReport
             }
