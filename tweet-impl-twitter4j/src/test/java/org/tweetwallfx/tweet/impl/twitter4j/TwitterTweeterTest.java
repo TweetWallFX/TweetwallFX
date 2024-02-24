@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,7 @@ class TwitterTweeterTest {
         final TwitterSettings twitterSettings = Configuration.getInstance()
                 .getConfigTyped(TwitterSettings.CONFIG_KEY, TwitterSettings.class);
         return twitterSettings != null &&
+               twitterSettings.enabled() &&
                twitterSettings.oauth() != null &&
                twitterSettings.oauth().accessToken() != null &&
                twitterSettings.oauth().accessTokenSecret() != null &&
