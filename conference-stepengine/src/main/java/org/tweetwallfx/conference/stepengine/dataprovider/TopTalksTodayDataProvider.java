@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
         votedTalks = votingResults.stream()
                 .sorted(Comparator.reverseOrder())
                 .filter(rt -> rt.getTotalRating() >= config.minTotalVotes)
-                .limit(config.nrVotes())
+                .limit(config.nrVotes)
                 .map(VotedTalk::new)
                 .toList();
         initialized = true;
@@ -151,7 +151,10 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
             this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
             this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
             this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 300L);
-            this.minTotalVotes = Objects.requireNonNullElse(nrVotes, 10);
+            this.minTotalVotes = Objects.requireNonNullElse(minTotalVotes, 10);
+            if (this.minTotalVotes < 0) {
+                throw new IllegalArgumentException("property 'minTotalVotes' must not be a negative number");
+            }
         }
     }
 }
