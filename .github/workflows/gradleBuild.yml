@@ -43,7 +43,7 @@ jobs:
 
       # Setup JDK environment for the next steps
       - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
-        uses: actions/setup-java@v4.0.0
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.jdk }}
