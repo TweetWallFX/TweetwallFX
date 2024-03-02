@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,17 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.time.Instant;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.Room;
@@ -43,7 +48,8 @@ public class SessionData {
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionData.class);
     private static final Comparator<SessionData> COMP = Comparator
-            .comparing(SessionData::getRoom);
+            .comparing(SessionData::getBeginTime)
+            .thenComparing(SessionData::getRoom);
 
     public final Room room;
     public final List<String> speakers;
@@ -53,6 +59,7 @@ public class SessionData {
     public final List<Speaker> speakerObjects;
     public final int favouritesCount;
     public final String trackImageUrl;
+    public final List<String> tags;
 
     private SessionData(final ScheduleSlot slot) {
         this.room = slot.getRoom();
@@ -63,9 +70,14 @@ public class SessionData {
         this.title = talk.getName();
         this.beginTime = slot.getDateTimeRange().getStart();
         this.endTime = slot.getDateTimeRange().getEnd();
-        // session data for schedule with talk always has its favorite count
-        this.favouritesCount = slot.getFavoriteCount().getAsInt();
+        // session data for schedule with talk may have a favorite count as well as the talk itself may have a favorite count
+        this.favouritesCount = IntStream
+                .concat(slot.getFavoriteCount().stream(), talk.getFavoriteCount().stream())
+                .filter(i -> i > 0)
+                .findFirst()
+                .orElse(0);
         this.trackImageUrl = talk.getTrack().getAvatarURL();
+        this.tags = talk.getTags();
     }
 
     public static List<SessionData> from(final List<ScheduleSlot> slots, final OffsetTime now, final ZoneId zoneId) {
@@ -87,15 +99,19 @@ public class SessionData {
         return room;
     }
 
+    private Instant getBeginTime() {
+        return beginTime;
+    }
+
     @Override
     public String toString() {
-        return new StringBuilder("SessionData")
-                .append("{room=").append(room)
-                .append(", speakers=").append(speakers)
-                .append(", title=").append(title)
-                .append(", beginTime=").append(beginTime)
-                .append(", endTime=").append(endTime)
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "room", getRoom(),
+                "speakers", speakers,
+                "title", title,
+                "beginTime", getBeginTime(),
+                "endTime", endTime
+            ),
+            true);
     }
 }

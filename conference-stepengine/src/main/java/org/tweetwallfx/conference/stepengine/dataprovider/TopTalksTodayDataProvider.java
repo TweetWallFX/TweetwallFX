@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.Nullable.nullable;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
@@ -30,12 +32,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.RatedTalk;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.Nullable.nullable;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Top Talks Today
@@ -44,6 +46,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     private List<VotedTalk> votedTalks = Collections.emptyList();
     private final Config config;
+    private boolean initialized = false;
 
     private TopTalksTodayDataProvider(final Config config) {
         this.config = config;
@@ -52,6 +55,16 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    @Override
+    public boolean requiresInitialization() {
+        return true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -67,9 +80,10 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
         votedTalks = votingResults.stream()
                 .sorted(Comparator.reverseOrder())
                 .filter(rt -> rt.getTotalRating() >= config.minTotalVotes)
-                .limit(config.nrVotes())
+                .limit(config.nrVotes)
                 .map(VotedTalk::new)
                 .toList();
+        initialized = true;
     }
 
     public List<VotedTalk> getFilteredSessionData() {
@@ -116,7 +130,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
      * Param {@code minTotalVotes} Minimum number of total votes for a rated
      * talk to be displayed. Defaults to {@code 10}.
      */
-    private static record Config(
+    public static record Config(
             Integer nrVotes,
             ScheduleType scheduleType,
             Long initialDelay,
@@ -130,14 +144,17 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
                 final Long initialDelay,
                 final Long scheduleDuration,
                 final Integer minTotalVotes) {
-            this.nrVotes = valueOrDefault(nrVotes, 5);
+            this.nrVotes = Objects.requireNonNullElse(nrVotes, 5);
             if (this.nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
             }
-            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = valueOrDefault(initialDelay, 0L);
-            this.scheduleDuration = valueOrDefault(scheduleDuration, 300L);
-            this.minTotalVotes = valueOrDefault(nrVotes, 10);
+            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 300L);
+            this.minTotalVotes = Objects.requireNonNullElse(minTotalVotes, 10);
+            if (this.minTotalVotes < 0) {
+                throw new IllegalArgumentException("property 'minTotalVotes' must not be a negative number");
+            }
         }
     }
 }

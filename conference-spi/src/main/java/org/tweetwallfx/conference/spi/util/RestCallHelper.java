@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,17 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -99,32 +105,80 @@ public class RestCallHelper {
     }
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass) {
-        return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
-                .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus())
-                .map(r -> r.readEntity(typeClass));
+        return readOptionalFrom(response, typeClass, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass, final BinaryOperator<T> docCombiner) {
+        return readOptionalFrom0(response, r -> r.readEntity(typeClass), docCombiner);
     }
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final GenericType<T> genericType) {
-        return Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
-                .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus())
-                .map(r -> r.readEntity(genericType));
+        return readOptionalFrom(response, genericType, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final Response response, final GenericType<T> genericType, final BinaryOperator<T> docCombiner) {
+        return readOptionalFrom0(response, r -> r.readEntity(genericType), docCombiner);
+    }
+
+    private static <T> Optional<T> readOptionalFrom0(final Response response, final Function<Response, T> docReader, final BinaryOperator<T> docCombiner) {
+        Optional<Response> okResponse = Optional.of(Objects.requireNonNull(response, "Parameter response must not be null!"))
+                .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus());
+        Optional<Link> nextLink = okResponse.map(r -> r.getLink("next"));
+
+        if (nextLink.isPresent()) {
+            Objects.requireNonNull(docCombiner, "Parameter documentCombiner is required as the response is paginated");
+            Stream<Response> okResponses = okResponse.stream();
+
+            while (nextLink.isPresent()) {
+                LOGGER.debug("Pagination next link: {}", nextLink);
+                okResponse = nextLink
+                        .map(Link::getUri)
+                        .map(Object::toString)
+                        .flatMap(RestCallHelper::getOptionalResponse)
+                        .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus());
+                okResponses = Stream.concat(okResponses, okResponse.stream());
+                nextLink = okResponse.map(r -> r.getLink("next"));
+            }
+
+            return okResponses
+                    .map(docReader)
+                    .collect(Collectors.reducing(docCombiner));
+        } else {
+            return okResponse.map(docReader);
+        }
     }
 
     public static <T> Optional<T> readOptionalFrom(final String url, final Class<T> typeClass) {
-        return readOptionalFrom(url, null, typeClass);
+        return readOptionalFrom(url, typeClass, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Class<T> typeClass, final BinaryOperator<T> docCombiner) {
+        return readOptionalFrom(url, null, typeClass, docCombiner);
     }
 
     public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final Class<T> typeClass) {
+        return readOptionalFrom(url, queryParameters, typeClass, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final Class<T> typeClass, final BinaryOperator<T> docCombiner) {
         return getOptionalResponse(url, queryParameters)
-                .flatMap(response -> readOptionalFrom(response, typeClass));
+                .flatMap(response -> readOptionalFrom(response, typeClass, docCombiner));
     }
 
     public static <T> Optional<T> readOptionalFrom(final String url, final GenericType<T> genericType) {
-        return readOptionalFrom(url, null, genericType);
+        return readOptionalFrom(url, genericType, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final GenericType<T> genericType, final BinaryOperator<T> docCombiner) {
+        return readOptionalFrom(url, null, genericType, docCombiner);
     }
 
     public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType) {
+        return readOptionalFrom(url, queryParameters, genericType, null);
+    }
+
+    public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType, final BinaryOperator<T> docCombiner) {
         return getOptionalResponse(url, queryParameters)
-                .flatMap(response -> readOptionalFrom(response, genericType));
+                .flatMap(response -> readOptionalFrom(response, genericType, docCombiner));
     }
 }

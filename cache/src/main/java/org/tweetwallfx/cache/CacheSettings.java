@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,16 @@
  */
 package org.tweetwallfx.cache;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.tweetwallfx.util.Nullable.nullable;
+
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.tweetwallfx.config.ConfigurationConverter;
-import static org.tweetwallfx.util.Nullable.nullable;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 public record CacheSettings(
         String persistenceDirectoryName,
@@ -46,7 +47,7 @@ public record CacheSettings(
     public CacheSettings(
             final String persistenceDirectoryName,
             final Map<String, CacheSetting> caches) {
-        this.persistenceDirectoryName = valueOrDefault(persistenceDirectoryName, "tweetwall-cache");
+        this.persistenceDirectoryName = Objects.requireNonNullElse(persistenceDirectoryName, "tweetwall-cache");
         this.caches = nullable(caches);
     }
 
@@ -88,7 +89,7 @@ public record CacheSettings(
             this.keyType = Objects.requireNonNull(keyType, "keyType must not be null");
             this.valueType = Objects.requireNonNull(valueType, "valueType must not be null");
             this.expiry = expiry;
-            this.contentLoaderThreads = valueOrDefault(contentLoaderThreads, 0);
+            this.contentLoaderThreads = Objects.requireNonNullElse(contentLoaderThreads, 0);
             this.cacheResources = nullable(cacheResources);
         }
 
@@ -107,7 +108,7 @@ public record CacheSettings(
                 final CacheExpiryType type,
                 final Long amount,
                 final ChronoUnit unit) {
-            this.type = valueOrDefault(type, CacheExpiryType.NONE);
+            this.type = Objects.requireNonNullElse(type, CacheExpiryType.NONE);
             this.amount = Objects.requireNonNull(amount, "amount must not be null");
             this.unit = Objects.requireNonNull(unit, "unit must not be null");
         }

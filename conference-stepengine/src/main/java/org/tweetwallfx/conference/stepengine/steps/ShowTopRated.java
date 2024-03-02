@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.conference.stepengine.steps;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,21 +32,27 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import javafx.animation.ParallelTransition;
-import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javafx.scene.text.TextAlignment;
+import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksWeekDataProvider;
+import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.VotedTalk;
+import org.tweetwallfx.emoji.control.EmojiFlow;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
@@ -60,17 +65,14 @@ import org.tweetwallfx.transitions.FlipInXTransition;
  */
 public class ShowTopRated implements Step {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShowTopRated.class);
     private final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter;
     private final Config config;
     private final String lookupId;
-    private final String fxmlResourcePath;
 
     private ShowTopRated(
             final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter,
             final Config config,
-            final String lookupId,
-            final String fxmlResourcePath) {
+            final String lookupId) {
         this.votedTalksConverter = Objects.requireNonNull(
                 votedTalksConverter,
                 "votedTalksConverter must not be null");
@@ -80,9 +82,6 @@ public class ShowTopRated implements Step {
         this.lookupId = Objects.requireNonNull(
                 lookupId,
                 "lookupId must not be null");
-        this.fxmlResourcePath = Objects.requireNonNull(
-                fxmlResourcePath,
-                "fxmlResourcePath must not be null");
     }
 
     @Override
@@ -90,30 +89,47 @@ public class ShowTopRated implements Step {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         List<FlipInXTransition> transitions = new ArrayList<>();
-        try {
-            Node scheduleNode = FXMLLoader.<Node>load(this.getClass().getResource(fxmlResourcePath));
-            transitions.add(new FlipInXTransition(scheduleNode));
-            scheduleNode.setLayoutX(config.layoutX);
-            scheduleNode.setLayoutY(config.layoutY);
-//            scheduleNode.layoutXProperty().bind(Bindings.multiply(150.0 / 1920.0, wordleSkin.getSkinnable().widthProperty()));
-//            scheduleNode.layoutYProperty().bind(Bindings.multiply(200.0 / 1280.0, wordleSkin.getSkinnable().heightProperty()));
-            wordleSkin.getPane().getChildren().add(scheduleNode);
+        if (null == wordleSkin.getNode().lookup("#topRatedeNode")) {
+            Pane topRatedNode = new Pane();
+            topRatedNode.getStyleClass().add("votedTalk");
+            topRatedNode.setId("topRatedeNode");
+            topRatedNode.setOpacity(0);
 
-            GridPane grid = (GridPane) scheduleNode.lookup("#sessionGrid");
-            int col = 0;
-            int row = 0;
+            var title = new Label(config.getTopVotedType().getTitle());
+
+            title.setPrefWidth(config.width);
+            title.getStyleClass().add("title");
+            title.setPrefHeight(config.titleHeight);
+            title.setAlignment(Pos.CENTER);
+
+            topRatedNode.getChildren().add(title);
+
+            transitions.add(new FlipInXTransition(topRatedNode));
+            topRatedNode.setLayoutX(config.layoutX);
+            topRatedNode.setLayoutY(config.layoutY);
+            topRatedNode.setMinWidth(config.width);
+            topRatedNode.setMaxWidth(config.width);
+            topRatedNode.setPrefWidth(config.width);
+            topRatedNode.setCacheHint(CacheHint.SPEED);
+            topRatedNode.setCache(true);
+
+            wordleSkin.getPane().getChildren().add(topRatedNode);
 
             Iterator<VotedTalk> iterator = votedTalksConverter.apply(context).iterator();
-            final SpeakerImageProvider speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
+            int row = 0;
             while (iterator.hasNext()) {
-                Node node = createTalkNode(iterator.next(), speakerImageProvider);
-                grid.getChildren().add(node);
-                GridPane.setColumnIndex(node, col);
-                GridPane.setRowIndex(node, row);
-                row += 1;
+                var talkPane = createTalkNode(context, iterator.next());
+                double talkWidth = config.width;
+                talkPane.setMinWidth(talkWidth);
+                talkPane.setMaxWidth(talkWidth);
+                talkPane.setPrefWidth(talkWidth);
+                talkPane.setMinHeight(config.talkHeight);
+                talkPane.setMaxHeight(config.talkHeight);
+                talkPane.setPrefHeight(config.talkHeight);
+                talkPane.setLayoutY(config.titleHeight + config.talkVGap + (config.talkHeight + config.talkVGap) * row);
+                topRatedNode.getChildren().add(talkPane);
+                row++;
             }
-        } catch (IOException ex) {
-            LOGGER.error("{}", ex);
         }
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
@@ -122,42 +138,160 @@ public class ShowTopRated implements Step {
         flipIns.play();
     }
 
-    private Node createTalkNode(
-            final VotedTalk votingResultTalk,
-            final SpeakerImageProvider speakerImageProvider) {
-        try {
-            Node session = FXMLLoader.<Node>load(this.getClass().getResource("/ratedTalk.fxml"));
-            Text title = (Text) session.lookup("#title");
-            title.setText(votingResultTalk.talk.getName());
-            Text speakers = (Text) session.lookup("#speakers");
-            speakers.setText(votingResultTalk.speakers);
-            Label averageVoting = (Label) session.lookup("#averageVote");
-            averageVoting.setText(String.format("%.1f", votingResultTalk.ratingAverageScore));
-            Label voteCount = (Label) session.lookup("#voteCount");
-            voteCount.setText(votingResultTalk.ratingTotalVotes + " Votes");
-            ImageView speakerImage = (ImageView) session.lookup("#speakerImage");
-            speakerImage.setImage(speakerImageProvider.getSpeakerImage(votingResultTalk.speaker));
-            speakerImage.setFitHeight(64);
-            speakerImage.setFitWidth(64);
-            if (config.circularAvatar) {
-                Circle clip = new Circle(speakerImage.getFitWidth() /2f, speakerImage.getFitHeight()/2f, speakerImage.getFitWidth() /2f);
-                speakerImage.setClip(clip);
-            } else {
-                Rectangle clip = new Rectangle(speakerImage.getFitWidth(), speakerImage.getFitHeight());
-                clip.setArcWidth(20);
-                clip.setArcHeight(20);
+    private Pane createTalkNode(final MachineContext context, final VotedTalk votedTalk) {
+        var ratingAverageScore = new Label(String.format("%.2f",votedTalk.ratingAverageScore));
+        ratingAverageScore.getStyleClass().add("ratingAverageScore");
+
+        var ratingTotalVotes = new Label("" + votedTalk.ratingTotalVotes);
+        ratingTotalVotes.getStyleClass().add("ratingTotalVotes");
+
+        var topLeftVBox = new VBox(4, ratingAverageScore, ratingTotalVotes);
+        Pane topLeft = topLeftVBox;
+
+        var speakerNames = new VBox();
+        speakerNames.getStyleClass().add("speakerNames");
+
+        votedTalk.speakers.stream().forEach(speaker -> {
+            var speakerName = new Label(speaker.getFullName());
+            speakerName.setTextAlignment(TextAlignment.RIGHT);
+            speakerName.getStyleClass().add("speakerName");
+            speakerNames.getChildren().add(speakerName);
+            if (config.showCompanyName) {
+                speaker.getCompany().ifPresent(company -> {
+                    var companyName = new Label("(" + company + ")");
+                    companyName.setTextAlignment(TextAlignment.RIGHT);
+                    companyName.getStyleClass().add("companyName");
+                    speakerNames.getChildren().add(companyName);
+                });
             }
-            return session;
-        } catch (IOException ex) {
-            LOGGER.error("{}", ex);
-            throw new IllegalStateException(ex);
+        });
+
+        if (config.showAvatar) {
+            var speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
+            if (config.compressedAvatars && votedTalk.speakers.size() >= config.compressedAvatarsLimit) {
+                var speakerImages = new Pane();
+                var images = votedTalk.speakers.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize * 3 / 4d + 2));
+                    image.setLayoutY(i % 2 * config.avatarSize / 2d + 2);
+                    speakerImages.getChildren().add(image);
+                }
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            } else {
+                var speakerImages = new Pane();
+                var images = votedTalk.speakers.stream()
+                        .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
+                        .toList();
+                for (int i = 0; i < images.size(); i++) {
+                    var image = images.get(i);
+                    image.setLayoutX(i * (config.avatarSize + config.avatarSpacing));
+                    image.setLayoutY(2);
+                    speakerImages.getChildren().add(image);
+                }
+                topLeft = new HBox(4, topLeftVBox, speakerImages);
+            }
         }
+
+        var title = new EmojiFlow();
+        title.setText(votedTalk.talk.getName());
+        title.setEmojiFitWidth(config.titleFontSize);
+        title.setEmojiFitHeight(config.titleFontSize);
+        title.getStyleClass().add("title");
+        title.setMaxHeight(Double.MAX_VALUE);
+
+        Node trackImageView;
+        if (config.showTrackAvatar && null != votedTalk.trackImageUrl) {
+            var trackImage = context.getDataProvider(TrackImageDataProvider.class).getImage(votedTalk.trackImageUrl);
+            trackImageView = new ImageView(trackImage);
+        } else {
+            trackImageView = null;
+        }
+
+        var bpSessionTopPane = new BorderPane();
+        bpSessionTopPane.getStyleClass().add("sessionTopPane");
+        bpSessionTopPane.setCenter(speakerNames);
+        bpSessionTopPane.setLeft(topLeft);
+        BorderPane.setAlignment(speakerNames, Pos.TOP_RIGHT);
+
+        var bpTitle = new BorderPane();
+        bpTitle.getStyleClass().add("titlePane");
+        bpTitle.setBottom(title);
+
+        var bpSessionBottomPane = new BorderPane();
+        bpSessionBottomPane.getStyleClass().add("sessionBottomPane");
+        bpSessionBottomPane.setRight(trackImageView);
+        if (config.showTags) {
+            var tags = new FlowPane();
+            tags.getStyleClass().add("tags");
+            votedTalk.tags.stream().forEach(tag -> {
+                var tagLabel = new Label(tag);
+                tagLabel.getStyleClass().add("tagLabel");
+                tags.getChildren().add(tagLabel);
+            });
+
+            var bpTags = new BorderPane();
+            bpTags.getStyleClass().add("tagPane");
+            BorderPane.setAlignment(tags, Pos.BOTTOM_LEFT);
+            bpTags.setLeft(tags);
+
+            VBox bpCenter = new VBox(bpTitle, bpTags);
+            bpCenter.getStyleClass().add("centerFlow");
+
+            bpSessionBottomPane.setCenter(bpCenter);
+        } else {
+            bpSessionBottomPane.setRight(trackImageView);
+            bpSessionBottomPane.setCenter(bpTitle);
+        }
+
+        var bpSessionPane = new BorderPane();
+        bpSessionPane.getStyleClass().add("scheduleSession");
+        bpSessionPane.setTop(bpSessionTopPane);
+        bpSessionPane.setBottom(bpSessionBottomPane);
+
+        if (null != trackImageView) {
+            BorderPane.setAlignment(trackImageView, Pos.BOTTOM_RIGHT);
+        }
+
+        return bpSessionPane;
+    }
+
+    private Node createSpeakerImage(SpeakerImageProvider speakerImageProvider, Speaker speaker) {
+        var image = speakerImageProvider.getSpeakerImage(speaker);
+        var speakerImage = new ImageView(image);
+        speakerImage.getStyleClass().add("speakerImage");
+        speakerImage.setPreserveRatio(true);
+        if (image.getWidth() > image.getHeight()) {
+            speakerImage.setFitHeight(config.avatarSize);
+        } else {
+            speakerImage.setFitWidth(config.avatarSize);
+        }
+
+        // avatar image clipping
+        if (config.circularAvatar) {
+            Circle circle = new Circle(config.avatarSize / 2f, config.avatarSize / 2f, config.avatarSize / 2f);
+            speakerImage.setClip(circle);
+        } else {
+            Rectangle clip = new Rectangle(config.avatarSize, config.avatarSize);
+            clip.setArcWidth(config.avatarArcSize);
+            clip.setArcHeight(config.avatarArcSize);
+            speakerImage.setClip(clip);
+        }
+        return speakerImage;
     }
 
     @Override
     public boolean shouldSkip(final MachineContext context) {
-        return votedTalksConverter.apply(context).isEmpty()
+        final boolean skip = votedTalksConverter.apply(context).isEmpty()
                 || null != ((WordleSkin) context.get("WordleSkin")).getNode().lookup(lookupId);
+
+        if (skip) {
+            context.put(SKIP_TOKEN, config.skipTokenValue);
+        }
+
+        return skip;
     }
 
     @Override
@@ -180,15 +314,13 @@ public class ShowTopRated implements Step {
                     return new ShowTopRated(
                             mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
                             stepDefinition.getConfig(Config.class),
-                            "#topRatedToday",
-                            "/topratedtalktoday.fxml");
+                            "#topRatedToday");
 
                 case WEEK:
                     return new ShowTopRated(
                             mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
                             stepDefinition.getConfig(Config.class),
-                            "#topRatedWeek",
-                            "/topratedtalkweek.fxml");
+                            "#topRatedWeek");
 
                 default:
                     throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
@@ -208,12 +340,14 @@ public class ShowTopRated implements Step {
                 case TODAY:
                     return Arrays.asList(
                             TopTalksTodayDataProvider.class,
-                            SpeakerImageProvider.class);
+                            SpeakerImageProvider.class,
+                            TrackImageDataProvider.class);
 
                 case WEEK:
                     return Arrays.asList(
                             TopTalksWeekDataProvider.class,
-                            SpeakerImageProvider.class);
+                            SpeakerImageProvider.class,
+                            TrackImageDataProvider.class);
 
                 default:
                     throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
@@ -224,9 +358,24 @@ public class ShowTopRated implements Step {
     public static class Config extends AbstractConfig {
 
         private TopVotedType topVotedType = null;
+        public int avatarSize = 64;
+        public int avatarArcSize = 20;
+        public int avatarSpacing = 4;
         public double layoutX = 0;
         public double layoutY = 0;
+        public double width = 800;
+        public double titleHeight = 60;
+        public double talkVGap = 10;
+        public double talkHeight = 200;
         public boolean circularAvatar = true;
+        public boolean showCompanyName = false;
+        public boolean showAvatar = true;
+        public boolean showTrackAvatar = true;
+        public boolean compressedAvatars = true;
+        public int compressedAvatarsLimit = 4;
+        public boolean showTags = false;
+        public String skipTokenValue = null;
+        public int titleFontSize = 13;
 
         /**
          * Provides the type of the Top Voted display to flip out.
@@ -255,10 +404,20 @@ public class ShowTopRated implements Step {
         /**
          * The Top Voted Session of Today.
          */
-        TODAY,
+        TODAY("Top Rated Talks of the Day"),
         /**
          * The Top Voted Session of the Week.
          */
-        WEEK;
+        WEEK("Top Rated Talks of the Week");
+
+        private final String title;
+
+        TopVotedType(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
     }
 }

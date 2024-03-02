@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,8 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import org.tweetwallfx.conference.api.ConferenceClient;
-import org.tweetwallfx.conference.api.Speaker;
-import org.tweetwallfx.conference.api.Talk;
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,12 +34,18 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import org.tweetwallfx.conference.api.ConferenceClient;
+import org.tweetwallfx.conference.api.Speaker;
+import org.tweetwallfx.conference.api.Talk;
+import org.tweetwallfx.conference.spi.util.Optionals;
+
 public final class SpeakerImpl implements Speaker {
 
     private final String id;
     private final String firstName;
     private final String fullName;
     private final String lastName;
+    private final Optional<String> company;
     private final String avatarURL;
     private final Map<String, String> socialMedia;
     private final List<Talk> talks;
@@ -50,6 +55,7 @@ public final class SpeakerImpl implements Speaker {
         this.firstName = Objects.requireNonNull(builder.firstName, "firstName must not be null");
         this.fullName = Objects.requireNonNull(builder.fullName, "fullName must not be null");
         this.lastName = Objects.requireNonNull(builder.lastName, "lastName must not be null");
+        this.company = Optionals.nonEmptyString(builder.company);
         this.avatarURL = Objects.requireNonNull(builder.avatarURL, "avatarURL must not be null");
         this.socialMedia = Map.copyOf(builder.socialMedia);
         this.talks = List.copyOf(builder.talks);
@@ -86,6 +92,11 @@ public final class SpeakerImpl implements Speaker {
     }
 
     @Override
+    public Optional<String> getCompany() {
+        return company;
+    }
+
+    @Override
     public String getAvatarURL() {
         return avatarURL;
     }
@@ -97,16 +108,17 @@ public final class SpeakerImpl implements Speaker {
 
     @Override
     public String toString() {
-        return new StringBuilder("SpeakerImpl")
-                .append("{id=").append(getId())
-                .append(", firstName=").append(getFirstName())
-                .append(", fullName=").append(getFullName())
-                .append(", lastName=").append(getLastName())
-                .append(", avatarURL=").append(getAvatarURL())
-                .append(", socialMedia=").append(getSocialMedia())
-                .append(", talks=").append(getTalks())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "firstName", getFirstName(),
+                "fullName", getFullName(),
+                "lastName", getLastName(),
+                "company", getCompany(),
+                "avatarURL", getAvatarURL(),
+                "socialMedia", getSocialMedia(),
+                "talks", getTalks()
+            ),
+            true);
     }
 
     public static Builder builder() {
@@ -122,6 +134,7 @@ public final class SpeakerImpl implements Speaker {
         private Map<String, String> socialMedia = new TreeMap<>();
         private List<Talk> talks = new ArrayList<>();
         private String id;
+        private String company;
         private String avatarURL;
 
         private Builder() {
@@ -156,6 +169,11 @@ public final class SpeakerImpl implements Speaker {
 
         public Builder withLastName(final String lastName) {
             this.lastName = Objects.requireNonNull(lastName, "lastName must not be null");
+            return this;
+        }
+
+        public Builder withCompany(final String company) {
+            this.company = company;
             return this;
         }
 

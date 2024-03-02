@@ -24,10 +24,11 @@
 apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
-    implementation 'com.github.mfornos:humanize-slim:1.2.2'
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.7.Final'
     implementation 'de.jensd:fontawesomefx-commons:11.0'
     implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
     implementation 'io.github.encryptorcode:pluralize:1.0.0'
+    implementation 'org.slf4j:slf4j-api'
     implementation project(':tweetwallfx-core')
     implementation project(':tweetwallfx-emoji')
     implementation project(':tweetwallfx-stepengine-dataproviders')

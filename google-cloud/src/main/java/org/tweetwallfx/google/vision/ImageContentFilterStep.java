@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,15 @@
  */
 package org.tweetwallfx.google.vision;
 
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.filterchain.FilterChainSettings;
@@ -31,16 +40,6 @@ import org.tweetwallfx.google.GoogleLikelihood;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
-
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking that photos comply
@@ -206,7 +205,7 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
      * Param {@code checkRetweeted} a boolean flag controlling whether for a
      * retweet the retweeted Tweet is also checked
      */
-    private static record Config(
+    public static record Config(
             Boolean checkRetweeted,
             SafeTypeConfig adult,
             SafeTypeConfig medical,
@@ -214,7 +213,6 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             SafeTypeConfig spoof,
             SafeTypeConfig violence) {
 
-        @SuppressWarnings("unused")
         public Config(
                 final Boolean checkRetweeted,
                 final SafeTypeConfig adult,
@@ -222,20 +220,20 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
                 final SafeTypeConfig racy,
                 final SafeTypeConfig spoof,
                 final SafeTypeConfig violence) {
-            this.checkRetweeted = valueOrDefault(checkRetweeted, false);
-            this.adult = valueOrDefault(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.medical = valueOrDefault(medical, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.racy = valueOrDefault(racy, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.spoof = valueOrDefault(spoof, new SafeTypeConfig(GoogleLikelihood.UNLIKELY));
-            this.violence = valueOrDefault(violence, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.checkRetweeted = Objects.requireNonNullElse(checkRetweeted, false);
+            this.adult = Objects.requireNonNullElse(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.medical = Objects.requireNonNullElse(medical, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.racy = Objects.requireNonNullElse(racy, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            this.spoof = Objects.requireNonNullElse(spoof, new SafeTypeConfig(GoogleLikelihood.UNLIKELY));
+            this.violence = Objects.requireNonNullElse(violence, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
         }
     }
 
-    private static record SafeTypeConfig(
+    public static record SafeTypeConfig(
             GoogleLikelihood acceptableLikelyhood) {
 
         public SafeTypeConfig(final GoogleLikelihood acceptableLikelyhood) {
-            this.acceptableLikelyhood = valueOrDefault(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
+            this.acceptableLikelyhood = Objects.requireNonNullElse(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
         }
     }
 }

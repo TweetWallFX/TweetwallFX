@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,15 @@ import java.util.stream.Collectors;
 
 public class Emojify {
 
-    @SuppressWarnings({"NarrowCalculation","StringSplitter"})
+    @SuppressWarnings({"NarrowCalculation", "StringSplitter"})
     private static String convert(String unicodeStr) {
-        if (unicodeStr.isEmpty()) return unicodeStr;
+        if (unicodeStr.isEmpty()) {
+            return unicodeStr;
+        }
         List<String> parts = new ArrayList<String>();
-        int c = 0;
+        int c;
         int p = 0;
-        for (int i=0; i<unicodeStr.length(); i++) {
+        for (int i = 0; i < unicodeStr.length(); i++) {
             c = unicodeStr.charAt(i);
             if (p > 0) {
                 parts.add(Integer.toString(0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00), 16));
@@ -44,8 +46,8 @@ public class Emojify {
             } else if (0xD800 <= c && c <= 0xDBFF) {
                 p = c;
             } else {
-                parts.add(Integer.toString(c,16));
-                p=0;
+                parts.add(Integer.toString(c, 16));
+                p = 0;
             }
         }
         String dashedLogic = parts.stream().collect(Collectors.joining("-"));
@@ -72,7 +74,11 @@ public class Emojify {
             String hex = convert(unicodeCandidate.getEmoji().getUnicode());
             objects.add(new Twemoji(hex));
         }
-        objects.add(message.substring(startIndex, message.length()));
+
+        if (startIndex < message.length()) {
+            objects.add(message.substring(startIndex, message.length()));
+        }
+
         return objects;
     }
 }

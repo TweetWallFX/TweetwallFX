@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -95,6 +95,27 @@ public interface DataProvider {
          * @return the configuration defining the periodic scheduled execution
          */
         ScheduledConfig getScheduleConfig();
+
+        /**
+         * {@return a boolean flag indicating that initialization is required prior being utilized}.
+         */
+        default boolean requiresInitialization() {
+            return false;
+        }
+
+        /**
+         * {@return a boolean flag indicating that initialization has been performed}.
+         */
+        default boolean isInitialized() {
+            return false;
+        }
+
+        /**
+         * {@return the number of milli seconds to wait before checking the initialization state again}.
+         */
+        default long initializationCheckIntervallMS() {
+            return 50L;
+        }
     }
 
     /**

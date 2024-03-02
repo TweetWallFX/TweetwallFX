@@ -28,28 +28,46 @@ plugins {
     id 'com.diffplug.spotless' version '6.15.0'
     id 'com.github.ben-manes.versions' version '0.46.0'
     id 'com.github.spotbugs' version '5.0.13' apply false
+    id 'com.google.osdetector' version '1.7.3'
     id 'nebula.info-dependencies' version '11.4.1' apply false
     id 'nebula.maven-nebula-publish' version '18.4.0' apply false
     id 'net.ltgt.errorprone' version '3.0.1' apply false
-    id 'org.openjfx.javafxplugin' version '0.0.13' apply false
     id 'org.sonarqube' version '4.0.0.2929'
     id 'com.autonomousapps.dependency-analysis' version '1.19.0'
 }
 
 ext {
-    javafxVersion = '20-ea+11'
+    javaFxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+    javaFxPlatform = osdetector.arch == 'aarch_64' ? javaFxPlatform + '-aarch64' : javaFxPlatform
+}
+
+javaPlatform {
+    allowDependencies()
+}
+
+dependencies {
+    api platform('org.junit:junit-bom:5.10.2')
+    api platform('org.apache.logging.log4j:log4j-bom:2.21.1')
+    api platform('org.glassfish.jersey:jersey-bom:3.1.5')
+
+    constraints {
+        api 'com.github.spotbugs:spotbugs-annotations:4.8.3'
+        api 'com.vdurmont:emoji-java:5.1.1'
+        api 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+        api 'org.eclipse:yasson:3.0.3'
+        api 'org.ehcache:ehcache:3.10.8'
+        api 'org.simplify4u:slf4j2-mock:2.3.0'
+        api 'org.slf4j:slf4j-api:2.0.12'
+    }
 }
 
 allprojects {
-    group = 'org.tweetwallfx'
-    version = VersionNumber.parse(currentVersion).with {
-        if ('release' == System.getenv('GITHUB_REF_NAME')) {
-            return String.format('%d.%d.%d', major, minor, micro)
-        } else {
-            return String.format('%d.%d-SNAPSHOT', major, minor)
-        }
-    }
-    description = 'JavaFX based Tweetwall (' + name + ')'
+    int[] versionSplit = currentVersion.split('[.]').collect{it as int}
+    assert 3 == versionSplit.length : 'currentVersion property requires all three version parts (major, minor, patch)'
+
+    group = mavenGroupName
+    version = String.format('release' == System.getenv('GITHUB_REF_NAME') ? '%d.%d.%d' : '%d.%d-SNAPSHOT', versionSplit)
+    description = "${projectDescriptionBase} (${name})"
 
     repositories {
         mavenCentral()
@@ -71,6 +89,7 @@ allprojects {
             format 'textBasedFiles', {
                 target(
                     '*.gradle',
+                    '**/*.gradle',
                     '**/*.asciidoc',
                     '**/*.adoc',
                     '**/*.asc',
@@ -80,10 +99,14 @@ allprojects {
                     '**/*.properties',
                     '.gitignore',
                 )
+                targetExclude(
+                    '.*/**',
+                )
 
                 trimTrailingWhitespace()
                 indentWithSpaces(4)
                 endWithNewline()
+                replaceRegex 'noMultipleEmptyLines', '\n{3,}', '\n\n'
             }
 
             def closure = {
@@ -92,8 +115,12 @@ allprojects {
                 endWithNewline()
 //                importOrder(
 //                    '\\#',    // static imports
+//                    'com',   // classes from com root package
 //                    'java',   // classes from java root package
+//                    'javafx',  // classes from javafx root package
 //                    'javax',  // classes from javax root package
+//                    'jakarta',  // classes from javax root package
+//                    'org',  // classes from org root package
 //                    '',       // any other import
 //                )
                 replaceRegex 'noStarImports', /\nimport (static )?[a-zA-Z0-9.]*[.][\*];\n/, '\n'
@@ -102,7 +129,7 @@ allprojects {
                 replaceRegex 'Remove trailing empty comment lines.', '\n\\s*\\*(\n\\s*\\*/\n)', '$1'
                 replaceRegex 'Remove empty javadoc', '\n\\s*/\\*\\*\n\\s*\\*/\n', '\n\n'
                 replaceRegex 'Remove empty lines before end of block', '\\n[\\n]+(\\s*})(?=\\n)', '\n$1'
-                licenseHeaderFile rootProject.file('LICENSE.spotlessTemplate')
+                licenseHeaderFile rootProject.file('LICENSE.spotlessJavaTemplate')
             }
 
             if (plugins.hasPlugin(GroovyPlugin)) {
@@ -151,39 +178,45 @@ allprojects {
         apply plugin: 'idea'
         apply plugin: 'jacoco'
         apply plugin: 'eclipse'
-        apply plugin: 'nebula.info'
+        apply plugin: 'com.netflix.nebula.info'
         apply plugin: 'maven-publish'
 
         java {
             withJavadocJar()
             withSourcesJar()
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '17')))
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '21')))
             }
         }
 
         jacoco {
-            toolVersion = '0.8.8'
+            toolVersion = '0.8.10'
         }
 
         configurations {
             javafx {
                 description = 'Java FX libraries'
             }
-            jaxb
+            jaxb {
+                description = 'JAXB libraries'
+            }
 
             all {
                 resolutionStrategy.eachDependency { DependencyResolveDetails details ->
 /*
-                    if (details.requested.group == 'com.fasterxml.jackson' &&
-                        details.requested.name == 'jackson-bom' &&
-                        details.requested.version == '2.13.2.1') {
-                        details.useVersion '2.13.2.20220324'
-                        details.because 'fixes CVE-2020-36518 and resolved version does not (pom) match expectation'
+                    if (details.requested.group == 'org.ow2.asm' &&
+                        details.requested.name == 'asm') {
+                        details.useVersion '9.5'
+                        details.because 'workaround for spotbugs not yet supporting JDK 21 class formats'
                     }
 */
                 }
             }
+
+            compileOnly {
+                extendsFrom configurations.javafx
+            }
+
             testFramework {
                 description = 'Libraries for testing'
                 // exclude old junit api
@@ -193,22 +226,40 @@ allprojects {
         }
 
         dependencies {
-            implementation 'com.github.spotbugs:spotbugs-annotations:4.7.3'
-            implementation 'org.slf4j:slf4j-api:2.0.6'
+            // get recommended versions from the platform project
+            api platform(rootProject)
 
-//            jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
-//            jaxb 'org.eclipse.angus:angus-activation:2.0.0'
-//            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
-//            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '19.0.2.1', classifier: javaFxPlatform
 
-            testFramework 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-            testFramework 'org.junit.jupiter:junit-jupiter-params:5.9.2'
-            testFramework 'org.assertj:assertj-core:3.24.2'
-            testFramework 'org.mockito:mockito-junit-jupiter:5.1.1'
+            jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
+            jaxb 'org.eclipse.angus:angus-activation:2.0.0'
+            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
 
-            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-            testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.9.2'
-            testRuntimeOnly 'org.mockito:mockito-inline:5.1.1'
+            testFramework 'org.assertj:assertj-core:3.25.3'
+            testFramework 'org.junit.jupiter:junit-jupiter-api'
+            testFramework 'org.junit.jupiter:junit-jupiter-params'
+            testFramework 'org.mockito:mockito-junit-jupiter:5.10.0'
+
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+            testRuntimeOnly 'org.junit.platform:junit-platform-runner'
+            testRuntimeOnly 'org.mockito:mockito-inline:5.2.0'
+        }
+
+        ext {
+            getJvmModulePath = { -> (configurations.javafx + configurations.jaxb).asPath}
+            getJvmAdditionalModules = { ->
+                [
+                    'jakarta.activation',
+                    'jakarta.xml.bind',
+                    'javafx.controls',
+                    'javafx.graphics',
+                    'javafx.fxml'
+                ].toUnique().toSorted().join(',')
+            }
         }
 
         tasks.named('jar') {
@@ -221,7 +272,8 @@ allprojects {
 
         tasks.withType(JavaCompile).configureEach {
             options.compilerArgs.addAll([
-                    '-Xlint:-preview',
+                    // lint everything except preview (as using preview features would generate a warning and thus break the build)
+                    '-Xlint:all,-preview',
                     '--enable-preview',
                     '-Werror',
                     '-proc:none',
@@ -247,8 +299,8 @@ allprojects {
             dependsOn javadoc
         }
 
-        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_18)) {
-            // jacoco not yet compatible with JDK18
+        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
+            // jacoco not yet compatible with JDK21
             tasks.named('test') {
                 finalizedBy jacocoTestReport
             }
@@ -258,24 +310,30 @@ allprojects {
         apply plugin: 'net.ltgt.errorprone'
 
         dependencies {
-            errorprone 'com.google.errorprone:error_prone_core:2.18.0'
+            errorprone 'com.google.errorprone:error_prone_core:2.25.0'
         }
 
         // configuring Spotbugs
-        apply plugin: 'com.github.spotbugs'
+        if (System.env.CI || project.findProperty('applySpotbugs')) {
+            apply plugin: 'com.github.spotbugs'
 
-        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
-            // fail build in case a failure was detected
-            ignoreFailures = false
+            tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+                // fail build in case a failure was detected
+                ignoreFailures = false
 
-            excludeFilter = rootProject.file('spotbugs-exclude.xml')
+                excludeFilter = rootProject.file('spotbugs-exclude.xml')
 
-            reports {
-                xml.required.set(false)
-                html.required.set(true)
+                omitVisitors = [
+                    'DontReusePublicIdentifiers',
+                ]
+
+                reports {
+                    xml.required.set(false)
+                    html.required.set(true)
+                }
+
+                auxClassPaths.from(configurations.javafx, configurations.jaxb)
             }
-
-            auxClassPaths = auxClassPaths + configurations.javafx + configurations.jaxb
         }
 
         // configuring Versions plugin
@@ -305,12 +363,8 @@ allprojects {
             }
         }
 
-        tasks.withType(Test).configureEach {
-            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
-        }
-
-        apply plugin: 'nebula.maven-publish'
-        apply plugin: 'nebula.publish-verification'
+        apply plugin: 'com.netflix.nebula.maven-base-publish'
+        apply plugin: 'com.netflix.nebula.publish-verification'
 
         publishing {
             repositories {
@@ -324,6 +378,13 @@ allprojects {
                 }
             }
         }
+    }
+}
+
+if (extensions.findByName('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
     }
 }
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -42,6 +41,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
 import org.tweetwallfx.controls.Word;
 import org.tweetwallfx.controls.WordleLayout;
 import org.tweetwallfx.controls.WordleSkin;
@@ -168,7 +168,7 @@ public class FadeInCloudStep implements Step {
         }
     }
 
-    private static class Config extends AbstractConfig {
+    public static class Config extends AbstractConfig {
         public double layoutX = 0;
         public double layoutY = 0;
         public double width = 0;

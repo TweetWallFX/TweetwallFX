@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,27 @@
  */
 package org.tweetwallfx.conference.spi;
 
-import java.util.ArrayList;
+import static org.tweetwallfx.util.ToString.createToString;
+
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.tweetwallfx.conference.api.ConferenceClient;
+import org.tweetwallfx.conference.api.DateTimeRange;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.SessionType;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
 import org.tweetwallfx.conference.api.Track;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import org.tweetwallfx.conference.api.ConferenceClient;
-import org.tweetwallfx.conference.api.DateTimeRange;
+import org.tweetwallfx.conference.spi.util.Optionals;
 
 public final class TalkImpl implements Talk {
 
@@ -46,6 +51,7 @@ public final class TalkImpl implements Talk {
     private final String name;
     private final String audienceLevel;
     private final SessionType sessionType;
+    private final OptionalInt favoriteCount;
     private final Locale language;
     private final List<ScheduleSlot> scheduleSlots;
     private final List<Speaker> speakers;
@@ -57,6 +63,7 @@ public final class TalkImpl implements Talk {
         this.name = Objects.requireNonNull(builder.name, "name must not be null");
         this.audienceLevel = Objects.requireNonNull(builder.audienceLevel, "audienceLevel must not be null");
         this.sessionType = Objects.requireNonNull(builder.sessionType, "sessionType must not be null");
+        this.favoriteCount = Optionals.integer(builder.favoriteCount);
         this.language = Objects.requireNonNull(builder.language, "language must not be null");
         this.scheduleSlots = List.copyOf(builder.scheduleSlots);
         this.speakers = List.copyOf(builder.speakers);
@@ -82,6 +89,11 @@ public final class TalkImpl implements Talk {
     @Override
     public SessionType getSessionType() {
         return sessionType;
+    }
+
+    @Override
+    public OptionalInt getFavoriteCount() {
+        return favoriteCount;
     }
 
     @Override
@@ -116,18 +128,19 @@ public final class TalkImpl implements Talk {
 
     @Override
     public String toString() {
-        return new StringBuilder("TalkImpl")
-                .append("{id=").append(getId())
-                .append(", name=").append(getName())
-                .append(", audienceLevel=").append(getAudienceLevel())
-                .append(", sessionType=").append(getSessionType())
-                .append(", language=").append(getLanguage())
-                .append(", scheduleSlots=").append(getScheduleSlots())
-                .append(", speakers=").append(getSpeakers())
-                .append(", tags=").append(getTags())
-                .append(", track=").append(getTrack())
-                .append('}')
-                .toString();
+        return createToString(this, Map.of(
+                "id", getId(),
+                "name", getName(),
+                "audienceLevel", getAudienceLevel(),
+                "sessionType", getSessionType(),
+                "favoriteCount", getFavoriteCount(),
+                "language", getLanguage(),
+                "scheduleSlots", getScheduleSlots(),
+                "speakers", getSpeakers(),
+                "tags", getTags(),
+                "track", getTrack()
+            ),
+            true);
     }
 
     public static Builder builder() {
@@ -141,6 +154,7 @@ public final class TalkImpl implements Talk {
         private String name;
         private String audienceLevel;
         private SessionType sessionType;
+        private Integer favoriteCount;
         private Locale language;
         private Set<ScheduleSlot> scheduleSlots = new TreeSet<>(Comparator
                 .comparing(ScheduleSlot::getDateTimeRange, Comparator.comparing(DateTimeRange::getStart))
@@ -186,6 +200,11 @@ public final class TalkImpl implements Talk {
 
         public Builder withSessionType(final SessionType sessionType) {
             this.sessionType = Objects.requireNonNull(sessionType, "sessionType must not be null");
+            return this;
+        }
+
+        public Builder withFavoriteCount(final Integer favoriteCount) {
+            this.favoriteCount = favoriteCount;
             return this;
         }
 

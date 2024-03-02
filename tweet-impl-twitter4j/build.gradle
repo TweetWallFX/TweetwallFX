@@ -25,8 +25,10 @@
 apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
-    api 'org.twitter4j:twitter4j-core:4.1.2'
     api project(':tweetwallfx-tweet-api')
+
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.twitter4j:twitter4j-core:4.1.2'
 }
 
 javafx {

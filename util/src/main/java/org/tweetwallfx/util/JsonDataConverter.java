@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,14 @@
  */
 package org.tweetwallfx.util;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Converts data from an input into a typesafe object.
@@ -39,12 +38,13 @@ import java.io.UncheckedIOException;
 public class JsonDataConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonDataConverter.class);
-    private static final ObjectMapper OM = new JsonMapper()
-            .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
-            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     private JsonDataConverter() {
         // prevent instantiation
+    }
+
+    private static JsonbConfig readConfig() {
+        return new JsonbConfig().setProperty("jsonb.allow-unknown-properties", false);
     }
 
     /**
@@ -75,12 +75,13 @@ public class JsonDataConverter {
      *
      * @return the converted object
      */
+    @SuppressWarnings("try")
     public static <T> T convertFromInputStream(final InputStream inputStream, final Class<T> typeClass) {
-        try {
-            return OM.readValue(inputStream, typeClass);
-        } catch (final IOException ex) {
+        try (Jsonb jsonb = JsonbBuilder.create(readConfig())) {
+            return jsonb.fromJson(inputStream, typeClass);
+        } catch (final Exception ex) {
             LOG.error("Failed to convert to {} from {}", typeClass, inputStream, ex);
-            throw new UncheckedIOException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 
@@ -96,12 +97,13 @@ public class JsonDataConverter {
      *
      * @return the converted object
      */
+    @SuppressWarnings("try")
     public static <T> T convertFromString(final String jsonString, final Class<T> typeClass) {
-        try {
-            return OM.readValue(jsonString, typeClass);
-        } catch (final IOException ex) {
+        try (Jsonb jsonb = JsonbBuilder.create(readConfig())) {
+            return jsonb.fromJson(jsonString, typeClass);
+        } catch (final Exception ex) {
             LOG.error("Failed to convert to {}: {}", typeClass, jsonString, ex);
-            throw new UncheckedIOException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 
@@ -112,12 +114,24 @@ public class JsonDataConverter {
      *
      * @return the converted String
      */
+    @SuppressWarnings("try")
     public static String convertToString(final Object object) {
-        try {
-            return OM.writeValueAsString(object);
-        } catch (final IOException ex) {
-            LOG.error("Failed to convert to {}: {}", String.class, object, ex);
-            throw new UncheckedIOException(ex);
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            return jsonb.toJson(object);
+        } catch (final Exception ex) {
+            LOG.error("Failed to convert to java.lang.String: {}", object, ex);
+            throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * Converts the {@code object} parameter into a JSON byte array.
+     *
+     * @param object the object to convert
+     *
+     * @return the converted byte array
+     */
+    public static byte[] convertToBytes(final Object object) {
+        return convertToString(object).getBytes(StandardCharsets.UTF_8);
     }
 }

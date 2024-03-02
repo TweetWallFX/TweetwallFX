@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,13 @@ import java.time.format.TextStyle;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
+
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * DataProvider Implementation for Schedule Data
@@ -44,6 +45,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
 
     private volatile List<ScheduleSlot> scheduleSlots = Collections.emptyList();
     private final Config config;
+    private boolean initialized = false;
 
     private ScheduleDataProvider(final Config config) {
         this.config = config;
@@ -52,6 +54,16 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    @Override
+    public boolean requiresInitialization() {
+        return true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
@@ -64,6 +76,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
                                 .getDayOfWeek()
                                 .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
                                 .toLowerCase(Locale.ENGLISH)));
+        initialized = true;
     }
 
     public List<SessionData> getFilteredSessionData() {
@@ -104,19 +117,18 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 300L}.
      */
-    private static record Config(
+    public record Config(
             ScheduleType scheduleType,
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {
 
-        @SuppressWarnings("unused")
         public Config(
                 final ScheduleType scheduleType,
                 final Long initialDelay,
                 final Long scheduleDuration) {
-            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = valueOrDefault(initialDelay, 0L);
-            this.scheduleDuration = valueOrDefault(scheduleDuration, 5 * 60L);
+            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 5 * 60L);
         }
     }
 }

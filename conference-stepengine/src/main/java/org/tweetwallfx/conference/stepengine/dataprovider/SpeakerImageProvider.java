@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,20 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
+import static org.tweetwallfx.util.Nullable.nullable;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javafx.scene.image.Image;
+
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.conference.api.ConferenceClient;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.ProfileImageCache;
-import static org.tweetwallfx.util.Nullable.nullable;
-import static org.tweetwallfx.util.Nullable.valueOrDefault;
 
 /**
  * Utility to provide a simple api to get the cached speaker image.
@@ -79,6 +81,12 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
+    }
+
+    public Stream<Image> getImages() {
+        return ConferenceClient.getClient()
+                .getSpeakers()
+                .stream().map(this::getSpeakerImage);
     }
 
     @Override
@@ -138,7 +146,7 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 1800L}.
      */
-    private static record Config(
+    public static record Config(
             String noImageResource,
             Map<String, String> urlReplacements,
             ScheduleType scheduleType,
@@ -152,11 +160,11 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
                 final ScheduleType scheduleType,
                 final Long initialDelay,
                 final Long scheduleDuration) {
-            this.noImageResource = valueOrDefault(noImageResource, "icons/anonymous.jpg");
+            this.noImageResource = Objects.requireNonNullElse(noImageResource, "icons/anonymous.jpg");
             this.urlReplacements = nullable(urlReplacements);
-            this.scheduleType = valueOrDefault(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = valueOrDefault(initialDelay, 0L);
-            this.scheduleDuration = valueOrDefault(scheduleDuration, 30 * 60L);
+            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 30 * 60L);
         }
 
         @Override

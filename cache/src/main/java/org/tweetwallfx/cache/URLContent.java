@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -43,7 +43,11 @@ public record URLContent(
         byte[] data,
         String digest) implements Serializable {
 
-    public static final URLContent NO_CONTENT = new URLContent(new byte[0], "d41d8cd98f00b204e9800998ecf8427e");
+    public static final URLContent NO_CONTENT = new URLContent(
+            new byte[0],
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" // SHA-256
+            // "d41d8cd98f00b204e9800998ecf8427e" // MD5
+    );
 
     private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
 
@@ -61,7 +65,7 @@ public record URLContent(
         byte[] bytes = bout.toByteArray();
         String digest = null;
         try {
-            digest = HexFormat.of().formatHex(MessageDigest.getInstance("md5").digest(bytes));
+            digest = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
             LOG.info("MD5: {}", digest);
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
@@ -70,7 +74,7 @@ public record URLContent(
     }
 
     public static URLContent of(final String urlString) throws IOException {
-        try (InputStream in = new URL(urlString).openStream()) {
+        try (InputStream in = URI.create(urlString).toURL().openStream()) {
             return of(in);
         } catch (FileNotFoundException fne) {
             LOG.warn("No data found for {}", urlString, fne);

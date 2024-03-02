@@ -23,7 +23,7 @@
  */
 package org.tweetwallfx.conference.stepengine.dataprovider;
 
-import java.util.stream.Collectors;
+import java.util.List;
 import org.tweetwallfx.conference.api.RatedTalk;
 import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
@@ -33,19 +33,19 @@ import org.tweetwallfx.conference.api.Talk;
  */
 public class VotedTalk {
 
-    public final String speakers;
+    public final List<Speaker> speakers;
     public final double ratingAverageScore;
     public final int ratingTotalVotes;
-    public final Speaker speaker;
     public final Talk talk;
+    public final List<String> tags;
+    public final String trackImageUrl;
 
     public VotedTalk(final RatedTalk ratedTalk) {
         this.talk = ratedTalk.getTalk();
-        this.speaker = ratedTalk.getTalk().getSpeakers().iterator().next();
-        this.speakers = ratedTalk.getTalk().getSpeakers().stream()
-                .map(Speaker::getFullName)
-                .collect(Collectors.joining(", "));
+        this.speakers = ratedTalk.getTalk().getSpeakers();
         this.ratingAverageScore = ratedTalk.getAverageRating();
         this.ratingTotalVotes = ratedTalk.getTotalRating();
+        this.tags = talk.getTags();
+        this.trackImageUrl = talk.getTrack().getAvatarURL();
     }
 }

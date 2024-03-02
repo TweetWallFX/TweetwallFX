@@ -23,6 +23,15 @@
  */
 package org.tweetwallfx.conference.stepengine.filter;
 
+import static org.tweetwallfx.util.ToString.createToString;
+import static org.tweetwallfx.util.ToString.map;
+
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.conference.api.ConferenceClient;
@@ -33,21 +42,13 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
 import org.tweetwallfx.tweet.api.filter.AcceptFromSenderFilterStep;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.tweetwallfx.util.ToString.createToString;
-import static org.tweetwallfx.util.ToString.map;
-
 /**
  * A {@link FilterStep} handling {@link Tweet}s by checking the sending
  * {@link User} {@link User#getName()} and possibly accept them if the user
  * twitter handle is one of the conferences speakers handles.
  *
  * In case {@link User#getName()} is one of the names configured in
+ * {@link Config#getUserHandles()} it is terminally accepted with
  * {@link Result#ACCEPTED}. Otherwise it is evaluated as
  * {@link Result#NOTHING_DEFINITE}.
  */
@@ -158,11 +159,11 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
         public String toString() {
             return createToString(this, map(
                     "checkRetweeted", isCheckRetweeted()
-            )) + " extends " + super.toString();
+            ), super.toString());
         }
     }
 
-    private static class SpeakerTwitterHandles {
+    public static class SpeakerTwitterHandles {
 
         private final Set<String> twitterHandles;
 

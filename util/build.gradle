@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,5 +23,8 @@
  */
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'jakarta.json.bind:jakarta.json.bind-api:3.0.0'
+    implementation 'org.slf4j:slf4j-api'
+
+    runtimeOnly 'org.eclipse:yasson'
 }

@@ -25,9 +25,7 @@ jobs:
     strategy:
       matrix:
         jdk:
-          - '17'
-          - '18'
-          - '19'
+          - '21'
         distribution:
           - 'zulu'
 
@@ -37,42 +35,42 @@ jobs:
     steps:
       # Check out sources
       - name: Fetch Sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1.0.6
+        uses: gradle/wrapper-validation-action@v2.1.1
 
       # Setup JDK environment for the next steps
-      - name: Setup ${{ matrix.distribution }} JDK 17 for gradle
-        uses: actions/setup-java@v3
+      - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
+        uses: actions/setup-java@v4.1.0
         with:
           distribution: ${{ matrix.distribution }}
-          java-version: 17
+          java-version: ${{ matrix.jdk }}
           cache: gradle
 
       # Run assemble tasks
       - name: Run assemble tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3.1.0
         with:
-          arguments: --no-daemon --refresh-dependencies --warning-mode all assemble
+          arguments: --no-daemon --refresh-dependencies --scan --warning-mode all assemble
 
       # Run test tasks
       - name: Run test tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3.1.0
         with:
-          arguments: --no-daemon --warning-mode all test
+          arguments: --no-daemon --scan --warning-mode all test
 
       # Run check tasks
       - name: Run check tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3.1.0
         with:
-          arguments: --no-daemon --warning-mode all check
+          arguments: --no-daemon --scan --warning-mode all check
 
       # Archive test reports
       - name: Archive build logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: ${{ matrix.distribution }}-jdk${{ matrix.jdk }}-build-logs
           retention-days: 5
@@ -84,8 +82,8 @@ jobs:
       # Run publish task
       - name: Run publish task
         if: ${{ (matrix.jdk == '17') && (github.event_name == 'push') && success() }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3.1.0
         with:
-          arguments: --no-daemon --warning-mode all publish
+          arguments: --no-daemon --scan --warning-mode all publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

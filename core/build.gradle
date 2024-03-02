@@ -23,6 +23,6 @@
  */
 
 dependencies {
-    implementation 'com.vdurmont:emoji-java:5.1.2'
+    implementation 'com.vdurmont:emoji-java'
     implementation project(':tweetwallfx-configuration')
 }

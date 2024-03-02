@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,8 @@ import java.util.stream.StreamSupport;
  */
 public class ToString {
 
-    private static final String NEW_ENTRY_DELIM = ",\n    ";
+    private static final String NEW_ENTRY_DELIM_MULTI_LINE = ",\n    ";
+    private static final String NEW_ENTRY_DELIM_SINGLE_LINE = ", ";
 
     private ToString() {
         // prevent instantiation
@@ -271,7 +272,29 @@ public class ToString {
      * @return the created String
      */
     public static String createToString(final Object object, final Map<String, Object> parameters, final String superToString) {
-        return createToString(object, parameters)
+        return createToString(object, parameters, superToString, false);
+    }
+
+    /**
+     * Creates a readable String for use in implementations of
+     * {@link Object#toString()} methods also adding the super objects toString
+     * value. The {@code singleLine} flag determines if the created String is
+     * in a single line or in multiple lines.
+     *
+     * @param object the object for which the String shall be created
+     *
+     * @param parameters the parameters to list in the created String
+     *
+     * @param superToString the toString value of the objects super
+     * implementation
+     *
+     * @param singleLine the flag indicating if the string being generated shall
+     * be in a single line or multiple line
+     *
+     * @return the created String
+     */
+    public static String createToString(final Object object, final Map<String, Object> parameters, final String superToString, final boolean singleLine) {
+        return createToString(object, parameters, singleLine)
                 + (null == superToString ? "" : " extends " + superToString);
     }
 
@@ -286,39 +309,57 @@ public class ToString {
      * @return the created String
      */
     public static String createToString(final Object object, final Map<String, Object> parameters) {
+        return createToString(object, parameters, false);
+    }
+
+    /**
+     * Creates a readable String for use in implementations of
+     * {@link Object#toString()} methods.
+     *
+     * @param object the object for which the String shall be created
+     *
+     * @param parameters the parameters to list in the created String
+     *
+     * @return the created String
+     */
+    public static String createToString(final Object object, final Map<String, Object> parameters, final boolean singleLine) {
         return object.getClass().getSimpleName() + Optional.ofNullable(parameters)
                 .filter(m -> !m.isEmpty())
-                .map(Map::entrySet)
-                .map(Collection::stream)
-                .map(s -> s
-                .map(e -> e.getKey() + ": " + getValueToString(e.getValue()))
-                .collect(Collectors.joining(NEW_ENTRY_DELIM, " {\n    ", "\n}")))
+                .map(m -> " " + getValueToStringImpl(m, singleLine))
                 .orElse("");
     }
 
-    private static String getValueToString(final Object object) {
-        return getValueToStringImpl(object).replace("\n", "\n    ");
+    private static String getValueToString(final Object object, final boolean singleLine) {
+        if (singleLine) {
+            return getValueToStringImpl(object, singleLine);
+        } else {
+            return getValueToStringImpl(object, singleLine).replace("\n", "\n    ");
+        }
     }
 
-    private static String getValueToStringImpl(final Object object) {
+    private static String getValueToStringImpl(final Object object, final boolean singleLine) {
+        final String newEntryDelim = singleLine ? NEW_ENTRY_DELIM_SINGLE_LINE : NEW_ENTRY_DELIM_MULTI_LINE;
+        final String iterationStartIndent = singleLine ? "" : "\n    ";
+        final String iterationEndIndent = singleLine ? "" : "\n";
+
         return switch(object) {
             case null -> "null";
             case Map<?,?> map ->
                 map.isEmpty() ? "{}" :
                     map.entrySet()
                         .stream()
-                        .map(e -> getValueToString(e.getKey()) + ": " + getValueToString(e.getValue()))
-                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "{\n    ", "\n}"));
+                        .map(e -> getValueToString(e.getKey(), singleLine) + ": " + getValueToString(e.getValue(), singleLine))
+                        .collect(Collectors.joining(newEntryDelim, "{" + iterationStartIndent, iterationEndIndent + '}'));
             case Iterable<?> iterable ->
                 !iterable.iterator().hasNext() ? "[]" :
                     StreamSupport.stream(iterable.spliterator(), false)
-                        .map(ToString::getValueToString)
-                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
+                        .map(o -> getValueToString(o, singleLine))
+                        .collect(Collectors.joining(newEntryDelim, "[" + iterationStartIndent, iterationEndIndent + ']'));
             case Object[] array ->
                 0 == array.length ? "[]":
                     Arrays.stream(array)
-                        .map(ToString::getValueToString)
-                        .collect(Collectors.joining(NEW_ENTRY_DELIM, "[\n    ", "\n]"));
+                        .map(o -> getValueToString(o, singleLine))
+                        .collect(Collectors.joining(newEntryDelim, "[" + iterationStartIndent, iterationEndIndent + ']'));
             default -> String.valueOf(object);
         };
     }
