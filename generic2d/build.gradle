@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
     compileOnly 'org.osgi:osgi.annotation:8.1.0'
@@ -32,4 +33,8 @@ dependencies {
     implementation 'org.slf4j:slf4j-api'
 
     runtimeOnly 'org.apache.logging.log4j:log4j-slf4j2-impl'
+}
+
+javafx {
+    modules = [ 'javafx.graphics' ]
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2022 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,16 +25,15 @@
 plugins {
     id 'base'
     id 'build-dashboard'
-    id 'java-platform'
-    id 'com.diffplug.spotless' version '6.25.0'
-    id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'com.github.spotbugs' version '6.0.8' apply false
+    id 'com.diffplug.spotless' version '6.15.0'
+    id 'com.github.ben-manes.versions' version '0.46.0'
+    id 'com.github.spotbugs' version '5.0.13' apply false
     id 'com.google.osdetector' version '1.7.3'
-    id 'com.netflix.nebula.info' version '13.0.0' apply false
-    id 'com.netflix.nebula.maven-base-publish' version '21.0.0' apply false
-    id 'net.ltgt.errorprone' version '3.1.0' apply false
-    id 'org.sonarqube' version '4.4.1.3373'
-    id 'com.autonomousapps.dependency-analysis' version '1.30.0'
+    id 'nebula.info-dependencies' version '11.4.1' apply false
+    id 'nebula.maven-nebula-publish' version '18.4.0' apply false
+    id 'net.ltgt.errorprone' version '3.0.1' apply false
+    id 'org.sonarqube' version '4.0.0.2929'
+    id 'com.autonomousapps.dependency-analysis' version '1.19.0'
 }
 
 ext {
@@ -72,7 +71,7 @@ allprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
+        mavenLocal()
     }
 
     // configuring Spotless
@@ -204,11 +203,13 @@ allprojects {
 
             all {
                 resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+/*
                     if (details.requested.group == 'org.ow2.asm' &&
                         details.requested.name == 'asm') {
                         details.useVersion '9.5'
                         details.because 'workaround for spotbugs not yet supporting JDK 21 class formats'
                     }
+*/
                 }
             }
 
@@ -228,15 +229,15 @@ allprojects {
             // get recommended versions from the platform project
             api platform(rootProject)
 
-            javafx group: 'org.openjfx', name: 'javafx-base', version: '21.0.2', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '21.0.2', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '21.0.2', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: '21.0.2', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-base', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '19.0.2.1', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-controls', version: '19.0.2.1', classifier: javaFxPlatform
 
-            jaxb 'jakarta.activation:jakarta.activation-api:2.1.3'
-            jaxb 'org.eclipse.angus:angus-activation:2.0.2'
-            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
-            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.4'
+            jaxb 'jakarta.activation:jakarta.activation-api:2.1.1'
+            jaxb 'org.eclipse.angus:angus-activation:2.0.0'
+            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
 
             testFramework 'org.assertj:assertj-core:3.25.3'
             testFramework 'org.junit.jupiter:junit-jupiter-api'
@@ -255,8 +256,8 @@ allprojects {
                     'jakarta.activation',
                     'jakarta.xml.bind',
                     'javafx.controls',
-                    'javafx.fxml',
                     'javafx.graphics',
+                    'javafx.fxml'
                 ].toUnique().toSorted().join(',')
             }
         }
@@ -266,8 +267,6 @@ allprojects {
         }
 
         tasks.named('javadoc') {
-            options.addStringOption('-module-path', getJvmModulePath())
-            options.addStringOption('-add-modules', getJvmAdditionalModules())
             enabled = false // TODO: re-enable (currently breaks build with ClassCastException)
         }
 
@@ -278,30 +277,17 @@ allprojects {
                     '--enable-preview',
                     '-Werror',
                     '-proc:none',
-                    '--module-path',
-                    getJvmModulePath(),
-                    '--add-modules',
-                    getJvmAdditionalModules(),
             ])
         }
 
         tasks.withType(JavaExec).configureEach {
             jvmArgs '--enable-preview'
-            jvmArgs '--module-path'
-            jvmArgs getJvmModulePath()
-            jvmArgs '--add-modules'
-            jvmArgs getJvmAdditionalModules()
             jvmArgs '--add-opens'
             jvmArgs 'java.base/jdk.internal.misc=ALL-UNNAMED'
         }
 
         tasks.withType(Test).configureEach {
             jvmArgs '--enable-preview'
-            jvmArgs '--module-path'
-            jvmArgs getJvmModulePath()
-            jvmArgs '--add-modules'
-            jvmArgs getJvmAdditionalModules()
-            systemProperty 'org.tweetwallfx.tests.executeConferenceClientLiveTests', executeConferenceClientLiveTests
 
             useJUnitPlatform()
             testLogging {
@@ -334,11 +320,6 @@ allprojects {
             tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
                 // fail build in case a failure was detected
                 ignoreFailures = false
-
-                jvmArgs.add '--module-path'
-                jvmArgs.add getJvmModulePath()
-                jvmArgs.add '--add-modules'
-                jvmArgs.add getJvmAdditionalModules()
 
                 excludeFilter = rootProject.file('spotbugs-exclude.xml')
 

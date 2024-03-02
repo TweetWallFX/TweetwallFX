@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:5.0.7.Final'
@@ -32,4 +33,8 @@ dependencies {
     implementation project(':tweetwallfx-emoji')
     implementation project(':tweetwallfx-stepengine-dataproviders')
     implementation project(':tweetwallfx-transitions')
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.graphics' ]
 }

@@ -127,6 +127,6 @@ final class TwitterOAuth {
     }
 
     public static TwitterOAuth instance() {
-        return INSTANCE_REFERENCE.updateAndGet(TwitterOAuth::checkOrInitialize);
+        return INSTANCE_REFERENCE.getAndUpdate(TwitterOAuth::checkOrInitialize);
     }
 }

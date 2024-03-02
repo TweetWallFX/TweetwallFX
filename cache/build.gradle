@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,7 @@
 dependencies {
     api project(':tweetwallfx-configuration')
 
-    implementation 'com.github.spotbugs:spotbugs-annotations'
-    implementation 'org.ehcache:ehcache'
-    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.ehcache:ehcache:3.10.8'
 
     runtimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl'
 }

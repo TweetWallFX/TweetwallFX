@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2023-2023 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,16 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-apply plugin: 'org.openjfx.javafxplugin'
-
-dependencies {
-    api project(':tweetwallfx-configuration')
-    api project(':tweetwallfx-tweet-api')
-
-    implementation 'com.github.spotbugs:spotbugs-annotations'
-    implementation 'org.slf4j:slf4j-api'
-}
-
-javafx {
-    modules = [ 'javafx.graphics' ]
+module org.tweetwallfx.conference.spi {
+    requires jakarta.ws.rs;
+    requires org.slf4j;
+    requires org.tweetwallfx.conference.api;
 }
