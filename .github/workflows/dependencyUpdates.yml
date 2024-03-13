@@ -25,7 +25,7 @@ jobs:
     steps:
       # Check out sources
       - name: Fetch Sources
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
