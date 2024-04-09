@@ -238,7 +238,7 @@ public final class Configuration {
         return result;
     }
 
-    public static Configuration getInstance() {
+    public static synchronized Configuration getInstance() {
         return INSTANCE;
     }
 
