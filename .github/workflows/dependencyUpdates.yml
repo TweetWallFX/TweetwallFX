@@ -41,7 +41,7 @@ jobs:
 
       # Run dependencyUpdates task
       - name: Run dependencyUpdates task
-        uses: gradle/gradle-build-action@v3.1.0
+        uses: gradle/gradle-build-action@v3.2.1
         with:
           arguments: --no-daemon --refresh-dependencies --scan dependencyUpdates
 
@@ -56,7 +56,7 @@ jobs:
       # Run dependency-analysis task
       - name: Run dependency-analysis task
         if: false
-        uses: gradle/gradle-build-action@v3.1.0
+        uses: gradle/gradle-build-action@v3.2.1
         with:
           arguments: --no-daemon --refresh-dependencies --scan buildHealth
 
