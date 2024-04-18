@@ -229,7 +229,7 @@ allprojects {
             api platform(rootProject)
 
             javafx group: 'org.openjfx', name: 'javafx-base', version: '22.0.1', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '22', classifier: javaFxPlatform
+            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '22.0.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '22.0.1', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '22', classifier: javaFxPlatform
 
