@@ -39,7 +39,7 @@ jobs:
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3.3.0
+        uses: gradle/wrapper-validation-action@v3.3.1
 
       # Setup JDK environment for the next steps
       - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
