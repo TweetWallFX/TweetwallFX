@@ -26,6 +26,7 @@ jobs:
       matrix:
         jdk:
           - '21'
+          - '22'
         distribution:
           - 'zulu'
 
