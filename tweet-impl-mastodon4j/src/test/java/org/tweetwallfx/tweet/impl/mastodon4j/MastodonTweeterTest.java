@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -212,7 +212,7 @@ class MastodonTweeterTest {
     void shutdown() {
         doNothing().when(logger).debug("shutdown()");
 
-        tweeter.shutdown();
+        assertThatNoException().isThrownBy(tweeter::shutdown);
     }
 
     @Test
