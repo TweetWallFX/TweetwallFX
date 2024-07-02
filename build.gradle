@@ -202,6 +202,7 @@ allprojects {
                 description = 'JAXB libraries'
             }
 
+            /*
             all {
                 resolutionStrategy.eachDependency { DependencyResolveDetails details ->
                     if (details.requested.group == 'org.ow2.asm' &&
@@ -211,6 +212,7 @@ allprojects {
                     }
                 }
             }
+            */
 
             compileOnly {
                 extendsFrom configurations.javafx
