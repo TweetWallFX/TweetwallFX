@@ -38,10 +38,6 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4.1.7
 
-      # Validate wrapper
-      - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3.4.2
-
       # Setup JDK environment for the next steps
       - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
         uses: actions/setup-java@v4.2.1
@@ -50,23 +46,23 @@ jobs:
           java-version: ${{ matrix.jdk }}
           cache: gradle
 
+      # Setup gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3.4.2
+        with:
+          validate-wrappers: true
+
       # Run assemble tasks
       - name: Run assemble tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v3.4.2
-        with:
-          arguments: --no-daemon --refresh-dependencies --scan --warning-mode all --stacktrace assemble
+        run: ./gradlew --no-daemon --refresh-dependencies --scan --warning-mode all --stacktrace assemble
 
       # Run test tasks
       - name: Run test tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v3.4.2
-        with:
-          arguments: --no-daemon --scan --warning-mode all test
+        run: ./gradlew --no-daemon --scan --warning-mode all test
 
       # Run check tasks
       - name: Run check tasks with toolchain JDK ${{ matrix.jdk }}
-        uses: gradle/gradle-build-action@v3.4.2
-        with:
-          arguments: --no-daemon --scan --warning-mode all check
+        run: ./gradlew --no-daemon --scan --warning-mode all check
 
       # Archive test reports
       - name: Archive build logs
@@ -83,8 +79,6 @@ jobs:
       # Run publish task
       - name: Run publish task
         if: ${{ (matrix.jdk == '17') && (github.event_name == 'push') && success() }}
-        uses: gradle/gradle-build-action@v3.4.2
-        with:
-          arguments: --no-daemon --scan --warning-mode all publish
+        run: ./gradlew --no-daemon --scan --warning-mode all publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
