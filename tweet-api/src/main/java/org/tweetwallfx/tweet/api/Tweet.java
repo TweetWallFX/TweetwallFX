@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -147,7 +147,7 @@ public interface Tweet extends BasicEntry {
         final AtomicInteger offset = new AtomicInteger(0);
 
         return IntStream.range(0, codePoints.length)
-                .filter(i -> codePoints[i] >= 0x1f000)
+                .filter(Character::isEmoji)
                 .mapToObj(i -> {
                     final int charCount = Character.charCount(codePoints[i]);
                     final int cOffset = offset.getAndAdd(charCount - 1);
