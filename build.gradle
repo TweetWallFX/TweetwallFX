@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,7 @@ dependencies {
     api platform('org.glassfish.jersey:jersey-bom:3.1.7')
 
     constraints {
+        api 'biz.aQute.bnd:biz.aQute.bnd.annotation:7.0.0'
         api 'com.github.spotbugs:spotbugs-annotations:4.8.6'
         api 'com.vdurmont:emoji-java:5.1.1'
         api 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
