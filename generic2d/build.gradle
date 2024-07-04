@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,9 @@
 
 dependencies {
     compileOnly 'org.osgi:osgi.annotation:8.1.0'
+
+    compileOnly 'biz.aQute.bnd:biz.aQute.bnd.annotation'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations'
 
     implementation project(':tweetwallfx-2d')
     implementation project(':tweetwallfx-mqtt')
