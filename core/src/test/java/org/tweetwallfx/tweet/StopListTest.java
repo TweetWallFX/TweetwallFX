@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.tweetwallfx.tweet;
 
-dependencies {
-    implementation 'org.slf4j:slf4j-api'
-    implementation project(':tweetwallfx-configuration')
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
+public class StopListTest {
+
+    static Stream<Arguments> parameters() {
+        return Stream.of(
+                arguments(
+                        "An 😀awesome 😃string with a few 😉emojis!",
+                        "An awesome string with a few emojis!"
+                ),
+                arguments(
+                        "😀 Awesome emojis! 😉",
+                        " Awesome emojis! "
+                )
+        );
+    }
+
+    @ParameterizedTest(name = "{0} > {1}")
+    @MethodSource("parameters")
+    void tokenizeStringToTextAndEmoji(String inputString, String result) {
+        assertThat(StopList.removeEmojis(inputString))
+                .isEqualTo(result);
+    }
 }
