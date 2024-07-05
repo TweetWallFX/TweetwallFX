@@ -1,7 +1,7 @@
 <!--
  The MIT License (MIT)
 
- Copyright (c) 2022-2023 TweetWallFX
+ Copyright (c) 2022-2024 TweetWallFX
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -69,5 +69,27 @@
     <Match>
         <Class name="org.tweetwallfx.tweet.impl.twitter4j.TwitterTweeter" />
         <Bug code="RV" />
+    </Match>
+    <Match>
+        <Or>
+            <Class name="org.tweetwallfx.google.vision.ImageContentAnalysisTest" />
+        </Or>
+        <Bug code="SECOBDES" />
+    </Match>
+    <Match>
+        <Or>
+            <Class name="org.tweetwallfx.cache.CacheManagerProvider" />
+            <Class name="org.tweetwallfx.google.vision.GoogleVisionCache" />
+        </Or>
+        <Bug code="SECPTI" />
+    </Match>
+    <Match>
+        <Or>
+            <Class name="org.tweetwallfx.cache.URLContent" />
+            <Class name="org.tweetwallfx.conference.test.ConferenceClientTestBase" />
+            <Class name="org.tweetwallfx.config.Configuration" />
+            <Class name="org.tweetwallfx.controls.util.URLHelper" />
+        </Or>
+        <Bug code="SECSSSRFUC" />
     </Match>
 </FindBugsFilter>

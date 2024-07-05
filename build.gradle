@@ -355,6 +355,10 @@ allprojects {
 
                 auxClassPaths.from(configurations.javafx, configurations.jaxb)
             }
+
+            dependencies {
+                spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
+            }
         }
 
         // configuring Versions plugin
