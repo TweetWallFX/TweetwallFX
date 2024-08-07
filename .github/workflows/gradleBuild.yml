@@ -67,7 +67,7 @@ jobs:
       # Archive test reports
       - name: Archive build logs
         if: always()
-        uses: actions/upload-artifact@v4.3.4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: ${{ matrix.distribution }}-jdk${{ matrix.jdk }}-build-logs
           retention-days: 5
