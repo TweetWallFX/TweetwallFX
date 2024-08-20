@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,27 @@
  */
 package org.tweetwallfx.controls.steps;
 
-import de.jensd.fx.glyphs.GlyphsStack;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import org.tweetwallfx.controls.TweetLayout;
+import org.tweetwallfx.controls.TweetWordNodeFactory;
+import org.tweetwallfx.controls.Word;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.emoji.control.EmojiFlow;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+import org.tweetwallfx.stepengine.dataproviders.PhotoImageMediaEntryDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
+import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
+import org.tweetwallfx.transitions.FontSizeTransition;
+import org.tweetwallfx.transitions.LocationTransition;
+import org.tweetwallfx.tweet.api.Tweet;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -48,20 +63,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.tweetwallfx.controls.TweetLayout;
-import org.tweetwallfx.controls.TweetWordNodeFactory;
-import org.tweetwallfx.controls.Word;
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.stepengine.api.DataProvider;
-import org.tweetwallfx.stepengine.api.Step;
-import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
-import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
-import org.tweetwallfx.stepengine.dataproviders.PhotoImageMediaEntryDataProvider;
-import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
-import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
-import org.tweetwallfx.transitions.FontSizeTransition;
-import org.tweetwallfx.transitions.LocationTransition;
-import org.tweetwallfx.tweet.api.Tweet;
 
 public class CloudToTweetStep implements Step {
 
@@ -277,7 +278,7 @@ public class CloudToTweetStep implements Step {
         HBox thirdLineBox = new HBox(handle);
 
         if (originalTweet.getUser().isVerified()) {
-            FontAwesomeIconView verifiedIcon = new FontAwesomeIconView();
+            EmojiFlow verifiedIcon = new EmojiFlow("✅", 24D, 24D);
             verifiedIcon.getStyleClass().addAll("verifiedAccount");
 
             secondLineBox.getChildren().add(verifiedIcon);
@@ -285,26 +286,19 @@ public class CloudToTweetStep implements Step {
         }
 
         if (displayTweet.isRetweet()) {
-            FontAwesomeIconView retweetIconBack = new FontAwesomeIconView();
-            retweetIconBack.getStyleClass().addAll("retweetBack");
-
-            FontAwesomeIconView retweetIconFront = new FontAwesomeIconView();
-            retweetIconFront.getStyleClass().addAll("retweetFront");
+            EmojiFlow retweetIcon = new EmojiFlow("🔁", 22D, 22D);
+            retweetIcon.getStyleClass().addAll("retweetBack");
 
             Label retweetName = new Label(displayTweet.getUser().getName());
             retweetName.getStyleClass().setAll("retweetName");
 
-            GlyphsStack stackedIcon = GlyphsStack.create()
-                    .add(retweetIconBack)
-                    .add(retweetIconFront);
-
-            firstLineBox.getChildren().addAll(stackedIcon, retweetName);
-            HBox.setMargin(stackedIcon, new Insets(0, 10, 0, 0));
+            firstLineBox.getChildren().addAll(retweetIcon, retweetName);
+            HBox.setMargin(retweetIcon, new Insets(0, 10, 0, 0));
         }
 
         if (wordleSkin.getFavIconsVisible()) {
             if (0 < originalTweet.getRetweetCount()) {
-                FontAwesomeIconView faiReTwCount = new FontAwesomeIconView();
+                EmojiFlow faiReTwCount = new EmojiFlow("🔁", 24D, 24D);
                 faiReTwCount.getStyleClass().setAll("retweetCount");
 
                 Label reTwCount = new Label(String.valueOf(originalTweet.getRetweetCount()));
@@ -315,7 +309,7 @@ public class CloudToTweetStep implements Step {
             }
 
             if (0 < originalTweet.getFavoriteCount()) {
-                FontAwesomeIconView faiFavCount = new FontAwesomeIconView();
+                EmojiFlow faiFavCount = new EmojiFlow("👍", 24D, 24D);
                 faiFavCount.getStyleClass().setAll("favoriteCount");
 
                 Label favCount = new Label(String.valueOf(originalTweet.getFavoriteCount()));

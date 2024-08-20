@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,13 @@
 package org.tweetwallfx.emoji.control;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.emoji.EmojiImageCache;
+import org.tweetwallfx.emoji.Emojify;
+import org.tweetwallfx.emoji.Twemoji;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,11 +38,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tweetwallfx.emoji.EmojiImageCache;
-import org.tweetwallfx.emoji.Emojify;
-import org.tweetwallfx.emoji.Twemoji;
 
 public final class EmojiFlow extends TextFlow {
 
@@ -49,6 +51,17 @@ public final class EmojiFlow extends TextFlow {
         this.textProperty.addListener((o, old, text) -> updateContent(text));
         this.emojiFitWidthProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
         this.emojiFitHeightProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
+    }
+
+    public EmojiFlow(String text) {
+        this();
+        setText(text);
+    }
+
+    public EmojiFlow(String text, double fitWidth, double fitHeight) {
+        this(text);
+        setEmojiFitWidth(fitWidth);
+        setEmojiFitHeight(fitHeight);
     }
 
     public final String getText() {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,22 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tweetwallfx.conference.api.Speaker;
+import org.tweetwallfx.conference.stepengine.dataprovider.ScheduleDataProvider;
+import org.tweetwallfx.conference.stepengine.dataprovider.SessionData;
+import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
+import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
+import org.tweetwallfx.controls.WordleSkin;
+import org.tweetwallfx.emoji.control.EmojiFlow;
+import org.tweetwallfx.stepengine.api.DataProvider;
+import org.tweetwallfx.stepengine.api.Step;
+import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
+import org.tweetwallfx.stepengine.api.config.AbstractConfig;
+import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -46,22 +62,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tweetwallfx.conference.api.Speaker;
-import org.tweetwallfx.conference.stepengine.dataprovider.ScheduleDataProvider;
-import org.tweetwallfx.conference.stepengine.dataprovider.SessionData;
-import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
-import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
-import org.tweetwallfx.controls.WordleSkin;
-import org.tweetwallfx.emoji.control.EmojiFlow;
-import org.tweetwallfx.stepengine.api.DataProvider;
-import org.tweetwallfx.stepengine.api.Step;
-import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
-import org.tweetwallfx.stepengine.api.config.AbstractConfig;
-import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
 /**
  * Show Schedule (Flip In) Animation Step
@@ -223,10 +223,10 @@ public class ShowSchedule implements Step {
         }
 
         if (config.showFavourite && sessionData.favouritesCount >= 0) {
-            final FontAwesomeIconView faiFavCount = new FontAwesomeIconView();
+            final EmojiFlow faiFavCount = new EmojiFlow("👍", 24D, 24D);
             faiFavCount.getStyleClass().setAll("favoriteGlyph");
 
-            var favLabel = new Label("" + sessionData.favouritesCount);
+            var favLabel = new Label(Integer.toString(sessionData.favouritesCount));
             favLabel.getStyleClass().setAll("favoriteCount");
 
             final HBox favourites = new HBox(5, faiFavCount, favLabel);

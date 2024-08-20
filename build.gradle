@@ -72,7 +72,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     // configuring Spotless
