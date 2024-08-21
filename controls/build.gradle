@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,6 @@
 
 dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:5.0.9.Final'
-    implementation 'de.jensd:fontawesomefx-commons:11.0'
-    implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-11'
     implementation 'io.github.encryptorcode:pluralize:1.0.0'
     implementation 'org.slf4j:slf4j-api'
     implementation project(':tweetwallfx-core')
