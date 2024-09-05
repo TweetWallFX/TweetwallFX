@@ -28,7 +28,7 @@ plugins {
     id 'java-platform'
     id 'com.diffplug.spotless' version '6.25.0'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'com.github.spotbugs' version '6.0.21' apply false
+    id 'com.github.spotbugs' version '6.0.22' apply false
     id 'com.google.osdetector' version '1.7.3'
     id 'com.netflix.nebula.info' version '13.1.2' apply false
     id 'com.netflix.nebula.maven-base-publish' version '21.1.0' apply false
