@@ -25,6 +25,6 @@ jobs:
 
       # Setup JDK environment for the next steps
       - name: Update Gradle Wrapper When Possible
-        uses: gradle-update/update-gradle-wrapper-action@v1.0.20
+        uses: gradle-update/update-gradle-wrapper-action@v2.0.0
         with:
           repo-token: ${{ secrets.REPO_PAT }}
