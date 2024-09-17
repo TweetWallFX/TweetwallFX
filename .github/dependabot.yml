@@ -31,6 +31,11 @@ updates:
       time: "08:15"
     reviewers:
        - "TweetWallFX/tweetwallfx-admins"
+    # Group Update PRs
+    groups:
+      javafx:
+        patterns:
+          - "org.openjfx:javafx-*"
     # Allow up to N open pull requests (independant of source)
     open-pull-requests-limit: 50
 
