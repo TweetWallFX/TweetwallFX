@@ -34,7 +34,7 @@ plugins {
     id 'com.netflix.nebula.maven-base-publish' version '21.1.0' apply false
     id 'net.ltgt.errorprone' version '4.0.1' apply false
     id 'org.sonarqube' version '5.1.0.4882'
-    id 'com.autonomousapps.dependency-analysis' version '2.1.0'
+    id 'com.autonomousapps.dependency-analysis' version '2.1.1'
 }
 
 ext {
