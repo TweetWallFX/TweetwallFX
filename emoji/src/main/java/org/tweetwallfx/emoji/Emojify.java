@@ -40,7 +40,7 @@ public final class Emojify {
         for (int idx = 0; idx < codePoints.length; idx++) {
             var cp = codePoints[idx];
 
-            if (Character.isEmoji(cp)) {
+            if (Character.isEmojiPresentation(cp)) {
                 // we have an emoji
                 if (idx != idxStart) {
                     // prior to the emoji is a non-empty text
