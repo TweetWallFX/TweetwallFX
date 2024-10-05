@@ -41,7 +41,7 @@ public final class Emojify {
             var cp = codePoints[idx];
 
             if (Character.isEmojiPresentation(cp)) {
-                // we have an emoji
+                // we have an emoji we can display
                 if (idx != idxStart) {
                     // prior to the emoji is a non-empty text
                     // add non-emoji text to tokens
