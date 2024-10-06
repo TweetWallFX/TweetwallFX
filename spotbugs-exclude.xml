@@ -46,6 +46,8 @@
             <Class name="org.tweetwallfx.stepengine.steps.PauseStep$Config" />
             <Class name="org.tweetwallfx.stepengine.steps.visual.HideAction$Config" />
             <Class name="org.tweetwallfx.stepengine.steps.visual.ShowAction$Config" />
+            <Class name="org.tweetwallfx.tweet.impl.mock.config.MockSettings" />
+            <Class name="org.tweetwallfx.tweet.impl.mock.MockPost" />
             <Class name="org.tweetwallfx.tweet.StringPropertyAppender" />
             <Package name="org.tweetwallfx.devoxx.api.cfp.client" />
         </Or>
@@ -61,6 +63,7 @@
             <Class name="org.tweetwallfx.transitions.FlipOutXTransition" />
             <Class name="org.tweetwallfx.transitions.FontSizeTransition" />
             <Class name="org.tweetwallfx.transitions.LocationTransition" />
+            <Class name="org.tweetwallfx.tweet.impl.mock.MockPost" />
             <Class name="org.tweetwallfx.twod.TagTweets" />
             <Package name="org.tweetwallfx.devoxx.api.cfp.client" />
         </Or>

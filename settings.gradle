@@ -45,6 +45,7 @@ includeWithName ':transitions', 'tweetwallfx-transitions'
 includeWithName ':tweet-api', 'tweetwallfx-tweet-api'
 includeWithName ':tweet-impl-twitter4j', 'tweetwallfx-tweet-impl-twitter4j'
 includeWithName ':tweet-impl-mastodon4j', 'tweetwallfx-tweet-impl-mastodon4j'
+includeWithName ':tweet-impl-mock', 'tweetwallfx-tweet-impl-mock'
 includeWithName ':mqtt', 'tweetwallfx-mqtt'
 includeWithName ':util', 'tweetwallfx-utility'
 
