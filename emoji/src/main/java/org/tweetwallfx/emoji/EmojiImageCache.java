@@ -23,10 +23,8 @@
  */
 package org.tweetwallfx.emoji;
 
-import java.util.Objects;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.cache.URLContentCacheBase;
-import org.tweetwallfx.config.Configuration;
 
 /**
  * Cache used to provide the avatar image of a User.
@@ -37,30 +35,12 @@ public final class EmojiImageCache extends URLContentCacheBase {
      * Cache instance.
      */
     public static final EmojiImageCache INSTANCE = new EmojiImageCache();
-    private final Config config;
 
     private EmojiImageCache() {
         super("emojiImage");
-        this.config = Configuration.getInstance().getConfigTyped(EmojiImageCache.class.getSimpleName(), Config.class);
     }
 
     public URLContent get(final String hex) {
-        return EmojiImageCache.INSTANCE.getCachedOrLoad(config.emojiImageBaseUrl() + hex + ".png");
-    }
-
-    public static record Config(
-            String emojiImageBaseUrl) {
-
-        public Config(
-                final String emojiImageBaseUrl) {
-            String bu = Objects.requireNonNullElse(emojiImageBaseUrl, "https://cdnjs.cloudflare.com/ajax/libs/twemoji/15.1.0/72x72");
-
-            // ensure baseUrl ends with a '/'
-            if (!bu.endsWith("/")) {
-                bu += "/";
-            }
-
-            this.emojiImageBaseUrl = bu;
-        }
+        return EmojiImageCache.INSTANCE.getCachedOrLoad(EmojiImageCacheConfig.getInstance().emojiImageBaseUrl() + hex + ".png");
     }
 }
