@@ -170,9 +170,9 @@ public final class StepEngine {
             final Runnable r = exceptionLoggingRunnable(scheduled);
 
             if (DataProvider.ScheduleType.FIXED_DELAY == sc.scheduleType()) {
-                scheduleExecutor.scheduleAtFixedRate(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
-            } else {
                 scheduleExecutor.scheduleWithFixedDelay(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
+            } else {
+                scheduleExecutor.scheduleAtFixedRate(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
             LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
