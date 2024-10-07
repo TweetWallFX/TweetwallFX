@@ -167,15 +167,41 @@ public final class StepEngine {
         final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
 
         try {
+            final Runnable r = exceptionLoggingRunnable(scheduled);
+
             if (DataProvider.ScheduleType.FIXED_DELAY == sc.scheduleType()) {
-                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleAtFixedRate(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             } else {
-                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleWithFixedDelay(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
             LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
             throw re;
         }
+    }
+
+    /**
+     * Wrapps the given Runnable in a try-catch block logging any exception
+     * produced by the wrapped {@link Runnable}.
+     *
+     * When using {@link java.util.concurrent.ExecutorService} instances
+     * produced by {@link Executors} no stacktrace will be produced. It could
+     * normally be handled in
+     * {@link java.util.concurrent.ThreadPoolExecutor#afterExecute(java.lang.Runnable, java.lang.Throwable)}
+     * but the default implementation is a no-op so none will be printed.
+     *
+     * @param r the {@link Runnable} to wrap
+     *
+     * @return the wrapped {@link Runnable}
+     */
+    private static Runnable exceptionLoggingRunnable(final Runnable r) {
+        return () -> {
+            try {
+                r.run();
+            } catch (final Exception e) {
+                LOGGER.error("#### Runnable {} failed with: ", r, e);
+            }
+        };
     }
 
     private void awaitScheduledDataProviderInitialization(final DataProvider.Scheduled scheduled) {
@@ -279,13 +305,13 @@ public final class StepEngine {
                     }
                 });
             } else {
-                    try {
-                        stepToExecute.doStep(context);
-                    } catch (RuntimeException | Error e) {
-                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
-                        // enforce that animation continues
-                        context.proceed();
-                    }
+                try {
+                    stepToExecute.doStep(context);
+                } catch (RuntimeException | Error e) {
+                    LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
+                    // enforce that animation continues
+                    context.proceed();
+                }
             }
 
             final long stop = System.currentTimeMillis();
