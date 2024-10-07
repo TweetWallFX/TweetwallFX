@@ -65,16 +65,16 @@ public final class StepEngine {
     private final Phaser asyncProceed = new Phaser(2);
     private final StepIterator stepIterator;
     private final MachineContext context = new MachineContext();
-    private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(THREAD_GROUP, r, "engine");
-        t.setDaemon(true);
-        return t;
-    });
-    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread t = new Thread(THREAD_GROUP, r, "schedule");
-        t.setDaemon(true);
-        return t;
-    });
+    private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(
+            Thread.ofPlatform()
+                    .name("engine").group(THREAD_GROUP)
+                    .daemon(true)
+                    .factory());
+    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(
+            Thread.ofPlatform()
+                    .name("schedule").group(THREAD_GROUP)
+                    .daemon(true)
+                    .factory());
 
     public StepEngine() {
         LOGGER.info("create StepIterator");
@@ -167,15 +167,41 @@ public final class StepEngine {
         final DataProvider.ScheduledConfig sc = scheduled.getScheduleConfig();
 
         try {
+            final Runnable r = exceptionLoggingRunnable(scheduled);
+
             if (DataProvider.ScheduleType.FIXED_DELAY == sc.scheduleType()) {
-                scheduleExecutor.scheduleWithFixedDelay(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleWithFixedDelay(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             } else {
-                scheduleExecutor.scheduleAtFixedRate(scheduled, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
+                scheduleExecutor.scheduleAtFixedRate(r, sc.initialDelay(), sc.scheduleDuration(), TimeUnit.SECONDS);
             }
         } catch (final RuntimeException re) {
             LOGGER.error("failed to initializing Scheduled: {}", scheduled, re);
             throw re;
         }
+    }
+
+    /**
+     * Wrapps the given Runnable in a try-catch block logging any exception
+     * produced by the wrapped {@link Runnable}.
+     *
+     * When using {@link java.util.concurrent.ExecutorService} instances
+     * produced by {@link Executors} no stacktrace will be produced. It could
+     * normally be handled in
+     * {@link java.util.concurrent.ThreadPoolExecutor#afterExecute(java.lang.Runnable, java.lang.Throwable)}
+     * but the default implementation is a no-op so none will be printed.
+     *
+     * @param r the {@link Runnable} to wrap
+     *
+     * @return the wrapped {@link Runnable}
+     */
+    private static Runnable exceptionLoggingRunnable(final Runnable r) {
+        return () -> {
+            try {
+                r.run();
+            } catch (final Exception e) {
+                LOGGER.error("#### Runnable {} failed with: ", r, e);
+            }
+        };
     }
 
     private void awaitScheduledDataProviderInitialization(final DataProvider.Scheduled scheduled) {
@@ -279,13 +305,13 @@ public final class StepEngine {
                     }
                 });
             } else {
-                    try {
-                        stepToExecute.doStep(context);
-                    } catch (RuntimeException | Error e) {
-                        LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
-                        // enforce that animation continues
-                        context.proceed();
-                    }
+                try {
+                    stepToExecute.doStep(context);
+                } catch (RuntimeException | Error e) {
+                    LOG.error("StepExecution has terminal failure {} ", stepToExecute.getClass().getSimpleName(), e);
+                    // enforce that animation continues
+                    context.proceed();
+                }
             }
 
             final long stop = System.currentTimeMillis();
