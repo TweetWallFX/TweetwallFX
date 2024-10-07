@@ -65,16 +65,16 @@ public final class StepEngine {
     private final Phaser asyncProceed = new Phaser(2);
     private final StepIterator stepIterator;
     private final MachineContext context = new MachineContext();
-    private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(THREAD_GROUP, r, "engine");
-        t.setDaemon(true);
-        return t;
-    });
-    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread t = new Thread(THREAD_GROUP, r, "schedule");
-        t.setDaemon(true);
-        return t;
-    });
+    private final ExecutorService engineExecutor = Executors.newSingleThreadExecutor(
+            Thread.ofPlatform()
+                    .name("engine").group(THREAD_GROUP)
+                    .daemon(true)
+                    .factory());
+    private final ScheduledExecutorService scheduleExecutor = Executors.newSingleThreadScheduledExecutor(
+            Thread.ofPlatform()
+                    .name("schedule").group(THREAD_GROUP)
+                    .daemon(true)
+                    .factory());
 
     public StepEngine() {
         LOGGER.info("create StepIterator");
