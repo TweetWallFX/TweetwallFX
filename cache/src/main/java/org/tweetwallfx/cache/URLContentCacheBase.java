@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.slf4j.Logger;
@@ -227,13 +226,10 @@ public abstract class URLContentCacheBase {
     }
 
     private static Executor createExecutor(final int nrThreads, final String name) {
-        final AtomicInteger counter = new AtomicInteger();
-        final ThreadGroup threadGroup = new ThreadGroup(THREAD_GROUP, name);
-        final ThreadFactory threadFactory = r -> {
-            final Thread t = new Thread(threadGroup, r, "contentLoader" + counter.incrementAndGet());
-            t.setDaemon(true);
-            return t;
-        };
+        final ThreadFactory threadFactory = Thread.ofPlatform()
+                .name("contentLoader", 1).group(new ThreadGroup(THREAD_GROUP, name))
+                .daemon(true)
+                .factory();
 
         if (nrThreads < 2) {
             return Executors.newSingleThreadExecutor(threadFactory);
