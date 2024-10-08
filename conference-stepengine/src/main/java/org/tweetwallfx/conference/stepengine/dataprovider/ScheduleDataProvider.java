@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -86,7 +86,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
         OffsetTime liveOffset = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.time"))
                 .map(OffsetTime::parse)
                 .orElseGet(() -> OffsetTime.now(zoneId));
-        return SessionData.from(scheduleSlots, liveOffset, zoneId);
+        return SessionData.from(scheduleSlots, liveOffset, zoneId, config.sessionsShallStartWithinMinutes);
     }
 
     public static class FactoryImpl implements DataProvider.Factory {
@@ -116,19 +116,27 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
      * <p>
      * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
      * executions in seconds. Defaults to {@code 300L}.
+     *
+     * <p>
+     * Param {@code Long sessionsShallStartWithinMinutes} Number of minutes
+     * within which the displayable sessions shall start. Defaults to
+     * {@code 240L}.
      */
     public record Config(
             ScheduleType scheduleType,
             Long initialDelay,
-            Long scheduleDuration) implements ScheduledConfig {
+            Long scheduleDuration,
+            Long sessionsShallStartWithinMinutes) implements ScheduledConfig {
 
         public Config(
                 final ScheduleType scheduleType,
                 final Long initialDelay,
-                final Long scheduleDuration) {
+                final Long scheduleDuration,
+                final Long sessionsShallStartWithinMinutes) {
             this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
             this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
             this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 5 * 60L);
+            this.sessionsShallStartWithinMinutes = Objects.requireNonNullElse(sessionsShallStartWithinMinutes, 4 * 60L);
         }
     }
 }

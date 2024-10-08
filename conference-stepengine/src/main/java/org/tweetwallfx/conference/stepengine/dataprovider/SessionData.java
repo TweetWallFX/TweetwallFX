@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -80,13 +80,14 @@ public class SessionData {
         this.tags = talk.getTags();
     }
 
-    public static List<SessionData> from(final List<ScheduleSlot> slots, final OffsetTime now, final ZoneId zoneId) {
+    public static List<SessionData> from(final List<ScheduleSlot> slots, final OffsetTime now, final ZoneId zoneId, final long startsWithinMinutes) {
         List<SessionData> sessionData = slots.stream()
                 .filter(slot -> slot.getTalk().isPresent())
                 .filter(slot -> OffsetTime.ofInstant(slot.getDateTimeRange().getEnd(), zoneId).isAfter(now.plusMinutes(10)))
+                .filter(slot -> OffsetTime.ofInstant(slot.getDateTimeRange().getStart(), zoneId).isBefore(now.plusMinutes(startsWithinMinutes)))
                 .collect(Collectors.groupingBy(ScheduleSlot::getRoom))
                 .entrySet().stream()
-                .map(entry -> entry.getValue().get(0))
+                .map(entry -> entry.getValue().getFirst())
                 .map(SessionData::new)
                 .sorted(SessionData.COMP)
                 .toList();
