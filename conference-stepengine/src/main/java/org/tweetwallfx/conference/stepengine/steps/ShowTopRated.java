@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -296,7 +296,7 @@ public class ShowTopRated implements Step {
 
     @Override
     public Duration preferredStepDuration(MachineContext context) {
-        return java.time.Duration.ofMillis(config.getStepDuration());
+        return config.stepDuration();
     }
 
     /**
