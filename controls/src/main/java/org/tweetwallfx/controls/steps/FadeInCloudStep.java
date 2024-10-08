@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2023 TweetWallFX
+ * Copyright (c) 2016-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public class FadeInCloudStep implements Step {
 
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
-        return java.time.Duration.ofMillis(config.getStepDuration());
+        return config.stepDuration();
     }
 
     @Override

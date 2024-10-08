@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,33 @@
  */
 package org.tweetwallfx.stepengine.api.config;
 
+import java.time.temporal.ChronoUnit;
+
 /**
  * Abstract step configuration providing stepDuration as config option.
  */
 public class AbstractConfig {
 
     private long stepDuration = 1;
+    private ChronoUnit stepDurationUnit = ChronoUnit.MILLIS;
 
     public long getStepDuration() {
         return stepDuration;
     }
 
+    public ChronoUnit getStepDurationUnit() {
+        return stepDurationUnit;
+    }
+
     public void setStepDuration(long stepDuration) {
         this.stepDuration = stepDuration;
+    }
+
+    public void setStepDurationUnit(ChronoUnit stepDurationUnit) {
+        this.stepDurationUnit = stepDurationUnit;
+    }
+
+    public java.time.Duration stepDuration() {
+        return java.time.Duration.of(getStepDuration(), getStepDurationUnit());
     }
 }
