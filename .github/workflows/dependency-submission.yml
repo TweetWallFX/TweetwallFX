@@ -17,7 +17,7 @@ jobs:
     steps:
       # Check out sources
       - name: Fetch Sources
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.1
 
       # Setup JDK environment for the next steps
       - name: Setup JDK 21
