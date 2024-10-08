@@ -72,6 +72,7 @@
     </Match>
     <Match>
         <Or>
+            <Class name="org.tweetwallfx.cache.URLContentTest" />
             <Class name="org.tweetwallfx.google.vision.ImageContentAnalysisTest" />
         </Or>
         <Bug code="SECOBDES" />

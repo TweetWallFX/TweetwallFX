@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2024 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,21 +39,23 @@ import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.Objects;
 
-public record URLContent(
-        byte[] data,
-        String digest) implements Serializable {
+public final class URLContent implements Serializable {
+    private static final long serialVersionUID = 0L;
+    private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
 
+    /**
+     * Represents an empty URL content value.
+     */
     public static final URLContent NO_CONTENT = new URLContent(
             new byte[0],
             "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" // SHA-256
             // "d41d8cd98f00b204e9800998ecf8427e" // MD5
     );
 
-    private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
+    private final byte[] data;
+    private final String digest;
 
-    public URLContent(
-            final byte[] data,
-            final String digest) {
+    public URLContent(final byte[] data, final String digest) {
         this.data = Arrays.copyOf(data, data.length);
         this.digest = digest;
     }
@@ -82,13 +84,17 @@ public record URLContent(
         }
     }
 
-    @Override
-    public byte[] data() {
-        return Arrays.copyOf(data, data.length);
+    public String digest() {
+        return digest;
     }
 
     public InputStream getInputStream() {
         return new ByteArrayInputStream(data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(digest, Arrays.hashCode(data));
     }
 
     @Override
