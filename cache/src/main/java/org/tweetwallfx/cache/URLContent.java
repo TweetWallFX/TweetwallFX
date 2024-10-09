@@ -40,6 +40,7 @@ import java.util.HexFormat;
 import java.util.Objects;
 
 public final class URLContent implements Serializable {
+
     private static final long serialVersionUID = 0L;
     private static final Logger LOG = LoggerFactory.getLogger(URLContent.class);
 
@@ -47,37 +48,41 @@ public final class URLContent implements Serializable {
      * Represents an empty URL content value.
      */
     public static final URLContent NO_CONTENT = new URLContent(
+            "/dev/null",
             new byte[0],
             "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" // SHA-256
             // "d41d8cd98f00b204e9800998ecf8427e" // MD5
     );
 
+    private final String urlString;
     private final byte[] data;
     private final String digest;
 
-    public URLContent(final byte[] data, final String digest) {
+    public URLContent(final String urlString, final byte[] data, final String digest) {
+        this.urlString = Objects.requireNonNull(urlString, "urlString must not be null");
+        Objects.requireNonNull(data, "data must not be null");
         this.data = Arrays.copyOf(data, data.length);
-        this.digest = digest;
+        this.digest = Objects.requireNonNull(digest, "digest must not be null");
     }
 
-    public static URLContent of(final InputStream in) throws IOException {
+    public static URLContent of(final String urlString, final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
         final ByteArrayOutputStream bout = new ByteArrayOutputStream();
         in.transferTo(bout);
         byte[] bytes = bout.toByteArray();
-        String digest = null;
+        String digest = "0000000000000000000000000000000000000000000000000000000000000000";
         try {
             digest = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
             LOG.info("MD5: {}", digest);
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
-        return new URLContent(bytes, digest);
+        return new URLContent(urlString, bytes, digest);
     }
 
     public static URLContent of(final String urlString) throws IOException {
         try (InputStream in = URI.create(urlString).toURL().openStream()) {
-            return of(in);
+            return of(urlString, in);
         } catch (FileNotFoundException fne) {
             LOG.warn("No data found for {}", urlString, fne);
             return NO_CONTENT;
@@ -86,6 +91,10 @@ public final class URLContent implements Serializable {
 
     public String digest() {
         return digest;
+    }
+
+    public String urlString() {
+        return urlString;
     }
 
     public InputStream getInputStream() {

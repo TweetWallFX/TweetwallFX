@@ -172,7 +172,7 @@ public abstract class URLContentCacheBase {
      */
     public final void putCachedContent(final String urlString, final InputStream content) {
         try {
-            putCachedContent(urlString, URLContent.of(content));
+            putCachedContent(urlString, URLContent.of(urlString, content));
         } catch (IOException ex) {
             LOG.error("{}: Failed to read content from InputStream for {}", cacheName, urlString, ex);
         }
