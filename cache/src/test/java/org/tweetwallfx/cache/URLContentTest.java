@@ -39,23 +39,23 @@ import static org.tweetwallfx.cache.URLContent.NO_CONTENT;
 
 class URLContentTest {
     static final String SERIALIZED_DATA = """
-            rO0ABXNyACBvcmcudHdlZXR3YWxsZnguY2FjaGUuVVJMQ29udGVudAAAAAAAAAAAAgACWwAEZGF0YXQAAl\
-            tCTAAGZGlnZXN0dAASTGphdmEvbGFuZy9TdHJpbmc7eHB1cgACW0Ks8xf4BghU4AIAAHhwAAAAFnRoaXMg\
-            aXMgc29tZSBkZW1vIGRhdGF0AEBmMjgyYjk3MzM3YmQ2N2VhZjIyZTgxNmQ4OTIzOWUzMTQ5MTBiNWJlMD\
-            AxOWUzZmU0YzQxNTg5NjM0Njg3Mjdl""";
+            rO0ABXNyACBvcmcudHdlZXR3YWxsZnguY2FjaGUuVVJMQ29udGVudAAAAAAAAAAAAgADWwAEZGF0YXQAAl\
+            tCTAAGZGlnZXN0dAASTGphdmEvbGFuZy9TdHJpbmc7TAAJdXJsU3RyaW5ncQB+AAJ4cHVyAAJbQqzzF/gG\
+            CFTgAgAAeHAAAAAWdGhpcyBpcyBzb21lIGRlbW8gZGF0YXQAQGYyODJiOTczMzdiZDY3ZWFmMjJlODE2ZD\
+            g5MjM5ZTMxNDkxMGI1YmUwMDE5ZTNmZTRjNDE1ODk2MzQ2ODcyN2V0AAA=""";
     static final String DIGEST = "f282b97337bd67eaf22e816d89239e314910b5be0019e3fe4c4158963468727e";
     public static final byte[] TEST_DATA = "this is some demo data".getBytes(StandardCharsets.UTF_8);
 
     @Test
     void equals() throws IOException {
         assertThat(NO_CONTENT)
-                .isEqualTo(new URLContent(new byte[0], NO_CONTENT.digest()))
-                .isEqualTo(URLContent.of(InputStream.nullInputStream()));
+                .isEqualTo(new URLContent("", new byte[0], NO_CONTENT.digest()))
+                .isEqualTo(URLContent.of("", InputStream.nullInputStream()));
     }
 
     @Test
     void serialization() throws IOException {
-        URLContent content = URLContent.of(new ByteArrayInputStream(TEST_DATA));
+        URLContent content = URLContent.of("", new ByteArrayInputStream(TEST_DATA));
         ByteArrayOutputStream out= new ByteArrayOutputStream();
         try (ObjectOutputStream objOout= new ObjectOutputStream(out)){
             objOout.writeObject(content);
