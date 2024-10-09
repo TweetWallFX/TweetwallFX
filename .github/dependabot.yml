@@ -47,7 +47,8 @@ updates:
       - "/tweet-impl-mastodon4j"
       - "/tweet-impl-mock"
       - "/tweet-impl-twitter4j"
-      - "/util"    # Raise pull requests for version updates on `master` branch
+      - "/util"
+    # Raise pull requests for version updates on `master` branch
     target-branch: "master"
     schedule:
       interval: "daily"
