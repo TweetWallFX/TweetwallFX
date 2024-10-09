@@ -26,7 +26,7 @@ dependencies {
     api project(':tweetwallfx-tweet-api')
 
     implementation 'net.datafaker:datafaker:2.4.0'
-    implementation 'org.jsoup:jsoup:1.17.2'
+    implementation 'org.jsoup:jsoup:1.18.1'
     implementation 'org.slf4j:slf4j-api'
 
     testRuntimeOnly 'org.simplify4u:slf4j2-mock'
