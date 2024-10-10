@@ -27,17 +27,21 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import javafx.scene.image.Image;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.util.Nullable;
 import org.tweetwallfx.util.ToString;
+import org.tweetwallfx.util.image.ExifData;
 
 /**
  * Storage of a timestamped, optionally categorized, {@link Image} based on
- * binary data.
+ * binary data. The image contained within is rotated and flipped in accordance
+ * with the image's EXIF data.
  */
 public final class ImageStorage {
 
@@ -62,6 +66,7 @@ public final class ImageStorage {
     private final Image image;
     private final String digest;
     private final Map<String, Object> additionalInfo;
+    private final List<ExifData> exifDatas;
 
     /**
      * Creates an ImageStorage instance based on the given parameters.
@@ -74,6 +79,7 @@ public final class ImageStorage {
         this.image = new Image(Objects.requireNonNull(builder.inputStream, "inputStream must not be null"));
         this.digest = Objects.requireNonNull(builder.digest, "digest must not be null");
         this.additionalInfo = builder.additionalInfo;
+        this.exifDatas = builder.exifDatas;
     }
 
     /**
@@ -105,6 +111,15 @@ public final class ImageStorage {
     }
 
     /**
+     * Returns the EXIF Data of the stored image if it has any.
+     *
+     * @return the EXIF Data
+     */
+    public List<ExifData> getExifDatas() {
+        return Nullable.nullable(exifDatas);
+    }
+
+    /**
      * Returns the category of this storage. The value is retrieved from
      * {@link #getAdditionalInfo()} via the key {@link #KEY_CATEGORY}. If none
      * is present then {@link #DEFAULT_CATEGORY} is returned.
@@ -114,6 +129,21 @@ public final class ImageStorage {
     @SuppressWarnings("unchecked")
     public String getCategory() {
         return (String) additionalInfo.getOrDefault(KEY_CATEGORY, DEFAULT_CATEGORY);
+    }
+
+    /**
+     * Attemps to locate an EXIF data entry by {@code directory} and
+     * {@code tagName}.
+     *
+     * @param directory the name of the directory
+     *
+     * @param tagName the name of the tag
+     *
+     * @return an {@link Optional} wrapping the located value or an empty
+     * {@link Optional} if none was found
+     */
+    public Optional<String> locateOptionalExifData(final String directory, final String tagName) {
+        return ExifData.locateOptional(exifDatas, directory, tagName);
     }
 
     @Override
@@ -164,6 +194,7 @@ public final class ImageStorage {
         private InputStream inputStream;
         private String digest;
         private Map<String, Object> additionalInfo = Map.of();
+        private List<ExifData> exifDatas = List.of();
 
         private Builder(final Instant timestamp) {
             this.timestamp = Objects.requireNonNull(timestamp, "timestamp must not be null");
@@ -193,8 +224,8 @@ public final class ImageStorage {
 
         /**
          * Uses the {@link URLContent} to configures the
-         * {@link #from(java.io.InputStream) image data source} and the
-         * {@link #withDigest(java.lang.String) digest} using
+         * {@link #from(java.io.InputStream) image data source}, {@link #withExifTags(java.io.InputStream) EXIF data}
+         * and the {@link #withDigest(java.lang.String) digest} using
          * {@link URLContent#getInputStream()} and {@link URLContent#digest()}
          * respectifely.
          *
@@ -204,6 +235,7 @@ public final class ImageStorage {
          */
         public Builder from(final URLContent urlc) {
             return from(urlc.getInputStream())
+                    .withExifTags(urlc.getInputStream())
                     .withDigest(urlc.digest());
         }
 
@@ -234,6 +266,21 @@ public final class ImageStorage {
          */
         public Builder withDigest(final String digest) {
             this.digest = digest;
+            return this;
+        }
+
+        /**
+         * Attempts to read EXIF Data from the given stream and stores it for
+         * evaluation.
+         *
+         * Note that the {@link InputStream inputStream} is consumed eagerly.
+         *
+         * @param inputStream the image data source
+         *
+         * @return this builder instance
+         */
+        public Builder withExifTags(final InputStream inputStream) {
+            this.exifDatas = ExifData.readFrom(inputStream);
             return this;
         }
     }
