@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.SequencedSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.cache.URLContent;
@@ -175,7 +176,7 @@ public interface ImageStorageDataProvider extends DataProvider {
                 public final List<ImageStorage> getImages(final int maxCount) {
                     return imageStorages.stream()
                             .limit(maxCount)
-                            .toList();
+                            .collect(Collectors.toList()); // modifiable list
                 }
             };
         }
