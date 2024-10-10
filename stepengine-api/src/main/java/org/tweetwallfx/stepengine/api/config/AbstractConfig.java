@@ -24,6 +24,7 @@
 package org.tweetwallfx.stepengine.api.config;
 
 import java.time.temporal.ChronoUnit;
+import org.tweetwallfx.util.JsonDataConverter;
 
 /**
  * Abstract step configuration providing stepDuration as config option.
@@ -51,5 +52,10 @@ public class AbstractConfig {
 
     public java.time.Duration stepDuration() {
         return java.time.Duration.of(getStepDuration(), getStepDurationUnit());
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + JsonDataConverter.convertToString(this);
     }
 }
