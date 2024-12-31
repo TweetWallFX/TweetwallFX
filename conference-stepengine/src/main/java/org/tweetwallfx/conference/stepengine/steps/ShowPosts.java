@@ -120,6 +120,9 @@ public class ShowPosts implements Step {
                     row++;
                     col = 0;
                 }
+                if (row >= config.rows) {
+                    break;
+                }
             }
 
             Platform.runLater(() -> {
@@ -237,6 +240,7 @@ public class ShowPosts implements Step {
         public int postFontSize = 13;
         public int postUserFontSize = 13;
         public int columns = 1;
+        public int rows = 1;
         public int avatarSize = 64;
         public int avatarArcSize = 20;
         public boolean circularAvatar = true;
