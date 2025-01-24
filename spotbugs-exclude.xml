@@ -83,6 +83,7 @@
     <Match>
         <Or>
             <Class name="org.tweetwallfx.cache.CacheManagerProvider" />
+            <Class name="org.tweetwallfx.config.Configuration" />
             <Class name="org.tweetwallfx.google.vision.GoogleVisionCache" />
         </Or>
         <Bug code="SECPTI" />
