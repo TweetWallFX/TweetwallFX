@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,6 @@
  */
 package org.tweetwallfx.conference.stepengine.steps;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
 import javafx.animation.ParallelTransition;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
@@ -46,12 +38,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import org.tweetwallfx.conference.api.Speaker;
-import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.conference.stepengine.dataprovider.SpeakerImageProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksTodayDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TopTalksWeekDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.TrackImageDataProvider;
 import org.tweetwallfx.conference.stepengine.dataprovider.VotedTalk;
+import org.tweetwallfx.controls.WordleSkin;
 import org.tweetwallfx.emoji.control.EmojiFlow;
 import org.tweetwallfx.stepengine.api.DataProvider;
 import org.tweetwallfx.stepengine.api.Step;
@@ -59,6 +51,15 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.AbstractConfig;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.FlipInXTransition;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Show Top Rated Talks (Flip In) Animation Step
@@ -308,23 +309,16 @@ public class ShowTopRated implements Step {
         @Override
         public ShowTopRated create(final StepEngineSettings.StepDefinition stepDefinition) {
             final TopVotedType topVotedType = stepDefinition.getConfig(Config.class).getTopVotedType();
-
-            switch (topVotedType) {
-                case TODAY:
-                    return new ShowTopRated(
-                            mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
-                            stepDefinition.getConfig(Config.class),
-                            "#topRatedToday");
-
-                case WEEK:
-                    return new ShowTopRated(
-                            mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
-                            stepDefinition.getConfig(Config.class),
-                            "#topRatedWeek");
-
-                default:
-                    throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
-            }
+            return switch (topVotedType) {
+                case TODAY -> new ShowTopRated(
+                        mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
+                        stepDefinition.getConfig(Config.class),
+                        "#topRatedToday");
+                case WEEK -> new ShowTopRated(
+                        mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
+                        stepDefinition.getConfig(Config.class),
+                        "#topRatedWeek");
+            };
         }
 
         @Override
@@ -335,23 +329,16 @@ public class ShowTopRated implements Step {
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
             final ShowTopRated.TopVotedType topVotedType = stepDefinition.getConfig(ShowTopRated.Config.class).getTopVotedType();
-
-            switch (topVotedType) {
-                case TODAY:
-                    return Arrays.asList(
-                            TopTalksTodayDataProvider.class,
-                            SpeakerImageProvider.class,
-                            TrackImageDataProvider.class);
-
-                case WEEK:
-                    return Arrays.asList(
-                            TopTalksWeekDataProvider.class,
-                            SpeakerImageProvider.class,
-                            TrackImageDataProvider.class);
-
-                default:
-                    throw new IllegalArgumentException("TopVotedType " + topVotedType + " is not supported");
-            }
+            return switch (topVotedType) {
+                case TODAY -> Arrays.asList(
+                        TopTalksTodayDataProvider.class,
+                        SpeakerImageProvider.class,
+                        TrackImageDataProvider.class);
+                case WEEK -> Arrays.asList(
+                        TopTalksWeekDataProvider.class,
+                        SpeakerImageProvider.class,
+                        TrackImageDataProvider.class);
+            };
         }
     }
 
