@@ -104,14 +104,14 @@ allprojects {
                 )
 
                 trimTrailingWhitespace()
-                indentWithSpaces(4)
+                leadingTabsToSpaces(4)
                 endWithNewline()
                 replaceRegex 'noMultipleEmptyLines', '\n{3,}', '\n\n'
             }
 
             def closure = {
                 trimTrailingWhitespace()
-                indentWithSpaces(4)
+                leadingTabsToSpaces(4)
                 endWithNewline()
 //                importOrder(
 //                    '\\#',    // static imports
