@@ -185,7 +185,7 @@ allprojects {
             withJavadocJar()
             withSourcesJar()
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '21')))
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '22')))
             }
         }
 
@@ -314,8 +314,8 @@ allprojects {
             dependsOn javadoc
         }
 
-        if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
-            // jacoco not yet compatible with JDK21
+        if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_22)) {
+            // jacoco not yet compatible with JDK22
             tasks.named('test') {
                 finalizedBy jacocoTestReport
             }
