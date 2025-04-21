@@ -180,6 +180,7 @@ allprojects {
         apply plugin: 'eclipse'
         apply plugin: 'com.netflix.nebula.info'
         apply plugin: 'maven-publish'
+        apply plugin: 'com.autonomousapps.dependency-analysis'
 
         java {
             withJavadocJar()
