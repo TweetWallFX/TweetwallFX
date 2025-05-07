@@ -190,10 +190,6 @@ allprojects {
             }
         }
 
-        jacoco {
-            toolVersion = '0.8.13'
-        }
-
         configurations {
             javafx {
                 description = 'Java FX libraries'
@@ -315,11 +311,8 @@ allprojects {
             dependsOn javadoc
         }
 
-        if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_22)) {
-            // jacoco not yet compatible with JDK22
-            tasks.named('test') {
-                finalizedBy jacocoTestReport
-            }
+        tasks.named('test') {
+            finalizedBy jacocoTestReport
         }
 
         // configuring Errorprone
