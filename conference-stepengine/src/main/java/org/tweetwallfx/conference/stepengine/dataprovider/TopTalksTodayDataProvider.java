@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2024 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
 
     private List<VotedTalk> votedTalks = Collections.emptyList();
     private final Config config;
-    private boolean initialized = false;
+    private volatile boolean initialized = false;
 
     private TopTalksTodayDataProvider(final Config config) {
         this.config = config;

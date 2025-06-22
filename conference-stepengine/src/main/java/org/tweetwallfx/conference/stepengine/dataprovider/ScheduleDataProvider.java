@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2024 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
 
     private volatile List<ScheduleSlot> scheduleSlots = Collections.emptyList();
     private final Config config;
-    private boolean initialized = false;
+    private volatile boolean initialized = false;
 
     private ScheduleDataProvider(final Config config) {
         this.config = config;
