@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.tweetwallfx.config.ConfigurationConverter;
 
 public record CacheSettings(
@@ -102,7 +101,7 @@ public record CacheSettings(
     public static record CacheExpiry(
             CacheExpiryType type,
             Long amount,
-            @SuppressFBWarnings ChronoUnit unit) {
+            ChronoUnit unit) {
 
         public CacheExpiry(
                 final CacheExpiryType type,

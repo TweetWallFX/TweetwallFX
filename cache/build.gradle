@@ -25,7 +25,6 @@
 dependencies {
     api project(':tweetwallfx-configuration')
 
-    implementation 'com.github.spotbugs:spotbugs-annotations'
     implementation 'org.ehcache:ehcache'
     implementation 'org.slf4j:slf4j-api'
 
