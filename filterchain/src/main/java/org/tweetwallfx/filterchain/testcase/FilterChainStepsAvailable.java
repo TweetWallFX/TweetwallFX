@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ public class FilterChainStepsAvailable implements RunnableTestCase {
                 .flatMap(Collection::stream)
                 .map(FilterStepDefinition::getStepClassName)
                 .collect(Collectors.groupingBy(filterStepFactories::containsKey))
-                .get(Boolean.FALSE);
+                .get(false);
 
         if (null != nonCreatableFilterSteps) {
             throw new IllegalStateException("FilterChainSettings has the following FilterSteps configured that are not creatable: " + nonCreatableFilterSteps);
