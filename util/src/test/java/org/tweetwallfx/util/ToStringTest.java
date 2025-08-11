@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ import org.assertj.core.data.MapEntry;
 import org.junit.jupiter.api.Test;
 
 class ToStringTest {
+
     private static final String KEY1 = "one";
     private static final Object VALUE1 = 1L;
     private static final String KEY2 = "deux";
@@ -388,7 +389,7 @@ class ToStringTest {
 
         private final Map<String, Object> params;
 
-        public TSImpl(Map<String, Object> params) {
+        private TSImpl(Map<String, Object> params) {
             this.params = params;
         }
 

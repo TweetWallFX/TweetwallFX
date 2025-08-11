@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -277,7 +277,7 @@ public class ImageMosaicStep implements Step {
         private final int column;
         private final int row;
 
-        public ImageWallAnimationTransition(final Transition transition, final int column, final int row) {
+        private ImageWallAnimationTransition(final Transition transition, final int column, final int row) {
             this.transition = transition;
             this.column = column;
             this.row = row;

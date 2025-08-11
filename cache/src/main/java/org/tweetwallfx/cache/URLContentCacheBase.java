@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2024 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -242,7 +242,7 @@ public abstract class URLContentCacheBase {
 
         private static final Default INSTANCE = new Default();
 
-        public Default() {
+        private Default() {
             super("default");
         }
     }
