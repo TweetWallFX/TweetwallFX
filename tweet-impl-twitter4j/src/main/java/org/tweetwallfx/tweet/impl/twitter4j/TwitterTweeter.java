@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -223,7 +223,7 @@ public class TwitterTweeter implements Tweeter {
         private static final Logger LOGGER = LoggerFactory.getLogger("org.tweetwallfx.startup");
         private int numberOfPages;
 
-        public PagedIterator(final Query query, int numberOfPages) {
+        private PagedIterator(final Query query, int numberOfPages) {
             this.numberOfPages = --numberOfPages;
             queryNext(query);
         }
@@ -295,7 +295,7 @@ public class TwitterTweeter implements Tweeter {
         R apply(long value) throws TwitterException;
     }
 
-    private abstract static class RateLimitIterator<T> implements Iterator<T> {
+    protected abstract static class RateLimitIterator<T> implements Iterator<T> {
 
         protected final void handleRateLimit(final RateLimitStatus rateLimitStatus) {
             LOGGER.info("RateLimit: {}/{} resetting in {}s",
@@ -319,6 +319,7 @@ public class TwitterTweeter implements Tweeter {
     }
 
     private static final class PagedEntityIterator<T extends TwitterResponse, R> extends RateLimitIterator<R> {
+
         private Iterator<T> iterator;
         private long cursorId = CursorSupport.START;
         private final TwitterExceptionLongFunction<PagableResponseList<T>> pageableFunction;

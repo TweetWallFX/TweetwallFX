@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -118,7 +118,7 @@ final class StepIterator {
             return this;
         }
 
-        public StepIterator build() {
+        private StepIterator build() {
             return new StepIterator(steps, requiredDataProviders);
         }
     }
