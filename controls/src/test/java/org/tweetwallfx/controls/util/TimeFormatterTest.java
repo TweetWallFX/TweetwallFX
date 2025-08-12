@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,12 +40,12 @@ public class TimeFormatterTest {
     static Stream<Arguments> parameters() {
         return Stream.of(
                 arguments(
-                        Duration.ZERO,
+                        Duration.ofMillis(20),
                         Locale.ENGLISH,
                         "moments ago"
                 ),
                 arguments(
-                        Duration.ZERO,
+                        Duration.ofMillis(20),
                         Locale.GERMAN,
                         "gerade eben"
                 ),
