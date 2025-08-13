@@ -1,8 +1,8 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @TweetWallFX/tweetwallfx-admins will be requested for
+# @TweetWallFX/TweetWallFX-Admins will be requested for
 # review when someone opens a pull request.
-*    @tweetwallfx/tweetwallfx-admins
+*    @TweetWallFX/TweetWallFX-Admins
 
 # Request for changes to this this file
-/.github/CODEOWNERS    @TweetWallFX/tweetwallfx-admins
+/.github/CODEOWNERS    @TweetWallFX/TweetWallFX-Admins
