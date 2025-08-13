@@ -2,7 +2,7 @@
 # the repo. Unless a later match takes precedence,
 # @TweetWallFX/tweetwallfx-admins will be requested for
 # review when someone opens a pull request.
-*    @TweetWallFX/tweetwallfx-admins
+*    @tweetwallfx/tweetwallfx-admins
 
 # Request for changes to this this file
 /.github/CODEOWNERS    @TweetWallFX/tweetwallfx-admins
