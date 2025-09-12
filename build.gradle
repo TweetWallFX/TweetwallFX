@@ -231,7 +231,7 @@ allprojects {
             javafx group: 'org.openjfx', name: 'javafx-fxml', version: '24.0.2', classifier: javaFxPlatform
             javafx group: 'org.openjfx', name: 'javafx-controls', version: '24.0.2', classifier: javaFxPlatform
 
-            jaxb 'jakarta.activation:jakarta.activation-api:2.1.3'
+            jaxb 'jakarta.activation:jakarta.activation-api:2.1.4'
             jaxb 'org.eclipse.angus:angus-activation:2.0.2'
             jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
             jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
