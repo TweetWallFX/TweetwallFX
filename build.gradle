@@ -186,7 +186,7 @@ allprojects {
             withJavadocJar()
             withSourcesJar()
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '22')))
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '24')))
             }
         }
 
