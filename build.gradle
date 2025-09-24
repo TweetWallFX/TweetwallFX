@@ -27,7 +27,7 @@ plugins {
     id 'build-dashboard'
     id 'java-platform'
     id 'com.diffplug.spotless' version '7.2.1'
-    id 'com.github.ben-manes.versions' version '0.52.0'
+    id 'com.github.ben-manes.versions' version '0.53.0'
     id 'com.github.spotbugs' version '6.4.2' apply false
     id 'com.google.osdetector' version '1.7.3'
     id 'com.netflix.nebula.info' version '14.0.0' apply false
@@ -48,7 +48,7 @@ javaPlatform {
 
 dependencies {
     api platform('org.junit:junit-bom:5.13.4')
-    api platform('org.apache.logging.log4j:log4j-bom:2.25.1')
+    api platform('org.apache.logging.log4j:log4j-bom:2.25.2')
     api platform('org.glassfish.jersey:jersey-bom:3.1.11')
 
     constraints {
@@ -234,12 +234,12 @@ allprojects {
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.4'
             jaxb 'org.eclipse.angus:angus-activation:2.0.3'
             jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.4'
-            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+            jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.6'
 
-            testFramework 'org.assertj:assertj-core:3.27.5'
+            testFramework 'org.assertj:assertj-core:3.27.6'
             testFramework 'org.junit.jupiter:junit-jupiter-api'
             testFramework 'org.junit.jupiter:junit-jupiter-params'
-            testFramework 'org.mockito:mockito-junit-jupiter:5.19.0'
+            testFramework 'org.mockito:mockito-junit-jupiter:5.20.0'
 
             testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
             testRuntimeOnly 'org.junit.platform:junit-platform-runner'
@@ -319,7 +319,7 @@ allprojects {
         apply plugin: 'net.ltgt.errorprone'
 
         dependencies {
-            errorprone 'com.google.errorprone:error_prone_core:2.41.0'
+            errorprone 'com.google.errorprone:error_prone_core:2.42.0'
         }
 
         // configuring Spotbugs
