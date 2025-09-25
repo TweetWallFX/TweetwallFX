@@ -226,10 +226,10 @@ allprojects {
             // get recommended versions from the platform project
             api platform(rootProject)
 
-            javafx group: 'org.openjfx', name: 'javafx-base', version: '25', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-graphics', version: '25', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-fxml', version: '25', classifier: javaFxPlatform
-            javafx group: 'org.openjfx', name: 'javafx-controls', version: '25', classifier: javaFxPlatform
+            javafx 'org.openjfx:javafx-base:25:' + javaFxPlatform
+            javafx 'org.openjfx:javafx-graphics:25:' + javaFxPlatform
+            javafx 'org.openjfx:javafx-fxml:25:' + javaFxPlatform
+            javafx 'org.openjfx:javafx-controls:25:' + javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.4'
             jaxb 'org.eclipse.angus:angus-activation:2.0.3'
