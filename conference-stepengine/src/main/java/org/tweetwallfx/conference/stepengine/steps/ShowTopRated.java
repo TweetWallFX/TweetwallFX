@@ -140,7 +140,7 @@ public class ShowTopRated implements Step {
     }
 
     private Pane createTalkNode(final MachineContext context, final VotedTalk votedTalk) {
-        var ratingAverageScore = new Label(String.format("%.2f",votedTalk.ratingAverageScore));
+        var ratingAverageScore = new Label(String.format("%.2f", votedTalk.ratingAverageScore));
         ratingAverageScore.getStyleClass().add("ratingAverageScore");
 
         var ratingTotalVotes = new Label("" + votedTalk.ratingTotalVotes);
@@ -157,7 +157,7 @@ public class ShowTopRated implements Step {
             speakerName.setTextAlignment(TextAlignment.RIGHT);
             speakerName.getStyleClass().add("speakerName");
             speakerNames.getChildren().add(speakerName);
-            if (config.showCompanyName) {
+            if (config.showCompanyName && votedTalk.speakers.size() < config.automaticCompanyNameHide) {
                 speaker.getCompany().ifPresent(company -> {
                     var companyName = new Label("(" + company + ")");
                     companyName.setTextAlignment(TextAlignment.RIGHT);
@@ -174,11 +174,24 @@ public class ShowTopRated implements Step {
                 var images = votedTalk.speakers.stream()
                         .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
                         .toList();
+                // layout 3 in line 1 , 2 in line 2, 3 in line 3 ... so 3 in even lines (starting with 0)
+                // and 2 in odd lines..
+                // offset only depend on odd / even
+                int lineNum = 0;
+                int imageInLine = 0;
+                int evenAvatars = 3;
+                int oddAvatars = 2;
+                double configAvatarOffset = (config.avatarSize * 3 / 4d + 2);
                 for (int i = 0; i < images.size(); i++) {
                     var image = images.get(i);
-                    image.setLayoutX(i * (config.avatarSize * 3 / 4d + 2));
-                    image.setLayoutY(i % 2 * config.avatarSize / 2d + 2);
+                    image.setLayoutX((imageInLine * 2 + lineNum % 2) * configAvatarOffset);
+                    image.setLayoutY(lineNum * config.avatarSize / 2d + 2);
                     speakerImages.getChildren().add(image);
+                    imageInLine++;
+                    if (imageInLine > (0 == lineNum % 2 ? evenAvatars : oddAvatars) - 1) {
+                        lineNum++;
+                        imageInLine = 0;
+                    }
                 }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             } else {
@@ -310,14 +323,16 @@ public class ShowTopRated implements Step {
         public ShowTopRated create(final StepEngineSettings.StepDefinition stepDefinition) {
             final TopVotedType topVotedType = stepDefinition.getConfig(Config.class).getTopVotedType();
             return switch (topVotedType) {
-                case TODAY -> new ShowTopRated(
-                        mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
-                        stepDefinition.getConfig(Config.class),
-                        "#topRatedToday");
-                case WEEK -> new ShowTopRated(
-                        mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
-                        stepDefinition.getConfig(Config.class),
-                        "#topRatedWeek");
+                case TODAY ->
+                    new ShowTopRated(
+                    mc -> mc.getDataProvider(TopTalksTodayDataProvider.class).getFilteredSessionData(),
+                    stepDefinition.getConfig(Config.class),
+                    "#topRatedToday");
+                case WEEK ->
+                    new ShowTopRated(
+                    mc -> mc.getDataProvider(TopTalksWeekDataProvider.class).getFilteredSessionData(),
+                    stepDefinition.getConfig(Config.class),
+                    "#topRatedWeek");
             };
         }
 
@@ -330,14 +345,16 @@ public class ShowTopRated implements Step {
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
             final ShowTopRated.TopVotedType topVotedType = stepDefinition.getConfig(ShowTopRated.Config.class).getTopVotedType();
             return switch (topVotedType) {
-                case TODAY -> Arrays.asList(
-                        TopTalksTodayDataProvider.class,
-                        SpeakerImageProvider.class,
-                        TrackImageDataProvider.class);
-                case WEEK -> Arrays.asList(
-                        TopTalksWeekDataProvider.class,
-                        SpeakerImageProvider.class,
-                        TrackImageDataProvider.class);
+                case TODAY ->
+                    Arrays.asList(
+                    TopTalksTodayDataProvider.class,
+                    SpeakerImageProvider.class,
+                    TrackImageDataProvider.class);
+                case WEEK ->
+                    Arrays.asList(
+                    TopTalksWeekDataProvider.class,
+                    SpeakerImageProvider.class,
+                    TrackImageDataProvider.class);
             };
         }
     }
@@ -360,6 +377,7 @@ public class ShowTopRated implements Step {
         public boolean showTrackAvatar = true;
         public boolean compressedAvatars = true;
         public int compressedAvatarsLimit = 4;
+        public int automaticCompanyNameHide = 6;
         public boolean showTags = false;
         public String skipTokenValue = null;
         public int titleFontSize = 13;
