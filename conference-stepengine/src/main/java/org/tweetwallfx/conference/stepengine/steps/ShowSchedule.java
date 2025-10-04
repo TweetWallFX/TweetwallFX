@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -172,7 +172,7 @@ public class ShowSchedule implements Step {
             speakerName.setTextAlignment(TextAlignment.RIGHT);
             speakerName.getStyleClass().add("speakerName");
             speakerNames.getChildren().add(speakerName);
-            if (config.showCompanyName) {
+            if (config.showCompanyName && sessionData.speakerObjects.size() < config.automaticCompanyNameHide) {
                 speaker.getCompany().ifPresent(company -> {
                     var companyName = new Label("(" + company + ")");
                     companyName.setTextAlignment(TextAlignment.RIGHT);
@@ -195,16 +195,36 @@ public class ShowSchedule implements Step {
 
         if (config.showAvatar) {
             var speakerImageProvider = context.getDataProvider(SpeakerImageProvider.class);
-            if (config.compressedAvatars && sessionData.speakerObjects.size() >= config.compressedAvatarsLimit) {
+            if (config.compressedAvatars && sessionData.speakerObjects.size() >= config.compressedAvatarsLimit ) {
                 var speakerImages = new Pane();
                 var images = sessionData.speakerObjects.stream()
                         .map(speaker -> createSpeakerImage(speakerImageProvider, speaker))
                         .toList();
+                // layout 3 in line 1 , 2 in line 2, 3 in line 3 ... so 3 in even lines (starting with 0)
+                // and 2 in odd lines..
+                // offset only depend on odd / even
+                int lineNum = 0;
+                int imageInLine = 0;
+                int evenAvatars = 3;
+                int oddAvatars =2;
+                double configAvatarOffset = (config.avatarSize * 3 / 4d + 2);
                 for (int i = 0; i < images.size(); i++) {
                     var image = images.get(i);
-                    image.setLayoutX(i * (config.avatarSize * 3 / 4d + 2));
-                    image.setLayoutY(i % 2 * config.avatarSize / 2d + 2);
+                    image.setLayoutX((imageInLine*2 + lineNum % 2) * configAvatarOffset);
+                    image.setLayoutY(lineNum * config.avatarSize / 2d + 2);
                     speakerImages.getChildren().add(image);
+                    imageInLine++;
+                    if (0 == lineNum % 2) {
+                        if (imageInLine > evenAvatars - 1) {
+                            lineNum++;
+                            imageInLine = 0;
+                        }
+                    } else {
+                        if (imageInLine > oddAvatars - 1) {
+                            lineNum++;
+                            imageInLine = 0;
+                        }
+                    }
                 }
                 topLeft = new HBox(4, topLeftVBox, speakerImages);
             } else {
@@ -363,6 +383,7 @@ public class ShowSchedule implements Step {
         public boolean showTags = false;
         public boolean compressedAvatars = true;
         public int compressedAvatarsLimit = 4;
+        public int automaticCompanyNameHide = 6;
         public int columns = 2;
         public boolean autoSeparateRoomTypes = false;
         public boolean showCompanyName = false;
