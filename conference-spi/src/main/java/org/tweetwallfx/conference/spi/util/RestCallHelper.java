@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.tweetwallfx.conference.spi.util;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Link;
@@ -66,22 +67,39 @@ public class RestCallHelper {
         }
     }
 
-    private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
-        LOGGER.info("Calling URL: {} with query parameters: {}", url, queryParameters);
-        WebTarget webTarget = getClient().target(getHttpsUrl(url));
+    private static WebTarget createWebTarget(final String url) {
+        LOGGER.info("Calling URL: {}", url);
+        return getClient().target(getHttpsUrl(url));
+    }
 
-        if (null != queryParameters && !queryParameters.isEmpty()) {
-            for (Map.Entry<String, Object> entry : queryParameters.entrySet()) {
-                final String key = entry.getKey();
-                final Object value = entry.getValue();
+    private static WebTarget addQueryParameters(final WebTarget webTarget, final Map<String, Object> queryParameters) {
+        LOGGER.info("Adding query parameters to {}: {}", webTarget, queryParameters);
 
-                webTarget = switch(value) {
-                    case Object[] array -> webTarget.queryParam(key, array);
-                    case Collection<?> collection -> webTarget.queryParam(key, collection.toArray());
-                    default -> webTarget.queryParam(key, value);
-                };
-            }
+        if (null == queryParameters || queryParameters.isEmpty()) {
+            return webTarget;
         }
+
+        WebTarget wt = webTarget;
+
+        for (Map.Entry<String, Object> entry : queryParameters.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue();
+
+            wt = switch (value) {
+                case Object[] array ->
+                    wt.queryParam(key, array);
+                case Collection<?> collection ->
+                    wt.queryParam(key, collection.toArray());
+                default ->
+                    wt.queryParam(key, value);
+            };
+        }
+
+        return wt;
+    }
+
+    private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
+        WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
 
         final Response response = webTarget
                 .request(MediaType.APPLICATION_JSON)
@@ -102,6 +120,26 @@ public class RestCallHelper {
 
     public static Optional<Response> getOptionalResponse(final String url) {
         return getOptionalResponse(url, Collections.emptyMap());
+    }
+
+    private static Response postRequest(final String url, final Map<String, Object> queryParameters, Entity<?> entity) {
+        WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
+
+        final Response response = webTarget
+                .request(MediaType.APPLICATION_JSON)
+                .post(entity);
+        LOGGER.info("Received Response: {}", response);
+
+        return response;
+    }
+
+    public static Optional<Response> postOptionalResponse(final String url, final Map<String, Object> queryParameters, final Entity<?> entity) {
+        try {
+            return Optional.ofNullable(postRequest(url, queryParameters, entity));
+        } catch (final ProcessingException pe) {
+            LOGGER.error("Encountered ProcessingException while calling to '" + url + "'", pe);
+            return Optional.empty();
+        }
     }
 
     public static <T> Optional<T> readOptionalFrom(final Response response, final Class<T> typeClass) {
