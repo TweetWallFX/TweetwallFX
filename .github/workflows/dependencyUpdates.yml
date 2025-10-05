@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-java@v5.0.0
         with:
           distribution: 'temurin'
-          java-version: ${{ env.super_secret }}
+          java-version: ${{ env.JAVA_PLATFORM_VERSION }}
           cache: gradle
 
       # Setup gradle
