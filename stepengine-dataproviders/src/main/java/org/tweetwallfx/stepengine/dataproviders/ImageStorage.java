@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -250,7 +250,7 @@ public final class ImageStorage {
         @SuppressWarnings("unchecked")
         public Builder withAdditionalInfo(final Map<String, Object> additionalInfo) {
             this.additionalInfo = Configuration.mergeMap(
-                    // ensure category is set to defazlt value
+                    // ensure category is set to default value
                     Map.of(KEY_CATEGORY, DEFAULT_CATEGORY),
                     // possibly overwrite it with the additionalInfo parameter
                     Nullable.nullable(additionalInfo));
