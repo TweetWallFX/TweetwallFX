@@ -17,6 +17,11 @@ on:
       - master
       - release
 
+env:
+  # Set Java Platform to 24 (currently latest supported
+  # version by dependencyUpdates gradle task
+  JAVA_PLATFORM_VERSION: 24
+
 jobs:
   checkUpdates:
     name: Check for available updates
@@ -28,11 +33,11 @@ jobs:
         uses: actions/checkout@v5.0.0
 
       # Setup JDK environment for the next steps
-      - name: Setup JDK 24
+      - name: Setup JDK
         uses: actions/setup-java@v5.0.0
         with:
           distribution: 'temurin'
-          java-version: '24'
+          java-version: ${{ env.super_secret }}
           cache: gradle
 
       # Setup gradle
