@@ -27,8 +27,9 @@ jobs:
         jdk:
           - '23'
           - '24'
+          - '25'
         distribution:
-          - 'zulu'
+          - 'temurin'
 
     env:
       JAVA_PLATFORM_VERSION: ${{ matrix.jdk }}
