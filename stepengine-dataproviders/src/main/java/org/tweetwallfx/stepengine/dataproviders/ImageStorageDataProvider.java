@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SequencedSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
@@ -93,6 +94,16 @@ public interface ImageStorageDataProvider extends DataProvider {
      * @return the {@link Access}
      */
     Access getAccess(final String category);
+
+    /**
+     * Returns the names of the categories that can be accessed with images.
+     * When images have already been added then the categories of those images
+     * are produced. Otherwise it will only contain
+     * {@link ImageStorage#DEFAULT_CATEGORY}.
+     *
+     * @return the category names
+     */
+    Set<String> getCategories();
 
     /**
      * Data retriever of stored image data.
@@ -179,6 +190,13 @@ public interface ImageStorageDataProvider extends DataProvider {
                             .collect(Collectors.toList()); // modifiable list
                 }
             };
+        }
+
+        @Override
+        public Set<String> getCategories() {
+            return categorizedImageStorages.isEmpty()
+                    ? Set.of(ImageStorage.DEFAULT_CATEGORY)
+                    : Set.copyOf(categorizedImageStorages.keySet());
         }
 
         /**
