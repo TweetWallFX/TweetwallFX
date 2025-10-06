@@ -132,9 +132,7 @@ allprojects {
                 licenseHeaderFile rootProject.file('LICENSE.spotlessJavaTemplate')
             }
 
-            if (plugins.hasPlugin(GroovyPlugin)) {
-                groovy(closure)
-            } else if (plugins.hasPlugin(JavaPlugin)) {
+            if (plugins.hasPlugin(JavaPlugin)) {
                 java(closure)
             }
         }
@@ -371,13 +369,6 @@ allprojects {
                         }
                     }
                 }
-            }
-        }
-
-        plugins.withType(GroovyPlugin) {
-            dependencies {
-                implementation 'org.codehaus.groovy:groovy-all:4.0.2'
-                testFramework 'org.spockframework:spock-core:2.3-groovy-4.0'
             }
         }
 
