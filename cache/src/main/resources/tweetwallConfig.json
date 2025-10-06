@@ -18,7 +18,7 @@
                     },
                     {
                         "type": "DISK",
-                        "amount": 1,
+                        "amount": 5,
                         "unit": "GB"
                     }
                 ]
