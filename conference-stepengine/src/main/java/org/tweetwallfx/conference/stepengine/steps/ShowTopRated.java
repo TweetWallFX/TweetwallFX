@@ -90,10 +90,10 @@ public class ShowTopRated implements Step {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
 
         List<FlipInXTransition> transitions = new ArrayList<>();
-        if (null == wordleSkin.getNode().lookup("#topRatedeNode")) {
+        if (null == wordleSkin.getNode().lookup("#topRatedNode")) {
             Pane topRatedNode = new Pane();
             topRatedNode.getStyleClass().add("votedTalk");
-            topRatedNode.setId("topRatedeNode");
+            topRatedNode.setId("topRatedNode");
             topRatedNode.setOpacity(0);
 
             var title = new Label(config.getTopVotedType().getTitle());
