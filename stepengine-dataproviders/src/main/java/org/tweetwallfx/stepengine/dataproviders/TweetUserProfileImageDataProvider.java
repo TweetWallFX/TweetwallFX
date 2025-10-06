@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getProfileImageUrl()).getInputStream(),
                 config.profileWidth(),
                 config.profileHeight(),
-                config.preserveRation(),
+                config.preserveRatio(),
                 config.smooth());
     }
 
@@ -57,7 +57,7 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl()).getInputStream(),
                 config.profileWidth(),
                 config.profileHeight(),
-                config.preserveRation(),
+                config.preserveRatio(),
                 config.smooth());
     }
 
@@ -111,18 +111,14 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
     public record Config(
             Integer profileWidth,
             Integer profileHeight,
-            Boolean preserveRation,
+            Boolean preserveRatio,
             Boolean smooth) {
 
-        public Config(
-                final Integer profileWidth,
-                final Integer profileHeight,
-                final Boolean preserveRation,
-                final Boolean smooth) {
-            this.profileWidth = Objects.requireNonNullElse(profileWidth, 64);
-            this.profileHeight = Objects.requireNonNullElse(profileHeight, 64);
-            this.preserveRation = Objects.requireNonNullElse(preserveRation, true);
-            this.smooth = Objects.requireNonNullElse(smooth, false);
+        public Config {
+            profileWidth = Objects.requireNonNullElse(profileWidth, 64);
+            profileHeight = Objects.requireNonNullElse(profileHeight, 64);
+            preserveRatio = Objects.requireNonNullElse(preserveRatio, true);
+            smooth = Objects.requireNonNullElse(smooth, false);
         }
     }
 }

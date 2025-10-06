@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,15 +51,9 @@ public record MastodonSettings(
         String restUrl,
         OAuth oauth) {
 
-    public MastodonSettings(
-            final Boolean debugEnabled,
-            final Boolean enabled,
-            final String restUrl,
-            final OAuth oauth) {
-        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
-        this.enabled = Objects.requireNonNullElse(enabled, true);
-        this.restUrl = restUrl;
-        this.oauth = oauth;
+    public MastodonSettings {
+        debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        enabled = Objects.requireNonNullElse(enabled, true);
     }
 
     /**

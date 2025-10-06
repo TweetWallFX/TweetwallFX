@@ -128,15 +128,11 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
             Long scheduleDuration,
             Long sessionsShallStartWithinMinutes) implements ScheduledConfig {
 
-        public Config(
-                final ScheduleType scheduleType,
-                final Long initialDelay,
-                final Long scheduleDuration,
-                final Long sessionsShallStartWithinMinutes) {
-            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
-            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 5 * 60L);
-            this.sessionsShallStartWithinMinutes = Objects.requireNonNullElse(sessionsShallStartWithinMinutes, 4 * 60L);
+        public Config {
+            scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 5 * 60L);
+            sessionsShallStartWithinMinutes = Objects.requireNonNullElse(sessionsShallStartWithinMinutes, 4 * 60L);
         }
     }
 }

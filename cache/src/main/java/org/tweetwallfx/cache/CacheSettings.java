@@ -43,11 +43,9 @@ public record CacheSettings(
      */
     public static final String CONFIG_KEY = "cacheConfiguration";
 
-    public CacheSettings(
-            final String persistenceDirectoryName,
-            final Map<String, CacheSetting> caches) {
-        this.persistenceDirectoryName = Objects.requireNonNullElse(persistenceDirectoryName, "tweetwall-cache");
-        this.caches = nullable(caches);
+    public CacheSettings {
+        persistenceDirectoryName = Objects.requireNonNullElse(persistenceDirectoryName, "tweetwall-cache");
+        caches = nullable(caches);
     }
 
     @Override
@@ -79,17 +77,11 @@ public record CacheSettings(
             Integer contentLoaderThreads,
             List<CacheResource> cacheResources) {
 
-        public CacheSetting(
-                final String keyType,
-                final String valueType,
-                final CacheExpiry expiry,
-                final Integer contentLoaderThreads,
-                final List<CacheResource> cacheResources) {
-            this.keyType = Objects.requireNonNull(keyType, "keyType must not be null");
-            this.valueType = Objects.requireNonNull(valueType, "valueType must not be null");
-            this.expiry = expiry;
-            this.contentLoaderThreads = Objects.requireNonNullElse(contentLoaderThreads, 0);
-            this.cacheResources = nullable(cacheResources);
+        public CacheSetting {
+            Objects.requireNonNull(keyType, "keyType must not be null");
+            Objects.requireNonNull(valueType, "valueType must not be null");
+            contentLoaderThreads = Objects.requireNonNullElse(contentLoaderThreads, 0);
+            cacheResources = nullable(cacheResources);
         }
 
         @Override
@@ -103,13 +95,10 @@ public record CacheSettings(
             Long amount,
             ChronoUnit unit) {
 
-        public CacheExpiry(
-                final CacheExpiryType type,
-                final Long amount,
-                final ChronoUnit unit) {
-            this.type = Objects.requireNonNullElse(type, CacheExpiryType.NONE);
-            this.amount = Objects.requireNonNull(amount, "amount must not be null");
-            this.unit = Objects.requireNonNull(unit, "unit must not be null");
+        public CacheExpiry {
+            type = Objects.requireNonNullElse(type, CacheExpiryType.NONE);
+            Objects.requireNonNull(amount, "amount must not be null");
+            Objects.requireNonNull(unit, "unit must not be null");
         }
 
         public Duration produceDuration() {
@@ -129,15 +118,12 @@ public record CacheSettings(
             Long amount,
             MemUnit unit) {
 
-        public CacheResource(
-                final CacheResourceType type,
-                final Long amount,
-                final MemUnit unit) {
-            this.type = Objects.requireNonNull(type, "type must not be null!");
-            this.amount = Objects.requireNonNull(amount, "amount must not be null!");
-            this.unit = this.type.requiresUnit
-                    ? Objects.requireNonNull(unit, "unit must not be null!")
-                    : unit;
+        public CacheResource {
+            Objects.requireNonNull(type, "type must not be null!");
+            Objects.requireNonNull(amount, "amount must not be null!");
+            if (type.requiresUnit) {
+                Objects.requireNonNull(unit, "unit must not be null!");
+            }
         }
     }
 
@@ -149,7 +135,7 @@ public record CacheSettings(
         private final boolean requiresUnit;
 
         CacheResourceType(final boolean requiresUnit) {
-           this.requiresUnit = requiresUnit;
+            this.requiresUnit = requiresUnit;
         }
     }
 

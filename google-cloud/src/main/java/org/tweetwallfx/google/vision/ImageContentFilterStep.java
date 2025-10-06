@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -213,27 +213,21 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             SafeTypeConfig spoof,
             SafeTypeConfig violence) {
 
-        public Config(
-                final Boolean checkRetweeted,
-                final SafeTypeConfig adult,
-                final SafeTypeConfig medical,
-                final SafeTypeConfig racy,
-                final SafeTypeConfig spoof,
-                final SafeTypeConfig violence) {
-            this.checkRetweeted = Objects.requireNonNullElse(checkRetweeted, false);
-            this.adult = Objects.requireNonNullElse(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.medical = Objects.requireNonNullElse(medical, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.racy = Objects.requireNonNullElse(racy, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
-            this.spoof = Objects.requireNonNullElse(spoof, new SafeTypeConfig(GoogleLikelihood.UNLIKELY));
-            this.violence = Objects.requireNonNullElse(violence, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+        public Config {
+            checkRetweeted = Objects.requireNonNullElse(checkRetweeted, false);
+            adult = Objects.requireNonNullElse(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            medical = Objects.requireNonNullElse(medical, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            racy = Objects.requireNonNullElse(racy, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
+            spoof = Objects.requireNonNullElse(spoof, new SafeTypeConfig(GoogleLikelihood.UNLIKELY));
+            violence = Objects.requireNonNullElse(violence, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
         }
     }
 
     public static record SafeTypeConfig(
             GoogleLikelihood acceptableLikelyhood) {
 
-        public SafeTypeConfig(final GoogleLikelihood acceptableLikelyhood) {
-            this.acceptableLikelyhood = Objects.requireNonNullElse(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
+        public SafeTypeConfig {
+            acceptableLikelyhood = Objects.requireNonNullElse(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
         }
     }
 }

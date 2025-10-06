@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public record MockPost(long id, String text, User user, LocalDateTime created,
                        Tweet originPost,
@@ -99,10 +100,7 @@ public record MockPost(long id, String text, User user, LocalDateTime created,
 
     @Override
     public Tweet getOriginTweet() {
-        if (originPost != null) {
-            return originPost;
-        }
-        return this;
+        return Objects.requireNonNullElse(originPost, this);
     }
 
     @Override

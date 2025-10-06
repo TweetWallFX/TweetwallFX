@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -153,18 +153,12 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {
 
-        @SuppressWarnings("unused")
-        public Config(
-                final String noImageResource,
-                final Map<String, String> urlReplacements,
-                final ScheduleType scheduleType,
-                final Long initialDelay,
-                final Long scheduleDuration) {
-            this.noImageResource = Objects.requireNonNullElse(noImageResource, "icons/anonymous.jpg");
-            this.urlReplacements = nullable(urlReplacements);
-            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
-            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 30 * 60L);
+        public Config {
+            noImageResource = Objects.requireNonNullElse(noImageResource, "icons/anonymous.jpg");
+            urlReplacements = nullable(urlReplacements);
+            scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 30 * 60L);
         }
 
         @Override

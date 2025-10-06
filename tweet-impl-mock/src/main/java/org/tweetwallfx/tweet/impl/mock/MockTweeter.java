@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ import org.tweetwallfx.tweet.impl.mock.config.MockSettings;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ import java.util.stream.Stream;
 import static org.tweetwallfx.tweet.impl.mock.config.MockSettings.CONFIG_KEY;
 
 public class MockTweeter implements Tweeter {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MockTweeter.class);
     private static final Faker FAKER = new Faker();
     private static final AtomicLong ID = new AtomicLong();
@@ -110,6 +112,7 @@ public class MockTweeter implements Tweeter {
         posts.add(new PostEntry(post));
         postConsumers.forEach(postConsumer -> postConsumer.accept(post));
     }
+
     static int limitUserId(int userId) {
         if (userId > 199) {
             userId = userId % 200;
@@ -174,9 +177,12 @@ public class MockTweeter implements Tweeter {
                 .collect(Collectors.groupingBy(this::trackType, () -> new EnumMap<>(TrackType.class), Collectors.toList()));
         trackTypeListMap.forEach((trackType, values) -> {
             switch (trackType) {
-                case HASHTAG -> handleHashtags(statusStream, values);
-                case USER -> handleUsers(statusStream, values);
-                case UNKNOWN -> LOGGER.error("Track names not supported: {}", values);
+                case HASHTAG ->
+                    handleHashtags(statusStream, values);
+                case USER ->
+                    handleUsers(statusStream, values);
+                case UNKNOWN ->
+                    LOGGER.error("Track names not supported: {}", values);
             }
         });
         return statusStream;
@@ -306,13 +312,13 @@ public class MockTweeter implements Tweeter {
     }
 
     private record PostEntry(Tweet tweet) implements Comparable<PostEntry>, LongPredicate {
+
         @Override
         public int compareTo(PostEntry other) {
-            int rc = tweet.getCreatedAt().compareTo(other.tweet.getCreatedAt());
-            if (rc == 0) {
-                return Long.compare(tweet.getId(), other.tweet.getId());
-            }
-            return rc;
+            return Comparator
+                    .comparing(Tweet::getCreatedAt)
+                    .thenComparing(Tweet::getId)
+                    .compare(tweet, other.tweet);
         }
 
         @Override

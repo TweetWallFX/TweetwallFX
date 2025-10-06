@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,7 @@ public record EmojiImageCacheConfig(
      */
     public static final String CONFIG_KEY = EmojiImageCache.class.getSimpleName();
 
-    public EmojiImageCacheConfig(
-            final String emojiImageBaseUrl) {
+    public EmojiImageCacheConfig {
         String bu = Objects.requireNonNullElse(emojiImageBaseUrl, "https://cdnjs.cloudflare.com/ajax/libs/twemoji/15.1.0/72x72");
 
         // ensure baseUrl ends with a '/'
@@ -45,7 +44,7 @@ public record EmojiImageCacheConfig(
             bu += "/";
         }
 
-        this.emojiImageBaseUrl = bu;
+        emojiImageBaseUrl = bu;
     }
 
     public static EmojiImageCacheConfig getInstance() {

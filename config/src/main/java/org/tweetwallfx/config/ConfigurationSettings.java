@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 TweetWallFX
+ * Copyright (c) 2019-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,9 +42,8 @@ public record ConfigurationSettings(
      */
     public static final String CONFIG_KEY = "configuration";
 
-    public ConfigurationSettings(
-            final List<String> additionalConfigurationURLs) {
-        this.additionalConfigurationURLs = nullable(additionalConfigurationURLs);
+    public ConfigurationSettings {
+        additionalConfigurationURLs = nullable(additionalConfigurationURLs);
     }
 
     @Override
