@@ -32,6 +32,8 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.net.URI;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,12 +41,12 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class RestCallHelper {
 
@@ -73,12 +75,11 @@ public class RestCallHelper {
     }
 
     private static WebTarget addQueryParameters(final WebTarget webTarget, final Map<String, Object> queryParameters) {
-        LOGGER.info("Adding query parameters to {}: {}", webTarget, queryParameters);
-
         if (null == queryParameters || queryParameters.isEmpty()) {
             return webTarget;
         }
 
+        LOGGER.info("Adding query parameters to {}: {}", webTarget, queryParameters);
         WebTarget wt = webTarget;
 
         for (Map.Entry<String, Object> entry : queryParameters.entrySet()) {
@@ -101,9 +102,9 @@ public class RestCallHelper {
     private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
         WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
 
-        final Response response = webTarget
+        final Response response = timer(webTarget.getUri(), () -> webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .get();
+                .get());
         LOGGER.info("Received Response: {}", response);
 
         return response;
@@ -125,9 +126,9 @@ public class RestCallHelper {
     private static Response postRequest(final String url, final Map<String, Object> queryParameters, Entity<?> entity) {
         WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
 
-        final Response response = webTarget
+        final Response response = timer(webTarget.getUri(), () -> webTarget
                 .request(MediaType.APPLICATION_JSON)
-                .post(entity);
+                .post(entity));
         LOGGER.info("Received Response: {}", response);
 
         return response;
@@ -218,5 +219,16 @@ public class RestCallHelper {
     public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType, final BinaryOperator<T> docCombiner) {
         return getOptionalResponse(url, queryParameters)
                 .flatMap(response -> readOptionalFrom(response, genericType, docCombiner));
+    }
+
+    public static <T> T timer(final URI uri, final Supplier<T> supplier) {
+        final long startNanos = System.nanoTime();
+
+        try {
+            return supplier.get();
+        } finally {
+            final long endNanos = System.nanoTime();
+            LOGGER.info("URI call to {} took {}", uri, Duration.ofNanos(endNanos - startNanos));
+        }
     }
 }
