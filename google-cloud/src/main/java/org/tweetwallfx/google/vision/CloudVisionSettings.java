@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,9 +32,8 @@ import static org.tweetwallfx.util.Nullable.nullable;
 public record CloudVisionSettings(
         Set<FeatureType> featureTypes) {
 
-    public CloudVisionSettings(
-            final Set<FeatureType> featureTypes) {
-        this.featureTypes = nullable(featureTypes);
+    public CloudVisionSettings {
+        featureTypes = nullable(featureTypes);
     }
 
     @Override

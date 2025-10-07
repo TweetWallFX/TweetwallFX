@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,13 +41,8 @@ public record ImageContentAnalysis(
         SafeSearch safeSearch,
         List<TextEntry> texts) implements Serializable {
 
-    public ImageContentAnalysis(
-            final AnalysisError analysisError,
-            final SafeSearch safeSearch,
-            final List<TextEntry> texts) {
-        this.analysisError = analysisError;
-        this.safeSearch = safeSearch;
-        this.texts = nullable(texts);
+    public ImageContentAnalysis {
+        texts = nullable(texts);
     }
 
     public static ImageContentAnalysis of(final AnnotateImageResponse air) {
@@ -67,11 +62,8 @@ public record ImageContentAnalysis(
             String message,
             List<String> details) implements Serializable {
 
-        public AnalysisError(
-                final String message,
-                final List<String> details) {
-            this.message = message;
-            this.details = nullable(details);
+        public AnalysisError {
+            details = nullable(details);
         }
 
         private static AnalysisError of(final Status error) {
@@ -120,15 +112,8 @@ public record ImageContentAnalysis(
             List<LocationEntry> locations,
             String locale) implements Serializable {
 
-        public TextEntry(
-                final String description,
-                final float score,
-                final List<LocationEntry> locations,
-                final String locale) {
-            this.description = description;
-            this.score = score;
-            this.locations = nullable(locations);
-            this.locale = locale;
+        public TextEntry {
+            locations = nullable(locations);
         }
 
         private static TextEntry of(final EntityAnnotation ea) {

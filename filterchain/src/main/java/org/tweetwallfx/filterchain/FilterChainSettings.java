@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,9 +50,8 @@ public record FilterChainSettings(
      */
     public static final String CONFIG_KEY = "filterchains";
 
-    public FilterChainSettings(
-            final Map<String, FilterChainDefinition> chains) {
-        this.chains = Map.copyOf(Objects.requireNonNull(chains, "chains must not be null!"));
+    public FilterChainSettings {
+        chains = Map.copyOf(Objects.requireNonNull(chains, "chains must not be null!"));
     }
 
     @Override
@@ -98,13 +97,8 @@ public record FilterChainSettings(
             List<FilterStepDefinition> filterSteps,
             String domainObjectClassName) {
 
-        public FilterChainDefinition(
-                final Boolean defaultResult,
-                final List<FilterStepDefinition> filterSteps,
-                final String domainObjectClassName) {
-            this.defaultResult = defaultResult;
-            this.filterSteps = nullable(filterSteps);
-            this.domainObjectClassName = domainObjectClassName;
+        public FilterChainDefinition {
+            filterSteps = nullable(filterSteps);
         }
 
         @Override

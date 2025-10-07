@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,10 +88,8 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
     public static record Config(
             Boolean includeRetweets) {
 
-        @SuppressWarnings("unused")
-        public Config(
-                final Boolean includeRetweets) {
-            this.includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
+        public Config {
+            includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.tweetwallfx.config.ConfigurationConverter;
+import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * POJO for reading Settings concerning the mock client.
@@ -50,29 +51,23 @@ public record MockSettings(
         List<String> users,
         List<String> hashtags) {
 
-    public MockSettings(
-            final Boolean debugEnabled,
-            final Boolean enabled,
-            final Integer postInterval,
-            final Integer initialPosts,
-            final List<String> users,
-            final List<String> hashtags) {
-        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
-        this.enabled = Objects.requireNonNullElse(enabled, true);
-        this.postInterval = Objects.requireNonNullElse(postInterval, 30);
-        this.initialPosts = Objects.requireNonNullElse(initialPosts, 0);
-        this.users = Objects.requireNonNullElse(users, List.of());
-        this.hashtags = Objects.requireNonNullElse(hashtags, List.of());
-        if (Boolean.TRUE.equals(enabled) && postInterval < 2) {
-            throw new IllegalArgumentException("Minimum post interval is 2 seconds");
-        }
-    }
-
     /**
      * Configuration key under which the data for this Settings object is stored
      * in the configuration data map.
      */
     public static final String CONFIG_KEY = "mock";
+
+    public MockSettings {
+        debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        enabled = Objects.requireNonNullElse(enabled, true);
+        postInterval = Objects.requireNonNullElse(postInterval, 30);
+        initialPosts = Objects.requireNonNullElse(initialPosts, 0);
+        users = nullable(users);
+        hashtags = nullable(hashtags);
+        if (Boolean.TRUE.equals(enabled) && postInterval < 2) {
+            throw new IllegalArgumentException("Minimum post interval is 2 seconds");
+        }
+    }
 
     /**
      * Service implementation converting the configuration data of the root key

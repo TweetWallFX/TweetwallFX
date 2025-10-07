@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2023 TweetWallFX
+ * Copyright (c) 2016-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -105,12 +105,9 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             Boolean includeRetweets,
             Integer maxCacheSize) {
 
-        @SuppressWarnings("unused")
-        public Config(
-                final Boolean includeRetweets,
-                final Integer maxCacheSize) {
-            this.includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
-            this.maxCacheSize = Objects.requireNonNullElse(maxCacheSize, 40);
+        public Config {
+            includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
+            maxCacheSize = Objects.requireNonNullElse(maxCacheSize, 40);
         }
     }
 

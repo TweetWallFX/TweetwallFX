@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,19 +70,12 @@ public record TwitterSettings(
      */
     public static final String CONFIG_KEY = "twitter";
 
-    public TwitterSettings(
-            final Boolean debugEnabled,
-            final Boolean enabled,
-            final Map<String, Object> extendedConfig,
-            final Boolean extendedMode,
-            final OAuth oauth,
-            final Boolean ignoreRateLimit) {
-        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
-        this.enabled = Objects.requireNonNullElse(enabled, true);
-        this.extendedConfig = nullable(extendedConfig);
-        this.extendedMode = Objects.requireNonNullElse(extendedMode, false);
-        this.oauth = oauth;
-        this.ignoreRateLimit = Objects.requireNonNullElse(ignoreRateLimit, true);
+    public TwitterSettings {
+        debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        enabled = Objects.requireNonNullElse(enabled, true);
+        extendedConfig = nullable(extendedConfig);
+        extendedMode = Objects.requireNonNullElse(extendedMode, false);
+        ignoreRateLimit = Objects.requireNonNullElse(ignoreRateLimit, true);
     }
 
     @Override

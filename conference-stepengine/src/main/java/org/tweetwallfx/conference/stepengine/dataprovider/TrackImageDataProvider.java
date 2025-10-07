@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,16 +65,11 @@ public class TrackImageDataProvider implements DataProvider {
             Boolean preserveRation,
             Boolean smooth) {
 
-        @SuppressWarnings("unused")
-        public Config(
-                final Integer profileWidth,
-                final Integer profileHeight,
-                final Boolean preserveRation,
-                final Boolean smooth) {
-            this.profileWidth = Objects.requireNonNullElse(profileWidth, 32);
-            this.profileHeight = Objects.requireNonNullElse(profileHeight, 32);
-            this.preserveRation = Objects.requireNonNullElse(preserveRation, true);
-            this.smooth = Objects.requireNonNullElse(smooth, true);
+        public Config {
+            profileWidth = Objects.requireNonNullElse(profileWidth, 32);
+            profileHeight = Objects.requireNonNullElse(profileHeight, 32);
+            preserveRation = Objects.requireNonNullElse(preserveRation, true);
+            smooth = Objects.requireNonNullElse(smooth, true);
         }
     }
 }

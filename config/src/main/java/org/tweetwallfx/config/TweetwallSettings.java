@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2022 TweetWallFX
+ * Copyright (c) 2017-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,17 +61,10 @@ public record TweetwallSettings(
      */
     public static final String CONFIG_KEY = "tweetwall";
 
-    public TweetwallSettings(
-            final String title,
-            final String stylesheetResource,
-            final String stylesheetFile,
-            final String query,
-            final Set<String> additionalStopWords) {
-        this.title = Objects.requireNonNull(title, "title must not be null!");
-        this.stylesheetResource = stylesheetResource;
-        this.stylesheetFile = stylesheetFile;
-        this.query = Objects.requireNonNull(query, "query must not be null!");
-        this.additionalStopWords = nullable(additionalStopWords);
+    public TweetwallSettings {
+        Objects.requireNonNull(title, "title must not be null!");
+        Objects.requireNonNull(query, "query must not be null!");
+        additionalStopWords = nullable(additionalStopWords);
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2023 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -182,19 +182,16 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
             Integer maxTweets,
             Boolean hideRetweets) {
 
-        public Config(
-                final Integer historySize,
-                final Integer maxTweets,
-                final Boolean hideRetweets) {
+        public Config {
             if (historySize < 0) {
                 throw new IllegalArgumentException("property 'historySize' must not be a negative number");
             }
-            this.historySize = Objects.requireNonNullElse(historySize, 50);
+            historySize = Objects.requireNonNullElse(historySize, 50);
             if (maxTweets < 0) {
                 throw new IllegalArgumentException("property 'maxTweets' must not be a negative number");
             }
-            this.maxTweets = Objects.requireNonNullElse(maxTweets, 4);
-            this.hideRetweets = Objects.requireNonNullElse(hideRetweets, false);
+            maxTweets = Objects.requireNonNullElse(maxTweets, 4);
+            hideRetweets = Objects.requireNonNullElse(hideRetweets, false);
         }
     }
 }

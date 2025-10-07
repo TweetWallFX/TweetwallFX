@@ -125,21 +125,18 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
             Long scheduleDuration,
             Integer minTotalVotes) implements ScheduledConfig {
 
-        @SuppressWarnings("unused")
-        public Config(
-                final Integer nrVotes,
-                final ScheduleType scheduleType,
-                final Long initialDelay,
-                final Long scheduleDuration,
-                final Integer minTotalVotes) {
-            this.nrVotes = Objects.requireNonNullElse(nrVotes, 5);
-            if (this.nrVotes < 0) {
+        public Config {
+            nrVotes = Objects.requireNonNullElse(nrVotes, 5);
+            if (nrVotes < 0) {
                 throw new IllegalArgumentException("property 'nrVotes' must not be a negative number");
             }
-            this.scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
-            this.initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
-            this.scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 300L);
-            this.minTotalVotes = Objects.requireNonNullElse(nrVotes, 10);
+            scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
+            initialDelay = Objects.requireNonNullElse(initialDelay, 0L);
+            scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 300L);
+            minTotalVotes = Objects.requireNonNullElse(minTotalVotes, 10);
+            if (minTotalVotes < 0) {
+                throw new IllegalArgumentException("property 'minTotalVotes' must not be a negative number");
+            }
         }
     }
 }

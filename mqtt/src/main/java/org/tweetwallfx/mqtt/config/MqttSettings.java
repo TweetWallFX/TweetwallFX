@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,19 +57,12 @@ public record MqttSettings(
         Integer heartbeatSeconds,
         Auth auth) {
 
-    public MqttSettings(
-            final Boolean enabled,
-            final Boolean debugEnabled,
-            final String brokerUrl,
-            final String clientId,
-            Integer heartbeatSeconds,
-            final Auth auth) {
-        this.enabled = Objects.requireNonNullElse(enabled, true);
-        this.debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
-        this.brokerUrl = Objects.requireNonNullElse(brokerUrl, "tcp://127.0.0.1:1883");
-        this.clientId = Objects.requireNonNullElse(clientId, UUID.randomUUID().toString());
-        this.heartbeatSeconds = checkValue(Objects.requireNonNullElse(heartbeatSeconds, 5));
-        this.auth = auth;
+    public MqttSettings {
+        enabled = Objects.requireNonNullElse(enabled, true);
+        debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
+        Objects.requireNonNullElse(brokerUrl, "tcp://127.0.0.1:1883");
+        clientId = Objects.requireNonNullElse(clientId, UUID.randomUUID().toString());
+        heartbeatSeconds = checkValue(Objects.requireNonNullElse(heartbeatSeconds, 5));
     }
 
     private Integer checkValue(Integer checkedValue) {
