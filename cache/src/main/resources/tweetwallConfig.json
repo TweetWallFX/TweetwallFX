@@ -22,6 +22,50 @@
                         "unit": "GB"
                     }
                 ]
+            },
+            "timeToForgetCache15m": {
+                "keyType": "java.lang.String",
+                "valueType": "org.tweetwallfx.cache.URLContent",
+                "contentLoaderThreads": 1,
+                "expiry": {
+                    "type": "TIME_TO_LIVE",
+                    "amount": 15,
+                    "unit": "MINUTES"
+                },
+                "cacheResources": [
+                    {
+                        "type": "HEAP",
+                        "amount": 160,
+                        "unit": "MB"
+                    },
+                    {
+                        "type": "DISK",
+                        "amount": 2,
+                        "unit": "GB"
+                    }
+                ]
+            },
+            "timeToForgetCache60m": {
+                "keyType": "java.lang.String",
+                "valueType": "org.tweetwallfx.cache.URLContent",
+                "contentLoaderThreads": 1,
+                "expiry": {
+                    "type": "TIME_TO_LIVE",
+                    "amount": 60,
+                    "unit": "MINUTES"
+                },
+                "cacheResources": [
+                    {
+                        "type": "HEAP",
+                        "amount": 160,
+                        "unit": "MB"
+                    },
+                    {
+                        "type": "DISK",
+                        "amount": 2,
+                        "unit": "GB"
+                    }
+                ]
             }
         }
     }
