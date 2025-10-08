@@ -31,6 +31,7 @@ import java.util.SequencedSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,21 @@ import org.tweetwallfx.stepengine.api.DataProvider;
  * types.
  */
 public interface ImageStorageDataProvider extends DataProvider {
+
+    /**
+     * Adds a new {@link ImageStorage} created with the given values.
+     *
+     * @param ucs the {@link Supplier} of a {@link URLContent} containing the
+     * image data
+     *
+     * @param instant the time associated with the image (i.e. the time the
+     * image was posted)
+     *
+     * @param additionalInfo additional info for the stored image
+     */
+    default void add(final Supplier<URLContent> ucs, final Instant instant, final Map<String, Object> additionalInfo) {
+        add(ImageStorage.builder(instant).from(ucs).withAdditionalInfo(additionalInfo).build());
+    }
 
     /**
      * Adds a new {@link ImageStorage} created with the given values.

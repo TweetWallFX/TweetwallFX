@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.Comparator;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import javafx.scene.image.Image;
 import org.tweetwallfx.cache.URLContent;
 import org.tweetwallfx.config.Configuration;
@@ -63,7 +63,7 @@ public final class ImageStorage {
             .comparing(ImageStorage::getTimestamp);
 
     private final Instant timestamp;
-    private final Image image;
+    private final Supplier<URLContent> urlContentSupplier;
     private final String digest;
     private final Map<String, Object> additionalInfo;
     private final List<ExifData> exifDatas;
@@ -76,10 +76,10 @@ public final class ImageStorage {
      */
     private ImageStorage(final Builder builder) {
         this.timestamp = Objects.requireNonNull(builder.timestamp, "timestamp must not be null");
-        this.image = new Image(Objects.requireNonNull(builder.inputStream, "inputStream must not be null"));
+        this.urlContentSupplier = Objects.requireNonNull(builder.urlContentSupplier, "urlContentSupplier must not be null");
         this.digest = Objects.requireNonNull(builder.digest, "digest must not be null");
-        this.additionalInfo = builder.additionalInfo;
-        this.exifDatas = builder.exifDatas;
+        this.additionalInfo = Nullable.nullable(builder.additionalInfo);
+        this.exifDatas = Nullable.nullable(builder.exifDatas);
     }
 
     /**
@@ -96,9 +96,8 @@ public final class ImageStorage {
      *
      * @return the {@link Image}
      */
-    @SuppressFBWarnings
     public Image getImage() {
-        return image;
+        return new Image(urlContentSupplier.get().getInputStream());
     }
 
     /**
@@ -191,7 +190,7 @@ public final class ImageStorage {
     public static final class Builder {
 
         private final Instant timestamp;
-        private InputStream inputStream;
+        private Supplier<URLContent> urlContentSupplier;
         private String digest;
         private Map<String, Object> additionalInfo = Map.of();
         private List<ExifData> exifDatas = List.of();
@@ -210,16 +209,9 @@ public final class ImageStorage {
             return new ImageStorage(this);
         }
 
-        /**
-         * Configures the image data source to be the given {@code inputStream}.
-         *
-         * @param inputStream the image data source
-         *
-         * @return this builder instance
-         */
-        public Builder from(final InputStream inputStream) {
-            this.inputStream = Objects.requireNonNull(inputStream, "inputStream must not be null");
-            return this;
+        public Builder from(final Supplier<URLContent> urlContentSupplier) {
+            this.urlContentSupplier = Objects.requireNonNull(urlContentSupplier, "urlContentSupplier must not be null");
+            return from(urlContentSupplier.get());
         }
 
         /**
@@ -234,8 +226,7 @@ public final class ImageStorage {
          * @return this builder instance
          */
         public Builder from(final URLContent urlc) {
-            return from(urlc.getInputStream())
-                    .withExifTags(urlc.getInputStream())
+            return withExifTags(urlc.getInputStream())
                     .withDigest(urlc.digest());
         }
 
