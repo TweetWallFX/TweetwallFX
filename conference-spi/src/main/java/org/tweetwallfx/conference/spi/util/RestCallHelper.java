@@ -32,8 +32,6 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.net.URI;
-import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +44,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
+import org.tweetwallfx.util.Stopwatch;
 
 public class RestCallHelper {
 
@@ -102,9 +100,9 @@ public class RestCallHelper {
     private static Response getResponse(final String url, final Map<String, Object> queryParameters) {
         WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
 
-        final Response response = timer(webTarget.getUri(), () -> webTarget
-                .request(MediaType.APPLICATION_JSON)
-                .get());
+        final Response response = Stopwatch.measure(
+                () -> webTarget.request(MediaType.APPLICATION_JSON).get(),
+                duration -> LOGGER.info("URI call to {} took {}", webTarget.getUri(), duration));
         LOGGER.info("Received Response: {}", response);
 
         return response;
@@ -126,9 +124,9 @@ public class RestCallHelper {
     private static Response postRequest(final String url, final Map<String, Object> queryParameters, Entity<?> entity) {
         WebTarget webTarget = addQueryParameters(createWebTarget(url), queryParameters);
 
-        final Response response = timer(webTarget.getUri(), () -> webTarget
-                .request(MediaType.APPLICATION_JSON)
-                .post(entity));
+        final Response response = Stopwatch.measure(
+                () -> webTarget.request(MediaType.APPLICATION_JSON).post(entity),
+                duration -> LOGGER.info("URI call to {} took {}", webTarget.getUri(), duration));
         LOGGER.info("Received Response: {}", response);
 
         return response;
@@ -219,16 +217,5 @@ public class RestCallHelper {
     public static <T> Optional<T> readOptionalFrom(final String url, final Map<String, Object> queryParameters, final GenericType<T> genericType, final BinaryOperator<T> docCombiner) {
         return getOptionalResponse(url, queryParameters)
                 .flatMap(response -> readOptionalFrom(response, genericType, docCombiner));
-    }
-
-    public static <T> T timer(final URI uri, final Supplier<T> supplier) {
-        final long startNanos = System.nanoTime();
-
-        try {
-            return supplier.get();
-        } finally {
-            final long endNanos = System.nanoTime();
-            LOGGER.info("URI call to {} took {}", uri, Duration.ofNanos(endNanos - startNanos));
-        }
     }
 }
