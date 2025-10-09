@@ -225,7 +225,7 @@ public final class ImageStorage {
          *
          * @return this builder instance
          */
-        public Builder from(final URLContent urlc) {
+        private Builder from(final URLContent urlc) {
             return withExifTags(urlc.getInputStream())
                     .withDigest(urlc.digest());
         }

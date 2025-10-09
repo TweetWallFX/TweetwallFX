@@ -70,7 +70,7 @@ public interface ImageStorageDataProvider extends DataProvider {
      * @param additionalInfo additional info for the stored image
      */
     default void add(final URLContent uc, final Instant instant, final Map<String, Object> additionalInfo) {
-        add(ImageStorage.builder(instant).from(uc).withAdditionalInfo(additionalInfo).build());
+        add(() -> uc, instant, additionalInfo);
     }
 
     /**
