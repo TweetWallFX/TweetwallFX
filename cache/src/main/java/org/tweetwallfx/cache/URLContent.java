@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2024 TweetWallFX
+ * Copyright (c) 2018-2025 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,7 +73,7 @@ public final class URLContent implements Serializable {
         String digest = "0000000000000000000000000000000000000000000000000000000000000000";
         try {
             digest = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));
-            LOG.info("MD5: {}", digest);
+            LOG.info("SHA-256: {}", digest);
         } catch (NoSuchAlgorithmException ex) {
             LOG.warn("Failed to create digest for {}", in, ex);
         }
