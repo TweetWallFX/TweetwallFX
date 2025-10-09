@@ -206,15 +206,16 @@ public class ShowSchedule implements Step {
                 int lineNum = 0;
                 int imageInLine = 0;
                 int evenAvatars = 3;
-                int oddAvatars =2;
+                int oddAvatars = 2;
                 double configAvatarOffset = (config.avatarSize * 3 / 4d + 2);
                 for (int i = 0; i < images.size(); i++) {
                     var image = images.get(i);
-                    image.setLayoutX((imageInLine*2 + lineNum % 2) * configAvatarOffset);
+                    image.setLayoutX((imageInLine * 2 + lineNum % 2) * configAvatarOffset);
                     image.setLayoutY(lineNum * config.avatarSize / 2d + 2);
                     speakerImages.getChildren().add(image);
                     imageInLine++;
-                    if (imageInLine > (0 == lineNum % 2 ? evenAvatars : oddAvatars) - 1) {
+                    if ((imageInLine == 2 && 4 == images.size()) // special handling for 4 speakers - we want 2 lines of 2 avatars
+                            || imageInLine > (0 == lineNum % 2 ? evenAvatars : oddAvatars) - 1) {
                         lineNum++;
                         imageInLine = 0;
                     }

@@ -188,7 +188,8 @@ public class ShowTopRated implements Step {
                     image.setLayoutY(lineNum * config.avatarSize / 2d + 2);
                     speakerImages.getChildren().add(image);
                     imageInLine++;
-                    if (imageInLine > (0 == lineNum % 2 ? evenAvatars : oddAvatars) - 1) {
+                    if ((imageInLine == 2 && 4 == images.size()) // special handling for 4 speakers - we want 2 lines of 2 avatars
+                            || imageInLine > (0 == lineNum % 2 ? evenAvatars : oddAvatars) - 1) {
                         lineNum++;
                         imageInLine = 0;
                     }
