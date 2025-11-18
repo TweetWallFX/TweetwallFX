@@ -37,7 +37,7 @@ jobs:
     steps:
       # Check out sources
       - name: Fetch Sources
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v5.0.1
 
       # Setup JDK environment for the next steps
       - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
