@@ -52,7 +52,7 @@ dependencies {
     api platform('org.glassfish.jersey:jersey-bom:4.0.0')
 
     constraints {
-        api 'biz.aQute.bnd:biz.aQute.bnd.annotation:7.2.0'
+        api 'biz.aQute.bnd:biz.aQute.bnd.annotation:7.2.1'
         api 'com.github.spotbugs:spotbugs-annotations:4.9.8'
         api 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
         api 'org.eclipse:yasson:3.0.4'
