@@ -71,6 +71,7 @@ public class MockTweeter implements Tweeter {
     private final List<Consumer<Tweet>> postConsumers;
     private final Set<PostEntry> posts;
     private final Map<Integer, User> users;
+
     private ScheduledFuture<?> postTask;
 
     /**
