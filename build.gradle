@@ -30,7 +30,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.53.0'
     id 'com.github.spotbugs' version '6.4.8' apply false
     id 'com.google.osdetector' version '1.7.3'
-    id 'com.netflix.nebula.info' version '16.0.0' apply false
+    id 'com.netflix.nebula.info' version '16.0.1' apply false
     id 'com.netflix.nebula.maven-base-publish' version '23.0.0' apply false
     id 'net.ltgt.errorprone' version '4.4.0' apply false
     id 'org.sonarqube' version '7.2.2.6593'
