@@ -231,7 +231,7 @@ allprojects {
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.4'
             jaxb 'org.eclipse.angus:angus-activation:2.0.3'
-            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.4'
+            jaxb 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.5'
             jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.6'
 
             testFramework 'org.assertj:assertj-core:3.27.7'
