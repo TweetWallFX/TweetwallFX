@@ -36,7 +36,7 @@ public record MockPostMedia(long id, int with, int height) implements MediaTweet
     }
 
     @Override
-    public String getMediaUrl() {
+    public String getMediaUrl(SizeHint sizeHint) {
         return "https://picsum.photos/id/%s/%s/%s".formatted(id, height, with);
     }
 
@@ -56,7 +56,7 @@ public record MockPostMedia(long id, int with, int height) implements MediaTweet
 
     @Override
     public String getText() {
-        return getMediaUrl();
+        return getMediaUrl(null);
     }
 
     @Override
