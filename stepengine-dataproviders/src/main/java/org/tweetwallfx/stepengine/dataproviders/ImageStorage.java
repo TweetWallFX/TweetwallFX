@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,13 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
+import javafx.scene.image.Image;
+import org.tweetwallfx.cache.URLContent;
+import org.tweetwallfx.config.Configuration;
+import org.tweetwallfx.util.Nullable;
+import org.tweetwallfx.util.ToString;
+import org.tweetwallfx.util.image.ExifData;
+
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.Comparator;
@@ -31,12 +38,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import javafx.scene.image.Image;
-import org.tweetwallfx.cache.URLContent;
-import org.tweetwallfx.config.Configuration;
-import org.tweetwallfx.util.Nullable;
-import org.tweetwallfx.util.ToString;
-import org.tweetwallfx.util.image.ExifData;
 
 /**
  * Storage of a timestamped, optionally categorized, {@link Image} based on
@@ -216,7 +217,7 @@ public final class ImageStorage {
 
         /**
          * Uses the {@link URLContent} to configures the
-         * {@link #from(java.io.InputStream) image data source}, {@link #withExifTags(java.io.InputStream) EXIF data}
+         * {@link #from(URLContent) image data source}, {@link #withExifTags(java.io.InputStream) EXIF data}
          * and the {@link #withDigest(java.lang.String) digest} using
          * {@link URLContent#getInputStream()} and {@link URLContent#digest()}
          * respectifely.
