@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,11 @@ import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.LocationInfo;
 import com.google.cloud.vision.v1.SafeSearchAnnotation;
 import com.google.rpc.Status;
+import org.tweetwallfx.google.GoogleLikelihood;
+
 import java.io.Serializable;
 import java.util.List;
-import org.tweetwallfx.google.GoogleLikelihood;
+
 import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
@@ -67,9 +69,7 @@ public record ImageContentAnalysis(
         }
 
         private static AnalysisError of(final Status error) {
-            if (null == error
-                    || null == error.getMessage()
-                    || error.getMessage().isBlank()) {
+            if (null == error || error.getMessage().isBlank()) {
                 return null;
             }
 
