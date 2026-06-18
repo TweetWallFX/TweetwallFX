@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -317,7 +317,7 @@ public class MockTweeter implements Tweeter {
         public int compareTo(PostEntry other) {
             return Comparator
                     .comparing(Tweet::getCreatedAt)
-                    .thenComparing(Tweet::getId)
+                    .thenComparingLong(Tweet::getId)
                     .compare(tweet, other.tweet);
         }
 

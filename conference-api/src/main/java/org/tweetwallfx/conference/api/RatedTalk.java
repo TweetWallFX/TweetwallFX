@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,8 +54,8 @@ public interface RatedTalk extends Comparable<RatedTalk> {
     @Override
     public default int compareTo(final RatedTalk o) {
         return Comparator
-                .comparing(RatedTalk::getAverageRating)
-                .thenComparing(RatedTalk::getTotalRating)
+                .comparingDouble(RatedTalk::getAverageRating)
+                .thenComparingInt(RatedTalk::getTotalRating)
                 .compare(this, o);
     }
 }

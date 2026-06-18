@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2024 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -153,7 +153,7 @@ public interface Tweet extends BasicEntry {
                     final int cOffset = offset.getAndAdd(charCount - 1);
                     return new EmojiTweetEntry(new String(codePoints, i, 1), cOffset + i, charCount);
                 })
-                .toArray(i -> new EmojiTweetEntry[i]);
+                .toArray(EmojiTweetEntry[]::new);
     }
 
     public default TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
@@ -163,7 +163,7 @@ public interface Tweet extends BasicEntry {
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class TextExtractor {
 
-        private final Set<TweetEntry> entriesToRemove = new TreeSet<>(Comparator.comparing(TweetEntry::getStart).reversed());
+        private final Set<TweetEntry> entriesToRemove = new TreeSet<>(Comparator.comparingInt(TweetEntry::getStart).reversed());
         private final Tweet tweet;
 
         public TextExtractor(final Tweet tweet) {
