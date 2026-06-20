@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,15 +62,27 @@ public abstract class ConferenceClientTestBase {
     private final String conferenceRoom;
     private final String talkId;
 
+    private ConferenceClientTestBase(
+            final String conferenceDay,
+            final String conferenceRoom,
+            final String talkId,
+            final Class<? extends ConferenceClient> expectedConferenceClient) {
+        this.conferenceDay = conferenceDay;
+        this.conferenceRoom = conferenceRoom;
+        this.talkId = talkId;
+        this.expectedConferenceClient = expectedConferenceClient;
+    }
+
     protected ConferenceClientTestBase(
             final Class<? extends ConferenceClient> expectedConferenceClient,
             final String conferenceDay,
             final String conferenceRoom,
             final String talkId) {
-        this.expectedConferenceClient = expectedConferenceClient;
-        this.conferenceDay = Objects.requireNonNull(conferenceDay, "conferenceDay must not be null");
-        this.conferenceRoom = Objects.requireNonNull(conferenceRoom, "conferenceRoom must not be null");
-        this.talkId = Objects.requireNonNull(talkId, "talkId must not be null");
+        this(
+                Objects.requireNonNull(conferenceDay, "conferenceDay must not be null"),
+                Objects.requireNonNull(conferenceRoom, "conferenceRoom must not be null"),
+                Objects.requireNonNull(talkId, "talkId must not be null"),
+                expectedConferenceClient);
     }
 
     protected static final void checkServerReachable(final String uri) {
@@ -202,7 +214,6 @@ public abstract class ConferenceClientTestBase {
 //        LOG.info("speakerReload: {}", speakerReload);
 //        assertThat(speakerReload.hasCompleteInformation()).isTrue();
 //    }
-
     @Test
     @EnabledIf("serverReachable")
     void speakerIsRetrievable() {
@@ -277,7 +288,6 @@ public abstract class ConferenceClientTestBase {
 //        LOG.info("speaker: {}", speaker);
 //        assertThat(speaker.hasCompleteInformation()).isTrue();
 //    }
-
     @Test
     @EnabledIf("serverReachable")
     void talkIsRetrievable() {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2025 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ package org.tweetwallfx.stepengine.dataproviders;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -67,7 +66,7 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
-        Arrays.stream(tweet.getMediaEntries())
+        tweet.getMediaEntries().stream()
                 .filter(MediaTweetEntryType.photo::isType)
                 .forEach(mte -> addImage(mte, tweet.getCreatedAt()));
     }

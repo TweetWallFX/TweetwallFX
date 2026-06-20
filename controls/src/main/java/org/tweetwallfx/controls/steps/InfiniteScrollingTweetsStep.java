@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -105,7 +105,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         tweetStreamDataProvider = context.getDataProvider(TweetStreamDataProvider.class);
 
         updateTweetList();
-        for (int i = 0; i< config.columns; i++) {
+        for (int i = 0; i < config.columns; i++) {
             var pane = createInfinitePane(wordleSkin, "infiniteStream." + i);
 
             pane.setLayoutX(config.layoutX + i * (config.tweetWidth + config.profileImageSize + 10 + 5 + config.columnGap));
@@ -143,7 +143,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
             node.setLayoutY(lastLayoutY + config.tweetGap);
             addNode(createNode(), pane, node.getLayoutY() + node.getLayoutBounds().getHeight());
         } else {
-            for (Node nodeToScroll : pane.getChildren().subList(0, pane.getChildren().size()-1)) {
+            for (Node nodeToScroll : pane.getChildren().subList(0, pane.getChildren().size() - 1)) {
                 double pixelToTravel = nodeToScroll.getLayoutBounds().getHeight() + nodeToScroll.getLayoutY();
                 double duration = pixelToTravel / config.speed;
 
@@ -161,12 +161,12 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
                 locationTransition.play();
             }
 
-            Node lastNode = pane.getChildren().get(pane.getChildren().size()-1);
-            double pixelToTravel = lastNode.getLayoutY() - (config.height-lastNode.getLayoutBounds().getHeight());
+            Node lastNode = pane.getChildren().get(pane.getChildren().size() - 1);
+            double pixelToTravel = lastNode.getLayoutY() - (config.height - lastNode.getLayoutBounds().getHeight());
             double duration = pixelToTravel / config.speed;
             var locationTransition = new LocationTransition(Duration.seconds(duration), lastNode,
-                        lastNode.getLayoutX(), lastNode.getLayoutY(),
-                        lastNode.getLayoutX(), config.height-lastNode.getLayoutBounds().getHeight());
+                    lastNode.getLayoutX(), lastNode.getLayoutY(),
+                    lastNode.getLayoutX(), config.height - lastNode.getLayoutBounds().getHeight());
             locationTransition.setInterpolator(Interpolator.LINEAR);
             locationTransition.setOnFinished(evt -> {
                 scrollOut(lastNode, pane).play();
@@ -185,8 +185,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
     }
 
     private Tweet getNextTweet() {
-       var tweets = tweetsRef.get();
-       var listPointer = next.get();
+        var tweets = tweetsRef.get();
+        var listPointer = next.get();
         if (listPointer >= config.numberOfTweets - 1 || listPointer >= tweets.size()) {
             next.set(0);
             updateTweetList();
@@ -252,7 +252,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
             final Tweet displayTweet) {
 
         String textWithoutMediaUrls = displayTweet.getDisplayEnhancedText();
-        String text = textWithoutMediaUrls.replaceAll("[\n\r]+", config.respectLineFeeds ? "\n": "|");
+        String text = textWithoutMediaUrls.replaceAll("[\n\r]+", config.respectLineFeeds ? "\n" : "|");
         Node profileImageView = createProfileImageView(displayTweet);
 
         EmojiFlow tweetFlow = new EmojiFlow();
@@ -285,8 +285,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         tweet.setMaxWidth(config.tweetWidth + config.profileImageSize + 10);
         tweet.setPrefWidth(config.tweetWidth + config.profileImageSize + 10);
 
-        VBox.setMargin(nameFlow, new Insets(5, 0,0, 0));
-        VBox.setMargin(naturalTime, new Insets(2, 5,5, 0));
+        VBox.setMargin(nameFlow, new Insets(5, 0, 0, 0));
+        VBox.setMargin(naturalTime, new Insets(2, 5, 5, 0));
         tweet.setCache(config.tweetOverallNode.isCacheEnabled);
         tweet.setCacheHint(config.tweetOverallNode.cacheHint);
 
@@ -319,22 +319,23 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         profileImageView.setCache(config.speakerImageNode.isCacheEnabled);
         profileImageView.setCacheHint(config.speakerImageNode.cacheHint);
         if (config.circularProfileImage) {
-            final Circle clip = new Circle(config.profileImageSize / 2f , config.profileImageSize / 2f, config.profileImageSize / 2f);
+            final Circle clip = new Circle(config.profileImageSize / 2f, config.profileImageSize / 2f, config.profileImageSize / 2f);
             profileImageView.setClip(clip);
         }
         return profileImageView;
     }
 
     private Optional<Node> createMediaNode(Tweet displayTweet) {
-        Optional<MediaTweetEntry> maybeImageEntry =
-            Arrays.stream(displayTweet.getMediaEntries())
-                .filter(e -> e.getType().equals(MediaTweetEntryType.photo)).findFirst();
+        Optional<MediaTweetEntry> maybeImageEntry
+                = displayTweet.getMediaEntries().stream()
+                        .filter(e -> e.getType().equals(MediaTweetEntryType.photo))
+                        .findFirst();
         return maybeImageEntry.flatMap(entry -> {
             var image = photoImageMediaEntryDataProvider.getImage(entry);
             ImageView iv = new ImageView(image);
             iv.setPreserveRatio(true);
             iv.setFitWidth(config.tweetWidth + config.profileImageSize + 10);
-            Rectangle rectangle = new Rectangle(0,0,iv.getBoundsInLocal().getWidth(),iv.getBoundsInLocal().getHeight());
+            Rectangle rectangle = new Rectangle(0, 0, iv.getBoundsInLocal().getWidth(), iv.getBoundsInLocal().getHeight());
             rectangle.setArcHeight(20);
             rectangle.setArcWidth(20);
             iv.setClip(rectangle);
@@ -355,27 +356,27 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         this.isTerminated = true;
         Platform.runLater(() -> {
             wordleSkin.getPane().getChildren()
-                .stream()
-                .filter(p -> p instanceof Pane)
-                .map(p -> (Pane) p)
-                .filter(p -> p.getId() != null && p.getId().startsWith("infiniteStream"))
-                .forEach(pane -> {
-                    LOG.info("Shutting down {}", pane.getId());
-                    for (Node nodeToFadeOut : pane.getChildren()) {
-                        var fadeOut = new FadeTransition(Duration.millis(1500), nodeToFadeOut);
-                        fadeOut.setFromValue(1);
-                        fadeOut.setToValue(0);
-                        fadeOut.setOnFinished(e -> {
-                            pane.getChildren().remove(nodeToFadeOut);
-                            if (pane.getChildren().isEmpty()) {
-                                wordleSkin.getPane().getChildren().remove(pane);
-                                LOG.info("Shutting down - removed {} from wordle", pane.getId());
-                                shutdownCountdown.countDown();
-                            }
-                        });
-                        fadeOut.play();
-                    }
-                });
+                    .stream()
+                    .filter(p -> p instanceof Pane)
+                    .map(p -> (Pane) p)
+                    .filter(p -> p.getId() != null && p.getId().startsWith("infiniteStream"))
+                    .forEach(pane -> {
+                        LOG.info("Shutting down {}", pane.getId());
+                        for (Node nodeToFadeOut : pane.getChildren()) {
+                            var fadeOut = new FadeTransition(Duration.millis(1500), nodeToFadeOut);
+                            fadeOut.setFromValue(1);
+                            fadeOut.setToValue(0);
+                            fadeOut.setOnFinished(e -> {
+                                pane.getChildren().remove(nodeToFadeOut);
+                                if (pane.getChildren().isEmpty()) {
+                                    wordleSkin.getPane().getChildren().remove(pane);
+                                    LOG.info("Shutting down - removed {} from wordle", pane.getId());
+                                    shutdownCountdown.countDown();
+                                }
+                            });
+                            fadeOut.play();
+                        }
+                    });
         });
         try {
             shutdownCountdown.await();
@@ -452,6 +453,7 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         public NodeCacheConfig tweetOverallNode = new NodeCacheConfig();
 
         public static class NodeCacheConfig {
+
             public boolean isCacheEnabled = true;
             public CacheHint cacheHint = CacheHint.QUALITY;
         }

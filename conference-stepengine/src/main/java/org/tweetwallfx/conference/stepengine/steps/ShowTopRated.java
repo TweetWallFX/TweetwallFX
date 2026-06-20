@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ import java.util.function.Function;
 /**
  * Show Top Rated Talks (Flip In) Animation Step
  */
-public class ShowTopRated implements Step {
+public final class ShowTopRated implements Step {
 
     private final Function<MachineContext, Collection<VotedTalk>> votedTalksConverter;
     private final Config config;

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,77 +38,55 @@ import twitter4j.v1.URLEntity;
 import twitter4j.v1.UserMentionEntity;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 final class TwitterTweet implements Tweet {
 
-    private static final HashtagTweetEntry[] NIL_HTES = new HashtagTweetEntry[0];
-    private static final MediaTweetEntry[] NIL_MTES = new MediaTweetEntry[0];
-    private static final SymbolTweetEntry[] NIL_STES = new SymbolTweetEntry[0];
-    private static final UrlTweetEntry[] NIL_UTES = new UrlTweetEntry[0];
-    private static final UserMentionTweetEntry[] NIL_UMTES = new UserMentionTweetEntry[0];
     private final Status status;
     private final TwitterUser user;
-    private final HashtagTweetEntry[] hashtagTweetEntries;
-    private final MediaTweetEntry[] mediaTweetEntries;
-    private final SymbolTweetEntry[] symbolTweetEntries;
-    private final UrlTweetEntry[] urlTweetTweetEntries;
-    private final UserMentionTweetEntry[] userMentionTweetEntries;
+    private final List<HashtagTweetEntry> hashtagTweetEntries;
+    private final List<MediaTweetEntry> mediaTweetEntries;
+    private final List<SymbolTweetEntry> symbolTweetEntries;
+    private final List<UrlTweetEntry> urlTweetTweetEntries;
+    private final List<UserMentionTweetEntry> userMentionTweetEntries;
     private final TwitterTweet retweetedTweet;
 
     public TwitterTweet(final Status status) {
         this.status = status;
         this.user = new TwitterUser(status.getUser());
 
-        final HashtagEntity[] hashtagEntities = status.getHashtagEntities();
-
-        if (null == hashtagEntities) {
-            hashtagTweetEntries = NIL_HTES;
-        } else {
-            hashtagTweetEntries = Arrays.stream(hashtagEntities)
-                    .map(TwitterHashtagTweetEntry::new)
-                    .toArray(c -> new HashtagTweetEntry[c]);
-        }
-
-        final MediaEntity[] mediaEntities = status.getMediaEntities();
-
-        if (null == mediaEntities) {
-            mediaTweetEntries = NIL_MTES;
-        } else {
-            mediaTweetEntries = Arrays.stream(mediaEntities)
-                    .map(TwitterMediaTweetEntry::new)
-                    .toArray(c -> new MediaTweetEntry[c]);
-        }
-
-        final SymbolEntity[] symbolEntities = status.getSymbolEntities();
-
-        if (null == symbolEntities) {
-            symbolTweetEntries = NIL_STES;
-        } else {
-            symbolTweetEntries = Arrays.stream(symbolEntities)
-                    .map(TwitterSymbolTweetEntry::new)
-                    .toArray(c -> new SymbolTweetEntry[c]);
-        }
-
-        final URLEntity[] urlEntities = status.getURLEntities();
-
-        if (null == urlEntities) {
-            urlTweetTweetEntries = NIL_UTES;
-        } else {
-            urlTweetTweetEntries = Arrays.stream(urlEntities)
-                    .map(TwitterUrlTweetEntry::new)
-                    .toArray(c -> new UrlTweetEntry[c]);
-        }
-
-        final UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
-
-        if (null == userMentionEntities) {
-            userMentionTweetEntries = NIL_UMTES;
-        } else {
-            userMentionTweetEntries = Arrays.stream(userMentionEntities)
-                    .map(TwitterUserMentionTweetEntry::new)
-                    .toArray(c -> new UserMentionTweetEntry[c]);
-        }
+        hashtagTweetEntries = Optional.ofNullable(status.getHashtagEntities())
+                .map(List::of)
+                .orElse(List.of())
+                .stream()
+                .map(TwitterHashtagTweetEntry::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
+        mediaTweetEntries = Optional.ofNullable(status.getMediaEntities())
+                .map(List::of)
+                .orElse(List.of())
+                .stream()
+                .map(TwitterMediaTweetEntry::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
+        symbolTweetEntries = Optional.ofNullable(status.getSymbolEntities())
+                .map(List::of)
+                .orElse(List.of())
+                .stream()
+                .map(TwitterSymbolTweetEntry::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
+        urlTweetTweetEntries = Optional.ofNullable(status.getURLEntities())
+                .map(List::of)
+                .orElse(List.of())
+                .stream()
+                .map(TwitterUrlTweetEntry::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
+        userMentionTweetEntries = Optional.ofNullable(status.getUserMentionEntities())
+                .map(List::of)
+                .orElse(List.of())
+                .stream()
+                .map(TwitterUserMentionTweetEntry::new)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
 
         retweetedTweet = isRetweet()
                 ? new TwitterTweet(status.getRetweetedStatus())
@@ -192,28 +170,28 @@ final class TwitterTweet implements Tweet {
     }
 
     @Override
-    public HashtagTweetEntry[] getHashtagEntries() {
-        return hashtagTweetEntries;
+    public List<HashtagTweetEntry> getHashtagEntries() {
+        return List.copyOf(hashtagTweetEntries);
     }
 
     @Override
-    public MediaTweetEntry[] getMediaEntries() {
-        return mediaTweetEntries;
+    public List<MediaTweetEntry> getMediaEntries() {
+        return List.copyOf(mediaTweetEntries);
     }
 
     @Override
-    public SymbolTweetEntry[] getSymbolEntries() {
-        return symbolTweetEntries;
+    public List<SymbolTweetEntry> getSymbolEntries() {
+        return List.copyOf(symbolTweetEntries);
     }
 
     @Override
-    public UrlTweetEntry[] getUrlEntries() {
-        return urlTweetTweetEntries;
+    public List<UrlTweetEntry> getUrlEntries() {
+        return List.copyOf(urlTweetTweetEntries);
     }
 
     @Override
-    public UserMentionTweetEntry[] getUserMentionEntries() {
-        return userMentionTweetEntries;
+    public List<UserMentionTweetEntry> getUserMentionEntries() {
+        return List.copyOf(userMentionTweetEntries);
     }
 
     @Override

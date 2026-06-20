@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.tweet.api.filter;
 
-import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
                     tweet.getId(),
                     t.getId());
 
-            final List<HashtagTweetEntry> htes = Arrays.stream(t.getHashtagEntries())
+            final List<HashtagTweetEntry> htes = t.getHashtagEntries().stream()
                     .filter(hte -> hte.getText().length() > config.getMaxLength())
                     .toList();
 

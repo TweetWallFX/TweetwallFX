@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+import java.util.List;
+
 public interface BasicEntry {
 
-    HashtagTweetEntry[] getHashtagEntries();
+    List<HashtagTweetEntry> getHashtagEntries();
 
-    MediaTweetEntry[] getMediaEntries();
+    List<MediaTweetEntry> getMediaEntries();
 
-    SymbolTweetEntry[] getSymbolEntries();
+    List<SymbolTweetEntry> getSymbolEntries();
 
-    UrlTweetEntry[] getUrlEntries();
+    List<UrlTweetEntry> getUrlEntries();
 
-    UserMentionTweetEntry[] getUserMentionEntries();
+    List<UserMentionTweetEntry> getUserMentionEntries();
 }
