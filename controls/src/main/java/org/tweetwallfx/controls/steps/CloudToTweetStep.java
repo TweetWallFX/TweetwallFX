@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2024 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -196,7 +196,7 @@ public class CloudToTweetStep implements Step {
             final Tweet displayTweet) {
         final Tweet originalTweet = displayTweet.getOriginTweet();
 
-        if (originalTweet.getMediaEntries().length > 0) {
+        if (!originalTweet.getMediaEntries().isEmpty()) {
             HBox mediaBox = new HBox(10);
             mediaBox.setOpacity(0);
             mediaBox.setPadding(new Insets(10));
@@ -223,11 +223,11 @@ public class CloudToTweetStep implements Step {
             mediaBox.maxWidthProperty().bind(mediaBox.minWidthProperty());
             mediaBox.maxHeightProperty().bind(mediaBox.minHeightProperty());
 
-            final int imageCount = Math.min(3, originalTweet.getMediaEntries().length);   //limit to maximum loading time of 3 images.
+            final int imageCount = Math.min(3, originalTweet.getMediaEntries().size());   //limit to maximum loading time of 3 images.
             final PhotoImageMediaEntryDataProvider pimedp = context.getDataProvider(PhotoImageMediaEntryDataProvider.class);
 
             for (int i = 0; i < imageCount; i++) {
-                Image mediaImage = pimedp.getImage(originalTweet.getMediaEntries()[i]);
+                Image mediaImage = pimedp.getImage(originalTweet.getMediaEntries().get(i));
                 ImageView mediaView = new ImageView(mediaImage);
                 mediaView.setPreserveRatio(true);
                 mediaView.setCache(true);

@@ -60,7 +60,7 @@ import java.util.stream.Stream;
 
 import static org.tweetwallfx.tweet.impl.mock.config.MockSettings.CONFIG_KEY;
 
-public class MockTweeter implements Tweeter {
+public final class MockTweeter implements Tweeter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MockTweeter.class);
     private static final Faker FAKER = new Faker();

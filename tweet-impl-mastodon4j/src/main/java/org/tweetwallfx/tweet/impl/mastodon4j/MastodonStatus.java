@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 final class MastodonStatus implements Tweet {
@@ -126,28 +127,28 @@ final class MastodonStatus implements Tweet {
     }
 
     @Override
-    public HashtagTweetEntry[] getHashtagEntries() {
-        return new HashtagTweetEntry[0];
+    public List<HashtagTweetEntry> getHashtagEntries() {
+        return List.of();
     }
 
     @Override
-    public MediaTweetEntry[] getMediaEntries() {
-        return new MediaTweetEntry[0];
+    public List<MediaTweetEntry> getMediaEntries() {
+        return List.of();
     }
 
     @Override
-    public SymbolTweetEntry[] getSymbolEntries() {
-        return new SymbolTweetEntry[0];
+    public List<SymbolTweetEntry> getSymbolEntries() {
+        return List.of();
     }
 
     @Override
-    public UrlTweetEntry[] getUrlEntries() {
-        return new UrlTweetEntry[0];
+    public List<UrlTweetEntry> getUrlEntries() {
+        return List.of();
     }
 
     @Override
-    public UserMentionTweetEntry[] getUserMentionEntries() {
-        return new UserMentionTweetEntry[0];
+    public List<UserMentionTweetEntry> getUserMentionEntries() {
+        return List.of();
     }
 
     @Override
@@ -157,9 +158,7 @@ final class MastodonStatus implements Tweet {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof MastodonStatus mastodonStatus) {
-            return status.equals(mastodonStatus.status);
-        }
-        return false;
+        return obj instanceof MastodonStatus mastodonStatus
+                && status.equals(mastodonStatus.status);
     }
 }

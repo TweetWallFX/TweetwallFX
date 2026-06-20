@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -124,32 +124,32 @@ public record MockPost(long id, String text, User user, LocalDateTime created,
     }
 
     @Override
-    public HashtagTweetEntry[] getHashtagEntries() {
-        return new HashtagTweetEntry[0];
+    public List<HashtagTweetEntry> getHashtagEntries() {
+        return List.of();
     }
 
     @Override
-    public MediaTweetEntry[] getMediaEntries() {
-        return mediaTweetEntries.toArray(MediaTweetEntry[]::new);
+    public List<MediaTweetEntry> getMediaEntries() {
+        return List.copyOf(mediaTweetEntries);
     }
 
     @Override
-    public SymbolTweetEntry[] getSymbolEntries() {
-        return new SymbolTweetEntry[0];
+    public List<SymbolTweetEntry> getSymbolEntries() {
+        return List.of();
     }
 
     @Override
-    public UrlTweetEntry[] getUrlEntries() {
-        return new UrlTweetEntry[0];
+    public List<UrlTweetEntry> getUrlEntries() {
+        return List.of();
     }
 
     @Override
-    public UserMentionTweetEntry[] getUserMentionEntries() {
-        return new UserMentionTweetEntry[0];
+    public List<UserMentionTweetEntry> getUserMentionEntries() {
+        return List.of();
     }
 
     @Override
-    public EmojiTweetEntry[] getEmojiEntries() {
+    public List<EmojiTweetEntry> getEmojiEntries() {
         return Tweet.super.getEmojiEntries();
     }
 

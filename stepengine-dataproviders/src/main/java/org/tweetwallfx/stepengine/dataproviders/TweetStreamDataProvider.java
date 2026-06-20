@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package org.tweetwallfx.stepengine.dataproviders;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
@@ -80,7 +79,7 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
     }
 
     private void updateImage(final Tweet tweet) {
-        Arrays.stream(tweet.getMediaEntries())
+        tweet.getMediaEntries().stream()
                 .filter(MediaTweetEntryType.photo::isType)
                 .findFirst()
                 .ifPresent(mte

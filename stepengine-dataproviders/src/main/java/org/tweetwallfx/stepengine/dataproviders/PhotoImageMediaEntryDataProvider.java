@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package org.tweetwallfx.stepengine.dataproviders;
 
-import java.util.Arrays;
 import java.util.Objects;
 import javafx.scene.image.Image;
 
@@ -67,7 +66,7 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
             return;
         }
         LOG.debug("processing new Tweet: {}", tweet.getId());
-        Arrays.stream(tweet.getMediaEntries())
+        tweet.getMediaEntries().stream()
                 .filter(MediaTweetEntryType.photo::isType)
                 .forEach(PhotoImageCache.INSTANCE::addToCacheAsync);
     }
