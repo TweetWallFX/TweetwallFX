@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2024 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import java.util.ServiceLoader;
 
 final class TweeterHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TweeterHolder.class);
-    private static Tweeter instance;
+    private static volatile Tweeter instance;
 
     private TweeterHolder() {
     }
@@ -46,7 +46,9 @@ final class TweeterHolder {
     static Tweeter instance() {
         if (null == instance) {
             synchronized (TweeterHolder.class) {
-                instance = createInstance(ServiceLoader.load(Tweeter.class));
+                if (null == instance) {
+                    instance = createInstance(ServiceLoader.load(Tweeter.class));
+                }
             }
         }
         return instance;
