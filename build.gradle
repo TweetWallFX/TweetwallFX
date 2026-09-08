@@ -241,7 +241,6 @@ allprojects {
 
             testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
             testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-            testRuntimeOnly 'org.mockito:mockito-inline:5.2.0'
         }
 
         ext {
