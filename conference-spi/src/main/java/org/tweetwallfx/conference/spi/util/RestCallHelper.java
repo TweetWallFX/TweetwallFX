@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -162,27 +162,27 @@ public class RestCallHelper {
                 .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus());
         Optional<Link> nextLink = okResponse.map(r -> r.getLink("next"));
 
-        if (nextLink.isPresent()) {
-            Objects.requireNonNull(docCombiner, "Parameter documentCombiner is required as the response is paginated");
-            Stream<Response> okResponses = okResponse.stream();
-
-            while (nextLink.isPresent()) {
-                LOGGER.debug("Pagination next link: {}", nextLink);
-                okResponse = nextLink
-                        .map(Link::getUri)
-                        .map(Object::toString)
-                        .flatMap(RestCallHelper::getOptionalResponse)
-                        .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus());
-                okResponses = Stream.concat(okResponses, okResponse.stream());
-                nextLink = okResponse.map(r -> r.getLink("next"));
-            }
-
-            return okResponses
-                    .map(docReader)
-                    .collect(Collectors.reducing(docCombiner));
-        } else {
+        if (nextLink.isEmpty()) {
             return okResponse.map(docReader);
         }
+
+        Objects.requireNonNull(docCombiner, "Parameter documentCombiner is required as the response is paginated");
+        Stream<Response> okResponses = okResponse.stream();
+
+        while (nextLink.isPresent()) {
+            LOGGER.debug("Pagination next link: {}", nextLink);
+            okResponse = nextLink
+                    .map(Link::getUri)
+                    .map(Object::toString)
+                    .flatMap(RestCallHelper::getOptionalResponse)
+                    .filter(r -> Response.Status.OK.getStatusCode() == r.getStatus());
+            okResponses = Stream.concat(okResponses, okResponse.stream());
+            nextLink = okResponse.map(r -> r.getLink("next"));
+        }
+
+        return okResponses
+                .map(docReader)
+                .collect(Collectors.reducing(docCombiner));
     }
 
     public static <T> Optional<T> readOptionalFrom(final String url, final Class<T> typeClass) {

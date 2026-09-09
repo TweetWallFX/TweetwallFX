@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -42,6 +41,7 @@ import org.mastodon4j.core.MastodonException;
 import org.mastodon4j.core.api.BaseMastodonApi;
 import org.mastodon4j.core.api.EventStream;
 import org.mastodon4j.core.api.MastodonApi;
+import org.mastodon4j.core.api.entities.Account;
 import org.mastodon4j.core.api.entities.AccessToken;
 import org.mastodon4j.core.api.entities.Status;
 import org.mastodon4j.core.api.entities.Subscription;
@@ -141,9 +141,8 @@ public class MastodonTweeter implements Tweeter {
     public Tweet getTweet(long tweetId) {
         LOGGER.debug("getTweet({})", tweetId);
         try {
-            return Optional.ofNullable(client.statuses().get(Long.toString(tweetId)))
-                    .map(MastodonStatus::new)
-                    .orElse(null);
+            final Status status = client.statuses().get(Long.toString(tweetId));
+            return null == status ? null : new MastodonStatus(status);
         } catch (RuntimeException e) {
             LOGGER.error("Unexpected failure on backend", e);
             return null;
@@ -154,9 +153,8 @@ public class MastodonTweeter implements Tweeter {
     public User getUser(String userId) {
         LOGGER.debug("getUser({})", userId);
         try {
-            return Optional.ofNullable(client.accounts().get(userId))
-                    .map(MastodonAccount::new)
-                    .orElse(null);
+            final Account account = client.accounts().get(userId);
+            return null == account ? null : new MastodonAccount(account);
         } catch (RuntimeException e) {
             LOGGER.error("Unexpected failure on backend", e);
             return null;

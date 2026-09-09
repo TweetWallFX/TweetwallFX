@@ -37,7 +37,6 @@ import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 final class MastodonStatus implements Tweet {
 
@@ -97,12 +96,14 @@ final class MastodonStatus implements Tweet {
 
     @Override
     public Tweet getRetweetedTweet() {
-        return Optional.ofNullable(status.reblog()).map(MastodonStatus::new).orElse(null);
+        final Status reblog = status.reblog();
+        return null == reblog ? null : new MastodonStatus(reblog);
     }
 
     @Override
     public Tweet getOriginTweet() {
-        return Optional.ofNullable(status.reblog()).map(MastodonStatus::new).orElse(this);
+        final Status reblog = status.reblog();
+        return null == reblog ? this : new MastodonStatus(reblog);
     }
 
     @Override

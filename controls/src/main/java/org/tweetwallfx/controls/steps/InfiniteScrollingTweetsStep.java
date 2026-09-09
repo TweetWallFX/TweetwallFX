@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,7 +66,6 @@ import org.tweetwallfx.stepengine.dataproviders.TweetStreamDataProvider;
 import org.tweetwallfx.stepengine.dataproviders.TweetUserProfileImageDataProvider;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.tweet.api.Tweet;
-import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 /**
@@ -292,9 +290,8 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
         Pane pane = tweet;
 
-        Optional<Node> mediaNode = createMediaNode(displayTweet);
-        if (mediaNode.isPresent()) {
-            var iv = mediaNode.get();
+        final Node iv = createMediaNode(displayTweet);
+        if (null != iv) {
             var box = config.mediaPosition.isTop() ? new VBox(iv, tweet) : new VBox(tweet, iv);
             box.setAlignment(Pos.CENTER_LEFT);
             VBox.setMargin(iv, new Insets(5, 5, 5, 5));
@@ -325,24 +322,24 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         return profileImageView;
     }
 
-    private Optional<Node> createMediaNode(Tweet displayTweet) {
-        Optional<MediaTweetEntry> maybeImageEntry
-                = displayTweet.getMediaEntries().stream()
-                        .filter(e -> e.getType().equals(MediaTweetEntryType.photo))
-                        .findFirst();
-        return maybeImageEntry.flatMap(entry -> {
-            var image = photoImageMediaEntryDataProvider.getImage(entry);
-            ImageView iv = new ImageView(image);
-            iv.setPreserveRatio(true);
-            iv.setFitWidth(config.tweetWidth + config.profileImageSize + 10);
-            Rectangle rectangle = new Rectangle(0, 0, iv.getBoundsInLocal().getWidth(), iv.getBoundsInLocal().getHeight());
-            rectangle.setArcHeight(20);
-            rectangle.setArcWidth(20);
-            iv.setClip(rectangle);
-            iv.setCache(config.tweetImageNode.isCacheEnabled);
-            iv.setCacheHint(config.tweetImageNode.cacheHint);
-            return Optional.of(iv);
-        });
+    private Node createMediaNode(Tweet displayTweet) {
+        return displayTweet.getMediaEntries().stream()
+                .filter(e -> e.getType().equals(MediaTweetEntryType.photo))
+                .findFirst()
+                .map(entry -> {
+                    var image = photoImageMediaEntryDataProvider.getImage(entry);
+                    ImageView iv = new ImageView(image);
+                    iv.setPreserveRatio(true);
+                    iv.setFitWidth(config.tweetWidth + config.profileImageSize + 10);
+                    Rectangle rectangle = new Rectangle(0, 0, iv.getBoundsInLocal().getWidth(), iv.getBoundsInLocal().getHeight());
+                    rectangle.setArcHeight(20);
+                    rectangle.setArcWidth(20);
+                    iv.setClip(rectangle);
+                    iv.setCache(config.tweetImageNode.isCacheEnabled);
+                    iv.setCacheHint(config.tweetImageNode.cacheHint);
+                    return iv;
+                })
+                .orElse(null);
     }
 
     @Override

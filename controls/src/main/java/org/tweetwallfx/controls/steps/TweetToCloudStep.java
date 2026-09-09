@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -99,29 +98,33 @@ public class TweetToCloudStep implements Step {
         cloudWordleLayout.getWordLayoutInfo().entrySet().stream().forEach(entry -> {
             Word word = entry.getKey();
             Bounds bounds = entry.getValue();
-            Optional<TweetLayout.TweetWordNode> optionalTweetWord = wordleSkin.tweetWordList.stream().filter(tweetWord -> tweetWord.tweetWord.text.trim().equals(word.getText())).findFirst();
-            if (optionalTweetWord.isPresent()) {
-                wordleSkin.tweetWordList.remove(optionalTweetWord.get());
-                Text textNode = optionalTweetWord.get().textNode;
+            wordleSkin.tweetWordList.stream()
+                    .filter(tw -> tw.tweetWord.text.trim().equals(word.getText()))
+                    .findFirst()
+                    .ifPresentOrElse(
+                            tweetWord -> {
+                                wordleSkin.tweetWordList.remove(tweetWord);
+                                Text textNode = tweetWord.textNode;
 
-                wordleSkin.word2TextMap.put(word, textNode);
-                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
-                        .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
-                        .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
-                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
-                        .withSize(textNode.getFont().getSize(), cloudWordleLayout.getFontSizeForWeight(word.getWeight())));
-            } else {
-                Text textNode = cloudWordleLayout.createTextNode(word);
+                                wordleSkin.word2TextMap.put(word, textNode);
+                                moveTransitions.add(new LocationTransition(defaultDuration, textNode)
+                                        .withX(textNode.getLayoutX(), bounds.getMinX() + layoutBounds.getWidth() / 2d)
+                                        .withY(textNode.getLayoutY(), bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d));
+                                moveTransitions.add(new FontSizeTransition(defaultDuration, textNode)
+                                        .withSize(textNode.getFont().getSize(), cloudWordleLayout.getFontSizeForWeight(word.getWeight())));
+                            },
+                            () -> {
+                                Text textNode = cloudWordleLayout.createTextNode(word);
 
-                wordleSkin.word2TextMap.put(word, textNode);
-                textNode.setLayoutX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
-                textNode.setLayoutY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
-                textNode.setOpacity(0);
-                wordleSkin.getPane().getChildren().add(textNode);
-                FadeTransition ft = new FadeTransition(defaultDuration, textNode);
-                ft.setToValue(1);
-                fadeInTransitions.add(ft);
-            }
+                                wordleSkin.word2TextMap.put(word, textNode);
+                                textNode.setLayoutX(bounds.getMinX() + layoutBounds.getWidth() / 2d);
+                                textNode.setLayoutY(bounds.getMinY() + layoutBounds.getHeight() / 2d + bounds.getHeight() / 2d);
+                                textNode.setOpacity(0);
+                                wordleSkin.getPane().getChildren().add(textNode);
+                                FadeTransition ft = new FadeTransition(defaultDuration, textNode);
+                                ft.setToValue(1);
+                                fadeInTransitions.add(ft);
+                            });
         });
 
         wordleSkin.tweetWordList.forEach(tweetWord -> {
