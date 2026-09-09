@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,7 @@
  */
 package org.tweetwallfx.controls;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public final class WordleSkin extends SkinBase<Wordle> {
     private final int fontSizeMax;
     private final int tweetFontSize;
     private final Boolean favIconsVisible;
-    private final DateFormat df = new SimpleDateFormat("HH:mm:ss");
+    private final DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public ImageView getSecondLogo() {
         return secondLogo;
@@ -100,7 +99,7 @@ public final class WordleSkin extends SkinBase<Wordle> {
         return favIconsVisible;
     }
 
-    public DateFormat getDf() {
+    public DateTimeFormatter getDf() {
         return df;
     }
 
