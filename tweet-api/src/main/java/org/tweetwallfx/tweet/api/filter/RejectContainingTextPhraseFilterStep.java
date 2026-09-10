@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import static org.tweetwallfx.util.ToString.map;
 
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -64,15 +63,17 @@ public class RejectContainingTextPhraseFilterStep implements FilterStep<Tweet> {
                     t.getId());
 
             final String text = t.getText().toLowerCase(Locale.ENGLISH);
-            final Optional<String> containedPhrase = config.getTextPhrases().stream()
+
+            final String containedPhrase = config.getTextPhrases().stream()
                     .map(s -> s.toLowerCase(Locale.ENGLISH))
                     .filter(phrase -> text.contains(phrase))
-                    .findAny();
+                    .findAny()
+                    .orElse(null);
 
-            if (containedPhrase.isPresent()) {
+            if (null != containedPhrase) {
                 LOG.warn("Tweet(id:{}): The text phrase \"{}\" is contained in Tweet(id:{}) because it contains the phrase {}",
                         tweet.getId(),
-                        containedPhrase.get(),
+                        containedPhrase,
                         t.getId());
                 return Result.REJECTED;
             }

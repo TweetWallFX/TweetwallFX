@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,7 +84,7 @@ public class MqttProcess implements Runnable {
             final Optional<MqttSettings> opMqttSettings = Configuration.getInstance()
                     .getConfigTypedOptional(MqttSettings.CONFIG_KEY, MqttSettings.class);
 
-            if (!opMqttSettings.isPresent()) {
+            if (opMqttSettings.isEmpty()) {
                 LOG.info("MQTT not configured");
                 return;
             }
