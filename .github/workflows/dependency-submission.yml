@@ -1,3 +1,10 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
 name: Dependency Submission
 
 on:
@@ -14,17 +21,27 @@ jobs:
     name: Determines all dependencies and submits the list to github for use in dependency insights
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        jdk:
+          - '26'
+        distribution:
+          - 'temurin'
+
+    env:
+      JAVA_PLATFORM_VERSION: ${{ matrix.jdk }}
+
     steps:
       # Check out sources
       - name: Fetch Sources
         uses: actions/checkout@v7.0.1
 
       # Setup JDK environment for the next steps
-      - name: Setup JDK 26
+      - name: Setup ${{ matrix.distribution }} JDK ${{ matrix.jdk }} for gradle
         uses: actions/setup-java@v6.0.1
         with:
-          distribution: 'zulu'
-          java-version: '26'
+          distribution: ${{ matrix.distribution }}
+          java-version: ${{ matrix.jdk }}
           cache: gradle
 
       - name: Generate and submit dependency graph
