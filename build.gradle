@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2025 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,12 @@ plugins {
     id 'build-dashboard'
     id 'java-platform'
     id 'com.diffplug.spotless' version '8.10.2'
-    id 'com.github.ben-manes.versions' version '0.63.0'
     id 'com.github.spotbugs' version '6.5.11' apply false
     id 'com.google.osdetector' version '1.7.3'
     id 'com.netflix.nebula.info' version '16.3.0' apply false
     id 'com.netflix.nebula.maven-base-publish' version '23.1.0' apply false
     id 'net.ltgt.errorprone' version '5.1.1' apply false
     id 'org.sonarqube' version '7.5.0.8588'
-    id 'com.autonomousapps.dependency-analysis' version '3.19.2'
 }
 
 ext {
@@ -142,33 +140,6 @@ allprojects {
         }
     }
 
-    // configuring dependencyAnalysis
-    plugins.withType(com.autonomousapps.DependencyAnalysisPlugin) {
-        if (rootProject == project) {
-            dependencyAnalysis {
-                issues {
-                    all { // applies to all projects
-                        onUsedTransitiveDependencies {
-                            severity 'ignore'
-                        }
-                        onUnusedDependencies {
-                            severity 'warn' // default
-                        }
-                        onRedundantPlugins {
-                            severity 'fail'
-                        }
-                    }
-                }
-            }
-
-            afterEvaluate {
-                tasks.named('buildHealth').configure {
-                    printBuildHealth = true
-                }
-            }
-        }
-    }
-
     // now configuring for projects that contain code not just structuring the project
     if (childProjects.isEmpty()) {
         // configuring standard java project
@@ -178,13 +149,12 @@ allprojects {
         apply plugin: 'eclipse'
         apply plugin: 'com.netflix.nebula.info'
         apply plugin: 'maven-publish'
-        apply plugin: 'com.autonomousapps.dependency-analysis'
 
         java {
             withJavadocJar()
             withSourcesJar()
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '25')))
+                languageVersion.set(JavaLanguageVersion.of(Integer.parseInt(System.getenv('JAVA_PLATFORM_VERSION') ?: '27')))
             }
         }
 
@@ -222,12 +192,12 @@ allprojects {
 
         dependencies {
             // get recommended versions from the platform project
-            api platform(rootProject)
+            api platform(project(':'))
 
-            javafx 'org.openjfx:javafx-base:25:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-graphics:25:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-fxml:25:' + javaFxPlatform
-            javafx 'org.openjfx:javafx-controls:25:' + javaFxPlatform
+            javafx 'org.openjfx:javafx-base:25:' + rootProject.javaFxPlatform
+            javafx 'org.openjfx:javafx-graphics:25:' + rootProject.javaFxPlatform
+            javafx 'org.openjfx:javafx-fxml:25:' + rootProject.javaFxPlatform
+            javafx 'org.openjfx:javafx-controls:25:' + rootProject.javaFxPlatform
 
             jaxb 'jakarta.activation:jakarta.activation-api:2.1.4'
             jaxb 'org.eclipse.angus:angus-activation:2.0.3'
@@ -353,26 +323,6 @@ allprojects {
 
             dependencies {
                 spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
-            }
-        }
-
-        // configuring Versions plugin
-        tasks.withType(com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask).configureEach {
-            outputFormatter = 'plain,html'
-            gradleReleaseChannel = 'current'
-
-            resolutionStrategy {
-                def rejectedQualifierParts = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'pr', 'ea']
-                componentSelection { rules ->
-                    rules.all { ComponentSelection selection ->
-                        boolean rejected = rejectedQualifierParts.any { qualifier ->
-                            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
-                        }
-                        if (rejected) {
-                            selection.reject('Release candidate')
-                        }
-                    }
-                }
             }
         }
 
