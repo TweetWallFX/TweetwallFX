@@ -10,12 +10,15 @@ name: Gradle Build
 on:
   push:
     branches:
+      - main
       - master
       - release
   pull_request:
     branches:
+      - main
       - master
       - release
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,9 +28,9 @@ jobs:
     strategy:
       matrix:
         jdk:
-          - '23'
-          - '24'
           - '25'
+          - '26'
+#          - '27'
         distribution:
           - 'temurin'
 
