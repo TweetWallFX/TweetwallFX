@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2025 TweetWallFX
+ * Copyright (c) 2025-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,12 +60,23 @@ public class TimeToForgetCache extends URLContentCacheBase {
         return JsonDataConverter.convertFromInputStream(urlc.getInputStream(), type);
     }
 
+    public <T> T getJson(final URI uri, final Class<T> type, final T defaultValue) {
+        final URLContent urlc = Stopwatch.measure(
+                () -> super.getCachedOrLoad(uri.toString()),
+                duration -> LOGGER.info("URI call to {} took {}", uri, duration));
+        if (0 == urlc.dataSize()) {
+            return defaultValue;
+        }
+
+        return JsonDataConverter.convertFromInputStream(urlc.getInputStream(), type);
+    }
+
     public List<?> getJsonList(final URI uri) {
-        return getJson(uri, List.class);
+        return getJson(uri, List.class, List.of());
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> getJsonMap(final URI uri) {
-        return getJson(uri, Map.class);
+        return getJson(uri, Map.class, Map.of());
     }
 }
