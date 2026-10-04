@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2025 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -92,7 +92,8 @@ public class ShowSchedule implements Step {
 
             var title = new Label("Upcoming Talks");
 
-            title.setPrefWidth(config.width);
+            title.setPrefWidth(config.titleWidth);
+            title.setLayoutX((config.width-config.titleWidth) / 2.0);
             title.getStyleClass().add("title");
             title.setPrefHeight(config.titleHeight);
             title.setAlignment(Pos.CENTER);
@@ -367,6 +368,7 @@ public class ShowSchedule implements Step {
         public int avatarArcSize = 20;
         public int avatarSpacing = 4;
         public boolean showFavourite = false;
+        public double titleWidth = 800;
         public double width = 800;
         public double titleHeight = 60;
         public double sessionVGap = 10;
