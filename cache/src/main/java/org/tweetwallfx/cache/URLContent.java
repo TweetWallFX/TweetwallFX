@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -87,6 +87,10 @@ public final class URLContent implements Serializable {
             LOG.warn("No data found for {}", urlString, fne);
             return NO_CONTENT;
         }
+    }
+
+    public int dataSize() {
+        return data.length;
     }
 
     public String digest() {
