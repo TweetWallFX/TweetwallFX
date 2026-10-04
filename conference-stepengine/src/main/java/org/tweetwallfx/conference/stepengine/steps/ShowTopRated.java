@@ -97,11 +97,25 @@ public final class ShowTopRated implements Step {
             topRatedNode.setOpacity(0);
 
             var title = new Label(config.getTopVotedType().getTitle());
-
-            title.setPrefWidth(config.width);
             title.getStyleClass().add("title");
-            title.setPrefHeight(config.titleHeight);
             title.setAlignment(Pos.CENTER);
+
+            switch (config.titlePosition) {
+                case LEFT -> {
+                    var width = config.talkHeight * config.maxTalks + config.talkVGap * (config.maxTalks -1);
+                    title.setRotate(-90);
+                    title.setLayoutX(-width / 2.0 + config.titleHeight / 2.0);
+                    title.setLayoutY(width / 2.0 - config.titleHeight / 2.0);
+                    title.setPrefWidth(width);
+                    title.setPrefHeight(config.titleHeight);
+                    title.getStyleClass().add("left");
+                }
+                case TOP -> {
+                    title.setPrefWidth(config.width);
+                    title.setPrefHeight(config.titleHeight);
+                    title.getStyleClass().add("top");
+                }
+            }
 
             topRatedNode.getChildren().add(title);
 
@@ -118,20 +132,32 @@ public final class ShowTopRated implements Step {
 
             Iterator<VotedTalk> iterator = votedTalksConverter.apply(context).iterator();
             int row = 0;
-            while (iterator.hasNext()) {
+            while (iterator.hasNext() && row < config.maxTalks) {
                 var talkPane = createTalkNode(context, iterator.next());
                 double talkWidth = config.width;
-                talkPane.setMinWidth(talkWidth);
-                talkPane.setMaxWidth(talkWidth);
-                talkPane.setPrefWidth(talkWidth);
                 talkPane.setMinHeight(config.talkHeight);
                 talkPane.setMaxHeight(config.talkHeight);
                 talkPane.setPrefHeight(config.talkHeight);
-                talkPane.setLayoutY(config.titleHeight + config.talkVGap + (config.talkHeight + config.talkVGap) * row);
+                switch (config.titlePosition) {
+                    case LEFT -> {
+                        talkPane.setLayoutX(config.titleHeight + config.talkVGap);
+                        talkPane.setMinWidth(talkWidth - config.titleHeight + config.talkVGap);
+                        talkPane.setMaxWidth(talkWidth - config.titleHeight + config.talkVGap);
+                        talkPane.setPrefWidth(talkWidth - config.titleHeight + config.talkVGap);
+                        talkPane.setLayoutY((config.talkHeight + config.talkVGap) * row);
+                    }
+                    case TOP -> {
+                        talkPane.setMinWidth(talkWidth);
+                        talkPane.setMaxWidth(talkWidth);
+                        talkPane.setPrefWidth(talkWidth);
+                        talkPane.setLayoutY(config.titleHeight + config.talkVGap + (config.talkHeight + config.talkVGap) * row);
+                    }
+                }
                 topRatedNode.getChildren().add(talkPane);
                 row++;
             }
         }
+
         ParallelTransition flipIns = new ParallelTransition();
         flipIns.getChildren().addAll(transitions);
         flipIns.setOnFinished(e -> context.proceed());
@@ -179,8 +205,8 @@ public final class ShowTopRated implements Step {
                 // offset only depend on odd / even
                 int lineNum = 0;
                 int imageInLine = 0;
-                int evenAvatars = 3;
-                int oddAvatars = 2;
+                int evenAvatars = config.compressedAvatarsLimit - 1;
+                int oddAvatars = config.compressedAvatarsLimit - 2;
                 double configAvatarOffset = (config.avatarSize * 3 / 4d + 2);
                 for (int i = 0; i < images.size(); i++) {
                     var image = images.get(i);
@@ -370,6 +396,8 @@ public final class ShowTopRated implements Step {
         public double layoutY = 0;
         public double width = 800;
         public double titleHeight = 60;
+        public TitlePosition titlePosition = TitlePosition.TOP;
+        public int maxTalks = 5;
         public double talkVGap = 10;
         public double talkHeight = 200;
         public boolean circularAvatar = true;
@@ -425,5 +453,10 @@ public final class ShowTopRated implements Step {
         public String getTitle() {
             return this.title;
         }
+    }
+
+    public static enum TitlePosition {
+        TOP,
+        LEFT
     }
 }
