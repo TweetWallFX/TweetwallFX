@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -179,22 +179,22 @@ public final class TalkImpl implements Talk {
         }
 
         public Builder addTag(final String tag) {
-            tags.add(Objects.requireNonNull(tag, "tag must not be null"));
+            tags.add(Objects.requireNonNull(tag, "tag must not be null").trim());
             return this;
         }
 
         public Builder withId(final String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+            this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
         public Builder withName(final String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+            this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
         public Builder withAudienceLevel(final String audienceLevel) {
-            this.audienceLevel = Objects.requireNonNull(audienceLevel, "audienceLevel must not be null");
+            this.audienceLevel = Objects.requireNonNull(audienceLevel, "audienceLevel must not be null").trim();
             return this;
         }
 

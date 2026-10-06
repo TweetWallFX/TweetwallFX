@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,22 +91,22 @@ public final class TrackImpl implements Track {
         }
 
         public Builder withId(final String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+            this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
         public Builder withName(final String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+            this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
         public Builder withDescription(final String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
+            this.description = Objects.requireNonNull(description, "description must not be null").trim();
             return this;
         }
 
         public Builder withAvatarURL(final String avatarURL) {
-            this.avatarURL = Objects.requireNonNull(avatarURL, "avatarURL must not be null");
+            this.avatarURL = Objects.requireNonNull(avatarURL, "avatarURL must not be null").trim();
             return this;
         }
 
