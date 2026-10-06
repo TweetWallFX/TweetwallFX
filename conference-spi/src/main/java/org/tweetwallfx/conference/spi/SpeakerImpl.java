@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -148,27 +148,29 @@ public final class SpeakerImpl implements Speaker {
         public Builder addSocialMedia(final String socialMediaName, final String socialMediaValue) {
             Objects.requireNonNull(socialMediaName, "socialMediaName must not be null");
             Objects.requireNonNull(socialMediaValue, "socialMediaValue must not be null");
-            socialMedia.put(socialMediaName.toUpperCase(Locale.ENGLISH), socialMediaValue);
+            socialMedia.put(
+                    socialMediaName.toUpperCase(Locale.ENGLISH).trim(),
+                    socialMediaValue.trim());
             return this;
         }
 
         public Builder withId(final String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+            this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
         public Builder withFirstName(final String firstName) {
-            this.firstName = Objects.requireNonNull(firstName, "firstName must not be null");
+            this.firstName = Objects.requireNonNull(firstName, "firstName must not be null").trim();
             return this;
         }
 
         public Builder withFullName(final String fullName) {
-            this.fullName = Objects.requireNonNull(fullName, "fullName must not be null");
+            this.fullName = Objects.requireNonNull(fullName, "fullName must not be null").trim();
             return this;
         }
 
         public Builder withLastName(final String lastName) {
-            this.lastName = Objects.requireNonNull(lastName, "lastName must not be null");
+            this.lastName = Objects.requireNonNull(lastName, "lastName must not be null").trim();
             return this;
         }
 

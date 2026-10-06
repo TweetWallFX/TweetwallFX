@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -114,7 +114,7 @@ public final class ScheduleSlotImpl implements ScheduleSlot {
         }
 
         public Builder withId(final String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+            this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
