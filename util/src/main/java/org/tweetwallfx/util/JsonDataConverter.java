@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2023 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ public class JsonDataConverter {
     }
 
     private static JsonbConfig readConfig() {
-        return new JsonbConfig().setProperty("jsonb.allow-unknown-properties", false);
+        return new JsonbConfig().setProperty("jsonb.fail-on-unknown-properties", true);
     }
 
     /**

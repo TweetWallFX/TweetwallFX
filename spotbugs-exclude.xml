@@ -103,4 +103,14 @@
         </Or>
         <Bug code="HSM" />
     </Match>
+    <Match>
+        <Or>
+            <Class name="org.tweetwallfx.controls.mosaic.CoverGridRegressionTest" />
+            <Class name="org.tweetwallfx.controls.mosaic.JustifiedRowsRegressionTest" />
+        </Or>
+        <Or>
+            <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+            <Bug pattern="PREDICTABLE_RANDOM" />
+        </Or>
+    </Match>
 </FindBugsFilter>
