@@ -30,7 +30,7 @@ jobs:
         jdk:
           - '25'
           - '26'
-#          - '27'
+          - '27'
         distribution:
           - 'temurin'
 
