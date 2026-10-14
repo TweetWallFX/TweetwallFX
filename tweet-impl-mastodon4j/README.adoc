@@ -1,0 +1,35 @@
+= tweet-impl-mastodon4j
+
+Mastodon implementation of the TweetWallFX tweet API using Mastodon4J.
+
+== Purpose
+
+Provides tweet/post data from Mastodon instances via Mastodon4J library. Implements the `tweet-api` contracts.
+
+== Key Classes
+
+- `org.tweetwallfx.tweet.impl.mastodon4j.MastodonTweeter` - Main `Tweeter` implementation for Mastodon
+- `org.tweetwallfx.tweet.impl.mastodon4j.Mastodon4JStatus` - Status/tweet wrapper
+- `org.tweetwallfx.tweet.impl.mastodon4j.Mastodon4JUser` - User wrapper
+
+## Configuration
+
+Configuration for Mastodon endpoint, credentials/tokens as per Mastodon API. See module's `tweetwallConfig.json` and related configuration classes.
+
+## Dependencies
+
+- Mastodon4J client library
+- `:tweetwallfx-tweet-api`
+- `:tweetwallfx-config`
+- `:tweetwallfx-filterchain`
+- `:tweetwallfx-utility`
+- Logging
+
+## Usage
+
+Use this implementation when displaying content from Mastodon instances. Suitable alternative to Twitter API.
+
+## See Also
+
+- link:../tweet-api/README.adoc[tweet-api]
+- link:../docs/CONFIGURATION.adoc[Configuration Guide]

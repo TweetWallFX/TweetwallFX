@@ -1,0 +1,37 @@
+= tweet-impl-mock
+
+Mock implementation of the TweetWallFX tweet API for testing and demonstration without external API access.
+
+== Purpose
+
+Provides in-memory/mock tweet data. Useful for local development, demos, testing, and environments without Twitter/Mastodon credentials.
+
+== Key Classes
+
+- `org.tweetwallfx.tweet.impl.mock.MockTweeter` - Mock `Tweeter` implementation
+- `org.tweetwallfx.tweet.impl.mock.MockTweet` - Mock tweet data
+- `org.tweetwallfx.tweet.impl.mock.MockUser` - Mock user data
+- `org.tweetwallfx.tweet.impl.mock.MockTweetStream` - Mock stream producing test tweets
+
+== Configuration
+
+The mock implementation can be configured via `tweetwallConfig.json` to control what mock data is produced. Check the module's configuration files for details.
+
+## Dependencies
+
+- `:tweetwallfx-tweet-api`
+- `:tweetwallfx-config`
+- `:tweetwallfx-filterchain`
+- `:tweetwallfx-utility`
+
+## When to Use
+
+- Development without external API dependencies
+- CI/testing environments
+- Demos where live API is not needed or available
+- Prototyping UI without credentials
+
+## See Also
+
+- link:../tweet-api/README.adoc[tweet-api]
+- link:../docs/CONFIGURATION.adoc[Configuration Guide]

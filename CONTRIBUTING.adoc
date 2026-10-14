@@ -1,0 +1,116 @@
+= Contributing to TweetWallFX
+
+Thank you for your interest in contributing to TweetWallFX! This guide will help you get started.
+
+== Prerequisites
+
+- JDK 17+ (Java 17 minimum)
+- Git
+- Gradle wrapper (included)
+
+== Getting Started
+
+1. Fork the repository on GitHub
+2. Clone your fork locally: `git clone https://github.com/YOUR_USERNAME/TweetwallFX.git`
+3. Create a branch for your changes: `git checkout -b feature/your-feature-name`
+
+== Building
+
+Build the entire project:
+
+[source,bash]
+----
+./gradlew build
+----
+
+Build a specific module:
+
+[source,bash]
+----
+./gradlew :tweetwallfx-config:build
+----
+
+== Testing
+
+Run all tests:
+
+[source,bash]
+----
+./gradlew test
+----
+
+Run tests for a specific module:
+
+[source,bash]
+----
+./gradlew :tweetwallfx-config:test
+----
+
+== Code Quality & Formatting
+
+=== Spotless
+
+This project uses https://github.com/diffplug/spotless[Spotless] to enforce code formatting. Before committing:
+
+[source,bash]
+----
+./gradlew spotlessApply
+----
+
+To verify formatting:
+
+[source,bash]
+----
+./gradlew spotlessCheck
+----
+
+Spotless formats: Java, Gradle files, Asciidoc (.adoc), Markdown (.md), JSON, CSS, properties files.
+
+=== Javadoc
+
+All code modules generate Javadoc and the build enforces checks via `javadoc` task (with `Werror`). Ensure your Javadoc compiles:
+
+[source,bash]
+----
+./gradlew javadoc
+----
+
+=== Static Analysis
+
+Spotbugs and Errorprone are configured. The full check includes these:
+
+[source,bash]
+----
+./gradlew check
+----
+
+== Development Workflow
+
+1. Make your changes following existing code style and conventions
+2. Add/update tests as appropriate
+3. Run `./gradlew spotlessApply` to format code
+4. Run `./gradlew build` to ensure everything compiles and passes tests
+5. Commit with clear messages
+6. Push to your fork and create a Pull Request against the `master` branch
+
+== Code Style Guidelines
+
+- Follow existing patterns in the codebase
+- Use meaningful names
+- Add Javadoc for public APIs
+- No star imports (enforced by Spotless)
+- License headers are added automatically by Spotless
+- Avoid adding comments unless explicitly necessary
+
+== Module Structure
+
+TweetWallFX is organized as a multi-project Gradle build. Each module has a specific responsibility. See the root `settings.gradle` for all modules.
+
+== Questions or Issues
+
+- Open an issue on https://github.com/TweetWallFX/TweetwallFX/issues[GitHub]
+- Check existing issue templates in `.github/ISSUE_TEMPLATE/`
+
+== License
+
+By contributing, you agree that your contributions will be licensed under the MIT License.

@@ -1,0 +1,57 @@
+= config
+
+The `config` module provides TweetWallFX's configuration system - loading, merging, and converting configuration data from JSON files and external sources.
+
+== Purpose
+
+- Central configuration management
+- Loads `tweetwallConfig.json` from classpath and filesystem
+- Supports custom config file via system property
+- Merges configuration fragments from multiple sources
+- Extensible via `ConfigurationConverter` SPI
+- Type-safe access to configuration objects
+
+== Key Classes
+
+- `org.tweetwallfx.config.Configuration` - Singleton configuration store; loads and merges config data. Handles classpath/filesystem lookup, additional URLs, merging logic.
+- `org.tweetwallfx.config.TweetwallSettings` - POJO for core TweetWallFX settings (query, title, stylesheets, stop words)
+- `org.tweetwallfx.config.ConfigurationConverter` - SPI interface for converting configuration maps to typed objects
+- `org.tweetwallfx.config.ConfigurationSettings` - Settings for additional configuration sources (URLs)
+
+== How Configuration Loading Works
+
+1. Load from classpath: `tweetwallConfig.json` (standard)
+2. Load from filesystem: `tweetwallConfig.json` in current working directory
+3. If `org.tweetwall.config.fileName` system property is set (and different from standard), also load that file from classpath and filesystem
+4. Load additional configurations from URLs specified in `ConfigurationSettings.additionalConfigurationURLs()`
+5. Merge all sources (primitive types merged by overwrite; complex objects merged recursively)
+6. Convert config data using registered `ConfigurationConverter` implementations (discovered via ServiceLoader)
+
+== Usage Example
+
+[source,java]
+----
+Configuration config = Configuration.getInstance();
+TweetwallSettings settings = config.getConfigTyped(
+    TweetwallSettings.CONFIG_KEY,
+    TweetwallSettings.class
+);
+String query = settings.query();
+String title = settings.title();
+----
+
+== System Properties
+
+- `org.tweetwall.config.fileName` - Custom configuration filename to load (in addition to standard)
+- `org.tweetwallfx.disable-full-screen` - Disable fullscreen on startup (used by apps)
+
+== Extending
+
+To add custom configuration types:
+1. Implement `ConfigurationConverter` for your type (specify responsible key and data class)
+2. Register via `META-INF/services/org.tweetwallfx.config.ConfigurationConverter`
+
+== See Also
+
+- link:../docs/CONFIGURATION.adoc[Configuration Guide]
+- link:../docs/ARCHITECTURE.adoc[Architecture]

@@ -1,0 +1,78 @@
+= Architecture Guide
+
+TweetWallFX is a JavaFX-based application with a modular, pluggable architecture. This document provides a high-level overview of components, modules, and data flow.
+
+== High-Level Overview
+
+TweetWallFX displays social media content (tweets/posts) in a dynamic, animated 2D/visualization interface. The architecture emphasizes:
+- Modularity via multi-project Gradle build
+- Pluggable data sources (Twitter, Mastodon, Mock)
+- Extensible configuration via SPI
+- Step-based animation engine for smooth transitions
+- Clean separation between data, processing, and rendering
+
+== Module Organization
+
+Core modules are organized by responsibility. Key areas:
+
+=== Configuration
+- `config` - Central configuration loading/merging, `ConfigurationConverter` SPI, `TweetwallSettings`. Loads `tweetwallConfig.json` from classpath/filesystem with support for additional URLs and custom filenames.
+
+=== Tweet API & Implementations
+- `tweet-api` - Abstractions (`Tweet`, `Tweeter`, `User`, streams)
+- `tweet-impl-twitter4j` - Twitter/X implementation
+- `tweet-impl-mastodon4j` - Mastodon implementation
+- `tweet-impl-mock` - Mock for testing/demo
+
+=== Core Processing & Engine
+- `stepengine-api` - Step engine API/contracts
+- `stepengine-dataproviders` - Data providers feeding steps
+- `stepengine-steps` - Step implementations for animations/transitions
+- `filterchain` - Filter chain processing for tweets/content
+- `transitions` - Transition effects
+- `cache` - Caching (Ehcache) for external resources
+
+=== UI & Rendering
+- `controls` - Reusable JavaFX controls
+- `2d` - 2D visualization components (`TagTweets`, layouts, skins)
+- `generic2d` - Runnable 2D application entry point
+- `3d` - 3D visualization (currently disabled in settings)
+
+=== Integration & Support
+- `util` - Shared utilities
+- `core` - Core shared classes
+- `mqtt` - MQTT integration for external control (restart/stop)
+- `emoji` - Emoji support
+- `google-cloud` - Google Cloud integrations
+- `conference-*` - Conference-specific features (api, spi, stepengine, test)
+
+## Data Flow
+
+1. **Configuration Load** - `Configuration` loads/merges configs from classpath/filesystem/URLs; converters produce typed settings.
+2. **Tweet Source Selection** - Application selects tweeter implementation (via config/classpath). Mock is useful for demos; production uses Twitter/Mastodon.
+3. **Data Acquisition** - `Tweeter` connects to data source (stream or query) producing `Tweet` objects.
+4. **Processing** - Filterchains and step engine process tweets (filter, transform, enrich). Data providers supply content to steps.
+5. **Rendering** - 2D/3D UI components display processed content with animations/transitions. JavaFX handles UI updates (use `Platform.runLater` where needed).
+6. **External Control** (optional) - MQTT allows external systems to send STOP/RESTART events.
+
+## Key Design Principles
+
+- **Loose coupling** - API/SPI separation (e.g. tweet-api + implementations, config converters)
+- **Extensibility** - Add new data sources by implementing `tweet-api`; add new config types via `ConfigurationConverter`; add new steps via step engine
+- **Testability** - Mock implementation enables UI/logic testing without external APIs
+- **Configuration-driven** - Behavior controlled via JSON config; runtime override via system properties
+- **Platform-aware** - JavaFX dependencies resolved with platform-specific classifiers (handled by Gradle)
+
+## Build & Runtime Notes
+
+- Java 17+ required; builds on JDK 25-27 in CI
+- Gradle multi-project; each module is a separate artifact with its own build
+- JavaFX pulled as dependencies (not assumed in JDK). Module path configured in build.
+- Strict javadoc checks in build; code style enforced by Spotless
+
+## See Also
+
+- link:CONFIGURATION.adoc[Configuration Guide]
+- link:RUNNING.adoc[Running Guide]
+- link:DEVELOPING.adoc[Developing Guide]
+- link:../README.adoc[Getting Started]

@@ -1,0 +1,32 @@
+= TweetWallFX Documentation
+:project-full-path: TweetWallFX/TweetwallFX
+:github-branch: master
+
+Welcome to the TweetWallFX documentation. TweetWallFX is a JavaFX-based application for displaying tweets and social media content on walls/displays.
+
+== Documentation Index
+
+- link:../README.adoc[Getting Started] - Prerequisites, quickstart, configuration, and running instructions
+- link:ARCHITECTURE.adoc[Architecture] (coming soon) - High-level design, modules, and data flow
+- link:CONFIGURATION.adoc[Configuration] (coming soon) - Detailed configuration options and examples
+- link:RUNNING.adoc[Running] (coming soon) - Platform-specific notes and deployment
+- link:DEVELOPING.adoc[Developing] (coming soon) - IDE setup, testing, formatting, and javadoc
+- link:CONVENTIONS.adoc[Conventions] (coming soon) - Coding style and project conventions
+- link:../CONTRIBUTING.adoc[Contributing] - How to contribute to TweetWallFX
+- link:../CHANGELOG.adoc[Changelog] (coming soon) - Release history and changes
+
+== API Documentation
+
+API documentation (Javadoc) is generated per module. To generate locally:
+
+[source,bash]
+----
+./gradlew javadoc
+----
+
+Javadoc output will be available under `*/build/docs/javadoc/` for each module.
+
+== Additional Resources
+
+- link:https://github.com/{project-full-path}[GitHub Repository]
+- link:../LICENSE[MIT License]

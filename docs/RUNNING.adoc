@@ -1,0 +1,106 @@
+= Running Guide
+
+This guide covers how to run TweetWallFX applications on different platforms.
+
+== Prerequisites
+
+- JDK 17+ installed and on PATH
+- Built project (or use Gradle to run directly)
+- Configuration file with appropriate settings (see Configuration Guide)
+
+== Running Applications
+
+### generic2d (Recommended for Getting Started)
+
+The `generic2d` module is the primary runnable 2D application.
+
+Using Gradle:
+[source,bash]
+----
+./gradlew :tweetwallfx-generic2d:run
+----
+
+This will:
+- Compile dependencies if needed
+- Configure JVM with required module-path and JavaFX modules
+- Launch the JavaFX application
+
+### 2d Module
+
+[source,bash]
+----
+./gradlew :tweetwallfx-2d:run
+----
+
+### Other Variants
+
+Check specific module READMEs for runnable entry points. Note the `3d` module is currently disabled in `settings.gradle`.
+
+## Platform-Specific Notes
+
+### JavaFX Platform Detection
+
+The build automatically detects your platform and architecture for JavaFX dependencies:
+- OS detection: macOS (`osx`), Windows (`win`), Linux (others)
+- Architecture: aarch64 (Apple Silicon, ARM64 Linux) gets `-aarch64` suffix
+- This affects which JavaFX artifacts are resolved
+
+### macOS
+
+- On Apple Silicon (aarch64), JavaFX is pulled with `mac-aarch64` classifier
+- Ensure you use a JDK that matches your architecture
+- Fullscreen behavior works as configured
+
+### Windows
+
+- JavaFX artifacts use `win` classifier
+- Standard JavaFX behavior applies
+
+### Linux
+
+- JavaFX artifacts use `linux` (or `linux-aarch64` on ARM64)
+- May need additional system libraries depending on distribution (JavaFX bundles most dependencies)
+
+## JVM Configuration
+
+Gradle's `JavaExec` tasks are pre-configured with:
+- `--enable-preview` (project uses preview features)
+- `--module-path` pointing to JavaFX and JAXB dependencies
+- `--add-modules` including javafx.controls, javafx.fxml, javafx.graphics, jakarta.activation, jakarta.xml.bind
+- `--add-opens java.base/jdk.internal.misc=ALL-UNNAMED`
+
+These are handled automatically when running via Gradle.
+
+## Configuration
+
+Before running, ensure you have a valid `tweetwallConfig.json`. For quick testing without external APIs, use the mock tweet implementation. See link:CONFIGURATION.adoc[Configuration Guide] for details.
+
+## Runtime Controls (generic2d)
+
+- `D` - Toggle status/debug line
+- `F` - Toggle fullscreen
+- `R` - Restart (exits with code 42; process managers can restart)
+- `X` or `Q` - Exit (code 0)
+
+## Building and Running a JAR
+
+To build executable jars:
+[source,bash]
+----
+./gradlew build
+----
+
+Jars are created in each module's `build/libs/`. Note that running fat/uber jars with JavaFX may require additional JVM args depending on packaging - running via Gradle tasks is the most reliable approach for development.
+
+## Troubleshooting
+
+- **Wrong JDK architecture**: Ensure JDK arch matches OS (e.g. don't mix x86_64 JDK on aarch64)
+- **JavaFX missing**: Running via Gradle is recommended as it sets up module path correctly
+- **No tweets showing**: Check your query and API credentials in config; try mock implementation first
+- For more troubleshooting, see link:../README.adoc#troubleshooting[README Troubleshooting]
+
+## See Also
+
+- link:CONFIGURATION.adoc[Configuration Guide]
+- link:DEVELOPING.adoc[Developing Guide]
+- link:../README.adoc[Getting Started]

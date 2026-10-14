@@ -1,0 +1,37 @@
+= 2d
+
+The `2d` module provides core 2D visualization components for TweetWallFX, including the TagCloud/Wordle display and tweet rendering logic.
+
+== Purpose
+
+- Core 2D UI components for displaying tweets
+- Tag cloud/wordle visualization (`Wordle`, `TagTweets`)
+- Tweet display controls and styling support
+- 2D-specific layout and animation logic
+
+== Key Classes
+
+- `org.tweetwallfx.twod.TagTweets` - Orchestrates tweet display in 2D; binds to config query, sets up Wordle component
+- `org.tweetwallfx.twod.WordleSkin` - Skin implementation for Wordle control
+- `org.tweetwallfx.twod.TweetLayout` - Layout logic for tweet positioning
+
+== Key Dependencies
+
+- JavaFX (controls, fxml, graphics)
+- Controls module (`:tweetwallfx-controls`)
+- Config module (`:tweetwallfx-configuration`)
+- Tweet API (`:tweetwallfx-tweet-api`)
+- Step engine components (for data flow)
+
+== Usage
+
+The 2D components are typically used by an application entry point (like `generic2d`) which sets up a `BorderPane` and starts `TagTweets`.
+
+== Styling
+
+Stylesheets are configurable via `TweetwallSettings.stylesheetResource()` or `stylesheetFile()`. The UI supports CSS customization for tweet display, wordle layout, and overall appearance.
+
+== See Also
+
+- link:../generic2d/README.adoc[generic2d] - Runnable demo using 2d module
+- link:../docs/ARCHITECTURE.adoc[Architecture]
