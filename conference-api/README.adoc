@@ -1,0 +1,13 @@
+= conference-api
+
+The `conference-api` module is part of TweetWallFX. For more information, see the root documentation.
+
+== Purpose
+
+Provides functionality related to `conference-api` within the TweetWallFX ecosystem.
+
+== See Also
+
+- link:../README.adoc[Getting Started]
+- link:../docs/ARCHITECTURE.adoc[Architecture Guide]
+- link:../docs/CONFIGURATION.adoc[Configuration Guide]
