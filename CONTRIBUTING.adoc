@@ -4,7 +4,8 @@ Thank you for your interest in contributing to TweetWallFX! This guide will help
 
 == Prerequisites
 
-- JDK 17+ (Java 17 minimum)
+- JDK 17+ to run the Gradle wrapper (Gradle 9.8.1 requirement)
+- Java toolchain: Compilation, testing, and Javadoc use Gradle's Java toolchain (defaults to 27 locally, CI uses 25-27)
 - Git
 - Gradle wrapper (included)
 

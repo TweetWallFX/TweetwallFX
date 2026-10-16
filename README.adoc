@@ -33,7 +33,8 @@ image:https://github.com/{project-full-path}/actions/workflows/gradleBuild.yml/b
 
 == Prerequisites
 
-- JDK 17+ (Java 17 minimum; toolchain can use newer versions like 25/27 as configured in CI)
+- JDK 17+ to run the Gradle wrapper (Gradle 9.8.1 requirement). The wrapper will not start on older JDKs.
+- Java toolchain: Compilation, testing, and Javadoc use Gradle's Java toolchain (configurable; defaults to 27 locally via JAVA_PLATFORM_VERSION, CI uses JDK 25–27).
 - Git
 - Internet access for downloading Gradle dependencies
 - OS-specific notes: JavaFX platform classifier is auto-detected (macOS, Windows, Linux; aarch64 handled)
