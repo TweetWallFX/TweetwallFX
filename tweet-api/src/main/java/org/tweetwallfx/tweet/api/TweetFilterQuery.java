@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,13 @@ package org.tweetwallfx.tweet.api;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Query used to filter the stream of {@link Tweet Tweets} received via
+ * {@link Tweeter#createTweetStream(TweetFilterQuery)}.
+ *
+ * <p>
+ * The setter methods return this instance to allow method chaining.
+ */
 @SuppressWarnings("CanIgnoreReturnValueSuggester")
 public final class TweetFilterQuery {
 
@@ -47,6 +54,12 @@ public final class TweetFilterQuery {
         return this;
     }
 
+    /**
+     * Returns the number of previous statuses to stream before transitioning to
+     * the live stream.
+     *
+     * @return the count
+     */
     public int getCount() {
         return count;
     }
@@ -62,6 +75,11 @@ public final class TweetFilterQuery {
         return this;
     }
 
+    /**
+     * Returns the users, by ID, to receive public tweets from.
+     *
+     * @return the user ids to follow
+     */
     public long[] getFollow() {
         return copy(follow);
     }
@@ -77,6 +95,11 @@ public final class TweetFilterQuery {
         return this;
     }
 
+    /**
+     * Returns the keywords to track.
+     *
+     * @return the keywords to track
+     */
     public String[] getTrack() {
         return copy(track);
     }
@@ -92,6 +115,11 @@ public final class TweetFilterQuery {
         return this;
     }
 
+    /**
+     * Returns the languages to track.
+     *
+     * @return the languages to track
+     */
     public String[] getLanguage() {
         return copy(language);
     }
@@ -108,6 +136,11 @@ public final class TweetFilterQuery {
         return this;
     }
 
+    /**
+     * Returns the minimum filter level of tweets to appear in the stream.
+     *
+     * @return the filter level
+     */
     public String getFilterLevel() {
         return filterLevel;
     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,11 @@ package org.tweetwallfx.tweet.api;
 
 import java.util.function.Consumer;
 
+/**
+ * A stream of {@link Tweet Tweets} received from a {@link Tweeter}.
+ * Consumers registered via {@link #onTweet(Consumer)} are notified whenever a
+ * new Tweet is received.
+ */
 public interface TweetStream {
 
     /**

@@ -238,6 +238,11 @@ public final class Configuration {
         return result;
     }
 
+    /**
+     * Returns the singleton {@link Configuration} instance of the application.
+     *
+     * @return the Configuration instance
+     */
     public static Configuration getInstance() {
         return INSTANCE;
     }
@@ -355,6 +360,24 @@ public final class Configuration {
         ));
     }
 
+    /**
+     * Merges the entries of the {@code next} configuration data map into those
+     * of the {@code previous} configuration data map.
+     *
+     * <p>
+     * Simple types are merged by overwrite (the {@code next} value wins). Nested
+     * maps are merged recursively. Collections are replaced by the {@code next}
+     * value.
+     *
+     * @param previous the base configuration data map, may be {@code null}
+     * @param next the configuration data map to merge into {@code previous},
+     * must not be {@code null}
+     *
+     * @return the merged configuration data map
+     *
+     * @throws NullPointerException in case {@code next} is {@code null}
+     * @throws UnsupportedOperationException in case a value cannot be merged
+     */
     public static Map<String, Object> mergeMap(final Map<String, Object> previous, final Map<String, Object> next) {
         Objects.requireNonNull(next, "Parameter next must not be null!");
 

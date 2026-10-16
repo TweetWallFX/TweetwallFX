@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +23,64 @@
  */
 package org.tweetwallfx.tweet.api;
 
+/**
+ * A user of the social media service providing {@link Tweet Tweets}.
+ */
 public interface User {
 
+    /**
+     * Returns the URL of the larger variant of the profile image.
+     *
+     * @return the URL of the larger profile image
+     */
     String getBiggerProfileImageUrl();
 
+    /**
+     * Returns the unique id of this user.
+     *
+     * @return the id of this user
+     */
     long getId();
 
+    /**
+     * Returns the language of this user.
+     *
+     * @return the language of this user
+     */
     String getLang();
 
+    /**
+     * Returns the display name of this user.
+     *
+     * @return the display name of this user
+     */
     String getName();
 
+    /**
+     * Returns the URL of the profile image.
+     *
+     * @return the URL of the profile image
+     */
     String getProfileImageUrl();
 
+    /**
+     * Returns the screen name (handle) of this user.
+     *
+     * @return the screen name of this user
+     */
     String getScreenName();
 
+    /**
+     * Returns the number of followers of this user.
+     *
+     * @return the number of followers of this user
+     */
     int getFollowersCount();
 
+    /**
+     * Determines if this user is verified.
+     *
+     * @return {@code true} if this user is verified, otherwise {@code false}
+     */
     boolean isVerified();
 }
