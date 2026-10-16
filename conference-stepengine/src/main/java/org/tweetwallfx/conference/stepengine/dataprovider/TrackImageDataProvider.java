@@ -66,21 +66,11 @@ public class TrackImageDataProvider implements DataProvider {
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link TrackImageDataProvider} instance as configured
-         * by the given data provider setting}
-         *
-         * @param dataProviderSetting the data provider setting providing the
-         *                            configuration for the created provider
-         */
         @Override
         public TrackImageDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TrackImageDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
-        /**
-         * {@return the class of the data provider created by this factory}
-         */
         @Override
         public Class<TrackImageDataProvider> getDataProviderClass() {
             return TrackImageDataProvider.class;

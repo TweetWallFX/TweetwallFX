@@ -59,17 +59,11 @@ public class UpdateCloudStep implements Step {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateCloudStep.class);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
@@ -188,25 +182,16 @@ public class UpdateCloudStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public UpdateCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new UpdateCloudStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<UpdateCloudStep> getStepClass() {
             return UpdateCloudStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);

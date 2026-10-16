@@ -48,27 +48,16 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
         this.config = config;
     }
 
-    /**
-     * {@return the scheduling configuration of this data provider}
-     */
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
     }
 
-    /**
-     * {@return {@code true} as this data provider has to be initialized before
-     * its first use}
-     */
     @Override
     public boolean requiresInitialization() {
         return true;
     }
 
-    /**
-     * {@return {@code true} when the data has been loaded, {@code false}
-     * otherwise}
-     */
     @Override
     public boolean isInitialized() {
         return initialized;
@@ -111,21 +100,11 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link TopTalksWeekDataProvider} instance as
-         * configured by the given data provider setting}
-         *
-         * @param dataProviderSetting the data provider setting providing the
-         *                            configuration for the created provider
-         */
         @Override
         public TopTalksWeekDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TopTalksWeekDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
-        /**
-         * {@return the class of the data provider created by this factory}
-         */
         @Override
         public Class<TopTalksWeekDataProvider> getDataProviderClass() {
             return TopTalksWeekDataProvider.class;

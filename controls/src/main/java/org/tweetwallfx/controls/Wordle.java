@@ -59,9 +59,6 @@ public final class Wordle extends Control {
         getStyleClass().setAll("wordle");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Skin<?> createDefaultSkin() {
         return new WordleSkin(this);
@@ -302,9 +299,6 @@ public final class Wordle extends Control {
         return tweetFontSizeProperty;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getUserAgentStylesheet() {
         if (null == userAgentStylesheet) {
@@ -462,9 +456,6 @@ public final class Wordle extends Control {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         return getClassCssMetaData();

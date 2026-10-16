@@ -54,17 +54,11 @@ public class AddTweetToCloudStep implements Step {
         // prevent external instantiation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean shouldSkip(final MachineContext context) {
         return null == context.getDataProvider(TweetDataProvider.class).getTweet();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         Tweet tweetInfo = context.getDataProvider(TweetDataProvider.class).getTweet();
@@ -100,25 +94,16 @@ public class AddTweetToCloudStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new AddTweetToCloudStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<AddTweetToCloudStep> getStepClass() {
             return AddTweetToCloudStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TweetDataProvider.class, TagCloudDataProvider.class);

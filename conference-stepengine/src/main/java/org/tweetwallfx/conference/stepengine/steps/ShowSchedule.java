@@ -161,20 +161,11 @@ public class ShowSchedule implements Step {
         }
     }
 
-    /**
-     * {@return {@code false} indicating that this step does not require the
-     * JavaFX application thread}
-     */
     @Override
     public boolean requiresPlatformThread() {
         return false;
     }
 
-    /**
-     * {@return the preferred display duration of this step}
-     *
-     * @param context the step engine machine context
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
@@ -364,32 +355,16 @@ public class ShowSchedule implements Step {
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link ShowSchedule} step instance as configured by
-         * the given step definition}
-         *
-         * @param stepDefinition the step definition providing the
-         *                       configuration for the created step
-         */
         @Override
         public ShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new ShowSchedule(stepDefinition.getConfig(Config.class));
         }
 
-        /**
-         * {@return the class of the step created by this factory}
-         */
         @Override
         public Class<ShowSchedule> getStepClass() {
             return ShowSchedule.class;
         }
 
-        /**
-         * {@return the data providers required by the created step}
-         *
-         * @param stepSettings the step definition providing the configuration
-         *                     for the created step
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(ScheduleDataProvider.class, SpeakerImageProvider.class, TrackImageDataProvider.class);

@@ -348,11 +348,6 @@ public final class ShowTopRated implements Step {
         return skip;
     }
 
-    /**
-     * {@return the preferred display duration of this step}
-     *
-     * @param context the step engine machine context
-     */
     @Override
     public Duration preferredStepDuration(MachineContext context) {
         return config.stepDuration();
@@ -369,13 +364,6 @@ public final class ShowTopRated implements Step {
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link ShowTopRated} step instance as configured by
-         * the given step definition}
-         *
-         * @param stepDefinition the step definition providing the
-         *                       configuration for the created step
-         */
         @Override
         public ShowTopRated create(final StepEngineSettings.StepDefinition stepDefinition) {
             final TopVotedType topVotedType = stepDefinition.getConfig(Config.class).getTopVotedType();
@@ -393,20 +381,11 @@ public final class ShowTopRated implements Step {
             };
         }
 
-        /**
-         * {@return the class of the step created by this factory}
-         */
         @Override
         public Class<ShowTopRated> getStepClass() {
             return ShowTopRated.class;
         }
 
-        /**
-         * {@return the data providers required by the created step}
-         *
-         * @param stepDefinition the step definition providing the
-         *                       configuration for the created step
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepDefinition) {
             final ShowTopRated.TopVotedType topVotedType = stepDefinition.getConfig(ShowTopRated.Config.class).getTopVotedType();

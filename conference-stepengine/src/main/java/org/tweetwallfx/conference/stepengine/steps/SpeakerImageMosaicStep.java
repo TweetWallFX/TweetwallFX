@@ -94,11 +94,6 @@ public class SpeakerImageMosaicStep implements Step {
         createMosaicTransition.play();
     }
 
-    /**
-     * {@return the preferred display duration of this step}
-     *
-     * @param context the step engine machine context
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
@@ -322,32 +317,16 @@ public class SpeakerImageMosaicStep implements Step {
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link SpeakerImageMosaicStep} step instance as
-         * configured by the given step definition}
-         *
-         * @param stepDefinition the step definition providing the
-         *                       configuration for the created step
-         */
         @Override
         public SpeakerImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new SpeakerImageMosaicStep(stepDefinition.getConfig(Config.class));
         }
 
-        /**
-         * {@return the class of the step created by this factory}
-         */
         @Override
         public Class<SpeakerImageMosaicStep> getStepClass() {
             return SpeakerImageMosaicStep.class;
         }
 
-        /**
-         * {@return the data providers required by the created step}
-         *
-         * @param stepSettings the step definition providing the configuration
-         *                     for the created step
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(SpeakerImageProvider.class);

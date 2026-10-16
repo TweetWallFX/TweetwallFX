@@ -124,30 +124,16 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return {@link Tweet} as the domain object class handled by this
-         * filter step}
-         */
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
         }
 
-        /**
-         * {@return the class of the filter step created by this factory}
-         */
         @Override
         public Class<AcceptFromSpeakersFilterStep> getFilterStepClass() {
             return AcceptFromSpeakersFilterStep.class;
         }
 
-        /**
-         * {@return a new {@link AcceptFromSpeakersFilterStep} instance as
-         * configured by the given filter step definition}
-         *
-         * @param filterStepDefinition the filter step definition providing the
-         *                             configuration for the created step
-         */
         @Override
         public AcceptFromSpeakersFilterStep create(final FilterChainSettings.FilterStepDefinition filterStepDefinition) {
             return new AcceptFromSpeakersFilterStep(filterStepDefinition.getConfig(Config.class));
@@ -187,9 +173,6 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
             this.checkRetweeted = checkRetweeted;
         }
 
-        /**
-         * {@return a string representation of this configuration}
-         */
         @Override
         public String toString() {
             return createToString(this, map(

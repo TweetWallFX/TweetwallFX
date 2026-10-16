@@ -57,25 +57,16 @@ public class TweetToCloudStep implements Step {
         // prevent external instantiation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean shouldSkip(MachineContext context) {
         return null == context.get("WordleSkin", WordleSkin.class).getPane().lookup("#tweetInfo");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(10);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
@@ -188,25 +179,16 @@ public class TweetToCloudStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public TweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new TweetToCloudStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<TweetToCloudStep> getStepClass() {
             return TweetToCloudStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);

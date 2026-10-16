@@ -52,9 +52,6 @@ public final class Word implements Comparable<Word> {
         return text;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int compareTo(final Word o) {
         return Double.compare(weight, o.weight);
@@ -67,25 +64,16 @@ public final class Word implements Comparable<Word> {
         return weight;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return "Word{" + "text=" + text + ", weight=" + weight + '}';
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return Objects.hashCode(this.text.toLowerCase(Locale.ENGLISH));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(final Object obj) {
         return obj instanceof Word other

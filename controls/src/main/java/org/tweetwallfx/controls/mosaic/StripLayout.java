@@ -104,9 +104,6 @@ final class StripLayout implements MosaicLayout {
         this.orientationGrouped = orientationGrouped;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<MosaicTile> layout(final MosaicItemSource source, final MosaicArea area) {
         Objects.requireNonNull(source, "source");

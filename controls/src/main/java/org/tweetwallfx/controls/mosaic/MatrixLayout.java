@@ -35,9 +35,6 @@ import java.util.Optional;
  */
 final class MatrixLayout implements MosaicLayout {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<MosaicTile> layout(final MosaicItemSource source, final MosaicArea area) {
         final double cellWidth = area.width() / area.columns() - area.gapX();

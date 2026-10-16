@@ -168,9 +168,6 @@ public class TweetLayout {
             this.text = text;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return "TweetWord{" + "text=" + text + ", bounds=" + bounds + '}';

@@ -45,9 +45,6 @@ public final class ListMosaicItemSource implements MosaicItemSource {
         this.remaining = new ArrayList<>(Objects.requireNonNull(items, "items"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<MosaicItem> next() {
         if (remaining.isEmpty()) {
@@ -56,9 +53,6 @@ public final class ListMosaicItemSource implements MosaicItemSource {
         return Optional.of(remaining.remove(0));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<MosaicItem> nextMatching(final Predicate<MosaicItem> predicate) {
         Objects.requireNonNull(predicate, "predicate");
@@ -72,9 +66,6 @@ public final class ListMosaicItemSource implements MosaicItemSource {
         return Optional.empty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int remaining() {
         return remaining.size();

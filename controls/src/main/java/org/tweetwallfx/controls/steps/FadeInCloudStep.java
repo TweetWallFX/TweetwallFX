@@ -63,26 +63,17 @@ public class FadeInCloudStep implements Step {
         this.config = config;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean shouldSkip(MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
         return sortedWords.isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -168,25 +159,16 @@ public class FadeInCloudStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public FadeInCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new FadeInCloudStep(stepDefinition.getConfig(Config.class));
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<FadeInCloudStep> getStepClass() {
             return FadeInCloudStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);

@@ -44,17 +44,11 @@ public class CloudFadeOutStep implements Step {
         // prevent external instantiation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(2);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -99,17 +93,11 @@ public class CloudFadeOutStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudFadeOutStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<CloudFadeOutStep> getStepClass() {
             return CloudFadeOutStep.class;

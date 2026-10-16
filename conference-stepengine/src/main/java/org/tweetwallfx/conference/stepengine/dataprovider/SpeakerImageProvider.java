@@ -85,9 +85,6 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
         return new Image(Thread.currentThread().getContextClassLoader().getResourceAsStream(config.noImageResource()));
     }
 
-    /**
-     * {@return the scheduling configuration of this data provider}
-     */
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
@@ -133,21 +130,11 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
          */
         public FactoryImpl() { }
 
-        /**
-         * {@return a new {@link SpeakerImageProvider} instance as configured by
-         * the given data provider setting}
-         *
-         * @param dataProviderSetting the data provider setting providing the
-         *                            configuration for the created provider
-         */
         @Override
         public SpeakerImageProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new SpeakerImageProvider(dataProviderSetting.getConfig(Config.class));
         }
 
-        /**
-         * {@return the class of the data provider created by this factory}
-         */
         @Override
         public Class<SpeakerImageProvider> getDataProviderClass() {
             return SpeakerImageProvider.class;

@@ -97,9 +97,6 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         this.config = config;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         isTerminated = false;
@@ -380,17 +377,11 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
                 .orElse(null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofMillis(config.stepDuration);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void shutdown() {
         shutdownCountdown = new CountDownLatch(2);
@@ -436,25 +427,16 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public InfiniteScrollingTweetsStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new InfiniteScrollingTweetsStep(stepDefinition.getConfig(Config.class));
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<InfiniteScrollingTweetsStep> getStepClass() {
             return InfiniteScrollingTweetsStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(

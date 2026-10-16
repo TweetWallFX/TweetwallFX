@@ -54,17 +54,11 @@ public class CloudToCloudStep implements Step {
         // prevent external instantiation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
@@ -172,25 +166,16 @@ public class CloudToCloudStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public CloudToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudToCloudStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<CloudToCloudStep> getStepClass() {
             return CloudToCloudStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);

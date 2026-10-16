@@ -47,9 +47,6 @@ public class NodeFadeOutStep implements Step {
         this.config = config;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final StepEngine.MachineContext context) {
         final WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -66,9 +63,6 @@ public class NodeFadeOutStep implements Step {
         fadeOutAll.play();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean shouldSkip(final StepEngine.MachineContext context) {
         final WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -85,18 +79,12 @@ public class NodeFadeOutStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public NodeFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
             return new NodeFadeOutStep(config);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<NodeFadeOutStep> getStepClass() {
             return NodeFadeOutStep.class;
@@ -130,9 +118,6 @@ public class NodeFadeOutStep implements Step {
             this.nodeSelector = Objects.requireNonNull(nodeSelector, "nodeSelector must not be null!");
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return createToString(this, map(

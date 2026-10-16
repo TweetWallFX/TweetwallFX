@@ -69,9 +69,6 @@ public class ImageMosaicStep implements Step {
     private Pane pane;
     private int count = 0;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -88,9 +85,6 @@ public class ImageMosaicStep implements Step {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(1);
@@ -303,25 +297,16 @@ public class ImageMosaicStep implements Step {
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public ImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new ImageMosaicStep();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<ImageMosaicStep> getStepClass() {
             return ImageMosaicStep.class;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(ImageMosaicDataProvider.class);

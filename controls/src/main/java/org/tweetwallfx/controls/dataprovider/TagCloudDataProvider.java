@@ -53,9 +53,6 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
         // prevent external instantiation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void processNewTweet(final Tweet tweet) {
         if (!tweet.isRetweet()) {
@@ -63,9 +60,6 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void processHistoryTweet(final Tweet tweet) {
         if (!tweet.isRetweet()) {
@@ -131,17 +125,11 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
         public FactoryImpl() {
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TagCloudDataProvider();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Class<TagCloudDataProvider> getDataProviderClass() {
             return TagCloudDataProvider.class;

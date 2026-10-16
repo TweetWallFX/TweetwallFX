@@ -124,9 +124,6 @@ public class SessionData {
         return beginTime;
     }
 
-    /**
-     * {@return a string representation of this session data}
-     */
     @Override
     public String toString() {
         return createToString(this, Map.of(
