@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,12 +48,31 @@ import org.tweetwallfx.mqtt.MqttProcess;
 import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.twod.TagTweets;
 
+/**
+ * Runnable 2D TweetWallFX application.
+ *
+ * <p>
+ * Configures and displays the JavaFX {@code Stage} using the settings from
+ * {@link TweetwallSettings}, starts the {@link TagTweets} visualization and
+ * {@link MqttProcess MQTT based external control}.
+ *
+ * <p>
+ * Supported keyboard shortcuts while running: {@code Ctrl/Cmd+D} toggles the
+ * status line, {@code Ctrl/Cmd+F} toggles fullscreen, {@code Ctrl/Cmd+R}
+ * restarts (exit code 42) and {@code Ctrl/Cmd+X} or {@code Ctrl/Cmd+Q} exits
+ * (exit code 0).
+ */
 public class Main extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final AtomicInteger RC = new AtomicInteger();
 
     final MqttProcess mqttProcess = new MqttProcess();
 
+    /**
+     * Starts the JavaFX application.
+     *
+     * @param primaryStage the primary stage of the application
+     */
     @Override
     public void start(Stage primaryStage) {
         new Thread(mqttProcess).start();
@@ -128,6 +147,10 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Called when the application is stopped. Shuts down the {@link Tweeter}
+     * and the {@link MqttProcess}.
+     */
     @Override
     public void stop() {
         LOG.info("closing...");

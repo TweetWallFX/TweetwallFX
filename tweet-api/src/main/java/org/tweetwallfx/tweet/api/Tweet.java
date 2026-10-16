@@ -42,22 +42,73 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toCollection;
 
+/**
+ * A Tweet as provided by a {@link Tweeter}.
+ *
+ * <p>
+ * Beside the plain {@link #getText() text} of the Tweet this interface provides
+ * access to the {@link User} that created it as well as metadata such as the
+ * time of creation and the number of retweets/likes.
+ */
 public interface Tweet extends BasicEntry {
 
+    /**
+     * Returns the date and time at which this Tweet was created.
+     *
+     * @return the creation date and time of this Tweet
+     */
     LocalDateTime getCreatedAt();
 
+    /**
+     * Returns the number of times this Tweet has been marked as favorite.
+     *
+     * @return the favorite count of this Tweet
+     */
     int getFavoriteCount();
 
+    /**
+     * Returns the unique id of this Tweet.
+     *
+     * @return the id of this Tweet
+     */
     long getId();
 
+    /**
+     * Returns the id of the Tweet this Tweet is a reply to.
+     *
+     * @return the id of the Tweet this Tweet replies to or {@code -1} if this
+     * Tweet is not a reply
+     */
     long getInReplyToTweetId();
 
+    /**
+     * Returns the id of the User this Tweet is a reply to.
+     *
+     * @return the id of the User this Tweet replies to or {@code -1} if this
+     * Tweet is not a reply
+     */
     long getInReplyToUserId();
 
+    /**
+     * Returns the screen name of the User this Tweet is a reply to.
+     *
+     * @return the screen name of the User this Tweet replies to or {@code null}
+     * if this Tweet is not a reply
+     */
     String getInReplyToScreenName();
 
+    /**
+     * Returns the language of this Tweet.
+     *
+     * @return the language of this Tweet
+     */
     String getLang();
 
+    /**
+     * Returns the number of times this Tweet has been retweeted.
+     *
+     * @return the retweet count of this Tweet
+     */
     int getRetweetCount();
 
     /**
@@ -113,18 +164,53 @@ public interface Tweet extends BasicEntry {
      */
     Tweet getOriginTweet();
 
+    /**
+     * Returns the text of this Tweet.
+     *
+     * @return the text of this Tweet
+     */
     String getText();
 
+    /**
+     * Returns the {@link User} that created this Tweet.
+     *
+     * @return the User that created this Tweet
+     */
     User getUser();
 
+    /**
+     * Determines if this Tweet is a retweet.
+     *
+     * @return {@code true} if this Tweet is a retweet, otherwise {@code false}
+     */
     boolean isRetweet();
 
+    /**
+     * Determines if the text of this Tweet has been truncated.
+     *
+     * @return {@code true} if the text of this Tweet has been truncated,
+     * otherwise {@code false}
+     */
     boolean isTruncated();
 
+    /**
+     * Returns the display text of this Tweet with reply mentions, URLs and
+     * media entries removed.
+     *
+     * @return the enhanced display text of this Tweet
+     *
+     * @see #getDisplayEnhancedTextExtractor()
+     */
     public default String getDisplayEnhancedText() {
         return getDisplayEnhancedTextExtractor().get();
     }
 
+    /**
+     * Returns a {@link TextExtractor} producing the display text of this Tweet
+     * with an initial reply mention, URLs and media entries removed.
+     *
+     * @return a TextExtractor for the enhanced display text of this Tweet
+     */
     public default TextExtractor getDisplayEnhancedTextExtractor() {
         final TextExtractor textExtractor = new TextExtractor(this);
 
@@ -142,6 +228,11 @@ public interface Tweet extends BasicEntry {
         return textExtractor;
     }
 
+    /**
+     * Returns the emoji contained within the text of this Tweet.
+     *
+     * @return the list of emoji entries of this Tweet
+     */
     public default List<EmojiTweetEntry> getEmojiEntries() {
         final int[] codePoints = getText().codePoints().toArray();
         final AtomicInteger offset = new AtomicInteger(0);
@@ -156,20 +247,43 @@ public interface Tweet extends BasicEntry {
                 .toList();
     }
 
+    /**
+     * Returns the text of this Tweet with all entries of the given type removed.
+     *
+     * @param entryToRemove the type of entries to remove from the text
+     *
+     * @return a TextExtractor for the text of this Tweet without the given entry
+     * type
+     */
     public default TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
         return new TextExtractor(this).getTextWithout(entryToRemove);
     }
 
+    /**
+     * Helper producing the text of a {@link Tweet} with specific entries removed.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class TextExtractor {
 
         private final Set<TweetEntry> entriesToRemove = new TreeSet<>(Comparator.comparingInt(TweetEntry::getStart).reversed());
         private final Tweet tweet;
 
+        /**
+         * Creates a new TextExtractor for the given Tweet.
+         *
+         * @param tweet the Tweet whose text is to be extracted
+         */
         public TextExtractor(final Tweet tweet) {
             this.tweet = tweet;
         }
 
+        /**
+         * Registers a specific entry to be removed from the text.
+         *
+         * @param entryToRemove the entry to remove from the text
+         *
+         * @return this TextExtractor instance
+         */
         public TextExtractor getTextWithout(final TweetEntry entryToRemove) {
             if (null != entryToRemove) {
                 entriesToRemove.add(entryToRemove);
@@ -178,6 +292,13 @@ public interface Tweet extends BasicEntry {
             return this;
         }
 
+        /**
+         * Registers all entries of the given type to be removed from the text.
+         *
+         * @param entryToRemove the type of entries to remove from the text
+         *
+         * @return this TextExtractor instance
+         */
         public TextExtractor getTextWithout(final Class<? extends TweetEntry> entryToRemove) {
             if (null != entryToRemove) {
                 if (EmojiTweetEntry.class.isAssignableFrom(entryToRemove)) {
@@ -198,6 +319,11 @@ public interface Tweet extends BasicEntry {
             return this;
         }
 
+        /**
+         * Returns the text of the Tweet with all registered entries removed.
+         *
+         * @return the extracted text
+         */
         public String get() {
             if (entriesToRemove.isEmpty()) {
                 return tweet.getText();
