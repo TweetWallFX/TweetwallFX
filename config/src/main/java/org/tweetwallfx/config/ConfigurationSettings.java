@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2025 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@ import static org.tweetwallfx.util.Nullable.nullable;
 /**
  * POJO for reading Settings concerning the Configuration itself.
  *
- * <p>
- * Param {@code additionalConfigurationURLs} is list of string representations
- * of URLs containing additional fragments for {@link Configuration}
+ * @param additionalConfigurationURLs list of string representations of URLs
+ * containing additional fragments for {@link Configuration}
  */
 public record ConfigurationSettings(
         List<String> additionalConfigurationURLs) {
@@ -42,10 +41,17 @@ public record ConfigurationSettings(
      */
     public static final String CONFIG_KEY = "configuration";
 
+    /**
+     * Creates a new instance normalizing the given list of additional
+     * configuration URLs.
+     */
     public ConfigurationSettings {
         additionalConfigurationURLs = nullable(additionalConfigurationURLs);
     }
 
+    /**
+     * {@return the list of URLs containing additional configuration fragments}
+     */
     @Override
     public List<String> additionalConfigurationURLs() {
         return nullable(additionalConfigurationURLs);
@@ -57,6 +63,12 @@ public record ConfigurationSettings(
      * {@link ConfigurationSettings}.
      */
     public static class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,21 +48,35 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
         this.config = config;
     }
 
+    /**
+     * {@return the scheduling configuration of this data provider}
+     */
     @Override
     public ScheduledConfig getScheduleConfig() {
         return config;
     }
 
+    /**
+     * {@return {@code true} as this data provider has to be initialized before
+     * its first use}
+     */
     @Override
     public boolean requiresInitialization() {
         return true;
     }
 
+    /**
+     * {@return {@code true} when the data has been loaded, {@code false}
+     * otherwise}
+     */
     @Override
     public boolean isInitialized() {
         return initialized;
     }
 
+    /**
+     * Loads the overall top rated talks from the conference rating client.
+     */
     @Override
     public void run() {
         List<RatedTalk> votingResults = ConferenceClient.getClient()
@@ -78,17 +92,40 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
         initialized = true;
     }
 
+    /**
+     * {@return an immutable list of the filtered top voted talks, or
+     * {@code null} when the list is empty}
+     */
     public List<VotedTalk> getFilteredSessionData() {
         return nullable(votedTalks);
     }
 
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link TopTalksWeekDataProvider}.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
+
+        /**
+         * {@return a new {@link TopTalksWeekDataProvider} instance as
+         * configured by the given data provider setting}
+         *
+         * @param dataProviderSetting the data provider setting providing the
+         *                            configuration for the created provider
+         */
         @Override
         public TopTalksWeekDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new TopTalksWeekDataProvider(dataProviderSetting.getConfig(Config.class));
         }
 
+        /**
+         * {@return the class of the data provider created by this factory}
+         */
         @Override
         public Class<TopTalksWeekDataProvider> getDataProviderClass() {
             return TopTalksWeekDataProvider.class;
@@ -98,25 +135,17 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
     /**
      * POJO used to configure {@link TopTalksWeekDataProvider}.
      *
-     * <p>
-     * Param {@code nrVotes} The number of votes to produce at most. Defaults to
-     * {@code 5}.
-     *
-     * <p>
-     * Param {@code initialDelay} The type of scheduling to perform. Defaults to
-     * {@link ScheduleType#FIXED_RATE}.
-     *
-     * <p>
-     * Param {@code initialDelay} Delay until the first execution in seconds.
-     * Defaults to {@code 0L}.
-     *
-     * <p>
-     * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
-     * executions in seconds. Defaults to {@code 300L}.
-     *
-     * <p>
-     * Param {@code minTotalVotes} Minimum number of total votes for a rated
-     * talk to be displayed. Defaults to {@code 10}.
+     * @param nrVotes          The number of votes to produce at most. Defaults
+     *                         to {@code 5}. Must not be negative.
+     * @param scheduleType     The type of scheduling to perform. Defaults to
+     *                         {@link ScheduleType#FIXED_RATE}.
+     * @param initialDelay     Delay until the first execution in seconds.
+     *                         Defaults to {@code 0L}.
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     *                         executions in seconds. Defaults to {@code 300L}.
+     * @param minTotalVotes    Minimum number of total votes for a rated talk
+     *                         to be displayed. Defaults to {@code 10}. Must not
+     *                         be negative.
      */
     public static record Config(
             Integer nrVotes,
@@ -125,6 +154,10 @@ public final class TopTalksWeekDataProvider implements DataProvider, DataProvide
             Long scheduleDuration,
             Integer minTotalVotes) implements ScheduledConfig {
 
+        /**
+         * Creates a new instance applying the documented default values to
+         * {@code null} arguments and validating the numeric values.
+         */
         public Config {
             nrVotes = Objects.requireNonNullElse(nrVotes, 5);
             if (nrVotes < 0) {

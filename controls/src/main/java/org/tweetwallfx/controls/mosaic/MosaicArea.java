@@ -54,6 +54,9 @@ public record MosaicArea(
         int columns,
         int rows) {
 
+    /**
+     * Creates a new instance, validating the given values.
+     */
     public MosaicArea {
         if (Double.isNaN(width) || width <= 0) {
             throw new IllegalArgumentException("width must be > 0 but was " + width);

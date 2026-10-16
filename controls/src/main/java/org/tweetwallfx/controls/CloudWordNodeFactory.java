@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,10 @@ package org.tweetwallfx.controls;
 
 import javafx.scene.text.Font;
 
+/**
+ * Factory creating and adapting the text nodes used to render the words of a
+ * tag cloud.
+ */
 public class CloudWordNodeFactory extends AbstractWordNodeFactory {
 
     private final Config configuration;
@@ -34,20 +38,41 @@ public class CloudWordNodeFactory extends AbstractWordNodeFactory {
         this.configuration = configuration;
     }
 
+    /**
+     * {@return a newly created factory for the given configuration}
+     *
+     * @param configuration the configuration of the factory
+     */
     static CloudWordNodeFactory createFactory(Config configuration) {
         return new CloudWordNodeFactory(configuration);
     }
 
+    /**
+     * {@return the font size to use for the word with the given weight}
+     *
+     * @param weight the weight of the word
+     * @param minWeight the minimum weight of all words
+     * @param maxWeight the maximum weight of all words
+     */
     double getFontSize(double weight, double minWeight, double maxWeight) {
         double a = (configuration.font.getSize() - configuration.maxFontSize) / Math.log(minWeight / maxWeight);
         double b = configuration.font.getSize() - a * Math.log(minWeight);
         return a * Math.log(weight) + b;
     }
 
+    /**
+     * Configuration of a {@link CloudWordNodeFactory}.
+     */
     static class Config extends AbstractWordNodeFactory.Configuration {
 
         private final double maxFontSize;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param font the font to use
+         * @param maxFontSize the maximum font size
+         */
         Config(final Font font, final double maxFontSize) {
             super(font);
             this.maxFontSize = maxFontSize;

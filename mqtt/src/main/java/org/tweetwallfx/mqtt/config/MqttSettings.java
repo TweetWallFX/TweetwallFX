@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023-2025 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,23 +31,14 @@ import org.tweetwallfx.config.ConfigurationConverter;
 /**
  * POJO for reading Settings concerning the MQTT client.
  *
- * <p>
- * Param {@code debugEnabled} a flag indicating that the MQTT client is to
- * work in debug mode
- *
- * <p>
- * Param {@code brokerUrl} the broker connection URL
- *
- * <p>
- * Param {@code clientId} the MQTT client id for the connection
- * the extended mode
- *
- * <p>
- * Param {@code heartbeatSeconds} the MQTT heart beat delay time in seconds
- *
- * <p>
- * Param {@code auth} the Auth setting the MQTT client is to use in order
- * to connect with the broker
+ * @param enabled a flag indicating whether the MQTT client is enabled
+ * @param debugEnabled a flag indicating that the MQTT client is to work in
+ * debug mode
+ * @param brokerUrl the broker connection URL
+ * @param clientId the MQTT client id for the connection
+ * @param heartbeatSeconds the MQTT heart beat delay time in seconds
+ * @param auth the Auth setting the MQTT client is to use in order to connect
+ * with the broker
  */
 public record MqttSettings(
         Boolean enabled,
@@ -57,6 +48,9 @@ public record MqttSettings(
         Integer heartbeatSeconds,
         Auth auth) {
 
+    /**
+     * Creates a new instance applying defaults and validating the given values.
+     */
     public MqttSettings {
         enabled = Objects.requireNonNullElse(enabled, true);
         debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
@@ -84,6 +78,12 @@ public record MqttSettings(
      */
     public static class Converter implements ConfigurationConverter {
 
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
+
         @Override
         public String getResponsibleKey() {
             return MqttSettings.CONFIG_KEY;
@@ -95,6 +95,12 @@ public record MqttSettings(
         }
     }
 
+    /**
+     * Authentication data used to connect with the MQTT broker.
+     *
+     * @param userName the user name to authenticate with
+     * @param secret the secret to authenticate with
+     */
     public static record Auth(
             String userName,
             String secret) {

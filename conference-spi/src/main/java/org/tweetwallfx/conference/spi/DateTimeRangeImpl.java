@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,10 +62,18 @@ public final class DateTimeRangeImpl implements DateTimeRange {
             ), true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link DateTimeRangeImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -75,16 +83,35 @@ public final class DateTimeRangeImpl implements DateTimeRange {
         private Builder() {
         }
 
+        /**
+         * Sets the end of the date and time range.
+         *
+         * @param end the end to set
+         *
+         * @return this builder instance
+         */
         public Builder withEnd(final Instant end) {
             this.end = Objects.requireNonNull(end, "end must not be null");
             return this;
         }
 
+        /**
+         * Sets the start of the date and time range.
+         *
+         * @param start the start to set
+         *
+         * @return this builder instance
+         */
         public Builder withStart(final Instant start) {
             this.start = Objects.requireNonNull(start, "start must not be null");
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link DateTimeRangeImpl}.
+         *
+         * @return a new {@link DateTimeRangeImpl} instance
+         */
         public DateTimeRange build() {
             return new DateTimeRangeImpl(this);
         }

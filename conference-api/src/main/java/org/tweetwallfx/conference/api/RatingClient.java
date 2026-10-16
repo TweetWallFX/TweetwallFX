@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,10 @@ package org.tweetwallfx.conference.api;
 
 import java.util.List;
 
+/**
+ * Client interface providing access to the rating (voting) results of a
+ * conference.
+ */
 public interface RatingClient {
 
     /**

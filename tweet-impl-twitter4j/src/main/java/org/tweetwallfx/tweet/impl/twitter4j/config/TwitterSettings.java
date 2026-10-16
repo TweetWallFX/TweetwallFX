@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,18 @@ import org.tweetwallfx.config.ConfigurationConverter;
  * <p>
  * Param {@code ignoreRateLimit} a flag indicating that the twitter rate
  * limitations shall be ignored (defaults to {@code  true})
+ *
+ * @param debugEnabled a flag indicating that the twitter client is to work in
+ *                     debug mode (defaults to {@code false})
+ * @param enabled a flag indicating that the twitter client enabled (defaults
+ *                to {@code true})
+ * @param extendedConfig the extended configuration of the twitter client
+ * @param extendedMode a flag indicating if the twitter client is to use the
+ *                     extended mode (defaults to {@code false})
+ * @param oauth the OAuth setting the twitter client is to use in order to
+ *              connect with twitter
+ * @param ignoreRateLimit a flag indicating that the twitter rate limitations
+ *                        shall be ignored (defaults to {@code true})
  */
 public record TwitterSettings(
         Boolean debugEnabled,
@@ -70,6 +82,22 @@ public record TwitterSettings(
      */
     public static final String CONFIG_KEY = "twitter";
 
+    /**
+     * Creates and initializes a new instance of {@link TwitterSettings},
+     * applying the default values for all optional settings.
+     *
+     * @param debugEnabled a flag indicating that the twitter client is to work
+     *                     in debug mode (defaults to {@code false})
+     * @param enabled a flag indicating that the twitter client enabled (defaults
+     *                to {@code true})
+     * @param extendedConfig the extended configuration of the twitter client
+     * @param extendedMode a flag indicating if the twitter client is to use the
+     *                     extended mode (defaults to {@code false})
+     * @param oauth the OAuth setting the twitter client is to use in order to
+     *              connect with twitter
+     * @param ignoreRateLimit a flag indicating that the twitter rate limitations
+     *                        shall be ignored (defaults to {@code true})
+     */
     public TwitterSettings {
         debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
         enabled = Objects.requireNonNullElse(enabled, true);
@@ -78,6 +106,10 @@ public record TwitterSettings(
         ignoreRateLimit = Objects.requireNonNullElse(ignoreRateLimit, true);
     }
 
+    /**
+     * {@return an immutable copy of the extended configuration of the twitter
+     * client}
+     */
     @Override
     public Map<String, Object> extendedConfig() {
         return Map.copyOf(extendedConfig);
@@ -88,6 +120,11 @@ public record TwitterSettings(
      * {@link TwitterSettings#CONFIG_KEY} into {@link TwitterSettings}.
      */
     public static class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() { }
 
         @Override
         public String getResponsibleKey() {
@@ -115,6 +152,11 @@ public record TwitterSettings(
      *
      * <p>
      * Param {@code accessTokenSecret} the access token secret
+     *
+     * @param consumerKey the consumer key
+     * @param consumerSecret the consumer secret
+     * @param accessToken the access token
+     * @param accessTokenSecret the access token secret
      */
     public static record OAuth(
             String consumerKey,

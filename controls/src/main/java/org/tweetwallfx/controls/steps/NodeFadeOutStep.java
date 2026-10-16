@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,9 @@ public class NodeFadeOutStep implements Step {
         this.config = config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doStep(final StepEngine.MachineContext context) {
         final WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -63,6 +66,9 @@ public class NodeFadeOutStep implements Step {
         fadeOutAll.play();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean shouldSkip(final StepEngine.MachineContext context) {
         final WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -75,30 +81,58 @@ public class NodeFadeOutStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public NodeFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
             return new NodeFadeOutStep(config);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<NodeFadeOutStep> getStepClass() {
             return NodeFadeOutStep.class;
         }
     }
 
+    /**
+     * Configuration of a {@link NodeFadeOutStep}.
+     */
     public static class Config {
 
         private String nodeSelector;
 
+        /** Creates a new instance. */
+        public Config() {
+        }
+
+        /**
+         * {@return the CSS selector of the nodes to fade out}
+         */
         public String getNodeSelector() {
             return nodeSelector;
         }
 
+        /**
+         * Sets the CSS selector of the nodes to fade out.
+         *
+         * @param nodeSelector the CSS selector of the nodes to fade out
+         */
         public void setNodeSelector(final String nodeSelector) {
             this.nodeSelector = Objects.requireNonNull(nodeSelector, "nodeSelector must not be null!");
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return createToString(this, map(

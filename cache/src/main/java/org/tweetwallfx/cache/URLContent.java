@@ -39,6 +39,10 @@ import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.Objects;
 
+/**
+ * Value class holding the content retrieved from a URL together with its
+ * digest.
+ */
 public final class URLContent implements Serializable {
 
     private static final long serialVersionUID = 0L;
@@ -54,10 +58,26 @@ public final class URLContent implements Serializable {
             // "d41d8cd98f00b204e9800998ecf8427e" // MD5
     );
 
+    /**
+     * The URL string this content was retrieved from.
+     */
     private final String urlString;
+    /**
+     * The raw content bytes.
+     */
     private final byte[] data;
+    /**
+     * The digest of the content.
+     */
     private final String digest;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param urlString the URL string this content is retrieved from
+     * @param data the raw content bytes
+     * @param digest the digest of the content
+     */
     public URLContent(final String urlString, final byte[] data, final String digest) {
         this.urlString = Objects.requireNonNull(urlString, "urlString must not be null");
         Objects.requireNonNull(data, "data must not be null");
@@ -65,6 +85,14 @@ public final class URLContent implements Serializable {
         this.digest = Objects.requireNonNull(digest, "digest must not be null");
     }
 
+    /**
+     * Creates a new instance by consuming the given {@code InputStream}.
+     *
+     * @param urlString the URL string the content is retrieved from
+     * @param in the stream to read the content from
+     * @return the created URLContent
+     * @throws IOException in case reading the stream fails
+     */
     public static URLContent of(final String urlString, final InputStream in) throws IOException {
         LOG.debug("Loading content from: {}", in);
         final ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -80,6 +108,14 @@ public final class URLContent implements Serializable {
         return new URLContent(urlString, bytes, digest);
     }
 
+    /**
+     * Creates a new instance by loading the content of the given URL string.
+     *
+     * @param urlString the URL string to load the content from
+     * @return the created URLContent or {@link #NO_CONTENT} when no data was
+     * found
+     * @throws IOException in case loading the content fails
+     */
     public static URLContent of(final String urlString) throws IOException {
         try (InputStream in = URI.create(urlString).toURL().openStream()) {
             return of(urlString, in);
@@ -89,18 +125,30 @@ public final class URLContent implements Serializable {
         }
     }
 
+    /**
+     * {@return the number of content bytes}
+     */
     public int dataSize() {
         return data.length;
     }
 
+    /**
+     * {@return the digest of the content}
+     */
     public String digest() {
         return digest;
     }
 
+    /**
+     * {@return the URL string this content was retrieved from}
+     */
     public String urlString() {
         return urlString;
     }
 
+    /**
+     * {@return an InputStream over the content bytes}
+     */
     public InputStream getInputStream() {
         return new ByteArrayInputStream(data);
     }

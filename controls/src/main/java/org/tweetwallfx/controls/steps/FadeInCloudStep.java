@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2024 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,9 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.AbstractConfig;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
+/**
+ * Step that fades the tag cloud in.
+ */
 public class FadeInCloudStep implements Step {
 
     private final Config config;
@@ -60,17 +63,26 @@ public class FadeInCloudStep implements Step {
         this.config = config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean shouldSkip(MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
         return sortedWords.isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -152,27 +164,63 @@ public class FadeInCloudStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public FadeInCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new FadeInCloudStep(stepDefinition.getConfig(Config.class));
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<FadeInCloudStep> getStepClass() {
             return FadeInCloudStep.class;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);
         }
     }
 
+    /**
+     * Configuration of a {@link FadeInCloudStep}.
+     */
     public static class Config extends AbstractConfig {
+
+        /**
+         * The x offset of the cloud.
+         */
         public double layoutX = 0;
+        /**
+         * The y offset of the cloud.
+         */
         public double layoutY = 0;
+        /**
+         * The width of the cloud.
+         */
         public double width = 0;
+        /**
+         * The height of the cloud.
+         */
         public double height = 0;
+        /**
+         * The maximum length of a displayed tag.
+         */
         public int tagLength = 15;
+
+        /** Creates a new instance. */
+        public Config() {
+        }
     }
 }

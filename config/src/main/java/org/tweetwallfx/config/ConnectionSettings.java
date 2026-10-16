@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,7 @@ import java.util.Objects;
 /**
  * POJO for reading Settings concerning the HTTP Connection itself.
  *
- * <p>
- * Param {@code proxy} the Proxy settings to use with HTTP connections
+ * @param proxy the Proxy settings to use with HTTP connections
  */
 public record ConnectionSettings(
         Proxy proxy) {
@@ -46,6 +45,12 @@ public record ConnectionSettings(
      */
     public static class Converter implements ConfigurationConverter {
 
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
+
         @Override
         public String getResponsibleKey() {
             return ConnectionSettings.CONFIG_KEY;
@@ -61,17 +66,10 @@ public record ConnectionSettings(
      * POJO containing the proxy setting to use when working with HTTP
      * Connections.
      *
-     * <p>
-     * Param {@code host} the host of proxy server to use
-     *
-     * <p>
-     * Param {@code port} the port number of the proxy server to use
-     *
-     * <p>
-     * Param {@code user} the user name to use for the proxy connection
-     *
-     * <p>
-     * Param {@code password} the password to use for the proxy connection
+     * @param host the host of proxy server to use
+     * @param port the port number of the proxy server to use
+     * @param user the user name to use for the proxy connection
+     * @param password the password to use for the proxy connection
      */
     public static record Proxy(
             String host,
@@ -79,6 +77,9 @@ public record ConnectionSettings(
             String user,
             String password) {
 
+        /**
+         * Creates a new instance validating the given values.
+         */
         public Proxy {
             Objects.requireNonNull(host, "host must not be null");
             Objects.requireNonNull(port, "port must not be null");

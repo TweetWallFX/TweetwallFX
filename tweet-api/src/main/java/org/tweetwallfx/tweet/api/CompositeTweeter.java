@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,10 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * {@link Tweeter} implementation combining the results of multiple delegate
+ * {@link Tweeter}s.
+ */
 public final class CompositeTweeter implements Tweeter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CompositeTweeter.class);
 

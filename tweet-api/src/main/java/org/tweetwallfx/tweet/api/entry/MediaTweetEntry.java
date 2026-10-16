@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,9 @@ package org.tweetwallfx.tweet.api.entry;
 
 import java.util.Map;
 
+/**
+ * {@link TweetEntry} representing a media item contained in a Tweet.
+ */
 public interface MediaTweetEntry extends TweetEntry {
 
     /**
@@ -48,19 +51,49 @@ public interface MediaTweetEntry extends TweetEntry {
      */
     Map<Integer, Size> getSizes();
 
+    /**
+     * A size variation of a media item.
+     */
     interface Size extends java.io.Serializable {
 
+        /**
+         * Identifier of the thumbnail size.
+         */
         Integer THUMB = 0;
+        /**
+         * Identifier of the small size.
+         */
         Integer SMALL = 1;
+        /**
+         * Identifier of the medium size.
+         */
         Integer MEDIUM = 2;
+        /**
+         * Identifier of the large size.
+         */
         Integer LARGE = 3;
+        /**
+         * Identifier of the "fit" resize mode.
+         */
         int FIT = 100;
+        /**
+         * Identifier of the "crop" resize mode.
+         */
         int CROP = 101;
 
+        /**
+         * {@return the width of this media size}
+         */
         int getWidth();
 
+        /**
+         * {@return the height of this media size}
+         */
         int getHeight();
 
+        /**
+         * {@return the resize mode of this media size}
+         */
         int getResize();
     }
 
@@ -71,6 +104,14 @@ public interface MediaTweetEntry extends TweetEntry {
      */
     MediaTweetEntryType getType();
 
+    /**
+     * Creates a new media size.
+     *
+     * @param width the width of the size
+     * @param height the height of the size
+     * @param resize the resize mode of the size
+     * @return the created media size
+     */
     static Size createSize(final int width, final int height, final int resize) {
         return new MediaTweetEntrySize(width, height, resize);
     }

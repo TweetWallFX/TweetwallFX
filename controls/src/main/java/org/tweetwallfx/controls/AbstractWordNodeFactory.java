@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,22 +26,47 @@ package org.tweetwallfx.controls;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * Base factory creating and adapting the text nodes used to render the words of
+ * a tag cloud.
+ */
 class AbstractWordNodeFactory {
 
     private final Configuration configuration;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param configuration the configuration of this factory
+     */
     protected AbstractWordNodeFactory(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * {@return a newly created factory for the given configuration}
+     *
+     * @param configuration the configuration of the factory
+     */
     public static AbstractWordNodeFactory createFactory(Configuration configuration) {
         return new AbstractWordNodeFactory(configuration);
     }
 
+    /**
+     * Adapts the font size of the given text node.
+     *
+     * @param text the text node to adapt
+     * @param fontSize the font size to apply
+     */
     public void fontSizeAdaption(Text text, double fontSize) {
         text.setFont(Font.font(text.getFont().getFamily(), fontSize));
     }
 
+    /**
+     * {@return a newly created text node displaying the given word}
+     *
+     * @param word the word to display
+     */
     public Text createTextNode(String word) {
         Text textNode = new Text(word);
         textNode.getStyleClass().setAll("tag");
@@ -53,10 +78,21 @@ class AbstractWordNodeFactory {
         return textNode;
     }
 
+    /**
+     * Configuration of an {@link AbstractWordNodeFactory}.
+     */
     protected static class Configuration {
 
+        /**
+         * The font used to render words.
+         */
         final Font font;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param font the font to use
+         */
         Configuration(Font font) {
             this.font = font;
         }

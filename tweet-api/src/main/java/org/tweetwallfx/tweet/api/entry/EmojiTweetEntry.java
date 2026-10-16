@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,22 @@ package org.tweetwallfx.tweet.api.entry;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
+/**
+ * {@link TweetEntry} representing an emoji contained in a Tweet.
+ */
 public class EmojiTweetEntry implements TweetEntry {
 
     private final String emojiText;
     private final int start;
     private final int width;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param emojiText the text of the emoji
+     * @param start the start index of the emoji within the Tweet text
+     * @param width the width of the emoji
+     */
     public EmojiTweetEntry(final String emojiText, final int start, final int width) {
         this.emojiText = emojiText;
         this.start = start;

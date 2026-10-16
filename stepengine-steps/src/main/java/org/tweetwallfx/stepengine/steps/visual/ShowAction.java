@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +44,12 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class ShowAction extends ActionStep<Visualization.Showable> {
 
+    /**
+     * Creates a new instance.
+     *
+     * @param config   the configuration for this step
+     * @param showable the showable visualization to act upon
+     */
     public ShowAction(Config config, Showable showable) {
         super(showable);
     }
@@ -65,6 +71,12 @@ public class ShowAction extends ActionStep<Visualization.Showable> {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
@@ -83,32 +95,66 @@ public class ShowAction extends ActionStep<Visualization.Showable> {
         }
     }
 
+    /**
+     * POJO to configure {@link ShowAction}.
+     */
     public static class Config {
 
         private ChronoUnit unit = ChronoUnit.SECONDS;
         private long amount = 5;
         private String visualizationIdentifier = "Undefined";
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
+
+        /**
+         * {@return the unit of the show duration}
+         */
         public ChronoUnit getUnit() {
             return unit;
         }
 
+        /**
+         * Sets the unit of the show duration.
+         *
+         * @param unit the unit of the show duration
+         */
         public void setUnit(final ChronoUnit unit) {
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");
         }
 
+        /**
+         * {@return the amount of the show duration}
+         */
         public long getAmount() {
             return amount;
         }
 
+        /**
+         * Sets the amount of the show duration.
+         *
+         * @param amount the amount of the show duration
+         */
         public void setAmount(final long amount) {
             this.amount = amount;
         }
 
+        /**
+         * {@return the identifier of the visualization to show}
+         */
         public String getVisualizationIdentifier() {
             return this.visualizationIdentifier;
         }
 
+        /**
+         * Sets the identifier of the visualization to show.
+         *
+         * @param visualizationIdentifier the identifier of the visualization to
+         *                                show
+         */
         public void setVisualizationIdentifier(String visualizationIdentifier) {
             this.visualizationIdentifier = visualizationIdentifier;
         }

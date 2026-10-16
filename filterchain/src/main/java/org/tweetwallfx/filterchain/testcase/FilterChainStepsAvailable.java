@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2025 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,12 @@ import org.tweetwallfx.util.testcase.RunnableTestCase;
  * {@link FilterChain}s are creatable.
  */
 public class FilterChainStepsAvailable implements RunnableTestCase {
+
+    /**
+     * Creates a new instance.
+     */
+    public FilterChainStepsAvailable() {
+    }
 
     @Override
     public void execute() {

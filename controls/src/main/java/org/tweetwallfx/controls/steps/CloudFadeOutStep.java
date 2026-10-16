@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,17 +35,26 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
+/**
+ * Step that fades out the currently displayed tag cloud.
+ */
 public class CloudFadeOutStep implements Step {
 
     private CloudFadeOutStep() {
         // prevent external instantiation
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(2);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -86,11 +95,21 @@ public class CloudFadeOutStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudFadeOutStep();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<CloudFadeOutStep> getStepClass() {
             return CloudFadeOutStep.class;

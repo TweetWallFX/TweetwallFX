@@ -95,6 +95,12 @@ public class RejectContainingTextPhraseFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -118,6 +124,12 @@ public class RejectContainingTextPhraseFilterStep implements FilterStep<Tweet> {
 
         private boolean checkRetweeted = true;
         private Set<String> textPhrases = Set.of();
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
 
         /**
          * Returns a boolean flag controlling whether for a retweet the

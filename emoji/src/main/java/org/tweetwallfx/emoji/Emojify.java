@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,25 @@ package org.tweetwallfx.emoji;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for tokenizing a message containing emoji into a list of plain
+ * text and emoji tokens.
+ */
 public final class Emojify {
 
     private Emojify() {
         // prevent instantiation
     }
 
+    /**
+     * Tokenizes the given message into a list of plain text {@link String} and
+     * {@link Twemoji} tokens, replacing every emoji with emoji presentation by
+     * its {@link Twemoji} representation.
+     *
+     * @param message the message to tokenize
+     *
+     * @return the list of text and emoji tokens
+     */
     public static List<Object> tokenizeStringToTextAndEmoji(final String message) {
         final List<Object> tokens = new ArrayList<>();
         final int[] codePoints = message.codePoints().toArray();

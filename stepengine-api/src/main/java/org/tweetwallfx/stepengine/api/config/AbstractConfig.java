@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,22 +34,53 @@ public class AbstractConfig {
     private long stepDuration = 1;
     private ChronoUnit stepDurationUnit = ChronoUnit.MILLIS;
 
+    /**
+     * Creates a new instance.
+     */
+    public AbstractConfig() {
+    }
+
+    /**
+     * Returns the configured step duration as a plain numeric value.
+     *
+     * @return the configured step duration
+     */
     public long getStepDuration() {
         return stepDuration;
     }
 
+    /**
+     * Returns the unit of the configured step duration.
+     *
+     * @return the unit of the configured step duration
+     */
     public ChronoUnit getStepDurationUnit() {
         return stepDurationUnit;
     }
 
+    /**
+     * Sets the configured step duration as a plain numeric value.
+     *
+     * @param stepDuration the step duration to set
+     */
     public void setStepDuration(long stepDuration) {
         this.stepDuration = stepDuration;
     }
 
+    /**
+     * Sets the unit of the configured step duration.
+     *
+     * @param stepDurationUnit the unit of the step duration to set
+     */
     public void setStepDurationUnit(ChronoUnit stepDurationUnit) {
         this.stepDurationUnit = stepDurationUnit;
     }
 
+    /**
+     * Returns the configured step duration as a {@link java.time.Duration}.
+     *
+     * @return the configured step duration as a {@link java.time.Duration}
+     */
     public java.time.Duration stepDuration() {
         return java.time.Duration.of(getStepDuration(), getStepDurationUnit());
     }

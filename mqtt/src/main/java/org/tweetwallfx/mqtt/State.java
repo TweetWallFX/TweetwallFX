@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,13 @@ import java.time.ZonedDateTime;
 
 import static java.time.Clock.systemUTC;
 
+/**
+ * State message published via MQTT.
+ *
+ * @param name the name of the state
+ * @param zonedDateTime the point in time the state was created
+ * @param payload the optional payload of the state message
+ */
 public record State(String name, ZonedDateTime zonedDateTime, Object payload) {
     static State stopping() {
         return new State("stopping", getNow(), null);

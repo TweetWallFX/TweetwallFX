@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2019 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,9 @@ public final class StringNumberComparator implements Comparator<String> {
 
     private static final long serialVersionUID = 8726482374926293877L;
 
+    /**
+     * The singleton instance of this comparator.
+     */
     public static final Comparator<String> INSTANCE = new StringNumberComparator();
 
     private StringNumberComparator() {

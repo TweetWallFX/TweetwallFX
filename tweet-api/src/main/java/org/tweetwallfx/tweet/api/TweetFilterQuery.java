@@ -43,6 +43,12 @@ public final class TweetFilterQuery {
     private String filterLevel = null;
 
     /**
+     * Creates a new instance.
+     */
+    public TweetFilterQuery() {
+    }
+
+    /**
      * Sets count.
      *
      * @param count Indicates the number of previous statuses to stream before

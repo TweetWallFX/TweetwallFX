@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,12 @@ import static org.tweetwallfx.util.ToString.map;
  */
 public class HideAction extends ActionStep<Visualization.Hideable> {
 
+    /**
+     * Creates a new instance.
+     *
+     * @param config   the configuration for this step
+     * @param hideable the hideable visualization to act upon
+     */
     public HideAction(Config config, Visualization.Hideable hideable) {
         super(hideable);
     }
@@ -64,6 +70,12 @@ public class HideAction extends ActionStep<Visualization.Hideable> {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
@@ -82,32 +94,66 @@ public class HideAction extends ActionStep<Visualization.Hideable> {
         }
     }
 
+    /**
+     * POJO to configure {@link HideAction}.
+     */
     public static class Config {
 
         private ChronoUnit unit = ChronoUnit.SECONDS;
         private long amount = 5;
         private String visualizationIdentifier = "Undefined";
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
+
+        /**
+         * {@return the unit of the hide duration}
+         */
         public ChronoUnit getUnit() {
             return unit;
         }
 
+        /**
+         * Sets the unit of the hide duration.
+         *
+         * @param unit the unit of the hide duration
+         */
         public void setUnit(final ChronoUnit unit) {
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");
         }
 
+        /**
+         * {@return the amount of the hide duration}
+         */
         public long getAmount() {
             return amount;
         }
 
+        /**
+         * Sets the amount of the hide duration.
+         *
+         * @param amount the amount of the hide duration
+         */
         public void setAmount(final long amount) {
             this.amount = amount;
         }
 
+        /**
+         * {@return the identifier of the visualization to hide}
+         */
         public String getVisualizationIdentifier() {
             return this.visualizationIdentifier;
         }
 
+        /**
+         * Sets the identifier of the visualization to hide.
+         *
+         * @param visualizationIdentifier the identifier of the visualization to
+         *                                hide
+         */
         public void setVisualizationIdentifier(String visualizationIdentifier) {
             this.visualizationIdentifier = visualizationIdentifier;
         }

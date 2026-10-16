@@ -210,6 +210,15 @@ public final class ImageStorage {
             return new ImageStorage(this);
         }
 
+        /**
+         * Uses the given supplier to configure the
+         * {@link #from(URLContent) image data source}, EXIF data and digest.
+         *
+         * @param urlContentSupplier the supplier providing the
+         * {@link URLContent} for the image data source
+         *
+         * @return this builder instance
+         */
         public Builder from(final Supplier<URLContent> urlContentSupplier) {
             this.urlContentSupplier = Objects.requireNonNull(urlContentSupplier, "urlContentSupplier must not be null");
             return from(urlContentSupplier.get());

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,11 +48,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Provider of the shared Ehcache {@link org.ehcache.CacheManager} and access
+ * to individual caches based on the cache configuration.
+ */
 public final class CacheManagerProvider {
 
     /**
-     * Configuration key under which the data for this Settings object is stored
-     * in the configuration data map.
+     * Tracks the caches to which a listener was already added.
      */
     private static final Collection<String> LISTENERS_ADDED_TO_CACHES = new HashSet<>(4);
     private static final Logger LOG = LoggerFactory.getLogger(CacheManagerProvider.class);
@@ -62,6 +65,17 @@ public final class CacheManagerProvider {
         // prevent instantiation
     }
 
+    /**
+     * Returns the cache with the given {@code alias} registering an event
+     * listener on first access.
+     *
+     * @param <K> the type of the cache keys
+     * @param <V> the type of the cache values
+     * @param alias the name of the cache
+     * @param keyClass the class of the cache keys
+     * @param valueClass the class of the cache values
+     * @return the requested cache
+     */
     public static <K, V> Cache<K, V> getCache(final String alias, final Class<K> keyClass, final Class<V> valueClass) {
         final org.ehcache.Cache<K, V> cache = CACHE_MANAGER.getCache(alias, keyClass, valueClass);
 

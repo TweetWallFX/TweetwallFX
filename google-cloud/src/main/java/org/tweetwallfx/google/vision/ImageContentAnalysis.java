@@ -37,16 +37,29 @@ import static org.tweetwallfx.util.Nullable.nullable;
 
 /**
  * An analysis result performed by Google Cloud API.
+ *
+ * @param analysisError the error that occurred during the analysis, may be
+ * {@code null}
+ * @param safeSearch the safe search result, may be {@code null}
+ * @param texts the text entries detected in the image
  */
 public record ImageContentAnalysis(
         AnalysisError analysisError,
         SafeSearch safeSearch,
         List<TextEntry> texts) implements Serializable {
 
+    /**
+     * Creates a new instance, replacing a {@code null} value with an empty list.
+     */
     public ImageContentAnalysis {
         texts = nullable(texts);
     }
 
+    /**
+     * {@return an analysis created from the given annotate image response}
+     *
+     * @param air the annotate image response to convert
+     */
     public static ImageContentAnalysis of(final AnnotateImageResponse air) {
         return new ImageContentAnalysis(
                 AnalysisError.of(air.getError()),
@@ -55,15 +68,28 @@ public record ImageContentAnalysis(
         );
     }
 
+    /**
+     * {@return the immutable list of text entries}
+     */
     @Override
     public List<TextEntry> texts() {
         return List.copyOf(texts);
     }
 
+    /**
+     * An error that occurred during the analysis of an image.
+     *
+     * @param message the error message
+     * @param details the details of the error
+     */
     public static record AnalysisError(
             String message,
             List<String> details) implements Serializable {
 
+        /**
+         * Creates a new instance, replacing a {@code null} value with an empty
+         * list.
+         */
         public AnalysisError {
             details = nullable(details);
         }
@@ -78,12 +104,25 @@ public record ImageContentAnalysis(
                     error.getDetailsList().stream().map(Object::toString).toList());
         }
 
+        /**
+         * {@return the immutable list of detail messages}
+         */
         @Override
         public List<String> details() {
             return List.copyOf(details);
         }
     }
 
+    /**
+     * Safe search likelihoods of the categories evaluated by the Google Cloud
+     * Vision API.
+     *
+     * @param adult likelihood that the image contains adult content
+     * @param medical likelihood that the image contains medical content
+     * @param racy likelihood that the image contains racy content
+     * @param spoof likelihood that the image contains spoofed content
+     * @param violence likelihood that the image contains violent content
+     */
     public static record SafeSearch(
             GoogleLikelihood adult,
             GoogleLikelihood medical,
@@ -106,12 +145,24 @@ public record ImageContentAnalysis(
         }
     }
 
+    /**
+     * A text annotation detected in an image.
+     *
+     * @param description the detected text
+     * @param score the confidence score of the detection
+     * @param locations the locations of the detected text
+     * @param locale the locale of the detected text
+     */
     public static record TextEntry(
             String description,
             float score,
             List<LocationEntry> locations,
             String locale) implements Serializable {
 
+        /**
+         * Creates a new instance, replacing a {@code null} value with an empty
+         * list.
+         */
         public TextEntry {
             locations = nullable(locations);
         }
@@ -127,12 +178,21 @@ public record ImageContentAnalysis(
             );
         }
 
+        /**
+         * {@return the immutable list of locations}
+         */
         @Override
         public List<LocationEntry> locations() {
             return List.copyOf(locations);
         }
     }
 
+    /**
+     * A geographic location of a detected text.
+     *
+     * @param latitude the latitude of the location
+     * @param longitude the longitude of the location
+     */
     public static record LocationEntry(
             double latitude,
             double longitude) implements Serializable {

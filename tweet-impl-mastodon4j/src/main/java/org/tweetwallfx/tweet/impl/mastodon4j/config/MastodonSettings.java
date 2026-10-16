@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023-2025 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,20 +30,14 @@ import org.tweetwallfx.config.ConfigurationConverter;
 /**
  * POJO for reading Settings concerning the mastodon client.
  *
- * <p>
- * Param {@code debugEnabled} a flag indicating that the mastodon client is to
- * work in debug mode (defaults to {@code false})
- *
- * <p>
- * Param {@code enabled} a flag indicating that the mastodon client enabled
+ * @param debugEnabled a flag indicating that the mastodon client is to work in
+ * debug mode (defaults to {@code false})
+ * @param enabled a flag indicating that the mastodon client is enabled
  * (defaults to {@code true})
- *
- * <p>
- * Param {@code restUrl} the base mastodon host URL like {@code https://mastodon.social}
- *
- * <p>
- * Param {@code oauth} the OAuth setting the twitter client is to use in order
- * to connect with mastodon
+ * @param restUrl the base mastodon host URL like
+ * {@code https://mastodon.social}
+ * @param oauth the OAuth setting the mastodon client is to use in order to
+ * connect with mastodon
  */
 public record MastodonSettings(
         Boolean debugEnabled,
@@ -51,6 +45,9 @@ public record MastodonSettings(
         String restUrl,
         OAuth oauth) {
 
+    /**
+     * Creates a new instance.
+     */
     public MastodonSettings {
         debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
         enabled = Objects.requireNonNullElse(enabled, true);
@@ -68,6 +65,12 @@ public record MastodonSettings(
      */
     public static class Converter implements ConfigurationConverter {
 
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
+
         @Override
         public String getResponsibleKey() {
             return MastodonSettings.CONFIG_KEY;
@@ -83,8 +86,7 @@ public record MastodonSettings(
      * POJO for the OAuth setting the mastodon client is to use in order to
      * connect with mastodon.
      *
-     * <p>
-     * Param {@code accessToken} the access token
+     * @param accessToken the access token
      */
     public static record OAuth(
             String accessToken) {

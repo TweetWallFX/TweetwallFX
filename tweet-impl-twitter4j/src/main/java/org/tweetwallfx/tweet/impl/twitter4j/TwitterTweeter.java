@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2025 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,10 @@ import java.util.stream.StreamSupport;
 import static org.tweetwallfx.tweet.impl.twitter4j.TwitterOAuth.instance;
 import static org.tweetwallfx.tweet.impl.twitter4j.config.TwitterSettings.CONFIG_KEY;
 
+/**
+ * Implementation of the {@link Tweeter} interface using the twitter4j library
+ * in order to access twitter.
+ */
 public class TwitterTweeter implements Tweeter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterTweeter.class);
@@ -62,6 +66,11 @@ public class TwitterTweeter implements Tweeter {
     static final TwitterSettings TWITTER_SETTINGS = Configuration.getInstance().getConfigTyped(CONFIG_KEY, TwitterSettings.class);
 
     private final List<TwitterTweetStream> streamCache = new ArrayList<>();
+
+    /**
+     * Creates a new instance.
+     */
+    public TwitterTweeter() { }
 
     @Override
     public boolean isEnabled() {
@@ -295,8 +304,25 @@ public class TwitterTweeter implements Tweeter {
         R apply(long value) throws TwitterException;
     }
 
+    /**
+     * Base class for iterators over twitter entities which handles the twitter
+     * rate limits while iterating.
+     *
+     * @param <T> the type of the elements iterated over
+     */
     protected abstract static class RateLimitIterator<T> implements Iterator<T> {
 
+        /**
+         * Creates a new instance.
+         */
+        public RateLimitIterator() { }
+
+        /**
+         * Logs the given {@code rateLimitStatus} and, unless rate limits are
+         * configured to be ignored, waits until the rate limit is reset.
+         *
+         * @param rateLimitStatus the rate limit status to handle
+         */
         protected final void handleRateLimit(final RateLimitStatus rateLimitStatus) {
             LOGGER.info("RateLimit: {}/{} resetting in {}s",
                     rateLimitStatus.getRemaining(),

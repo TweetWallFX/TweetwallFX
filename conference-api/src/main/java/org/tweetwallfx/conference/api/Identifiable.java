@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,10 @@
  */
 package org.tweetwallfx.conference.api;
 
+/**
+ * Interface for objects that are identified by a unique ID within the context
+ * of a conference event.
+ */
 public interface Identifiable {
 
     /**

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,9 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Computes the non-overlapping placement of the words of a tag cloud.
+ */
 public final class WordleLayout {
 
     private static final Logger LOG = LoggerFactory.getLogger(WordleLayout.class);
@@ -59,26 +62,58 @@ public final class WordleLayout {
         this.wordLayoutMap = calcTagLayout();
     }
 
+    /**
+     * {@return a newly created layout for the given configuration}
+     *
+     * @param configuration the configuration of the layout
+     */
     public static WordleLayout createWordleLayout(Configuration configuration) {
         return new WordleLayout(configuration, null);
     }
 
+    /**
+     * {@return a newly created layout reusing the positions of the given
+     * initial layout solution where possible}
+     *
+     * @param configuration the configuration of the layout
+     * @param initialLayoutSolution the layout solution to reuse positions from
+     */
     public static WordleLayout createWordleLayout(Configuration configuration, WordleLayout initialLayoutSolution) {
         return new WordleLayout(configuration, initialLayoutSolution);
     }
 
+    /**
+     * {@return the computed layout of the words}
+     */
     public Map<Word, Bounds> getWordLayoutInfo() {
         return wordLayoutMap;
     }
 
+    /**
+     * {@return the font size to use for the given weight}
+     *
+     * @param weight the weight of the word
+     */
     public double getFontSizeForWeight(double weight) {
         return wordNodeFactory.getFontSize(weight, configuration.minWeight, configuration.maxWeight);
     }
 
+    /**
+     * Adapts the font size of the given text node to the given weight.
+     *
+     * @param text the text node to adapt
+     * @param weight the weight of the word
+     */
     public void fontSizeAdaption(Text text, double weight) {
         wordNodeFactory.fontSizeAdaption(text, wordNodeFactory.getFontSize(weight, configuration.minWeight, configuration.maxWeight));
     }
 
+    /**
+     * {@return a newly created text node displaying the given word with the
+     * font size matching its weight}
+     *
+     * @param word the word to display
+     */
     public Text createTextNode(Word word) {
         Text textNode = wordNodeFactory.createTextNode(word.getText());
         fontSizeAdaption(textNode, word.getWeight());
@@ -189,6 +224,9 @@ public final class WordleLayout {
         return boundsMap;
     }
 
+    /**
+     * Configuration of a {@link WordleLayout}.
+     */
     public static class Configuration {
 
         private final List<Word> words;
@@ -199,6 +237,14 @@ public final class WordleLayout {
         private final double maxFontSize;
         private Bounds[] blockedAreaBounds = new Bounds[0];
 
+        /**
+         * Creates a new instance.
+         *
+         * @param words the words to lay out
+         * @param font the font to use
+         * @param maxFontSize the maximum font size to use
+         * @param layoutBounds the bounds within which the words are placed
+         */
         public Configuration(final List<Word> words, final Font font, final double maxFontSize, final Bounds layoutBounds) {
             this.words = words;
             this.font = font;
@@ -212,6 +258,11 @@ public final class WordleLayout {
             LOG.info("MiWeight: {}", minWeight);
         }
 
+        /**
+         * Sets the areas within which no word may be placed.
+         *
+         * @param blockedAreaBounds the blocked areas
+         */
         public void setBlockedAreaBounds(final Bounds... blockedAreaBounds) {
             this.blockedAreaBounds = blockedAreaBounds;
         }

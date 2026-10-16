@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,9 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import static org.tweetwallfx.util.ToString.createToString;
 import static org.tweetwallfx.util.ToString.map;
 
+/**
+ * Step that pauses for a configured duration before proceeding.
+ */
 public class PauseStep implements Step {
 
     private final Duration pause;
@@ -70,6 +73,12 @@ public class PauseStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Step create(final StepEngineSettings.StepDefinition stepDefinition) {
             final Config config = stepDefinition.getConfig(Config.class);
@@ -82,24 +91,49 @@ public class PauseStep implements Step {
         }
     }
 
+    /**
+     * POJO to configure {@link PauseStep}.
+     */
     public static class Config {
 
         private ChronoUnit unit = ChronoUnit.SECONDS;
         private long amount = 5;
         private String skipWhenSkipped = null;
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
+
+        /**
+         * {@return the unit of the pause duration}
+         */
         public ChronoUnit getUnit() {
             return unit;
         }
 
+        /**
+         * Sets the unit of the pause duration.
+         *
+         * @param unit the unit of the pause duration
+         */
         public void setUnit(final ChronoUnit unit) {
             this.unit = Objects.requireNonNull(unit, "unit must not be null!");
         }
 
+        /**
+         * {@return the amount of the pause duration}
+         */
         public long getAmount() {
             return amount;
         }
 
+        /**
+         * Sets the amount of the pause duration.
+         *
+         * @param amount the amount of the pause duration
+         */
         public void setAmount(final long amount) {
             this.amount = amount;
         }
@@ -108,10 +142,19 @@ public class PauseStep implements Step {
             return Duration.of(getAmount(), getUnit());
         }
 
+        /**
+         * Sets the token which, when skipped, causes this step to be skipped.
+         *
+         * @param skipWhenSkipped the token which causes this step to be skipped
+         */
         public void setSkipWhenSkipped(String skipWhenSkipped) {
             this.skipWhenSkipped = Objects.requireNonNull(skipWhenSkipped, "skipWhenSkipped must not be null!");
         }
 
+        /**
+         * {@return the token which, when skipped, causes this step to be
+         * skipped}
+         */
         public String getSkipWhenSkipped() {
             return skipWhenSkipped;
         }

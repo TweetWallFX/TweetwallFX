@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,10 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.User;
 
+/**
+ * Data provider that loads and caches user profile images and provides them as
+ * {@link Image} instances sized according to its configuration.
+ */
 public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(TweetUserProfileImageDataProvider.class);
@@ -43,6 +47,14 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         this.config = config;
     }
 
+    /**
+     * Returns the profile image of the given user, loading and caching it if
+     * necessary.
+     *
+     * @param user the user whose profile image is to be returned
+     *
+     * @return the profile image of the given user
+     */
     public Image getImage(final User user) {
         return new Image(
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getProfileImageUrl()).getInputStream(),
@@ -52,6 +64,14 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
                 config.smooth());
     }
 
+    /**
+     * Returns the bigger profile image of the given user, loading and caching it
+     * if necessary.
+     *
+     * @param user the user whose bigger profile image is to be returned
+     *
+     * @return the bigger profile image of the given user
+     */
     public Image getImageBig(final User user) {
         return new Image(
                 ProfileImageCache.INSTANCE.getCachedOrLoad(user.getBiggerProfileImageUrl()).getInputStream(),
@@ -95,7 +115,17 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         // do nothing
     }
 
+    /**
+     * Factory implementation creating {@link TweetUserProfileImageDataProvider}
+     * instances.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public TweetUserProfileImageDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -108,12 +138,27 @@ public class TweetUserProfileImageDataProvider implements DataProvider.HistoryAw
         }
     }
 
+    /**
+     * POJO used to configure {@link TweetUserProfileImageDataProvider}.
+     *
+     * @param profileWidth the width of the produced profile images, defaults to
+     * {@code 64}
+     * @param profileHeight the height of the produced profile images, defaults
+     * to {@code 64}
+     * @param preserveRatio whether the ratio of the images is to be preserved,
+     * defaults to {@code true}
+     * @param smooth whether the images are to be rendered smoothly, defaults to
+     * {@code false}
+     */
     public record Config(
             Integer profileWidth,
             Integer profileHeight,
             Boolean preserveRatio,
             Boolean smooth) {
 
+        /**
+         * Creates a new instance applying the documented default values.
+         */
         public Config {
             profileWidth = Objects.requireNonNullElse(profileWidth, 64);
             profileHeight = Objects.requireNonNullElse(profileHeight, 64);

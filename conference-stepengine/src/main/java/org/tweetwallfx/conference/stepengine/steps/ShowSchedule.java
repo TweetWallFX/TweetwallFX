@@ -79,6 +79,13 @@ public class ShowSchedule implements Step {
         this.config = config;
     }
 
+    /**
+     * Creates the upcoming talks schedule node (if not yet present) and fades
+     * it into view.
+     *
+     * @param context the step engine machine context providing access to the
+     *                skin and the data providers
+     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -154,11 +161,20 @@ public class ShowSchedule implements Step {
         }
     }
 
+    /**
+     * {@return {@code false} indicating that this step does not require the
+     * JavaFX application thread}
+     */
     @Override
     public boolean requiresPlatformThread() {
         return false;
     }
 
+    /**
+     * {@return the preferred display duration of this step}
+     *
+     * @param context the step engine machine context
+     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
@@ -343,46 +359,98 @@ public class ShowSchedule implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
+
+        /**
+         * {@return a new {@link ShowSchedule} step instance as configured by
+         * the given step definition}
+         *
+         * @param stepDefinition the step definition providing the
+         *                       configuration for the created step
+         */
         @Override
         public ShowSchedule create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new ShowSchedule(stepDefinition.getConfig(Config.class));
         }
 
+        /**
+         * {@return the class of the step created by this factory}
+         */
         @Override
         public Class<ShowSchedule> getStepClass() {
             return ShowSchedule.class;
         }
 
+        /**
+         * {@return the data providers required by the created step}
+         *
+         * @param stepSettings the step definition providing the configuration
+         *                     for the created step
+         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(ScheduleDataProvider.class, SpeakerImageProvider.class, TrackImageDataProvider.class);
         }
     }
 
+    /**
+     * Configuration POJO for the {@link ShowSchedule} step.
+     */
     public static class Config extends AbstractConfig {
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() { }
+
+        /** The x coordinate of the schedule node layout. */
         public double layoutX = 0;
+        /** The y coordinate of the schedule node layout. */
         public double layoutY = 0;
+        /** Whether speaker avatars are shown at all. */
         public boolean showAvatar = false;
+        /** The size (width and height) of a speaker avatar in pixels. */
         public int avatarSize = 64;
+        /** The corner arc size used when clipping rectangular avatars. */
         public int avatarArcSize = 20;
+        /** The horizontal spacing between adjacent speaker avatars. */
         public int avatarSpacing = 4;
+        /** Whether the favourite count of a session is shown. */
         public boolean showFavourite = false;
+        /** The width of the title node in pixels. */
         public double titleWidth = 800;
+        /** The total width of the schedule node in pixels. */
         public double width = 800;
+        /** The height of the title node in pixels. */
         public double titleHeight = 60;
+        /** The vertical gap between two session rows in pixels. */
         public double sessionVGap = 10;
+        /** The horizontal gap between two session columns in pixels. */
         public double sessionHGap = 10;
+        /** The height of a single session node in pixels. */
         public double sessionHeight = 200;
+        /** Whether the track avatar of a session is shown. */
         public boolean showTrackAvatar = true;
+        /** Whether speaker avatars are clipped to a circle. */
         public boolean circularAvatar = true;
+        /** Whether the tags of a session are shown. */
         public boolean showTags = false;
+        /** Whether avatars are arranged in multiple compressed lines. */
         public boolean compressedAvatars = true;
+        /** The number of speakers from which on compressed avatars are used. */
         public int compressedAvatarsLimit = 4;
+        /** The number of speakers below which the company name is hidden. */
         public int automaticCompanyNameHide = 6;
+        /** The number of session columns of the schedule grid. */
         public int columns = 2;
+        /** Whether a new row is started when the room type changes. */
         public boolean autoSeparateRoomTypes = false;
+        /** Whether the company name of a speaker is shown. */
         public boolean showCompanyName = false;
+        /** The font size of the session title in points. */
         public int titleFontSize = 13;
     }
 }

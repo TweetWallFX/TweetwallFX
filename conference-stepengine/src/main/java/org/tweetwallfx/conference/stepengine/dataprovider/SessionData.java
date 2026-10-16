@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2024 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,14 +51,23 @@ public class SessionData {
             .comparing(SessionData::getBeginTime)
             .thenComparing(SessionData::getRoom);
 
+    /** The room the session takes place in. */
     public final Room room;
+    /** The full names of the speakers of the session. */
     public final List<String> speakers;
+    /** The title of the session. */
     public final String title;
+    /** The start time of the session. */
     public final Instant beginTime;
+    /** The end time of the session. */
     public final Instant endTime;
+    /** The speaker objects of the session. */
     public final List<Speaker> speakerObjects;
+    /** The number of favourites of the session. */
     public final int favouritesCount;
+    /** The URL of the avatar image of the track of the session. */
     public final String trackImageUrl;
+    /** The tags assigned to the session. */
     public final List<String> tags;
 
     private SessionData(final ScheduleSlot slot) {
@@ -80,6 +89,17 @@ public class SessionData {
         this.tags = talk.getTags();
     }
 
+    /**
+     * Creates session data for the talks of the given schedule slots which
+     * start within the given time frame, sorted by begin time and room.
+     *
+     * @param slots              the schedule slots to convert
+     * @param now                the current time
+     * @param zoneId             the zone id to evaluate the times with
+     * @param startsWithinMinutes the number of minutes from now within which a
+     *                           session must start to be included
+     * @return an immutable list of the session data of the matching slots
+     */
     public static List<SessionData> from(final List<ScheduleSlot> slots, final OffsetTime now, final ZoneId zoneId, final long startsWithinMinutes) {
         List<SessionData> sessionData = slots.stream()
                 .filter(slot -> slot.getTalk().isPresent())
@@ -104,6 +124,9 @@ public class SessionData {
         return beginTime;
     }
 
+    /**
+     * {@return a string representation of this session data}
+     */
     @Override
     public String toString() {
         return createToString(this, Map.of(

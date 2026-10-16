@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2025 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,10 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.transitions.SizeTransition;
 
+/**
+ * Step showing a mosaic of speaker images which fades in, then repeatedly
+ * highlights and zooms random speakers before fading out again.
+ */
 public class SpeakerImageMosaicStep implements Step {
 
     private final Config config;
@@ -73,6 +77,12 @@ public class SpeakerImageMosaicStep implements Step {
         this.bounds = new Bounds[config.columns][config.rows];
     }
 
+    /**
+     * Builds the image mosaic and starts the animation sequence.
+     *
+     * @param context the step engine machine context providing access to the
+     *                skin and the data providers
+     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -84,6 +94,11 @@ public class SpeakerImageMosaicStep implements Step {
         createMosaicTransition.play();
     }
 
+    /**
+     * {@return the preferred display duration of this step}
+     *
+     * @param context the step engine machine context
+     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return config.stepDuration();
@@ -302,30 +317,66 @@ public class SpeakerImageMosaicStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
+
+        /**
+         * {@return a new {@link SpeakerImageMosaicStep} step instance as
+         * configured by the given step definition}
+         *
+         * @param stepDefinition the step definition providing the
+         *                       configuration for the created step
+         */
         @Override
         public SpeakerImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new SpeakerImageMosaicStep(stepDefinition.getConfig(Config.class));
         }
 
+        /**
+         * {@return the class of the step created by this factory}
+         */
         @Override
         public Class<SpeakerImageMosaicStep> getStepClass() {
             return SpeakerImageMosaicStep.class;
         }
 
+        /**
+         * {@return the data providers required by the created step}
+         *
+         * @param stepSettings the step definition providing the configuration
+         *                     for the created step
+         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(SpeakerImageProvider.class);
         }
     }
 
+    /**
+     * Configuration POJO for the {@link SpeakerImageMosaicStep} step.
+     */
     public static class Config extends AbstractConfig {
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() { }
+
+        /** The x coordinate of the mosaic layout. */
         public double layoutX = 0;
+        /** The y coordinate of the mosaic layout. */
         public double layoutY = 0;
+        /** The total width of the mosaic in pixels. */
         public double width = 800;
+        /** The total height of the mosaic in pixels. */
         public double height = 800;
+        /** The number of image columns in the mosaic. */
         public int columns = 14;
+        /** The number of image rows in the mosaic. */
         public int rows = 12;
+        /** The duration of the zoom animation in milliseconds. */
         public double zoomDurationAnimation = 2500;
     }
 }

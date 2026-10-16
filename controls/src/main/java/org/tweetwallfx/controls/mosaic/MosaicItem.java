@@ -34,6 +34,9 @@ package org.tweetwallfx.controls.mosaic;
  */
 public record MosaicItem(double width, double height, Object payload) {
 
+    /**
+     * Creates a new instance, validating the given dimensions.
+     */
     public MosaicItem {
         if (Double.isNaN(width) || width <= 0) {
             throw new IllegalArgumentException("width must be > 0 but was " + width);

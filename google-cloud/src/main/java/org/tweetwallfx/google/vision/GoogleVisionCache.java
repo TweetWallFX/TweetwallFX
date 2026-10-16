@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -121,6 +121,12 @@ public final class GoogleVisionCache {
         };
     }
 
+    /**
+     * {@return a map of image URI to image analysis for the given image URIs}
+     *
+     * @param imageUris the image URIs for which to get or load the analysis
+     * @throws IOException if an error occurs while loading the image analyses
+     */
     public Map<String, ImageContentAnalysis> getCachedOrLoad(final Stream<String> imageUris) throws IOException {
         final Map<String, ImageContentAnalysis> result = new HashMap<>();
 

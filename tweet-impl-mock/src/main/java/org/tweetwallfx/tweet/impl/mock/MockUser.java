@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,18 @@ package org.tweetwallfx.tweet.impl.mock;
 
 import org.tweetwallfx.tweet.api.User;
 
+/**
+ * Mock implementation of a {@link User} as used by the mock tweet client.
+ *
+ * @param id               the unique id of the user
+ * @param lang             the language of the user
+ * @param name             the full name of the user
+ * @param screenName       the screen name of the user
+ * @param followerCount    the number of followers of the user
+ * @param verified         a flag indicating whether the user is verified
+ * @param profileUrl       the URL of the profile image
+ * @param biggerProfileUrl the URL of the bigger profile image
+ */
 public record MockUser(long id, String lang,
                        String name, String screenName,
                        int followerCount, boolean verified,

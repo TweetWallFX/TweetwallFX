@@ -33,6 +33,9 @@ import java.util.Optional;
 import org.tweetwallfx.conference.api.SessionType;
 import org.tweetwallfx.conference.spi.util.Optionals;
 
+/**
+ * Default implementation of {@link SessionType}.
+ */
 public final class SessionTypeImpl implements SessionType {
 
     private final String id;
@@ -94,10 +97,18 @@ public final class SessionTypeImpl implements SessionType {
             true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link SessionTypeImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -111,36 +122,83 @@ public final class SessionTypeImpl implements SessionType {
         private Builder() {
         }
 
+        /**
+         * Sets the id of the session type.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the name of the session type.
+         *
+         * @param name the name to set
+         *
+         * @return this builder instance
+         */
         public Builder withName(final String name) {
             this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the description of the session type.
+         *
+         * @param description the description to set
+         *
+         * @return this builder instance
+         */
         public Builder withDescription(final String description) {
             this.description = description;
             return this;
         }
 
+        /**
+         * Sets the color of the session type.
+         *
+         * @param color the color to set
+         *
+         * @return this builder instance
+         */
         public Builder withColor(final String color) {
             this.color = color;
             return this;
         }
 
+        /**
+         * Sets the duration of the session type.
+         *
+         * @param duration the duration to set
+         *
+         * @return this builder instance
+         */
         public Builder withDuration(final Duration duration) {
             this.duration = Objects.requireNonNull(duration, "duration must not be null");
             return this;
         }
 
+        /**
+         * Sets whether the session type is a pause.
+         *
+         * @param pause {@code true} if the session type is a pause, otherwise {@code false}
+         *
+         * @return this builder instance
+         */
         public Builder withPause(final Boolean pause) {
             this.pause = Objects.requireNonNull(pause, "pause must not be null");
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link SessionTypeImpl}.
+         *
+         * @return a new {@link SessionTypeImpl} instance
+         */
         public SessionType build() {
             return new SessionTypeImpl(this);
         }

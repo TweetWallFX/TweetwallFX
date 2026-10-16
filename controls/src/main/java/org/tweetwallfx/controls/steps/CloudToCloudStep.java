@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,17 +45,26 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.LocationTransition;
 
+/**
+ * Step that morphs the currently displayed tag cloud into an updated tag cloud.
+ */
 public class CloudToCloudStep implements Step {
 
     private CloudToCloudStep() {
         // prevent external instantiation
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public java.time.Duration preferredStepDuration(final MachineContext context) {
         return java.time.Duration.ofSeconds(5);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doStep(final MachineContext context) {
         List<Word> sortedWords = context.getDataProvider(TagCloudDataProvider.class).getWords();
@@ -159,16 +168,29 @@ public class CloudToCloudStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public CloudToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new CloudToCloudStep();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<CloudToCloudStep> getStepClass() {
             return CloudToCloudStep.class;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TagCloudDataProvider.class);

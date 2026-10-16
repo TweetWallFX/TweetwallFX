@@ -90,6 +90,12 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -113,6 +119,12 @@ public class MaxHashtagLengthFilterStep implements FilterStep<Tweet> {
 
         private boolean checkRetweeted = true;
         private int maxLength = 30;
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
 
         /**
          * Returns the length of a hashtag that when exceeding it willl cause

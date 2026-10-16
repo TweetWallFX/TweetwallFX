@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,11 +36,28 @@ import java.util.Optional;
 
 /**
  * A storage of a singe EXIF data entry.
+ *
+ * @param directory the EXIF directory the entry belongs to
+ * @param name the name of the EXIF entry
+ * @param type the numeric type of the EXIF entry
+ * @param value the value of the EXIF entry
+ * @param description the description of the EXIF entry
  */
 public record ExifData(String directory, String name, int type, String value, String description) {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExifData.class);
 
+    /**
+     * Locates the value of the EXIF entry with the given {@code name} within the
+     * given {@code directory}.
+     *
+     * @param exifData the EXIF data entries to search
+     * @param directory the directory the entry is expected in
+     * @param tagName the name of the EXIF entry
+     *
+     * @return an {@link Optional} containing the value of the located entry or
+     * an empty Optional if it could not be found
+     */
     public static Optional<String> locateOptional(final List<ExifData> exifData, final String directory, final String tagName) {
         return exifData.stream()
                 .filter(ed -> directory.equals(ed.directory()))

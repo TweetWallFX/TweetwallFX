@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,13 @@ public final class EmojiImageCache extends URLContentCacheBase {
         super("emojiImage");
     }
 
+    /**
+     * Retrieves the content of the emoji image with the given hex code.
+     *
+     * @param hex the hexadecimal code point of the emoji
+     *
+     * @return the content of the emoji image
+     */
     public URLContent get(final String hex) {
         return EmojiImageCache.INSTANCE.getCachedOrLoad(EmojiImageCacheConfig.getInstance().emojiImageBaseUrl() + hex + ".png");
     }

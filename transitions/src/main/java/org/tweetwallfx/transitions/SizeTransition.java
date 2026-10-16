@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,9 @@ import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Duration;
 
+/**
+ * A JavaFX {@link Transition} that animates width and height properties.
+ */
 public final class SizeTransition extends Transition {
 
     private final DoubleProperty widthProperty;
@@ -49,17 +52,38 @@ public final class SizeTransition extends Transition {
         this.targetWidth = targetWidth;
     }
 
+    /**
+     * Creates a new size transition.
+     *
+     * @param duration the duration of the transition
+     * @param widthProperty the width property to animate
+     * @param heightProperty the height property to animate
+     */
     public SizeTransition(
             final Duration duration, final DoubleProperty widthProperty, final DoubleProperty heightProperty) {
         this(duration, widthProperty, heightProperty,
                 Double.NaN, Double.NaN, Double.NaN, Double.NaN);
     }
 
+    /**
+     * Creates a new size transition with specified start and target width values.
+     *
+     * @param startWidth the initial width
+     * @param targetWidth the final width
+     * @return a new SizeTransition instance
+     */
     public SizeTransition withWidth(final double startWidth, final double targetWidth) {
         return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
                 this.startHeight, startWidth, this.targetHeight, targetWidth);
     }
 
+    /**
+     * Creates a new size transition with specified start and target height values.
+     *
+     * @param startHeight the initial height
+     * @param targetHeight the final height
+     * @return a new SizeTransition instance
+     */
     public SizeTransition withHeight(final double startHeight, final double targetHeight) {
         return new SizeTransition(getCycleDuration(), this.widthProperty, this.heightProperty,
                 startHeight, this.startWidth, targetHeight, this.targetWidth);

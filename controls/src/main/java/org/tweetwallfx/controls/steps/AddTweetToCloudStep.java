@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,9 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
+/**
+ * Step that adds the words of the currently displayed tweet to the tag cloud.
+ */
 public class AddTweetToCloudStep implements Step {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddTweetToCloudStep.class);
@@ -51,11 +54,17 @@ public class AddTweetToCloudStep implements Step {
         // prevent external instantiation
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean shouldSkip(final MachineContext context) {
         return null == context.getDataProvider(TweetDataProvider.class).getTweet();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doStep(final MachineContext context) {
         Tweet tweetInfo = context.getDataProvider(TweetDataProvider.class).getTweet();
@@ -87,16 +96,29 @@ public class AddTweetToCloudStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new AddTweetToCloudStep();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Class<AddTweetToCloudStep> getStepClass() {
             return AddTweetToCloudStep.class;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public Collection<Class<? extends DataProvider>> getRequiredDataProviders(final StepEngineSettings.StepDefinition stepSettings) {
             return Arrays.asList(TweetDataProvider.class, TagCloudDataProvider.class);

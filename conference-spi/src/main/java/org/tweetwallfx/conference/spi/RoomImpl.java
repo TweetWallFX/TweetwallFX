@@ -30,6 +30,9 @@ import java.util.Objects;
 
 import org.tweetwallfx.conference.api.Room;
 
+/**
+ * Default implementation of {@link Room}.
+ */
 public final class RoomImpl implements Room {
 
     private final String id;
@@ -75,10 +78,18 @@ public final class RoomImpl implements Room {
             true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link RoomImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -90,21 +101,49 @@ public final class RoomImpl implements Room {
         private Builder() {
         }
 
+        /**
+         * Sets the id of the room.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the name of the room.
+         *
+         * @param name the name to set
+         *
+         * @return this builder instance
+         */
         public Builder withName(final String name) {
             this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the capacity of the room.
+         *
+         * @param capacity the capacity to set
+         *
+         * @return this builder instance
+         */
         public Builder withCapacity(final Integer capacity) {
             this.capacity = Objects.requireNonNull(capacity, "capacity must not be null");
             return this;
         }
 
+        /**
+         * Sets the weight of the room.
+         *
+         * @param weight the weight to set
+         *
+         * @return this builder instance
+         */
         public Builder withWeight(final Double weight) {
             if (null != weight) {
                 this.weight = weight;
@@ -112,6 +151,11 @@ public final class RoomImpl implements Room {
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link RoomImpl}.
+         *
+         * @return a new {@link RoomImpl} instance
+         */
         public Room build() {
             return new RoomImpl(this);
         }

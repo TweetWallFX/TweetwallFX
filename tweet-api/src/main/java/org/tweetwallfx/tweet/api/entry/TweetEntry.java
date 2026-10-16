@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,24 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+/**
+ * Base interface for an entity contained in a Tweet, such as a hashtag, URL or
+ * user mention.
+ */
 public interface TweetEntry {
 
+    /**
+     * {@return the text of the entry}
+     */
     public String getText();
 
+    /**
+     * {@return the start index of the entry within the Tweet text}
+     */
     public int getStart();
 
+    /**
+     * {@return the end index of the entry within the Tweet text}
+     */
     public int getEnd();
 }

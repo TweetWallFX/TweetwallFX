@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,11 @@ import org.tweetwallfx.google.vision.CloudVisionSettings;
 
 /**
  * POJO for reading Settings Google APIs.
+ *
+ * @param credentialFilePath the path to the file containing the Google
+ * credentials
+ * @param credentialBase64 the BASE64 encoded Google credentials
+ * @param cloudVision the settings concerning the Google Cloud Vision API
  */
 public record GoogleSettings(
         String credentialFilePath,
@@ -45,6 +50,10 @@ public record GoogleSettings(
      * {@link GoogleSettings#CONFIG_KEY} into {@link GoogleSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
+
+        /** Creates a new instance. */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {

@@ -34,6 +34,10 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
+/**
+ * Data provider that loads and caches the photo images of the media tweet
+ * entries contained in tweets and provides them as {@link Image} instances.
+ */
 public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(PhotoImageMediaEntryDataProvider.class);
@@ -43,6 +47,14 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
         this.config = config;
     }
 
+    /**
+     * Returns the image for the given media tweet entry, loading and caching it
+     * if necessary.
+     *
+     * @param mte the media tweet entry whose image is to be returned
+     *
+     * @return the image of the given media tweet entry
+     */
     public Image getImage(final MediaTweetEntry mte) {
         return new Image(PhotoImageCache.INSTANCE
                 .getCached(mte)
@@ -71,7 +83,17 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
                 .forEach(PhotoImageCache.INSTANCE::addToCacheAsync);
     }
 
+    /**
+     * Factory implementation creating {@link PhotoImageMediaEntryDataProvider}
+     * instances.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public PhotoImageMediaEntryDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -84,9 +106,18 @@ public class PhotoImageMediaEntryDataProvider implements DataProvider.HistoryAwa
         }
     }
 
+    /**
+     * POJO used to configure {@link PhotoImageMediaEntryDataProvider}.
+     *
+     * @param includeRetweets whether retweets are to be included, defaults to
+     * {@code false}
+     */
     public static record Config(
             Boolean includeRetweets) {
 
+        /**
+         * Creates a new instance applying the documented default value.
+         */
         public Config {
             includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
         }

@@ -25,15 +25,33 @@ package org.tweetwallfx.tweet.api.entry;
 
 import java.util.List;
 
+/**
+ * Provides access to the individual entities contained in a Tweet.
+ */
 public interface BasicEntry {
 
+    /**
+     * {@return the hashtag entries of the Tweet}
+     */
     List<HashtagTweetEntry> getHashtagEntries();
 
+    /**
+     * {@return the media entries of the Tweet}
+     */
     List<MediaTweetEntry> getMediaEntries();
 
+    /**
+     * {@return the symbol entries of the Tweet}
+     */
     List<SymbolTweetEntry> getSymbolEntries();
 
+    /**
+     * {@return the URL entries of the Tweet}
+     */
     List<UrlTweetEntry> getUrlEntries();
 
+    /**
+     * {@return the user mention entries of the Tweet}
+     */
     List<UserMentionTweetEntry> getUserMentionEntries();
 }

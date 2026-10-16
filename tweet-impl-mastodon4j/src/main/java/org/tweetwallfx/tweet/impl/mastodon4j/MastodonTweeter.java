@@ -56,6 +56,10 @@ import org.tweetwallfx.tweet.api.Tweeter;
 import org.tweetwallfx.tweet.api.User;
 import org.tweetwallfx.tweet.impl.mastodon4j.config.MastodonSettings;
 
+/**
+ * {@link Tweeter} implementation accessing the mastodon service via the
+ * mastodon4j client library.
+ */
 public class MastodonTweeter implements Tweeter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MastodonTweeter.class);
     private static final Pattern ACCEPTED_KEYWORDS = Pattern.compile("([@#]).+");
@@ -66,6 +70,9 @@ public class MastodonTweeter implements Tweeter {
     private final List<EventStream> openStreams;
     private final AccessToken accessToken;
 
+    /**
+     * Creates a new instance.
+     */
     public MastodonTweeter() {
         this(Configuration.getInstance().getConfigTyped(CONFIG_KEY, MastodonSettings.class), MastodonTweeter::createClient);
     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,10 +48,18 @@ public class TagTweets {
     private final BorderPane root;
     private final HBox hWordle = new HBox();
 
+    /**
+     * Creates a new instance.
+     *
+     * @param root the root pane the tag cloud is added to
+     */
     public TagTweets(final BorderPane root) {
         this.root = root;
     }
 
+    /**
+     * Starts the tag cloud visualization.
+     */
     public void start() {
         LOGGER.trace("TagTweets.start");
         hWordle.setAlignment(Pos.CENTER);

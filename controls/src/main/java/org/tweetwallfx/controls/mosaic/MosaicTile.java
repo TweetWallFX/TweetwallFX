@@ -38,6 +38,9 @@ import java.util.Objects;
  */
 public record MosaicTile(MosaicItem item, double x, double y, double width, double height) {
 
+    /**
+     * Creates a new instance, validating the given placement.
+     */
     public MosaicTile {
         Objects.requireNonNull(item, "item must not be null");
 

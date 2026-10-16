@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,12 @@ import org.tweetwallfx.stepengine.api.Step;
 public class StepFactoryLoadable implements RunnableTestCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(StepFactoryLoadable.class);
+
+    /**
+     * Creates a new instance.
+     */
+    public StepFactoryLoadable() {
+    }
 
     @Override
     public void execute() {

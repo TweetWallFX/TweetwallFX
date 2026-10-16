@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2024 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,7 +59,16 @@ public final class StopList {
     private static final Set<String> CUSTOM_LIST = new HashSet<>();
     private static final Set<String> STOP_LIST = readStopListResource("stoplist.list");
     private static final Pattern TRIM_PATTERN = Pattern.compile("(\\S+?)[.,!?:;´`']+"); //cut of bad word tails.
+
+    /**
+     * {@link Predicate} testing {@code true} for words that are not URLs, i.e.
+     * the URL pattern {@code http[s]?:.*} negated.
+     */
     public static final Predicate<String> IS_NOT_URL = Pattern.compile("http[s]?:.*").asPredicate().negate();   //url pattern
+    /**
+     * {@link Pattern} matching one or more whitespace characters, used to split
+     * text into words.
+     */
     public static final Pattern WORD_SPLIT = Pattern.compile("\\s+");
 
     //TODO: Init from file.
@@ -113,6 +122,15 @@ public final class StopList {
                 && !CUSTOM_LIST.contains(lowerWord);
     }
 
+    /**
+     * Removes the tail (trailing punctuation and special characters) from the
+     * given string.
+     *
+     * @param s the string to remove the tail from
+     * @return the part of the string before the trailing punctuation if the
+     * whole string consists of a word followed by such trailing punctuation,
+     * otherwise the unchanged string
+     */
     public static String trimTail(final String s) {
         Matcher matcher = TRIM_PATTERN.matcher(s);
         if (matcher.matches()) {
@@ -122,6 +140,12 @@ public final class StopList {
         }
     }
 
+    /**
+     * Removes all emoji characters from the given string.
+     *
+     * @param s the string to remove the emojis from
+     * @return the string with all emoji code points filtered out
+     */
     public static String removeEmojis(final String s) {
         final int[] nonEmojiCodePoints = s.codePoints()
                 .filter(cp -> !Character.isEmoji(cp))

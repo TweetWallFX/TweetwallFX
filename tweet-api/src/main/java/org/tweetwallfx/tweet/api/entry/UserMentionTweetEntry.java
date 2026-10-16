@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,23 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+/**
+ * {@link TweetEntry} representing a user mention contained in a Tweet.
+ */
 public interface UserMentionTweetEntry extends TweetEntry {
 
+    /**
+     * {@return the name of the mentioned user}
+     */
     String getName();
 
+    /**
+     * {@return the screen name of the mentioned user}
+     */
     String getScreenName();
 
+    /**
+     * {@return the id of the mentioned user}
+     */
     long getId();
 }

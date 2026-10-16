@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * A builder-style query for searching Tweets.
+ */
 @SuppressWarnings("CanIgnoreReturnValueSuggester")
 public final class TweetQuery {
 
+    /**
+     * Query fragment selecting Tweets that contain media.
+     */
     public static final String QUERY_FILTER_MEDIA = "Filter:media";
+    /**
+     * Query fragment selecting Tweets that contain links.
+     */
     public static final String QUERY_FILTER_LINKS = "Filter:Links";
     private String query = null;
     private String lang = null;
@@ -42,6 +51,12 @@ public final class TweetQuery {
     private Long sinceId = null;
     private String until = null;
     private ResultType resultType = null;
+
+    /**
+     * Creates a new instance.
+     */
+    public TweetQuery() {
+    }
 
     /**
      * Returns the specified query
@@ -297,6 +312,9 @@ public final class TweetQuery {
         return this;
     }
 
+    /**
+     * The type of results to return for a query.
+     */
     public enum ResultType {
 
         /**
@@ -387,6 +405,13 @@ public final class TweetQuery {
                 + '}';
     }
 
+    /**
+     * Joins the given conditions into an OR query.
+     *
+     * @param conditions the conditions to combine
+     * @return the combined OR query or {@code null} when no conditions were
+     * given
+     */
     public static String queryOR(final String... conditions) {
         return Arrays.stream(conditions)
                 .filter(s -> null != s && !s.isEmpty())
@@ -399,12 +424,24 @@ public final class TweetQuery {
                         : l.stream().collect(Collectors.joining(" OR ", "( ", " )"))));
     }
 
+    /**
+     * Creates a {@code from:} query fragment for the given sender.
+     *
+     * @param from the sender to restrict the query to
+     * @return the {@code from:} query fragment or {@code null}
+     */
     public static String queryFrom(final String from) {
         return Optional.ofNullable(from)
                 .map(s -> "from:" + from)
                 .orElse(null);
     }
 
+    /**
+     * Creates a {@code to:} query fragment for the given recipient.
+     *
+     * @param to the recipient to restrict the query to
+     * @return the {@code to:} query fragment or {@code null}
+     */
     public static String queryTo(final String to) {
         return Optional.ofNullable(to)
                 .map(s -> "to:" + to)
