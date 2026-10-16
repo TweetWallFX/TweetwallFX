@@ -1,0 +1,136 @@
+= Developing Guide
+
+This guide covers setting up a development environment, building, testing, and contributing to TweetWallFX.
+
+== Prerequisites
+
+- JDK 17+ (Java 17 minimum; CI uses 25-27)
+- Git
+- IDE of choice (IntelliJ IDEA, Eclipse, VS Code) with Gradle support
+
+== IDE Setup
+
+### IntelliJ IDEA
+
+1. Open IntelliJ IDEA
+2. Select "Open" and choose the repository root
+3. Import as a Gradle project (IDEA should auto-detect)
+4. Ensure the correct JDK is configured (Project Structure → SDKs)
+
+### Eclipse
+
+1. Install Buildship Gradle Integration
+2. Import → Gradle → Existing Gradle Project
+3. Select repository root
+
+### VS Code
+
+1. Install Java Extension Pack and Gradle for Java extensions
+2. Open the folder; Gradle projects will be detected
+
+## Build Lifecycle
+
+### Build Everything
+
+[source,bash]
+----
+./gradlew build
+----
+
+This runs: `assemble`, `test`, and `check` (includes formatting checks, static analysis, and javadoc).
+
+### Common Tasks
+
+- `./gradlew assemble` - Compile and package without running tests/checks
+- `./gradlew test` - Run all tests (JUnit 5)
+- `./gradlew check` - Run all verification tasks (spotlessCheck, spotbugs, errorprone, javadoc)
+- `./gradlew spotlessApply` - Auto-format all code and text files
+- `./gradlew spotlessCheck` - Verify formatting
+- `./gradlew javadoc` - Generate Javadoc for all modules
+- `./gradlew clean` - Clean build outputs
+
+### Module-Specific Tasks
+
+Build a single module:
+[source,bash]
+----
+./gradlew :tweetwallfx-config:build
+./gradlew :tweetwallfx-generic2d:run
+./gradlew :tweetwallfx-config:test
+----
+
+## Testing
+
+Tests use JUnit 5 (Jupiter). Test execution is configured in root build.gradle.
+
+Run all tests:
+[source,bash]
+----
+./gradlew test
+----
+
+Test reports are available in each module's `build/reports/tests/test/index.html`.
+
+### System Properties
+
+- `org.tweetwallfx.tests.executeConferenceClientLiveTests` - Set to true to run live conference client tests (default controlled by build)
+
+## Code Style & Formatting
+
+TweetWallFX uses https://github.com/diffplug/spotless[Spotless] for consistent formatting.
+
+Spotless enforces:
+- Java formatting (with license headers from `LICENSE.spotlessJavaTemplate`)
+- Gradle files, Asciidoc (.adoc), Markdown (.md), JSON, CSS, properties
+- No star imports
+- No `@author` tags in Javadoc
+- Trailing whitespace trimmed, files end with newline
+- No multiple consecutive empty lines
+
+**Always run `./gradlew spotlessApply` before committing**. CI runs `spotlessCheck` and will fail if formatting is incorrect.
+
+## Static Analysis
+
+- **Spotbugs** - Runs when `CI=true` or `applySpotbugs` property is set. Reports in `build/reports/spotbugs/`
+- **Errorprone** - Compiles with Errorprone checks enabled
+
+## Javadoc
+
+Javadoc is generated with strict settings:
+- Module path configured (JavaFX, JAXB)
+- `-Xdoclint:all,-missing`
+- `Werror` (fail on warnings)
+
+Ensure public APIs are properly documented. Package-level docs can go in `package-info.java`.
+
+## Debugging
+
+To debug a running application (e.g., generic2d):
+
+1. Run with Gradle in debug mode:
+[source,bash]
+----
+./gradlew :tweetwallfx-generic2d:run --debug-jvm
+----
+
+2. Attach your IDE debugger to the JVM on the debug port (default 5005)
+
+JavaExec tasks are already configured with necessary JVM args (module-path, add-modules, --enable-preview).
+
+## Tips for Development
+
+- Use the `tweet-impl-mock` module for local development without external API credentials
+- Run a specific test class: `./gradlew :module:test --tests "com.example.ClassTest"`
+- For faster iteration, consider `--continuous` mode (though with JavaFX, be cautious): `./gradlew :tweetwallfx-generic2d:run --continuous`
+- Check the full build before pushing: `./gradlew build`
+
+## Contributing
+
+See link:../CONTRIBUTING.adoc[CONTRIBUTING.adoc] for detailed contribution guidelines.
+
+## See Also
+
+- link:CONFIGURATION.adoc[Configuration Guide]
+- link:RUNNING.adoc[Running Guide]
+- link:ARCHITECTURE.adoc[Architecture Guide]
+- link:../README.adoc[Getting Started]

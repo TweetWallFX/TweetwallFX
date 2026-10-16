@@ -1,0 +1,133 @@
+= Configuration Guide
+
+TweetWallFX uses a flexible JSON-based configuration system that loads and merges configuration from multiple sources.
+
+== How Configuration Works
+
+The `org.tweetwallfx.config.Configuration` class loads configuration in the following order:
+
+1. **Classpath** - Standard `tweetwallConfig.json` files bundled with modules
+2. **Filesystem** - `tweetwallConfig.json` in the current working directory
+3. **Custom filename** - If `org.tweetwall.config.fileName` system property is set (and different from the standard name), also load it from classpath and filesystem
+4. **Additional URLs** - Load additional configurations from URLs specified in `ConfigurationSettings.additionalConfigurationURLs()`
+
+All loaded configurations are merged. Primitive types (Boolean, Byte, Character, Double, Float, Integer, Long, Short, String, BigDecimal, BigInteger) are merged by overwrite. Complex objects/maps are merged recursively.
+
+== System Properties
+
+- `org.tweetwall.config.fileName` - Override the default config filename. Example: `-Dorg.tweetwall.config.fileName=my-config.json`
+- `org.tweetwallfx.disable-full-screen` - Set to disable fullscreen mode at startup
+- `org.tweetwallfx.tests.executeConferenceClientLiveTests` - Control whether live conference client tests run
+
+== Core Configuration Keys
+
+=== TweetwallSettings (`tweetwall`)
+
+Defines core application behavior.
+
+[source,json]
+----
+{
+  "tweetwall": {
+    "query": "#javafx OR #openjfx",
+    "title": "TweetWallFX",
+    "stylesheetResource": "tweetwall.css",
+    "stylesheetFile": "/path/to/custom.css",
+    "additionalStopWords": ["foo", "bar"]
+  }
+}
+----
+
+- `query` (required) - Search/query string for tweets
+- `title` (required) - Window title
+- `stylesheetResource` (optional) - CSS resource path loaded from classpath
+- `stylesheetFile` (optional) - CSS file path loaded from filesystem
+- `additionalStopWords` (optional) - Additional stop words for text processing
+
+=== Configuration Settings (`configuration`)
+
+Controls where additional configuration is loaded from.
+
+[source,json]
+----
+{
+  "configuration": {
+    "additionalConfigurationURLs": [
+      "file:///path/to/extra-config.json",
+      "https://example.com/config.json"
+    ]
+  }
+}
+----
+
+=== Cache Configuration (`cacheConfiguration`)
+
+Controls Ehcache-based caching. See `cache` module's default configs for detailed structure (heap/disk sizes, expiry policies - TIME_TO_IDLE/TIME_TO_LIVE).
+
+=== Filterchains (`filterchains`)
+
+Defines filter chains for processing tweets. See `filterchain` module and implementation modules for examples.
+
+=== Twitter (`twitter`)
+
+Configuration for Twitter4J implementation.
+
+[source,json]
+----
+{
+  "twitter": {
+    "extendedMode": true,
+    "oauth": {
+      "consumerKey": "YOUR_CONSUMER_KEY",
+      "consumerSecret": "YOUR_CONSUMER_SECRET",
+      "accessToken": "YOUR_ACCESS_TOKEN",
+      "accessTokenSecret": "YOUR_ACCESS_TOKEN_SECRET"
+    }
+  }
+}
+----
+
+=== Mastodon (`mastodon`)
+
+Configuration for Mastodon4J implementation. Structure depends on Mastodon4J client configuration; see `tweet-impl-mastodon4j` module.
+
+=== Steps and Transitions
+
+Step engine and transition configurations control the animation flow. See `stepengine-*` and `transitions` modules.
+
+== Extending Configuration
+
+Custom configuration types can be added by implementing `ConfigurationConverter`:
+
+1. Create a class implementing `org.tweetwallfx.config.ConfigurationConverter`
+2. Register it via `META-INF/services/org.tweetwallfx.config.ConfigurationConverter`
+3. Implement `getResponsibleKey()` to return the config key and `getDataClass()` for the target type
+
+Example:
+[source,java]
+----
+public class MySettingsConverter implements ConfigurationConverter {
+  @Override
+  public String getResponsibleKey() {
+    return "mySettings";
+  }
+  @Override
+  public Class<?> getDataClass() {
+    return MySettings.class;
+  }
+}
+----
+
+The converter will be automatically discovered via ServiceLoader.
+
+== Tips
+
+- Module default configs in `src/main/resources/tweetwallConfig.json` provide sensible defaults - you only need to override what's needed
+- For local development, create a `tweetwallConfig.json` in the working directory to override defaults
+- Use the mock implementation (`tweet-impl-mock`) if you don't have external API credentials
+
+== See Also
+
+- link:ARCHITECTURE.adoc[Architecture Guide]
+- link:../config/README.adoc[Config Module]
+- link:../tweet-api/README.adoc[Tweet API]

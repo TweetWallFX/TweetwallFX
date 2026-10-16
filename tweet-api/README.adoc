@@ -1,0 +1,34 @@
+= tweet-api
+
+The `tweet-api` module defines the core abstraction for tweet data sources in TweetWallFX.
+
+== Purpose
+
+- API contract for accessing tweets (`Tweet`, `Tweeter`)
+- Decouples UI/processing from specific social media implementations
+- Enables pluggable backends (Twitter4J, Mastodon4J, Mock)
+
+== Key Interfaces/Classes
+
+- `org.tweetwallfx.tweet.api.Tweet` - Tweet domain object abstraction
+- `org.tweetwallfx.tweet.api.Tweeter` - Main interface for tweet sources and operations
+- `org.tweetwallfx.tweet.api.TweetStream` - Stream abstraction for receiving tweets
+- `org.tweetwallfx.tweet.api.User` - User/domain types
+
+## Implementations
+
+- `tweet-impl-twitter4j` - Twitter/X implementation using Twitter4J
+- `tweet-impl-mastodon4j` - Mastodon implementation
+- `tweet-impl-mock` - Mock implementation for testing/demo without external APIs
+
+== Configuration
+
+Implementations provide their own configuration fragments (`tweetwallConfig.json`) and may require API keys/tokens.
+
+== See Also
+
+- link:../tweet-impl-twitter4j/README.adoc[Twitter4J implementation]
+- link:../tweet-impl-mastodon4j/README.adoc[Mastodon4J implementation]
+- link:../tweet-impl-mock/README.adoc[Mock implementation]
+- link:../docs/CONFIGURATION.adoc[Configuration]
+- link:../docs/ARCHITECTURE.adoc[Architecture]

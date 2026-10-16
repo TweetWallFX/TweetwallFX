@@ -1,0 +1,59 @@
+= tweet-impl-twitter4j
+
+Twitter/X implementation of the TweetWallFX tweet API using Twitter4J.
+
+== Purpose
+
+Provides tweet data from Twitter/X API v1.1 via Twitter4J library. Implements the `tweet-api` contracts for tweets, users, and tweet streams.
+
+== Key Classes
+
+- `org.tweetwallfx.tweet.impl.twitter4j.TwitterTweeter` - Main implementation of `Tweeter` for Twitter4J
+- `org.tweetwallfx.tweet.impl.twitter4j.Twitter4JTweet` - Tweet wrapper/adapter
+- `org.tweetwallfx.tweet.impl.twitter4j.Twitter4JUser` - User wrapper/adapter
+- `org.tweetwallfx.tweet.impl.twitter4j.TwitterOAuth` - OAuth configuration for Twitter API
+- `org.tweetwallfx.tweet.impl.twitter4j.TwitterTweetStream` - Tweet streaming implementation
+
+== Configuration
+
+Requires Twitter API OAuth credentials. Configuration is read via the configuration system; see module's `tweetwallConfig.json` and `TwitterSettings`.
+
+Example configuration structure (as documented in root README, extended mode etc.):
+
+[source,json]
+----
+{
+  "twitter": {
+    "extendedMode": true,
+    "oauth": {
+      "consumerKey": "...",
+      "consumerSecret": "...",
+      "accessToken": "...",
+      "accessTokenSecret": "..."
+    }
+  }
+}
+----
+
+## Filterchains
+
+The module registers filterchain configurations for tweets from Twitter.
+
+== Dependencies
+
+- Twitter4J (`org.twitter4j:twitter4j-core`, `twitter4j-stream`)
+- `:tweetwallfx-tweet-api`
+- `:tweetwallfx-config`
+- `:tweetwallfx-filterchain`
+- `:tweetwallfx-utility`
+
+== Usage Notes
+
+- API access requires valid Twitter credentials and appropriate API permissions
+- Rate limits apply as per Twitter API terms
+- Extended mode is supported for full tweet text
+
+== See Also
+
+- link:../tweet-api/README.adoc[tweet-api]
+- link:../docs/CONFIGURATION.adoc[Configuration Guide]

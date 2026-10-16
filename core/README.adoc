@@ -1,0 +1,22 @@
+= core
+
+The `core` module contains core/shared classes used across TweetWallFX components.
+
+== Purpose
+
+- Shared utilities and base functionality
+- Common types and helpers used by multiple modules
+
+== Key Dependencies
+
+- Config module
+- Util module
+- Logging
+
+== Notes
+
+Core provides foundational classes. For detailed API information, see the generated Javadoc or source code.
+
+== See Also
+
+- link:../docs/ARCHITECTURE.adoc[Architecture]

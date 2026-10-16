@@ -1,0 +1,54 @@
+= generic2d
+
+The `generic2d` module provides a runnable JavaFX-based 2D TweetWallFX application. It serves as a demonstration entry point and a ready-to-run implementation.
+
+== Purpose
+
+- Main 2D demo application
+- Integrates with MQTT for external control (restart/stop)
+- Provides keyboard shortcuts for runtime control
+- Configurable via TweetWallFX configuration system
+
+== How to Run
+
+From the repository root:
+
+[source,bash]
+----
+./gradlew :tweetwallfx-generic2d:run
+----
+
+== Key Classes
+
+- `org.tweetwallfx.generic.Main` - Application entry point (JavaFX Application). Handles MQTT events, configures stage/scene, applies stylesheets, sets up status line, registers key handlers.
+
+== Keyboard Shortcuts
+
+- `D` - Toggle debug/status line display
+- `F` - Toggle fullscreen mode
+- `R` - Restart application (triggers MQTT restart event handling; exits with code 42)
+- `X` or `Q` - Exit application (normal exit, code 0)
+
+== MQTT Integration
+
+The app listens to MQTT events via `MqttProcess`:
+- `STOP` event → exit with code 0
+- `RESTART` event → exit with code 42
+
+The JVM exit code allows process managers/orchestrators to restart the app.
+
+== Configuration
+
+Uses standard TweetWallFX configuration (`tweetwallConfig.json`). Key settings come from `TweetwallSettings` (query, title, stylesheetResource, stylesheetFile). Stylesheets can be loaded from classpath resources or filesystem.
+
+== Dependencies
+
+- Core 2D functionality (`:tweetwallfx-2d`)
+- MQTT support (`:tweetwallfx-mqtt`)
+- Tweet API (`:tweetwallfx-tweet-api`)
+- Logging (Log4j2, SLF4J)
+
+== See Also
+
+- link:../docs/ARCHITECTURE.adoc[Architecture]
+- link:../docs/CONFIGURATION.adoc[Configuration]
