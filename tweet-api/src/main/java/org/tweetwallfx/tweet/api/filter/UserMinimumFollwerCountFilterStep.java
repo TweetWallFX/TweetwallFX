@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,6 +74,12 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -96,6 +102,12 @@ public class UserMinimumFollwerCountFilterStep implements FilterStep<Tweet> {
     public static final class Config {
 
         private Integer count;
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
 
         /**
          * Returns the number of followers a {@link User} shall have at a

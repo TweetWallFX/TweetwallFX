@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,31 @@ package org.tweetwallfx.mqtt;
 import javafx.event.Event;
 import javafx.event.EventType;
 
+/**
+ * JavaFX event used to signal MQTT related state changes.
+ */
 public class MqttEvent extends Event {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * Common supertype for all MQTT event types.
+     */
     public static final EventType<MqttEvent> ANY = new EventType<>(Event.ANY, "ANY");
+    /**
+     * Event type signalling a restart request.
+     */
     public static final EventType<MqttEvent> RESTART = new EventType<>(Event.ANY, "RESTART");
+    /**
+     * Event type signalling a stop request.
+     */
     public static final EventType<MqttEvent> STOP = new EventType<>(Event.ANY, "STOP");
 
+    /**
+     * Creates a new instance.
+     *
+     * @param source the source of the event
+     * @param eventType the type of the event
+     */
     public MqttEvent(Object source, EventType<? extends Event> eventType) {
         super(source, null, eventType);
     }

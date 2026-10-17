@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +66,9 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
         return initialized;
     }
 
+    /**
+     * Loads the schedule of the current day from the conference client.
+     */
     @Override
     public void run() {
         scheduleSlots = ConferenceClient.getClient()
@@ -79,6 +82,10 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
         initialized = true;
     }
 
+    /**
+     * {@return an immutable list of the sessions starting within the
+     * configured time frame}
+     */
     public List<SessionData> getFilteredSessionData() {
         ZoneId zoneId = Optional.ofNullable(System.getProperty("org.tweetwallfx.scheduledata.zone"))
                 .map(ZoneId::of)
@@ -89,7 +96,16 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
         return SessionData.from(scheduleSlots, liveOffset, zoneId, config.sessionsShallStartWithinMinutes);
     }
 
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link ScheduleDataProvider}.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
 
         @Override
         public DataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -105,22 +121,17 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
     /**
      * POJO used to configure {@link ScheduleDataProvider}.
      *
-     * <p>
-     * Param {@code initialDelay} The type of scheduling to perform. Defaults to
-     * {@link ScheduleType#FIXED_RATE}.
-     *
-     * <p>
-     * Param {@code initialDelay} Delay until the first execution in seconds.
-     * Defaults to {@code 0L}.
-     *
-     * <p>
-     * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
-     * executions in seconds. Defaults to {@code 300L}.
-     *
-     * <p>
-     * Param {@code Long sessionsShallStartWithinMinutes} Number of minutes
-     * within which the displayable sessions shall start. Defaults to
-     * {@code 240L}.
+     * @param scheduleType                  The type of scheduling to perform.
+     *                                      Defaults to
+     *                                      {@link ScheduleType#FIXED_RATE}.
+     * @param initialDelay                  Delay until the first execution in
+     *                                      seconds. Defaults to {@code 0L}.
+     * @param scheduleDuration              Fixed rate of / delay between
+     *                                      consecutive executions in seconds.
+     *                                      Defaults to {@code 300L}.
+     * @param sessionsShallStartWithinMinutes Number of minutes within which the
+     *                                      displayable sessions shall start.
+     *                                      Defaults to {@code 240L}.
      */
     public record Config(
             ScheduleType scheduleType,
@@ -128,6 +139,10 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
             Long scheduleDuration,
             Long sessionsShallStartWithinMinutes) implements ScheduledConfig {
 
+        /**
+         * Creates a new instance applying the documented default values to
+         * {@code null} arguments.
+         */
         public Config {
             scheduleType = Objects.requireNonNullElse(scheduleType, ScheduleType.FIXED_RATE);
             initialDelay = Objects.requireNonNullElse(initialDelay, 0L);

@@ -124,10 +124,21 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
         }
     }
 
+    /**
+     * Returns the image of the most recently added tweet, if any.
+     *
+     * @return an {@link Optional} wrapping the latest image or an empty
+     * {@link Optional} if no image has been set yet
+     */
     public Optional<Image> getLatestImage() {
         return Optional.ofNullable(latestTweetedImage);
     }
 
+    /**
+     * Returns a snapshot copy of the tweets currently held by this provider.
+     *
+     * @return a new {@link List} containing the currently known tweets
+     */
     public List<Tweet> getTweets() {
         tweetListLock.readLock().lock();
 
@@ -147,7 +158,16 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
                 .toList();
     }
 
+    /**
+     * Factory implementation creating {@link TweetStreamDataProvider} instances.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public TweetStreamDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -175,12 +195,22 @@ public class TweetStreamDataProvider implements DataProvider.NewTweetAware {
      * <p>
      * Param {@code hideRetweets} Is accepting retweets into the datastore of
      * the DataProvider acceptable? Defaults to {@code false}.
+     *
+     * @param historySize the number of tweets to request from the query in
+     * order to fill up {@link TweetStreamDataProvider} upon initialization
+     * @param maxTweets the maximum number of tweets to produce upon request via
+     * {@link TweetStreamDataProvider#getTweets()}
+     * @param hideRetweets whether retweets are to be hidden from the datastore
      */
     public record Config(
             Integer historySize,
             Integer maxTweets,
             Boolean hideRetweets) {
 
+        /**
+         * Creates a new instance applying the documented default values and
+         * validating the given configuration values.
+         */
         public Config {
             if (historySize < 0) {
                 throw new IllegalArgumentException("property 'historySize' must not be a negative number");

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -87,6 +87,12 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -110,6 +116,12 @@ public final class AcceptFromSenderFilterStep implements FilterStep<Tweet> {
 
         private Set<String> userHandles = Set.of();
         private boolean checkRetweeted = false;
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
 
         /**
          * Returns the handles for the {@link User} for which any {@link Tweet}

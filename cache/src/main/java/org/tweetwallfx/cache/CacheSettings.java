@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,13 @@ import java.util.Objects;
 
 import org.tweetwallfx.config.ConfigurationConverter;
 
+/**
+ * POJO for reading Settings concerning the cache configuration.
+ *
+ * @param persistenceDirectoryName name of the directory in which the cache
+ * persists its content
+ * @param caches mapping of cache names to their individual configuration
+ */
 public record CacheSettings(
         String persistenceDirectoryName,
         Map<String, CacheSetting> caches) {
@@ -43,11 +50,17 @@ public record CacheSettings(
      */
     public static final String CONFIG_KEY = "cacheConfiguration";
 
+    /**
+     * Creates a new instance applying defaults and null normalization.
+     */
     public CacheSettings {
         persistenceDirectoryName = Objects.requireNonNullElse(persistenceDirectoryName, "tweetwall-cache");
         caches = nullable(caches);
     }
 
+    /**
+     * {@return the mapping of cache names to their individual configuration}
+     */
     @Override
     public Map<String, CacheSetting> caches() {
         return nullable(caches);
@@ -58,6 +71,12 @@ public record CacheSettings(
      * {@link CacheSettings#CONFIG_KEY} into {@link CacheSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {
@@ -70,6 +89,16 @@ public record CacheSettings(
         }
     }
 
+    /**
+     * Configuration for an individual cache.
+     *
+     * @param keyType fully qualified class name of the key type
+     * @param valueType fully qualified class name of the value type
+     * @param expiry configuration of the expiry of cached values
+     * @param contentLoaderThreads number of threads to employ when loading
+     * content
+     * @param cacheResources resources available to the cache
+     */
     public static record CacheSetting(
             String keyType,
             String valueType,
@@ -77,6 +106,9 @@ public record CacheSettings(
             Integer contentLoaderThreads,
             List<CacheResource> cacheResources) {
 
+        /**
+         * Creates a new instance validating the given values.
+         */
         public CacheSetting {
             Objects.requireNonNull(keyType, "keyType must not be null");
             Objects.requireNonNull(valueType, "valueType must not be null");
@@ -84,40 +116,78 @@ public record CacheSettings(
             cacheResources = nullable(cacheResources);
         }
 
+        /**
+         * {@return the resources available to the cache}
+         */
         @Override
         public List<CacheResource> cacheResources() {
             return nullable(cacheResources);
         }
     }
 
+    /**
+     * Configuration of the expiry of cached values.
+     *
+     * @param type the type of the expiry
+     * @param amount the amount of time units after which values expire
+     * @param unit the unit of the expiry amount
+     */
     public static record CacheExpiry(
             CacheExpiryType type,
             Long amount,
             ChronoUnit unit) {
 
+        /**
+         * Creates a new instance validating the given values.
+         */
         public CacheExpiry {
             type = Objects.requireNonNullElse(type, CacheExpiryType.NONE);
             Objects.requireNonNull(amount, "amount must not be null");
             Objects.requireNonNull(unit, "unit must not be null");
         }
 
+        /**
+         * {@return the duration after which cached values expire}
+         */
         public Duration produceDuration() {
             return Duration.of(amount, unit);
         }
     }
 
+    /**
+     * The type determining how cached values expire.
+     */
     public enum CacheExpiryType {
 
+        /**
+         * Cached values never expire.
+         */
         NONE,
+        /**
+         * Cached values expire after a period of being idle.
+         */
         TIME_TO_IDLE,
+        /**
+         * Cached values expire after a fixed period of time.
+         */
         TIME_TO_LIVE;
     }
 
+    /**
+     * Configuration of a resource available to a cache.
+     *
+     * @param type the type of the resource
+     * @param amount the amount of units available
+     * @param unit the unit of the amount
+     */
     public static record CacheResource(
             CacheResourceType type,
             Long amount,
             MemUnit unit) {
 
+        /**
+         * Creates a new instance validating the given values.
+         */
         public CacheResource {
             Objects.requireNonNull(type, "type must not be null!");
             Objects.requireNonNull(amount, "amount must not be null!");
@@ -127,10 +197,22 @@ public record CacheSettings(
         }
     }
 
+    /**
+     * The type of resource made available to a cache.
+     */
     public enum CacheResourceType {
 
+        /**
+         * Disk based resource.
+         */
         DISK(true),
+        /**
+         * Heap memory based resource.
+         */
         HEAP(false),
+        /**
+         * Off-heap memory based resource.
+         */
         OFFHEAP(true);
         private final boolean requiresUnit;
 

@@ -48,6 +48,9 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.FontSizeTransition;
 import org.tweetwallfx.transitions.LocationTransition;
 
+/**
+ * Step that morphs the currently displayed tweet into the tag cloud.
+ */
 public class TweetToCloudStep implements Step {
 
     private TweetToCloudStep() {
@@ -171,6 +174,10 @@ public class TweetToCloudStep implements Step {
      * {@link TweetToCloudStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public TweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {

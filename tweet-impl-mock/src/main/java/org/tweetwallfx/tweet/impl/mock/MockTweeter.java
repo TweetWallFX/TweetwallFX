@@ -60,6 +60,10 @@ import java.util.stream.Stream;
 
 import static org.tweetwallfx.tweet.impl.mock.config.MockSettings.CONFIG_KEY;
 
+/**
+ * Mock implementation of {@link Tweeter} simulating posts at a fixed interval
+ * using randomly generated data.
+ */
 public final class MockTweeter implements Tweeter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MockTweeter.class);

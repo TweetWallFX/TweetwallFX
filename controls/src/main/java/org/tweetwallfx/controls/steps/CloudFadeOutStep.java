@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2019 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,9 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
+/**
+ * Step that fades out the currently displayed tag cloud.
+ */
 public class CloudFadeOutStep implements Step {
 
     private CloudFadeOutStep() {
@@ -85,6 +88,10 @@ public class CloudFadeOutStep implements Step {
      * {@link CloudFadeOutStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public CloudFadeOutStep create(final StepEngineSettings.StepDefinition stepDefinition) {

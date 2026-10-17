@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.tweetwallfx.tweet.api.Tweet;
 
+/**
+ * Calculates the layout of the words of a {@link Tweet} within a text flow.
+ */
 public class TweetLayout {
 
     private final Pattern pattern = Pattern.compile("\\s+");
@@ -46,10 +49,23 @@ public class TweetLayout {
         tweetWords = recalcTweetLayout();
     }
 
+    /**
+     * {@return the calculated layout information of the tweet words}
+     */
     public List<TweetWord> getWordLayoutInfo() {
         return tweetWords;
     }
 
+    /**
+     * Calculates the line offset to be used for a word that does not fit into
+     * the remaining line width.
+     *
+     * @param targetBounds the bounds of the word to place
+     * @param upperLeft the upper left corner of the layout area
+     * @param maxWidth the maximum width of a line
+     * @param lineOffset the current line offset
+     * @return the line offset to be used for the word
+     */
     public Point2D tweetWordLineOffset(Bounds targetBounds, Point2D upperLeft, double maxWidth, Point2D lineOffset) {
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
         double rightMargin = upperLeft.getX() + maxWidth;
@@ -59,6 +75,14 @@ public class TweetLayout {
         return lineOffset;
     }
 
+    /**
+     * Calculates the position at which the given word is to be placed.
+     *
+     * @param targetBounds the bounds of the word to place
+     * @param upperLeft the upper left corner of the layout area
+     * @param lineOffset the current line offset
+     * @return the position at which the word is to be placed
+     */
     public Point2D layoutTweetWord(Bounds targetBounds, Point2D upperLeft, Point2D lineOffset) {
         double y = upperLeft.getY() + targetBounds.getMinY() + lineOffset.getY();
         double x = upperLeft.getX() + targetBounds.getMinX() - lineOffset.getX();
@@ -85,16 +109,32 @@ public class TweetLayout {
                 .toList();
     }
 
+    /**
+     * Creates a new {@link TweetLayout} for the given configuration.
+     *
+     * @param configuration the configuration of the tweet layout
+     * @return the created tweet layout
+     */
     public static TweetLayout createTweetLayout(Configuration configuration) {
         return new TweetLayout(configuration);
     }
 
+    /**
+     * Configuration of a {@link TweetLayout}.
+     */
     public static class Configuration {
 
         private final Tweet tweet;
         private final Font font;
         private final double tweetFontSize;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param tweet the tweet to lay out
+         * @param font the font to use
+         * @param tweetFontSize the font size to use for the tweet words
+         */
         public Configuration(Tweet tweet, Font font, double tweetFontSize) {
             this.tweet = tweet;
             this.font = font;
@@ -102,11 +142,27 @@ public class TweetLayout {
         }
     }
 
+    /**
+     * A single word of a laid out tweet together with its bounds.
+     */
     public static class TweetWord {
 
+        /**
+         * The bounds of the word.
+         */
         public final Bounds bounds;
+
+        /**
+         * The text of the word.
+         */
         public final String text;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param bounds the bounds of the word
+         * @param text the text of the word
+         */
         public TweetWord(Bounds bounds, String text) {
             this.bounds = bounds;
             this.text = text;
@@ -118,11 +174,27 @@ public class TweetLayout {
         }
     }
 
+    /**
+     * Associates a {@link TweetWord} with the {@link Text} node displaying it.
+     */
     public static class TweetWordNode {
 
+        /**
+         * The word being displayed.
+         */
         public final TweetWord tweetWord;
+
+        /**
+         * The text node displaying the word.
+         */
         public final Text textNode;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param tweetWord the word being displayed
+         * @param textNode the text node displaying the word
+         */
         public TweetWordNode(TweetWord tweetWord, Text textNode) {
             this.tweetWord = tweetWord;
             this.textNode = textNode;

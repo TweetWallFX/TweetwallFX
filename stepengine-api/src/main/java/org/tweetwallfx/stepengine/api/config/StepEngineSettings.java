@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,12 @@ import static org.tweetwallfx.util.ToString.map;
  * <p>
  * Param {@code visualizationSettings} list of settings for
  * {@link Visualization} instances
+ *
+ * @param steps the definitions of the {@link Step}s to execute
+ * @param dataProviderSettings the settings for the {@link DataProvider}
+ * instances to use
+ * @param visualizationSettings the settings for the
+ * {@link Visualization} instances to use, keyed by their identifier
  */
 public record StepEngineSettings(
         List<StepDefinition> steps,
@@ -65,22 +71,51 @@ public record StepEngineSettings(
      */
     public static final String CONFIG_KEY = "stepEngine";
 
+    /**
+     * Creates a new instance defensively copying the given steps and
+     * normalizing possibly {@code null} collections to empty ones.
+     *
+     * @param steps the definitions of the {@link Step}s to execute
+     * @param dataProviderSettings the settings for the {@link DataProvider}
+     * instances to use
+     * @param visualizationSettings the settings for the
+     * {@link Visualization} instances to use, keyed by their identifier
+     */
     public StepEngineSettings {
         steps = List.copyOf(Objects.requireNonNull(steps, "steps must not be null"));
         dataProviderSettings = nullable(dataProviderSettings);
         visualizationSettings = nullable(visualizationSettings);
     }
 
+    /**
+     * Returns an immutable copy of the configured {@link Step} definitions.
+     *
+     * @return an immutable copy of the configured {@link Step} definitions
+     */
     @Override
     public List<StepDefinition> steps() {
         return List.copyOf(steps);
     }
 
+    /**
+     * Returns an immutable copy of the configured {@link DataProvider}
+     * settings.
+     *
+     * @return an immutable copy of the configured {@link DataProvider}
+     * settings
+     */
     @Override
     public List<DataProviderSetting> dataProviderSettings() {
         return List.copyOf(dataProviderSettings);
     }
 
+    /**
+     * Returns an immutable copy of the configured {@link Visualization}
+     * settings.
+     *
+     * @return an immutable copy of the configured {@link Visualization}
+     * settings
+     */
     @Override
     public Map<String, VisualizationSetting> visualizationSettings() {
         return Map.copyOf(visualizationSettings);
@@ -91,6 +126,12 @@ public record StepEngineSettings(
      * {@link StepEngineSettings#CONFIG_KEY} into {@link StepEngineSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {
@@ -111,6 +152,12 @@ public record StepEngineSettings(
     public static final class StepDefinition extends ConfigurableObjectBase {
 
         private String stepClassName;
+
+        /**
+         * Creates a new instance.
+         */
+        public StepDefinition() {
+        }
 
         /**
          * Returns the class name of the {@link Step}.
@@ -153,6 +200,12 @@ public record StepEngineSettings(
     public static final class DataProviderSetting extends ConfigurableObjectBase {
 
         private String dataProviderClassName;
+
+        /**
+         * Creates a new instance.
+         */
+        public DataProviderSetting() {
+        }
 
         /**
          * Returns the class name of the {@link DataProvider}.
@@ -204,6 +257,12 @@ public record StepEngineSettings(
     public static final class VisualizationSetting extends ConfigurableObjectBase {
 
         private String visualizationClassName;
+
+        /**
+         * Creates a new instance.
+         */
+        public VisualizationSetting() {
+        }
 
         /**
          * Returns the class name of the {@link Visualization}.

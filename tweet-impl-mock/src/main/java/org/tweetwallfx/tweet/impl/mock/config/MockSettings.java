@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,17 @@ import static org.tweetwallfx.util.Nullable.nullable;
  *
  * <p>
  * Param {@code postInterval} the base data directory where the static data resides.
+ *
+ * @param debugEnabled a flag indicating that the mock client is to work in
+ *                     debug mode (defaults to {@code false})
+ * @param enabled      a flag indicating that the mock client is enabled
+ *                     (defaults to {@code true})
+ * @param postInterval the interval in seconds between two simulated posts
+ *                     (defaults to {@code 30})
+ * @param initialPosts the number of posts created during initialization
+ *                     (defaults to {@code 0})
+ * @param users        the user screen names to be mentioned in simulated posts
+ * @param hashtags     the hash tags to be included in simulated posts
  */
 public record MockSettings(
         Boolean debugEnabled,
@@ -57,6 +68,10 @@ public record MockSettings(
      */
     public static final String CONFIG_KEY = "mock";
 
+    /**
+     * Creates a new instance, replacing {@code null} values with their default
+     * values and validating the post interval.
+     */
     public MockSettings {
         debugEnabled = Objects.requireNonNullElse(debugEnabled, false);
         enabled = Objects.requireNonNullElse(enabled, true);
@@ -74,6 +89,11 @@ public record MockSettings(
      * {@link MockSettings#CONFIG_KEY} into {@link MockSettings}.
      */
     public static class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() { }
 
         @Override
         public String getResponsibleKey() {

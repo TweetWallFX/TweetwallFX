@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,5 +23,11 @@
  */
 package org.tweetwallfx.emoji;
 
+/**
+ * An emoji represented as Twemoji, identified by its hexadecimal Unicode code
+ * point.
+ *
+ * @param hex the hexadecimal Unicode code point of the emoji
+ */
 public record Twemoji(String hex) {
 }

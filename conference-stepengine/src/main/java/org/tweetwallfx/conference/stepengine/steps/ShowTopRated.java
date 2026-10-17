@@ -85,6 +85,13 @@ public final class ShowTopRated implements Step {
                 "lookupId must not be null");
     }
 
+    /**
+     * Creates the top rated talks node (if not yet present) and animates the
+     * talk entries into view.
+     *
+     * @param context the step engine machine context providing access to the
+     *                skin and the data providers
+     */
     @Override
     public void doStep(final MachineContext context) {
         WordleSkin wordleSkin = (WordleSkin) context.get("WordleSkin");
@@ -323,6 +330,12 @@ public final class ShowTopRated implements Step {
         return speakerImage;
     }
 
+    /**
+     * {@return {@code true} when there are no voted talks to display or the
+     * display node was already created, {@code false} otherwise}
+     *
+     * @param context the step engine machine context
+     */
     @Override
     public boolean shouldSkip(final MachineContext context) {
         final boolean skip = votedTalksConverter.apply(context).isEmpty()
@@ -345,6 +358,11 @@ public final class ShowTopRated implements Step {
      * {@link ShowTopRated}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
 
         @Override
         public ShowTopRated create(final StepEngineSettings.StepDefinition stepDefinition) {
@@ -386,29 +404,58 @@ public final class ShowTopRated implements Step {
         }
     }
 
+    /**
+     * Configuration POJO for the {@link ShowTopRated} step.
+     */
     public static class Config extends AbstractConfig {
 
+        /**
+         * Creates a new instance.
+         */
+        public Config() { }
+
         private TopVotedType topVotedType = null;
+        /** The size (width and height) of a speaker avatar in pixels. */
         public int avatarSize = 64;
+        /** The corner arc size used when clipping rectangular avatars. */
         public int avatarArcSize = 20;
+        /** The horizontal spacing between adjacent speaker avatars. */
         public int avatarSpacing = 4;
+        /** The x coordinate of the top rated node layout. */
         public double layoutX = 0;
+        /** The y coordinate of the top rated node layout. */
         public double layoutY = 0;
+        /** The total width of the top rated node in pixels. */
         public double width = 800;
+        /** The height of the title node in pixels. */
         public double titleHeight = 60;
+        /** The position of the title relative to the displayed talks. */
         public TitlePosition titlePosition = TitlePosition.TOP;
+        /** The maximum number of top rated talks to display. */
         public int maxTalks = 5;
+        /** The vertical gap between two talk rows in pixels. */
         public double talkVGap = 10;
+        /** The height of a single talk row in pixels. */
         public double talkHeight = 200;
+        /** Whether speaker avatars are clipped to a circle. */
         public boolean circularAvatar = true;
+        /** Whether the company name of a speaker is shown. */
         public boolean showCompanyName = false;
+        /** Whether speaker avatars are shown at all. */
         public boolean showAvatar = true;
+        /** Whether the track avatar of a talk is shown. */
         public boolean showTrackAvatar = true;
+        /** Whether avatars are arranged in multiple compressed lines. */
         public boolean compressedAvatars = true;
+        /** The number of speakers from which on compressed avatars are used. */
         public int compressedAvatarsLimit = 4;
+        /** The number of speakers below which the company name is hidden. */
         public int automaticCompanyNameHide = 6;
+        /** Whether the tags of a talk are shown. */
         public boolean showTags = false;
+        /** The value stored as skip token when the step is skipped. */
         public String skipTokenValue = null;
+        /** The font size of the talk title in points. */
         public int titleFontSize = 13;
 
         /**
@@ -450,13 +497,25 @@ public final class ShowTopRated implements Step {
             this.title = title;
         }
 
+        /**
+         * {@return the title describing this type of top voted display}
+         */
         public String getTitle() {
             return this.title;
         }
     }
 
+    /**
+     * The position of the title relative to the displayed talks.
+     */
     public static enum TitlePosition {
+        /**
+         * The title is placed on top of the talks.
+         */
         TOP,
+        /**
+         * The title is placed on the left side of the talks.
+         */
         LEFT
     }
 }

@@ -52,6 +52,10 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Base class for tests verifying a {@link ConferenceClient} implementation
+ * against a live conference server.
+ */
 public abstract class ConferenceClientTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConferenceClientTestBase.class);
@@ -73,6 +77,16 @@ public abstract class ConferenceClientTestBase {
         this.expectedConferenceClient = expectedConferenceClient;
     }
 
+    /**
+     * Creates a new ConferenceClientTestBase for the given conference test
+     * data.
+     *
+     * @param expectedConferenceClient the expected {@link ConferenceClient}
+     *                                 implementation class
+     * @param conferenceDay            the conference day to test against
+     * @param conferenceRoom           the conference room to test against
+     * @param talkId                   the ID of the talk to test against
+     */
     protected ConferenceClientTestBase(
             final Class<? extends ConferenceClient> expectedConferenceClient,
             final String conferenceDay,
@@ -85,6 +99,14 @@ public abstract class ConferenceClientTestBase {
                 expectedConferenceClient);
     }
 
+    /**
+     * Checks whether the conference server is reachable at the given
+     * {@code uri}, but only if live conference client tests are enabled via
+     * the {@code org.tweetwallfx.tests.executeConferenceClientLiveTests}
+     * system property.
+     *
+     * @param uri the URI of the conference server to check
+     */
     protected static final void checkServerReachable(final String uri) {
         final boolean testingLive = Boolean.getBoolean("org.tweetwallfx.tests.executeConferenceClientLiveTests");
         LOG.info("Test of Conference Client against live system is {}.", testingLive ? "enabled" : "disabled");
@@ -117,6 +139,12 @@ public abstract class ConferenceClientTestBase {
         return conferenceRoom;
     }
 
+    /**
+     * {@return true if the conference server is reachable, false otherwise}
+     *
+     * <p>Indicates whether the conference server was determined to be reachable by
+     * a previous call to {@link #checkServerReachable(String)}.
+     */
     protected final static boolean serverReachable() {
         if (!CONFERENCE_REACHABLE.get()) {
             LOG.info("CFP Server is unreachable");

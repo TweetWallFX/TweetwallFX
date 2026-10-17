@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,6 +50,11 @@ public abstract class URLContentCacheBase {
     private final Executor contentLoader;
     private final Cache<String, URLContent> urlContentCache;
 
+    /**
+     * Creates a new instance initializing cache and content loader.
+     *
+     * @param cacheName the name of the cache
+     */
     protected URLContentCacheBase(final String cacheName) {
         this(cacheName, initializeCache(cacheName), initializeExecutor(cacheName));
     }
@@ -221,6 +226,9 @@ public abstract class URLContentCacheBase {
         });
     }
 
+    /**
+     * {@return the default URLContentCacheBase instance}
+     */
     public static URLContentCacheBase getDefault() {
         return Default.INSTANCE;
     }

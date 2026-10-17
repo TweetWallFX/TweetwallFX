@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,5 +23,8 @@
  */
 package org.tweetwallfx.tweet.api.entry;
 
+/**
+ * {@link TweetEntry} representing a cashtag symbol contained in a Tweet.
+ */
 public interface SymbolTweetEntry extends TweetEntry {
 }

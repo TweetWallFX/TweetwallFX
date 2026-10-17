@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,10 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
+/**
+ * Data provider maintaining a weighted tag cloud built from the words of
+ * processed tweets.
+ */
 public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final int NUM_MAX_WORDS = 40;
@@ -63,14 +67,26 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
         }
     }
 
+    /**
+     * Sets the list of additional words to be made available to the tag cloud.
+     *
+     * @param newWordList the additional words
+     */
     public void setAdditionalTweetWords(final List<Word> newWordList) {
         this.additionalTweetWords = newWordList;
     }
 
+    /**
+     * {@return the additional words to be made available to the tag cloud}
+     */
     public List<Word> getAdditionalTweetWords() {
         return this.additionalTweetWords;
     }
 
+    /**
+     * {@return the most frequent words of the tag cloud in descending weight
+     * order}
+     */
     public List<Word> getWords() {
         return tree.entrySet().stream()
                 .sorted(COMPARATOR.reversed())
@@ -99,7 +115,15 @@ public class TagCloudDataProvider implements DataProvider.HistoryAware, DataProv
                 .forEach(w -> tree.merge(w, 1L, (oldValue, newValue) -> oldValue + newValue));
     }
 
+    /**
+     * Implementation of {@link DataProvider.Factory} as Service implementation
+     * creating {@link TagCloudDataProvider}.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public TagCloudDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

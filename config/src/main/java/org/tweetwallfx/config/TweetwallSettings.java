@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,23 +30,13 @@ import static org.tweetwallfx.util.Nullable.nullable;
 /**
  * POJO for reading Settings concerning the Tweetwall itself.
  *
- * <p>
- * Param {@code title} the title of the Tweetwall
- *
- * <p>
- * Param {@code stylesheetResource} the resource path containing stylesheet to
- * be read from the Classpath
- *
- * <p>
- * Param {@code stylesheetFile} the resource path containing stylesheet to be
- * read from the filesystem
- *
- * <p>
- * Param {@code query} the Query String that is to provide Tweets for this
- * Tweetwall
- *
- * <p>
- * Param {@code additionalStopWords} the additional stop words to employ
+ * @param title the title of the Tweetwall
+ * @param stylesheetResource the resource path containing stylesheet to be read
+ * from the Classpath
+ * @param stylesheetFile the resource path containing stylesheet to be read from
+ * the filesystem
+ * @param query the Query String that is to provide Tweets for this Tweetwall
+ * @param additionalStopWords the additional stop words to employ
  */
 public record TweetwallSettings(
         String title,
@@ -61,12 +51,18 @@ public record TweetwallSettings(
      */
     public static final String CONFIG_KEY = "tweetwall";
 
+    /**
+     * Creates a new instance validating the given values.
+     */
     public TweetwallSettings {
         Objects.requireNonNull(title, "title must not be null!");
         Objects.requireNonNull(query, "query must not be null!");
         additionalStopWords = nullable(additionalStopWords);
     }
 
+    /**
+     * {@return the additional stop words to employ}
+     */
     @Override
     public Set<String> additionalStopWords() {
         return nullable(additionalStopWords);
@@ -77,6 +73,12 @@ public record TweetwallSettings(
      * {@link TweetwallSettings#CONFIG_KEY} into {@link TweetwallSettings}.
      */
     public static class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {

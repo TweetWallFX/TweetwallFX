@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2025 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,13 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
         this.config = config;
     }
 
+    /**
+     * Returns the (cached) image of the given speaker.
+     *
+     * @param speaker the speaker to get the image for, may be {@code null}
+     * @return the speaker image or the configured default image when no
+     *         speaker image is available
+     */
     public Image getSpeakerImage(final Speaker speaker) {
         return null == speaker
                 ? getDefaultClasspathImage()
@@ -83,12 +90,18 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
         return config;
     }
 
+    /**
+     * {@return a stream of the images of all conference speakers}
+     */
     public Stream<Image> getImages() {
         return ConferenceClient.getClient()
                 .getSpeakers()
                 .stream().map(this::getSpeakerImage);
     }
 
+    /**
+     * Preloads the speaker images into the profile image cache.
+     */
     @Override
     public void run() {
         ConferenceClient.getClient()
@@ -112,6 +125,11 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
      */
     public static class FactoryImpl implements DataProvider.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
+
         @Override
         public SpeakerImageProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
             return new SpeakerImageProvider(dataProviderSetting.getConfig(Config.class));
@@ -124,27 +142,21 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
     }
 
     /**
-     * POJO used to configure {@link TopTalksTodayDataProvider}.
+     * POJO used to configure {@link SpeakerImageProvider}.
      *
-     * <p>
-     * Param {@code noImageResource} Classpath entry for usage in cases when no
-     * speaker image is available
-     *
-     * <p>
-     * Param {@code urlReplacements} Mapping of unloadable profile image URLs to
-     * loadable ones (required due to e.g. changed profile pics)
-     *
-     * <p>
-     * Param {@code initialDelay} The type of scheduling to perform. Defaults to
-     * {@link ScheduleType#FIXED_RATE}.
-     *
-     * <p>
-     * Param {@code initialDelay} Delay until the first execution in seconds.
-     * Defaults to {@code 0L}.
-     *
-     * <p>
-     * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
-     * executions in seconds. Defaults to {@code 1800L}.
+     * @param noImageResource Classpath entry for the image used when no speaker
+     *                        image is available. Defaults to
+     *                        {@code "icons/anonymous.jpg"}.
+     * @param urlReplacements Mapping of unloadable profile image URLs to
+     *                        loadable ones (required due to e.g. changed
+     *                        profile pics).
+     * @param scheduleType    The type of scheduling to perform. Defaults to
+     *                        {@link ScheduleType#FIXED_RATE}.
+     * @param initialDelay    Delay until the first execution in seconds.
+     *                        Defaults to {@code 0L}.
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     *                        executions in seconds. Defaults to
+     *                        {@code 1800L}.
      */
     public static record Config(
             String noImageResource,
@@ -153,6 +165,10 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
             Long initialDelay,
             Long scheduleDuration) implements ScheduledConfig {
 
+        /**
+         * Creates a new instance applying the documented default values to
+         * {@code null} arguments.
+         */
         public Config {
             noImageResource = Objects.requireNonNullElse(noImageResource, "icons/anonymous.jpg");
             urlReplacements = nullable(urlReplacements);
@@ -161,6 +177,10 @@ public final class SpeakerImageProvider implements DataProvider, DataProvider.Sc
             scheduleDuration = Objects.requireNonNullElse(scheduleDuration, 30 * 60L);
         }
 
+        /**
+         * {@return the mapping of unloadable profile image URLs to loadable
+         * ones, never {@code null}}
+         */
         @Override
         public Map<String, String> urlReplacements() {
             return nullable(urlReplacements);

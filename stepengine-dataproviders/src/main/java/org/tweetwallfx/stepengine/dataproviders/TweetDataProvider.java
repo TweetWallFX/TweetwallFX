@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,10 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.Tweeter;
 
+/**
+ * Data provider that hands out tweets of the configured query in a randomized,
+ * non-repeating order based on a bounded history.
+ */
 public class TweetDataProvider implements DataProvider.NewTweetAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TweetDataProvider.class);
@@ -60,6 +64,11 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
         this.lastTweetCollection = null;
     }
 
+    /**
+     * Returns the tweet that was last handed out by {@link #nextTweet()}.
+     *
+     * @return the current tweet or {@code null} if none was selected yet
+     */
     public Tweet getTweet() {
         return this.tweet;
     }
@@ -72,6 +81,12 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
                 .toList();
     }
 
+    /**
+     * Selects the next tweet to present, avoiding tweets that were already
+     * handed out recently.
+     *
+     * @return the next tweet to present or {@code null} if none is available
+     */
     public Tweet nextTweet() {
         if (null == nextTweet) {
             if (null == lastTweetCollection) {
@@ -101,6 +116,12 @@ public class TweetDataProvider implements DataProvider.NewTweetAware {
      * creating {@link TweetDataProvider}.
      */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public TweetDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {

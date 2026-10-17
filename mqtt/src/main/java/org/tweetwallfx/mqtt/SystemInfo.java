@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,9 +33,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides information about the local system, such as the network addresses
+ * of its non-loopback interfaces.
+ */
 public class SystemInfo {
     private static final Logger LOG = LoggerFactory.getLogger(SystemInfo.class);
 
+    /**
+     * Creates a new instance.
+     */
+    public SystemInfo() {
+    }
+
+    /**
+     * {@return a mapping of network interface names to the addresses assigned
+     * to them}
+     */
     public static Map<String, List<String>> info() {
         try {
             var infos = new HashMap<String, List<String>>();

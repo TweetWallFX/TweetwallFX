@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,9 @@ import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
+/**
+ * A JavaFX {@link Transition} that animates the layout position (X and Y) of a {@link Node}.
+ */
 public final class LocationTransition extends Transition {
 
     private final Node node;
@@ -35,6 +38,16 @@ public final class LocationTransition extends Transition {
     private final double targetX;
     private final double targetY;
 
+    /**
+     * Creates a new location transition.
+     *
+     * @param duration the duration of the transition
+     * @param node the Node whose layout position is animated
+     * @param startX the initial X position
+     * @param startY the initial Y position
+     * @param targetX the final X position
+     * @param targetY the final Y position
+     */
     public LocationTransition(
             final Duration duration, final Node node,
             final double startX, final double startY,
@@ -47,18 +60,38 @@ public final class LocationTransition extends Transition {
         this.targetY = targetY;
     }
 
+    /**
+     * Creates a new location transition with positions determined dynamically.
+     *
+     * @param duration the duration of the transition
+     * @param node the Node whose layout position is animated
+     */
     public LocationTransition(
             final Duration duration, final Node node) {
         this(duration, node,
                 Double.NaN, Double.NaN, Double.NaN, Double.NaN);
     }
 
+    /**
+     * Creates a new location transition with specified start and target X positions.
+     *
+     * @param startX the initial X position
+     * @param targetX the final X position
+     * @return a new LocationTransition instance
+     */
     public LocationTransition withX(final double startX, final double targetX) {
         return new LocationTransition(
                 getCycleDuration(), this.node,
                 startX, this.startY, targetX, this.targetY);
     }
 
+    /**
+     * Creates a new location transition with specified start and target Y positions.
+     *
+     * @param startY the initial Y position
+     * @param targetY the final Y position
+     * @return a new LocationTransition instance
+     */
     public LocationTransition withY(final double startY, final double targetY) {
         return new LocationTransition(
                 getCycleDuration(), this.node,

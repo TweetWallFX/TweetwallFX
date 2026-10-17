@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -91,6 +91,12 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -114,6 +120,12 @@ public class RejectContainingHashtagFilterStep implements FilterStep<Tweet> {
 
         private Set<String> hashtags = Set.of();
         private boolean checkRetweeted = false;
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
 
         /**
          * Returns the hashtags for the {@link Tweet} for which any

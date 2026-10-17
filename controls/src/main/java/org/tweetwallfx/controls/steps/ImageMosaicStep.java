@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2025 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,9 @@ import org.tweetwallfx.stepengine.dataproviders.ImageMosaicDataProvider.ImageSto
 import org.tweetwallfx.transitions.LocationTransition;
 import org.tweetwallfx.transitions.SizeTransition;
 
+/**
+ * Step that displays an animated mosaic of images.
+ */
 public class ImageMosaicStep implements Step {
 
     private ImageMosaicStep() {
@@ -289,6 +292,10 @@ public class ImageMosaicStep implements Step {
      * {@link ImageMosaicStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public ImageMosaicStep create(final StepEngineSettings.StepDefinition stepDefinition) {

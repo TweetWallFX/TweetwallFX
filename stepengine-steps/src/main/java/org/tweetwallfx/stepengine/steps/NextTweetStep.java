@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,9 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.stepengine.dataproviders.TweetDataProvider;
 
+/**
+ * Step that advances the tweet data provider to the next tweet.
+ */
 public class NextTweetStep implements Step {
 
     private NextTweetStep() {
@@ -48,6 +51,12 @@ public class NextTweetStep implements Step {
      * {@link NextTweetStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public NextTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {

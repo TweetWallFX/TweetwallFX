@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,28 @@ package org.tweetwallfx.controls;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * A word with a weight used for rendering a tag cloud.
+ */
 public final class Word implements Comparable<Word> {
 
     private final String text;
     private final double weight;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param text the text of the word
+     * @param weight the weight of the word
+     */
     public Word(final String text, final double weight) {
         this.text = text;
         this.weight = weight;
     }
 
+    /**
+     * {@return the text of the word}
+     */
     public String getText() {
         return text;
     }
@@ -45,6 +57,9 @@ public final class Word implements Comparable<Word> {
         return Double.compare(weight, o.weight);
     }
 
+    /**
+     * {@return the weight of the word}
+     */
     public double getWeight() {
         return weight;
     }

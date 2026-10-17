@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,9 @@ package org.tweetwallfx.controls;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * Factory creating text nodes for the words of a tweet.
+ */
 public class TweetWordNodeFactory extends AbstractWordNodeFactory {
 
     private final Config configuration;
@@ -35,18 +38,39 @@ public class TweetWordNodeFactory extends AbstractWordNodeFactory {
         this.configuration = configuration;
     }
 
+    /**
+     * Creates a new {@link TweetWordNodeFactory} for the given configuration.
+     *
+     * @param configuration the configuration to use
+     * @return the created factory
+     */
     public static TweetWordNodeFactory createFactory(Config configuration) {
         return new TweetWordNodeFactory(configuration);
     }
 
+    /**
+     * Adapts the font size of the given text node to the configured tweet font
+     * size.
+     *
+     * @param textNode the text node to adapt
+     */
     public void fontSizeAdaption(Text textNode) {
         fontSizeAdaption(textNode, configuration.tweetFontSize);
     }
 
+    /**
+     * Configuration of a {@link TweetWordNodeFactory}.
+     */
     public static class Config extends AbstractWordNodeFactory.Configuration {
 
         private final double tweetFontSize;
 
+        /**
+         * Creates a new instance.
+         *
+         * @param font the font to use
+         * @param tweetFontSize the font size to use for tweet words
+         */
         public Config(Font font, double tweetFontSize) {
             super(font);
             this.tweetFontSize = tweetFontSize;

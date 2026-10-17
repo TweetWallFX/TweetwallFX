@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
  * returned immediately. Otherwise the value is loaded via the
  * {@code valueSupplier} and its validity for the next {@code validFor}
  * duration.
+ *
+ * @param <T> the type of the value held by this ExpiringValue
  */
 public final class ExpiringValue<T> {
 
@@ -48,6 +50,14 @@ public final class ExpiringValue<T> {
     private transient Instant expires = Instant.MIN;
     private transient T currentValue = null;
 
+    /**
+     * Creates a new ExpiringValue supplying its value via the given
+     * {@code valueSupplier} and remaining valid for the given {@code validFor}
+     * duration.
+     *
+     * @param valueSupplier the supplier used to (re)acquire the value
+     * @param validFor the duration for which an acquired value remains valid
+     */
     public ExpiringValue(final Supplier<T> valueSupplier, final Duration validFor) {
         this.valueSupplier = Objects.requireNonNull(valueSupplier, "valueSupplier must not be null");
         this.validFor = Objects.requireNonNull(validFor, "validFor must not be null");

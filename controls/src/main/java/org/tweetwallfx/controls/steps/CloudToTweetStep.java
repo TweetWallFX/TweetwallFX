@@ -64,6 +64,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/**
+ * Step that morphs the currently displayed tag cloud into the detail view of a
+ * tweet.
+ */
 public class CloudToTweetStep implements Step {
 
     private CloudToTweetStep() {
@@ -343,6 +347,10 @@ public class CloudToTweetStep implements Step {
      * {@link CloudToTweetStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public CloudToTweetStep create(final StepEngineSettings.StepDefinition stepDefinition) {

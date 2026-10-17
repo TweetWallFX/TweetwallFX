@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,9 @@ import org.tweetwallfx.stepengine.api.Step;
 import org.tweetwallfx.stepengine.api.StepEngine;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 
+/**
+ * Step that shuts down a controllable step identified by configuration.
+ */
 public class GenericShutdownStep implements Step {
 
     private final Config config;
@@ -57,6 +60,12 @@ public class GenericShutdownStep implements Step {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
+
         @Override
         public GenericShutdownStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new GenericShutdownStep(stepDefinition.getConfig(Config.class));
@@ -73,8 +82,20 @@ public class GenericShutdownStep implements Step {
         }
     }
 
+    /**
+     * Configuration for {@link GenericShutdownStep}.
+     */
     public static class Config extends AbstractConfig {
 
+        /**
+         * The name of the step to terminate.
+         */
         public String stepToTerminate = "Not defined - please set in configuration";
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() {
+        }
     }
 }

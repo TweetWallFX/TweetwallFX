@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2025 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +37,8 @@ import static org.tweetwallfx.util.ToString.map;
 /**
  * POJO for reading Settings concerning {@link FilterChain}s.
  *
- * <p>
- * Param {@code chains} the mapping of the {@link FilterChainDefinition}s to the
- * name of the defined {@link FilterChain}
+ * @param chains the mapping of the {@link FilterChainDefinition}s to the name
+ * of the defined {@link FilterChain}
  */
 public record FilterChainSettings(
         Map<String, FilterChainDefinition> chains) {
@@ -50,10 +49,17 @@ public record FilterChainSettings(
      */
     public static final String CONFIG_KEY = "filterchains";
 
+    /**
+     * Creates a new instance validating the given values.
+     */
     public FilterChainSettings {
         chains = Map.copyOf(Objects.requireNonNull(chains, "chains must not be null!"));
     }
 
+    /**
+     * {@return the mapping of {@link FilterChainDefinition}s to filter chain
+     * names}
+     */
     @Override
     public Map<String, FilterChainDefinition> chains() {
         return Map.copyOf(chains);
@@ -64,6 +70,12 @@ public record FilterChainSettings(
      * {@link FilterChainSettings#CONFIG_KEY} into {@link FilterChainSettings}.
      */
     public static final class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {
@@ -79,28 +91,28 @@ public record FilterChainSettings(
     /**
      * POJO defining a {@link FilterChain}.
      *
-     * <p>
-     * Param {@code defaultResult} a boolean flag determining if the evaluated
-     * object are accepted or rejected should no previous evaluation by the
+     * @param defaultResult a boolean flag determining if the evaluated object
+     * are accepted or rejected should no previous evaluation by the
      * {@link FilterStep}s have terminated the evaluation
-     *
-     * <p>
-     * Param {@code filterSteps} the filter steps contained in the
-     * {@link FilterChain}
-     *
-     * <p>
-     * Param {@code domainObjectClassName} the class name of the domain object
-     * being evaluated
+     * @param filterSteps the filter steps contained in the {@link FilterChain}
+     * @param domainObjectClassName the class name of the domain object being
+     * evaluated
      */
     public static record FilterChainDefinition(
             Boolean defaultResult,
             List<FilterStepDefinition> filterSteps,
             String domainObjectClassName) {
 
+        /**
+         * Creates a new instance normalizing the given filter steps.
+         */
         public FilterChainDefinition {
             filterSteps = nullable(filterSteps);
         }
 
+        /**
+         * {@return the filter steps contained in the {@link FilterChain}}
+         */
         @Override
         public List<FilterStepDefinition> filterSteps() {
             return List.copyOf(filterSteps);
@@ -120,6 +132,12 @@ public record FilterChainSettings(
     public static final class FilterStepDefinition extends ConfigurableObjectBase {
 
         private String stepClassName;
+
+        /**
+         * Creates a new instance.
+         */
+        public FilterStepDefinition() {
+        }
 
         /**
          * Returns the class name of the {@link FilterStep}.

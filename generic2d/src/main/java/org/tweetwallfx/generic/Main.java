@@ -63,6 +63,13 @@ import org.tweetwallfx.twod.TagTweets;
  * (exit code 0).
  */
 public class Main extends Application {
+
+    /**
+     * Creates a new instance.
+     */
+    public Main() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final AtomicInteger RC = new AtomicInteger();
 

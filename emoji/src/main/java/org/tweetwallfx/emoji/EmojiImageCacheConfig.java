@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,11 @@ import java.util.Objects;
 import org.tweetwallfx.config.Configuration;
 import org.tweetwallfx.config.ConfigurationConverter;
 
+/**
+ * Settings for the emoji image cache.
+ *
+ * @param emojiImageBaseUrl the base URL the emoji images are retrieved from
+ */
 public record EmojiImageCacheConfig(
         String emojiImageBaseUrl) {
 
@@ -36,6 +41,10 @@ public record EmojiImageCacheConfig(
      */
     public static final String CONFIG_KEY = EmojiImageCache.class.getSimpleName();
 
+    /**
+     * Creates a new instance applying defaults and ensuring that the emoji
+     * image base URL ends with a {@code /}.
+     */
     public EmojiImageCacheConfig {
         String bu = Objects.requireNonNullElse(emojiImageBaseUrl, "https://cdnjs.cloudflare.com/ajax/libs/twemoji/15.1.0/72x72");
 
@@ -47,6 +56,9 @@ public record EmojiImageCacheConfig(
         emojiImageBaseUrl = bu;
     }
 
+    /**
+     * {@return the current emoji image cache configuration}
+     */
     public static EmojiImageCacheConfig getInstance() {
         return Configuration.getInstance().getConfigTyped(CONFIG_KEY, EmojiImageCacheConfig.class);
     }
@@ -56,6 +68,12 @@ public record EmojiImageCacheConfig(
      * {@link #CONFIG_KEY} into {@link EmojiImageCacheConfig}.
      */
     public static final class Converter implements ConfigurationConverter {
+
+        /**
+         * Creates a new instance.
+         */
+        public Converter() {
+        }
 
         @Override
         public String getResponsibleKey() {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2024 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,16 @@ import org.tweetwallfx.tweet.api.TweetQuery;
 import org.tweetwallfx.tweet.api.TweetStream;
 import org.tweetwallfx.tweet.api.Tweeter;
 
+/**
+ * The engine driving the execution of {@link Step}s as configured for a
+ * TweetWallFX instance.
+ *
+ * <p>
+ * Creates the required {@link DataProvider} instances, initializes the
+ * {@link Step} chain and executes the steps sequentially, honouring each
+ * step's preferred duration and its requirement to run on the JavaFX platform
+ * thread.
+ */
 public final class StepEngine {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("org.tweetwallfx.startup");
@@ -76,6 +86,11 @@ public final class StepEngine {
                     .daemon(true)
                     .factory());
 
+    /**
+     * Creates a new instance, loads the {@link Step} chain and initializes all
+     * required {@link DataProvider} instances as well as every {@link Step}
+     * with the {@link MachineContext}.
+     */
     public StepEngine() {
         LOGGER.info("create StepIterator");
         stepIterator = StepIterator.create();
@@ -84,6 +99,11 @@ public final class StepEngine {
         stepIterator.applyWith(step -> step.initStep(context));
     }
 
+    /**
+     * Returns the {@link MachineContext} shared by all executed {@link Step}s.
+     *
+     * @return the {@link MachineContext} shared by all executed {@link Step}s
+     */
     @SuppressFBWarnings
     public MachineContext getContext() {
         return context;
@@ -218,21 +238,59 @@ public final class StepEngine {
         LOG.info("Initialization finished for {}", scheduled);
     }
 
+    /**
+     * Context of the running {@link StepEngine} providing shared properties,
+     * access to the currently available {@link DataProvider} instances and the
+     * means for a {@link Step} to signal that it is finished.
+     */
     public final class MachineContext {
 
         private final Map<String, Object> properties = new ConcurrentHashMap<>();
         private final ObservableList<DataProvider> dataProviders = FXCollections.<DataProvider>observableArrayList();
         private final FilteredList<DataProvider> filteredDataProviders = dataProviders.filtered(null);
 
+        /**
+         * Creates a new instance.
+         */
+        public MachineContext() {
+        }
+
+        /**
+         * Returns the property stored under the given key.
+         *
+         * @param key the key of the property to return
+         * @return the property stored under the given key, or {@code null} if
+         * none is stored
+         */
         public Object get(final String key) {
             return properties.get(key);
         }
 
+        /**
+         * Returns the property stored under the given key cast to the given
+         * type.
+         *
+         * @param <T> the type of the property to return
+         * @param key the key of the property to return
+         * @param clazz the type to cast the property to
+         * @return the property stored under the given key, or {@code null} if
+         * none is stored
+         */
         @SuppressWarnings("unchecked")
         public <T> T get(final String key, final Class<T> clazz) {
             return (T) properties.get(key);
         }
 
+        /**
+         * Stores the given value under the given key. A {@code null} value
+         * removes any previously stored property for that key.
+         *
+         * @param key the key under which to store the value
+         * @param value the value to store, or {@code null} to remove the
+         * property
+         * @return the previously stored value, or {@code null} if none was
+         * stored
+         */
         public Object put(final String key, final Object value) {
             Objects.requireNonNull(key, "key must not be null");
             if (null == value) {
@@ -242,6 +300,10 @@ public final class StepEngine {
             }
         }
 
+        /**
+         * Signals that the current {@link Step} is finished and the engine may
+         * proceed to the next one.
+         */
         public void proceed() {
             LOG.info("Proceed called");
             asyncProceed.arrive();
@@ -253,6 +315,15 @@ public final class StepEngine {
                     "Parameter dataProvider must not be null!"));
         }
 
+        /**
+         * Returns the currently available {@link DataProvider} of the given
+         * type.
+         *
+         * @param <T> the type of the {@link DataProvider} to return
+         * @param klazz the class of the {@link DataProvider} to return
+         * @return the currently available {@link DataProvider} of the given
+         * type
+         */
         @SuppressWarnings("unchecked")
         public <T extends DataProvider> T getDataProvider(final Class<T> klazz) {
             return filteredDataProviders
@@ -270,6 +341,9 @@ public final class StepEngine {
         }
     }
 
+    /**
+     * Starts the execution of the {@link Step} chain on the engine's executor.
+     */
     public void go() {
         engineExecutor.execute(this::process);
     }

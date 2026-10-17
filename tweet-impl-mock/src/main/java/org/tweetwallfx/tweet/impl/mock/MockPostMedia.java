@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2024-2025 TweetWallFX
+ * Copyright (c) 2024-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,13 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
 import java.util.Map;
 
+/**
+ * Mock implementation of a {@link MediaTweetEntry} providing a static image.
+ *
+ * @param id     the unique id of the media entry
+ * @param with   the width of the media image in pixels
+ * @param height the height of the media image in pixels
+ */
 public record MockPostMedia(long id, int with, int height) implements MediaTweetEntry {
 
     @Override

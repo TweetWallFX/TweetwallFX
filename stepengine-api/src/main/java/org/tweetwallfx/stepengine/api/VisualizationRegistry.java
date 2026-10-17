@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,9 @@ import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
  */
 public class VisualizationRegistry {
 
+    /**
+     * The singleton instance of the {@link VisualizationRegistry}.
+     */
     public static VisualizationRegistry INSTANCE = new VisualizationRegistry();
     private final Map<String, StepEngineSettings.VisualizationSetting> visualizationSettingsMap
             = Configuration.getInstance().getConfigTyped(StepEngineSettings.CONFIG_KEY, StepEngineSettings.class).visualizationSettings();

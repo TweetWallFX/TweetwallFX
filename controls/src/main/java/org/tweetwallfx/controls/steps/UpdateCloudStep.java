@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,9 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.LocationTransition;
 
+/**
+ * Step that updates the currently displayed tag cloud with the latest words.
+ */
 public class UpdateCloudStep implements Step {
 
     private UpdateCloudStep() {
@@ -174,6 +177,10 @@ public class UpdateCloudStep implements Step {
      * {@link UpdateCloudStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public UpdateCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {

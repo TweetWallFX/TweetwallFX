@@ -36,11 +36,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Mock implementation of a {@link Tweet} as used by the mock tweet client.
+ *
+ * @param id                the unique id of the post
+ * @param text              the text of the post
+ * @param user              the user who created the post
+ * @param created           the creation date and time of the post
+ * @param originPost        the origin post in case this post is a retweet,
+ *                          otherwise {@code null}
+ * @param favoriteCount     the number of favorites of the post
+ * @param repostCount       the number of reposts of the post
+ * @param mediaTweetEntries the media entries attached to the post
+ */
 public record MockPost(long id, String text, User user, LocalDateTime created,
                        Tweet originPost,
                        int favoriteCount, int repostCount,
                        List<MediaTweetEntry> mediaTweetEntries) implements Tweet {
 
+    /**
+     * Creates a new instance converting the given media entries into a list.
+     *
+     * @param id                the unique id of the post
+     * @param text              the text of the post
+     * @param user              the user who created the post
+     * @param created           the creation date and time of the post
+     * @param originPost        the origin post in case this post is a retweet,
+     *                          otherwise {@code null}
+     * @param favoriteCount     the number of favorites of the post
+     * @param repostCount       the number of reposts of the post
+     * @param mediaTweetEntries the media entries attached to the post
+     */
     public MockPost(long id, String text, User user, LocalDateTime created,
                     Tweet originPost,
                     int favoriteCount, int repostCount,
@@ -48,6 +74,10 @@ public record MockPost(long id, String text, User user, LocalDateTime created,
         this(id, text, user, created, originPost, favoriteCount, repostCount, List.of(mediaTweetEntries));
     }
 
+    /**
+     * {@return the origin post in case this post is a retweet, otherwise
+     * {@code null}}
+     */
     @Override
     public Tweet originPost() {
         return originPost;

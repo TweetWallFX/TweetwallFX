@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,9 @@ import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UrlTweetEntry;
 import org.tweetwallfx.tweet.api.entry.UserMentionTweetEntry;
 
+/**
+ * Step that adds the words of the currently displayed tweet to the tag cloud.
+ */
 public class AddTweetToCloudStep implements Step {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddTweetToCloudStep.class);
@@ -86,6 +89,10 @@ public class AddTweetToCloudStep implements Step {
      * {@link AddTweetToCloudStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public AddTweetToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {

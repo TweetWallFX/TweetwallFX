@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,23 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/**
+ * A JavaFX {@link Transition} that animates the font size of a {@link Text} node.
+ */
 public final class FontSizeTransition extends Transition {
 
     private final Text node;
     private final double startSize;
     private final double toSize;
 
+    /**
+     * Creates a new font size transition.
+     *
+     * @param duration the duration of the transition
+     * @param node the Text node whose font size is animated
+     * @param startSize the initial font size
+     * @param toSize the final font size
+     */
     public FontSizeTransition(
             final Duration duration, final Text node,
             final double startSize, final double toSize) {
@@ -43,11 +54,24 @@ public final class FontSizeTransition extends Transition {
         this.toSize = toSize;
     }
 
+    /**
+     * Creates a new font size transition with font sizes determined dynamically.
+     *
+     * @param duration the duration of the transition
+     * @param node the Text node whose font size is animated
+     */
     public FontSizeTransition(
             final Duration duration, final Text node) {
         this(duration, node, Double.NaN, Double.NaN);
     }
 
+    /**
+     * Creates a new font size transition with specified start and target sizes.
+     *
+     * @param startSize the initial font size
+     * @param toSize the final font size
+     * @return a new FontSizeTransition instance
+     */
     public FontSizeTransition withSize(final double startSize, final double toSize) {
         return new FontSizeTransition(
                 getCycleDuration(), node,

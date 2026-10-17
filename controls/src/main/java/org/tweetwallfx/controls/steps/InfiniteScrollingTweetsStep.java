@@ -88,6 +88,11 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
 
     private volatile boolean isTerminated = false;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param config the configuration of this step
+     */
     protected InfiniteScrollingTweetsStep(Config config) {
         this.config = config;
     }
@@ -127,10 +132,23 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         next.set(0);
     }
 
+    /**
+     * Initializes the given pane by adding the first tweet node.
+     *
+     * @param pane the pane to initialize
+     */
     void initializePane(Pane pane) {
         addNode(createNode(), pane, config.vOffset);
     }
 
+    /**
+     * Adds the given node to the pane and recursively fills the pane up to its
+     * height.
+     *
+     * @param node the node to add
+     * @param pane the pane to add the node to
+     * @param lastLayoutY the layout y position below which the node is added
+     */
     void addNode(Node node, Pane pane, double lastLayoutY) {
         if (lastLayoutY < config.height) {
             node.setOpacity(0);
@@ -178,6 +196,11 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         }
     }
 
+    /**
+     * Scrolls a new node into the given pane.
+     *
+     * @param pane the pane to scroll into
+     */
     void scrollInfinite(Pane pane) {
         scrollIn(createNode(), pane).play();
     }
@@ -197,6 +220,12 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         return createSingleTweetDisplay(getNextTweet());
     }
 
+    /**
+     * {@return the transition scrolling the given node into the pane}
+     *
+     * @param node the node to scroll in
+     * @param pane the pane to scroll into
+     */
     Transition scrollIn(final Node node, Pane pane) {
         node.setLayoutY(config.height + config.tweetGap);
         node.setLayoutX(0);
@@ -223,6 +252,12 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         return locationTransition;
     }
 
+    /**
+     * {@return the transition scrolling the given node out of the pane}
+     *
+     * @param node the node to scroll out
+     * @param pane the pane to scroll out of
+     */
     Transition scrollOut(Node node, Pane pane) {
         double pixelToTravel = pane.getHeight();
         double duration = pixelToTravel / config.speed;
@@ -388,6 +423,10 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
      */
     public static final class FactoryImpl implements Step.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
         @Override
         public InfiniteScrollingTweetsStep create(final StepEngineSettings.StepDefinition stepDefinition) {
             return new InfiniteScrollingTweetsStep(stepDefinition.getConfig(Config.class));
@@ -408,51 +447,154 @@ public class InfiniteScrollingTweetsStep implements Step, Controllable {
         }
     }
 
+    /**
+     * Configuration of an {@link InfiniteScrollingTweetsStep}.
+     */
     public static class Config {
 
+        /**
+         * The position of the media within a displayed tweet.
+         */
         public static enum MediaPosition {
+            /**
+             * The media is placed above the tweet text.
+             */
             TOP(true),
+            /**
+             * The media is placed below the tweet text.
+             */
             BOTTOM(false);
 
             private final boolean isTop;
 
+            /**
+             * Creates a new instance.
+             *
+             * @param isTop whether the media is placed above the tweet text
+             */
             MediaPosition(boolean isTop) {
                 this.isTop = isTop;
             }
 
+            /**
+             * {@return whether the media is placed above the tweet text}
+             */
             final public boolean isTop() {
                 return isTop;
             }
         }
 
+        /**
+         * The duration of the step in milliseconds.
+         */
         public long stepDuration = 1;
+        /**
+         * The x offset of the pane.
+         */
         public double layoutX = 0;
+        /**
+         * The y offset of the pane.
+         */
         public double layoutY = 0;
+        /**
+         * The width of a tweet.
+         */
         public double tweetWidth = 600;
+        /**
+         * The vertical gap between tweets.
+         */
         public double tweetGap = 20;
+        /**
+         * The height of the pane.
+         */
         public double height = 700;
+        /**
+         * The scroll speed in pixels per second.
+         */
         public double speed = 50; // pixel / s
+        /**
+         * The number of columns of scrolling tweets.
+         */
         public int columns = 1;
+        /**
+         * The horizontal gap between columns.
+         */
         public double columnGap = tweetGap;
+        /**
+         * The number of tweets to stream.
+         */
         public int numberOfTweets = 25;
+        /**
+         * The identifier under which this step is registered in the context.
+         */
         public String stepIdentifier = InfiniteScrollingTweetsStep.class.getName();
+        /**
+         * Whether line feeds in tweet text are respected.
+         */
         public boolean respectLineFeeds = true;
+        /**
+         * The vertical offset of the first tweet.
+         */
         public double vOffset = 0;
+        /**
+         * The position of the media within a displayed tweet.
+         */
         public MediaPosition mediaPosition = MediaPosition.BOTTOM;
+        /**
+         * The size of the profile image.
+         */
         public int profileImageSize = 64;
+        /**
+         * Whether the profile image is clipped to a circle.
+         */
         public boolean circularProfileImage = true;
 
+        /**
+         * The cache configuration of the speaker name node.
+         */
         public NodeCacheConfig speakerNameNode = new NodeCacheConfig();
+        /**
+         * The cache configuration of the speaker image node.
+         */
         public NodeCacheConfig speakerImageNode = new NodeCacheConfig();
+        /**
+         * The cache configuration of the tweet text node.
+         */
         public NodeCacheConfig tweetTextNode = new NodeCacheConfig();
+        /**
+         * The cache configuration of the tweet flow node.
+         */
         public NodeCacheConfig tweetFlowNode = new NodeCacheConfig();
+        /**
+         * The cache configuration of the tweet image node.
+         */
         public NodeCacheConfig tweetImageNode = new NodeCacheConfig();
+        /**
+         * The cache configuration of the overall tweet node.
+         */
         public NodeCacheConfig tweetOverallNode = new NodeCacheConfig();
 
+        /** Creates a new instance. */
+        public Config() {
+        }
+
+        /**
+         * Cache configuration of a node.
+         */
         public static class NodeCacheConfig {
 
+            /**
+             * Whether caching is enabled for the node.
+             */
             public boolean isCacheEnabled = true;
+            /**
+             * The cache hint to use for the node.
+             */
             public CacheHint cacheHint = CacheHint.QUALITY;
+
+            /** Creates a new instance. */
+            public NodeCacheConfig() {
+            }
         }
     }
 }

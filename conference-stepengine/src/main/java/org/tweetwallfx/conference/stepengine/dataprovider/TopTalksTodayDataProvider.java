@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,6 +67,10 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
         return initialized;
     }
 
+    /**
+     * Loads the top rated talks of the current day from the conference
+     * rating client.
+     */
     @Override
     public void run() {
         // TODO: find a way for today's talks to be filtered from the overall list
@@ -86,6 +90,10 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
         initialized = true;
     }
 
+    /**
+     * {@return an immutable list of the filtered top voted talks, or
+     * {@code null} when the list is empty}
+     */
     public List<VotedTalk> getFilteredSessionData() {
         return nullable(votedTalks);
     }
@@ -95,6 +103,11 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
      * creating {@link TopTalksTodayDataProvider}.
      */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
 
         @Override
         public TopTalksTodayDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -110,25 +123,17 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
     /**
      * POJO used to configure {@link TopTalksTodayDataProvider}.
      *
-     * <p>
-     * Param {@code nrVotes} The number of votes to produce at most. Defaults to
-     * {@code 5}.
-     *
-     * <p>
-     * Param {@code initialDelay} The type of scheduling to perform. Defaults to
-     * {@link ScheduleType#FIXED_RATE}.
-     *
-     * <p>
-     * Param {@code initialDelay} Delay until the first execution in seconds.
-     * Defaults to {@code 0L}.
-     *
-     * <p>
-     * Param {@code scheduleDuration} Fixed rate of / delay between consecutive
-     * executions in seconds. Defaults to {@code 300L}.
-     *
-     * <p>
-     * Param {@code minTotalVotes} Minimum number of total votes for a rated
-     * talk to be displayed. Defaults to {@code 10}.
+     * @param nrVotes          The number of votes to produce at most. Defaults
+     *                         to {@code 5}. Must not be negative.
+     * @param scheduleType     The type of scheduling to perform. Defaults to
+     *                         {@link ScheduleType#FIXED_RATE}.
+     * @param initialDelay     Delay until the first execution in seconds.
+     *                         Defaults to {@code 0L}.
+     * @param scheduleDuration Fixed rate of / delay between consecutive
+     *                         executions in seconds. Defaults to {@code 300L}.
+     * @param minTotalVotes    Minimum number of total votes for a rated talk
+     *                         to be displayed. Defaults to {@code 10}. Must not
+     *                         be negative.
      */
     public static record Config(
             Integer nrVotes,
@@ -137,6 +142,10 @@ public final class TopTalksTodayDataProvider implements DataProvider, DataProvid
             Long scheduleDuration,
             Integer minTotalVotes) implements ScheduledConfig {
 
+        /**
+         * Creates a new instance applying the documented default values to
+         * {@code null} arguments and validating the numeric values.
+         */
         public Config {
             nrVotes = Objects.requireNonNullElse(nrVotes, 5);
             if (nrVotes < 0) {

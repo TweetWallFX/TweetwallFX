@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2022 TweetWallFX
+ * Copyright (c) 2016-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,9 @@ import org.tweetwallfx.stepengine.api.StepEngine.MachineContext;
 import org.tweetwallfx.stepengine.api.config.StepEngineSettings;
 import org.tweetwallfx.transitions.LocationTransition;
 
+/**
+ * Step that morphs the currently displayed tag cloud into an updated tag cloud.
+ */
 public class CloudToCloudStep implements Step {
 
     private CloudToCloudStep() {
@@ -158,6 +161,10 @@ public class CloudToCloudStep implements Step {
      * {@link CloudToCloudStep}.
      */
     public static final class FactoryImpl implements Step.Factory {
+
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
 
         @Override
         public CloudToCloudStep create(final StepEngineSettings.StepDefinition stepDefinition) {

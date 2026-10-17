@@ -39,6 +39,9 @@ import org.tweetwallfx.conference.api.Speaker;
 import org.tweetwallfx.conference.api.Talk;
 import org.tweetwallfx.conference.spi.util.Optionals;
 
+/**
+ * Default implementation of {@link Speaker}.
+ */
 public final class SpeakerImpl implements Speaker {
 
     private final String id;
@@ -121,10 +124,18 @@ public final class SpeakerImpl implements Speaker {
             true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link SpeakerImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -140,11 +151,26 @@ public final class SpeakerImpl implements Speaker {
         private Builder() {
         }
 
+        /**
+         * Adds a talk to the speaker.
+         *
+         * @param talk the talk to add
+         *
+         * @return this builder instance
+         */
         public Builder addTalk(final Talk talk) {
             talks.add(Objects.requireNonNull(talk, "talk must not be null"));
             return this;
         }
 
+        /**
+         * Adds a social media entry for the speaker.
+         *
+         * @param socialMediaName the name of the social media platform
+         * @param socialMediaValue the value (e.g. handle or URL) for the social media platform
+         *
+         * @return this builder instance
+         */
         public Builder addSocialMedia(final String socialMediaName, final String socialMediaValue) {
             Objects.requireNonNull(socialMediaName, "socialMediaName must not be null");
             Objects.requireNonNull(socialMediaValue, "socialMediaValue must not be null");
@@ -154,36 +180,85 @@ public final class SpeakerImpl implements Speaker {
             return this;
         }
 
+        /**
+         * Sets the id of the speaker.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the first name of the speaker.
+         *
+         * @param firstName the first name to set
+         *
+         * @return this builder instance
+         */
         public Builder withFirstName(final String firstName) {
             this.firstName = Objects.requireNonNull(firstName, "firstName must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the full name of the speaker.
+         *
+         * @param fullName the full name to set
+         *
+         * @return this builder instance
+         */
         public Builder withFullName(final String fullName) {
             this.fullName = Objects.requireNonNull(fullName, "fullName must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the last name of the speaker.
+         *
+         * @param lastName the last name to set
+         *
+         * @return this builder instance
+         */
         public Builder withLastName(final String lastName) {
             this.lastName = Objects.requireNonNull(lastName, "lastName must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the company of the speaker.
+         *
+         * @param company the company to set
+         *
+         * @return this builder instance
+         */
         public Builder withCompany(final String company) {
             this.company = company;
             return this;
         }
 
+        /**
+         * Sets the avatar URL of the speaker.
+         *
+         * @param avatarURL the avatar URL to set
+         *
+         * @return this builder instance
+         */
         public Builder withAvatarURL(final String avatarURL) {
             this.avatarURL = Objects.requireNonNull(avatarURL, "avatarURL must not be null");
             return this;
         }
 
+        /**
+         * Sets the talks of the speaker.
+         *
+         * @param talks the collection of talks to set
+         *
+         * @return this builder instance
+         */
         public Builder withTalks(final Collection<? extends Talk> talks) {
             this.talks.clear();
             if (null != talks) {
@@ -192,6 +267,11 @@ public final class SpeakerImpl implements Speaker {
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link SpeakerImpl}.
+         *
+         * @return a new {@link SpeakerImpl} instance
+         */
         public Speaker build() {
             return new SpeakerImpl(this);
         }

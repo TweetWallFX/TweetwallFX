@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2023 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,9 @@ import java.util.Objects;
 import org.tweetwallfx.conference.api.RatedTalk;
 import org.tweetwallfx.conference.api.Talk;
 
+/**
+ * Default implementation of {@link RatedTalk}.
+ */
 public final class RatedTalkImpl implements RatedTalk {
 
     private final Talk talk;
@@ -67,10 +70,18 @@ public final class RatedTalkImpl implements RatedTalk {
             ), true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link RatedTalkImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -81,21 +92,47 @@ public final class RatedTalkImpl implements RatedTalk {
         private Builder() {
         }
 
+        /**
+         * Sets the talk.
+         *
+         * @param talk the talk to set
+         *
+         * @return this builder instance
+         */
         public Builder withTalk(final Talk talk) {
             this.talk = Objects.requireNonNull(talk, "talk must not be null");
             return this;
         }
 
+        /**
+         * Sets the average rating.
+         *
+         * @param averageRating the average rating to set
+         *
+         * @return this builder instance
+         */
         public Builder withAverageRating(final double averageRating) {
             this.averageRating = averageRating;
             return this;
         }
 
+        /**
+         * Sets the total rating.
+         *
+         * @param totalRating the total rating to set
+         *
+         * @return this builder instance
+         */
         public Builder withTotalRating(final int totalRating) {
             this.totalRating = totalRating;
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link RatedTalkImpl}.
+         *
+         * @return a new {@link RatedTalkImpl} instance
+         */
         public RatedTalk build() {
             return new RatedTalkImpl(this);
         }

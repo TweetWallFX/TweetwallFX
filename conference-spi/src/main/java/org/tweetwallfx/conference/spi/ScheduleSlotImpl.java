@@ -36,6 +36,9 @@ import org.tweetwallfx.conference.api.ScheduleSlot;
 import org.tweetwallfx.conference.api.Talk;
 import org.tweetwallfx.conference.spi.util.Optionals;
 
+/**
+ * Default implementation of {@link ScheduleSlot}.
+ */
 public final class ScheduleSlotImpl implements ScheduleSlot {
 
     private final String id;
@@ -96,10 +99,18 @@ public final class ScheduleSlotImpl implements ScheduleSlot {
             ), true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link ScheduleSlotImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -113,36 +124,83 @@ public final class ScheduleSlotImpl implements ScheduleSlot {
         private Builder() {
         }
 
+        /**
+         * Sets the id of the schedule slot.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets whether the schedule slot is an overflow slot.
+         *
+         * @param overflow {@code true} if the slot is an overflow slot, otherwise {@code false}
+         *
+         * @return this builder instance
+         */
         public Builder withOverflow(final boolean overflow) {
             this.overflow = overflow;
             return this;
         }
 
+        /**
+         * Sets the date and time range of the schedule slot.
+         *
+         * @param dateTimeRange the date and time range to set
+         *
+         * @return this builder instance
+         */
         public Builder withDateTimeRange(final DateTimeRange dateTimeRange) {
             this.dateTimeRange = dateTimeRange;
             return this;
         }
 
+        /**
+         * Sets the favorite count for the schedule slot.
+         *
+         * @param favoriteCount the favorite count to set
+         *
+         * @return this builder instance
+         */
         public Builder withFavoriteCount(final Integer favoriteCount) {
             this.favoriteCount = favoriteCount;
             return this;
         }
 
+        /**
+         * Sets the room of the schedule slot.
+         *
+         * @param room the room to set
+         *
+         * @return this builder instance
+         */
         public Builder withRoom(final Room room) {
             this.room = Objects.requireNonNull(room, "room must not be null");
             return this;
         }
 
+        /**
+         * Sets the talk for the schedule slot.
+         *
+         * @param talk the talk to set
+         *
+         * @return this builder instance
+         */
         public Builder withTalk(final Talk talk) {
             this.talk = talk;
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link ScheduleSlotImpl}.
+         *
+         * @return a new {@link ScheduleSlotImpl} instance
+         */
         public ScheduleSlot build() {
             return new ScheduleSlotImpl(this);
         }

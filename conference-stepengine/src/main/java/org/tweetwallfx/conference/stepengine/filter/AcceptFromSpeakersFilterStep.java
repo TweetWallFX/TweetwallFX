@@ -63,6 +63,14 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
         this.config = config;
     }
 
+    /**
+     * Checks whether the given tweet (or the tweet it retweets) was sent by a
+     * conference speaker.
+     *
+     * @param tweet the tweet to check
+     * @return {@link Result#ACCEPTED} when the sending user is a conference
+     *         speaker, {@link Result#NOTHING_DEFINITE} otherwise
+     */
     @Override
     public FilterStep.Result check(final Tweet tweet) {
         Tweet t = tweet;
@@ -111,6 +119,11 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() { }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -131,6 +144,11 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
      * POJO used to configure {@link AcceptFromSenderFilterStep}.
      */
     public static final class Config {
+
+        /**
+         * Creates a new instance.
+         */
+        public Config() { }
 
         private boolean checkRetweeted = false;
 
@@ -163,10 +181,19 @@ public final class AcceptFromSpeakersFilterStep implements FilterStep<Tweet> {
         }
     }
 
+    /**
+     * Immutable holder for the twitter handles of the conference speakers.
+     */
     public static class SpeakerTwitterHandles {
 
         private final Set<String> twitterHandles;
 
+        /**
+         * Creates a new instance containing an immutable copy of the given
+         * twitter handles.
+         *
+         * @param twitterHandles the twitter handles of the conference speakers
+         */
         public SpeakerTwitterHandles(final Collection<String> twitterHandles) {
             this.twitterHandles = Set.copyOf(twitterHandles);
         }

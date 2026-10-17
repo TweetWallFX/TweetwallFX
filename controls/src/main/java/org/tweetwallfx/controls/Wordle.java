@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2023 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,9 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.text.Font;
 
+/**
+ * JavaFX control rendering a tag cloud (wordle).
+ */
 public final class Wordle extends Control {
 
     private SimpleStyleableStringProperty logo;
@@ -51,6 +54,7 @@ public final class Wordle extends Control {
     private SimpleStyleableIntegerProperty tweetFontSizeProperty;
     private String userAgentStylesheet = null;
 
+    /** Creates a new instance. */
     public Wordle() {
         getStyleClass().setAll("wordle");
     }
@@ -60,14 +64,25 @@ public final class Wordle extends Control {
         return new WordleSkin(this);
     }
 
+    /**
+     * {@return the URL of the logo graphic}
+     */
     public String getLogo() {
         return logo.get();
     }
 
+    /**
+     * Sets the URL of the logo graphic.
+     *
+     * @param value the URL of the logo graphic
+     */
     public void setLogo(String value) {
         logo.set(value);
     }
 
+    /**
+     * {@return the styleable property of the logo graphic}
+     */
     public SimpleStyleableStringProperty logoProperty() {
         if (logo == null) {
             logo = new SimpleStyleableStringProperty(StyleableProperties.LOGO_GRAPHIC, Wordle.this, "logo", null);
@@ -75,14 +90,25 @@ public final class Wordle extends Control {
         return logo;
     }
 
+    /**
+     * {@return the URL of the second logo graphic}
+     */
     public String getSecondLogo() {
         return secondLogo.get();
     }
 
+    /**
+     * Sets the URL of the second logo graphic.
+     *
+     * @param value the URL of the second logo graphic
+     */
     public void setSecondLogo(String value) {
         secondLogo.set(value);
     }
 
+    /**
+     * {@return the styleable property of the second logo graphic}
+     */
     public SimpleStyleableStringProperty secondLogoProperty() {
         if (secondLogo == null) {
             secondLogo = new SimpleStyleableStringProperty(StyleableProperties.SECOND_LOGO_GRAPHIC, Wordle.this, "secondlogo", null);
@@ -90,14 +116,25 @@ public final class Wordle extends Control {
         return secondLogo;
     }
 
+    /**
+     * {@return the URL of the background graphic}
+     */
     public String getBackgroundGraphic() {
         return backgroundGraphic.get();
     }
 
+    /**
+     * Sets the URL of the background graphic.
+     *
+     * @param value the URL of the background graphic
+     */
     public void setBackgroundGraphic(String value) {
         backgroundGraphic.set(value);
     }
 
+    /**
+     * {@return the styleable property of the background graphic}
+     */
     public SimpleStyleableStringProperty backgroundGraphicProperty() {
         if (backgroundGraphic == null) {
             backgroundGraphic = new SimpleStyleableStringProperty(StyleableProperties.BACKGROUND_GRAPHIC, Wordle.this, "background", null);
@@ -105,14 +142,26 @@ public final class Wordle extends Control {
         return backgroundGraphic;
     }
 
+    /**
+     * {@return whether the favorite icons are visible}
+     */
     public Boolean isFavIconsVisible() {
         return favIconsVisible.get();
     }
 
+    /**
+     * Sets whether the favorite icons are visible.
+     *
+     * @param value whether the favorite icons are visible
+     */
     public void setFavIconsVisible(Boolean value) {
         favIconsVisible.set(value);
     }
 
+    /**
+     * {@return the styleable property controlling the visibility of the
+     * favorite icons}
+     */
     public SimpleStyleableBooleanProperty favIconsVisibleProperty() {
         if (favIconsVisible == null) {
             favIconsVisible = new SimpleStyleableBooleanProperty(StyleableProperties.FAVICONS_VISIBLE, Wordle.this, "-fx-fav-icons-visible", true);
@@ -120,14 +169,25 @@ public final class Wordle extends Control {
         return favIconsVisible;
     }
 
+    /**
+     * {@return the number of tags to display}
+     */
     public Integer getDisplayedTagNum() {
         return displayedNumberOfTagsProperty.get();
     }
 
+    /**
+     * Sets the number of tags to display.
+     *
+     * @param value the number of tags to display
+     */
     public void setDisplayedNumberOfTags(Integer value) {
         displayedNumberOfTagsProperty.set(value);
     }
 
+    /**
+     * {@return the styleable property of the number of displayed tags}
+     */
     public SimpleStyleableIntegerProperty displayedNumberOfTagsProperty() {
         if (displayedNumberOfTagsProperty == null) {
             displayedNumberOfTagsProperty = new SimpleStyleableIntegerProperty(StyleableProperties.DISPLAYED_TAGS_NUMBER, Wordle.this, "-fx-display-tag-num", 50);
@@ -135,14 +195,25 @@ public final class Wordle extends Control {
         return displayedNumberOfTagsProperty;
     }
 
+    /**
+     * {@return the font used to render tags}
+     */
     public Font getFont() {
         return fontProperty.get();
     }
 
+    /**
+     * Sets the font used to render tags.
+     *
+     * @param value the font used to render tags
+     */
     public void setFont(Font value) {
         fontProperty.set(value);
     }
 
+    /**
+     * {@return the styleable property of the tag font}
+     */
     public SimpleStyleableObjectProperty<Font> fontProperty() {
         if (fontProperty == null) {
             fontProperty = new SimpleStyleableObjectProperty<>(StyleableProperties.FONT, Wordle.this, "-fx-font", Font.getDefault());
@@ -150,14 +221,25 @@ public final class Wordle extends Control {
         return fontProperty;
     }
 
+    /**
+     * {@return the minimum font size}
+     */
     public Integer getFontSizeMin() {
         return fontSizeMinProperty.get();
     }
 
+    /**
+     * Sets the minimum font size.
+     *
+     * @param value the minimum font size
+     */
     public void setFontSizeMin(Integer value) {
         fontSizeMinProperty.set(value);
     }
 
+    /**
+     * {@return the styleable property of the minimum font size}
+     */
     public SimpleStyleableIntegerProperty fontSizeMinProperty() {
         if (fontSizeMinProperty == null) {
             fontSizeMinProperty = new SimpleStyleableIntegerProperty(StyleableProperties.FONT_SIZE_MIN, Wordle.this, "-fx-font-size-min", 36);
@@ -165,14 +247,25 @@ public final class Wordle extends Control {
         return fontSizeMinProperty;
     }
 
+    /**
+     * {@return the maximum font size}
+     */
     public Integer getFontSizeMax() {
         return fontSizeMaxProperty.get();
     }
 
+    /**
+     * Sets the maximum font size.
+     *
+     * @param value the maximum font size
+     */
     public void setFontSizeMax(Integer value) {
         fontSizeMaxProperty.set(value);
     }
 
+    /**
+     * {@return the styleable property of the maximum font size}
+     */
     public SimpleStyleableIntegerProperty fontSizeMaxProperty() {
         if (fontSizeMaxProperty == null) {
             fontSizeMaxProperty = new SimpleStyleableIntegerProperty(StyleableProperties.FONT_SIZE_MAX, Wordle.this, "-fx-font-size-max", 72);
@@ -180,14 +273,25 @@ public final class Wordle extends Control {
         return fontSizeMaxProperty;
     }
 
+    /**
+     * {@return the font size used to render tweet words}
+     */
     public Integer getTweetFontSize() {
         return tweetFontSizeProperty.get();
     }
 
+    /**
+     * Sets the font size used to render tweet words.
+     *
+     * @param value the font size used to render tweet words
+     */
     public void setTweetFontSize(Integer value) {
         tweetFontSizeProperty.set(value);
     }
 
+    /**
+     * {@return the styleable property of the tweet font size}
+     */
     public SimpleStyleableIntegerProperty tweetFontSizeProperty() {
         if (tweetFontSizeProperty == null) {
             tweetFontSizeProperty = new SimpleStyleableIntegerProperty(StyleableProperties.TWEET_FONT_SIZE, Wordle.this, "-fx-tweet-font-size", 54);
@@ -357,6 +461,9 @@ public final class Wordle extends Control {
         return getClassCssMetaData();
     }
 
+    /**
+     * {@return the CSS metadata of this control class}
+     */
     public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return StyleableProperties.STYLEABLES;
     }

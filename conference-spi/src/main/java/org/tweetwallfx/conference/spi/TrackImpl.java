@@ -30,6 +30,9 @@ import java.util.Objects;
 
 import org.tweetwallfx.conference.api.Track;
 
+/**
+ * Default implementation of {@link Track}.
+ */
 public final class TrackImpl implements Track {
 
     private final String avatarURL;
@@ -75,10 +78,18 @@ public final class TrackImpl implements Track {
             true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link TrackImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -90,26 +101,59 @@ public final class TrackImpl implements Track {
         private Builder() {
         }
 
+        /**
+         * Sets the id of the track.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the name of the track.
+         *
+         * @param name the name to set
+         *
+         * @return this builder instance
+         */
         public Builder withName(final String name) {
             this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the description of the track.
+         *
+         * @param description the description to set
+         *
+         * @return this builder instance
+         */
         public Builder withDescription(final String description) {
             this.description = Objects.requireNonNull(description, "description must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the avatar URL of the track.
+         *
+         * @param avatarURL the avatar URL to set
+         *
+         * @return this builder instance
+         */
         public Builder withAvatarURL(final String avatarURL) {
             this.avatarURL = Objects.requireNonNull(avatarURL, "avatarURL must not be null").trim();
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link TrackImpl}.
+         *
+         * @return a new {@link TrackImpl} instance
+         */
         public Track build() {
             return new TrackImpl(this);
         }

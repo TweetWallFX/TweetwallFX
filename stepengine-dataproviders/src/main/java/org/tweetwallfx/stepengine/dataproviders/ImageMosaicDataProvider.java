@@ -43,6 +43,10 @@ import org.tweetwallfx.tweet.api.Tweet;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntry;
 import org.tweetwallfx.tweet.api.entry.MediaTweetEntryType;
 
+/**
+ * Data provider collecting the photo images of tweets in order to present them
+ * as an image mosaic.
+ */
 public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataProvider.NewTweetAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageMosaicDataProvider.class);
@@ -71,6 +75,12 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
                 .forEach(mte -> addImage(mte, tweet.getCreatedAt()));
     }
 
+    /**
+     * Returns an unmodifiable view on the images collected so far.
+     *
+     * @return an unmodifiable {@link List} of the collected {@link ImageStore}
+     * instances
+     */
     public List<ImageStore> getImages() {
         return Collections.<ImageStore>unmodifiableList(images);
     }
@@ -87,7 +97,16 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         });
     }
 
+    /**
+     * Factory implementation creating {@link ImageMosaicDataProvider} instances.
+     */
     public static class FactoryImpl implements DataProvider.Factory {
+
+        /**
+         * Creates a new instance.
+         */
+        public FactoryImpl() {
+        }
 
         @Override
         public ImageMosaicDataProvider create(final StepEngineSettings.DataProviderSetting dataProviderSetting) {
@@ -100,36 +119,72 @@ public class ImageMosaicDataProvider implements DataProvider.HistoryAware, DataP
         }
     }
 
+    /**
+     * POJO used to configure {@link ImageMosaicDataProvider}.
+     *
+     * @param includeRetweets whether retweets are to be included, defaults to
+     * {@code false}
+     * @param maxCacheSize the maximum number of images to keep, defaults to
+     * {@code 40}
+     */
     public static record Config(
             Boolean includeRetweets,
             Integer maxCacheSize) {
 
+        /**
+         * Creates a new instance applying the documented default values.
+         */
         public Config {
             includeRetweets = Objects.requireNonNullElse(includeRetweets, false);
             maxCacheSize = Objects.requireNonNullElse(maxCacheSize, 40);
         }
     }
 
+    /**
+     * Immutable holder of an image together with its digest and the timestamp
+     * of the tweet it originated from.
+     */
     public static final class ImageStore {
 
         private final Image image;
         private final String digest;
         private final Instant instant;
 
+        /**
+         * Creates a new instance reading the image from the given content.
+         *
+         * @param urlc the URL content providing the image data
+         * @param instant the instant the image shall be associated with
+         */
         public ImageStore(final URLContent urlc, final Instant instant) {
             this.digest = urlc.digest();
             this.image = new Image(urlc.getInputStream());
             this.instant = instant;
         }
 
+        /**
+         * Returns the digest identifying the image data source.
+         *
+         * @return the digest
+         */
         public String getDigest() {
             return digest;
         }
 
+        /**
+         * Returns the instant this image is associated with.
+         *
+         * @return the instant
+         */
         public Instant getInstant() {
             return instant;
         }
 
+        /**
+         * Returns the image.
+         *
+         * @return the image
+         */
         @SuppressFBWarnings
         public Image getImage() {
             return image;

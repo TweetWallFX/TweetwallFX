@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 TweetWallFX
+ * Copyright (c) 2019-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,15 +26,27 @@ package org.tweetwallfx.stepengine.api;
 /**
  * A special Step in the {@link StepEngine}. It represents an action triggered against an existing
  * visualization.
+ *
+ * @param <V> the type of the {@link Visualization} this action is triggered against
  */
 public abstract class ActionStep<V extends Visualization> implements Step{
 
     private final V visualization;
 
+    /**
+     * Creates a new instance acting on the given {@link Visualization}.
+     *
+     * @param visualization the {@link Visualization} this action is triggered against
+     */
     protected ActionStep(V visualization) {
         this.visualization = visualization;
     }
 
+    /**
+     * Returns the {@link Visualization} this action is triggered against.
+     *
+     * @return the {@link Visualization} this action is triggered against
+     */
     protected final V getVisualization() {
         return visualization;
     }

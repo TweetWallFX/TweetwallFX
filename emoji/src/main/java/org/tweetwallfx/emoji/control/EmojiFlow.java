@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022-2024 TweetWallFX
+ * Copyright (c) 2022-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+/**
+ * A {@link TextFlow} that displays the given text and renders emoji found
+ * therein as their corresponding Twemoji images.
+ */
 public final class EmojiFlow extends TextFlow {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmojiFlow.class);
@@ -47,43 +51,83 @@ public final class EmojiFlow extends TextFlow {
     private final SimpleDoubleProperty emojiFitWidthProperty = new SimpleDoubleProperty(12);
     private final SimpleDoubleProperty emojiFitHeightProperty = new SimpleDoubleProperty(12);
 
+    /**
+     * Creates a new instance with no text displayed.
+     */
     public EmojiFlow() {
         this.textProperty.addListener((o, old, text) -> updateContent(text));
         this.emojiFitWidthProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
         this.emojiFitHeightProperty.addListener((o, old, newValue) -> updateContent(textProperty.get()));
     }
 
+    /**
+     * Creates a new instance displaying the given text.
+     *
+     * @param text the text to display
+     */
     public EmojiFlow(String text) {
         this();
         setText(text);
     }
 
+    /**
+     * Creates a new instance displaying the given text with the emoji images
+     * fitted to the given dimensions.
+     *
+     * @param text the text to display
+     * @param fitWidth the fit width of the emoji images
+     * @param fitHeight the fit height of the emoji images
+     */
     public EmojiFlow(String text, double fitWidth, double fitHeight) {
         this(text);
         setEmojiFitWidth(fitWidth);
         setEmojiFitHeight(fitHeight);
     }
 
+    /**
+     * {@return the text displayed by this {@code EmojiFlow}}
+     */
     public final String getText() {
         return textProperty.get();
     }
 
+    /**
+     * Sets the text to be displayed.
+     *
+     * @param text the text to display
+     */
     public final void setText(String text) {
         textProperty.set(text);
     }
 
+    /**
+     * {@return the fit width used for the emoji images}
+     */
     public final double getEmojiFitWidth() {
         return emojiFitWidthProperty.get();
     }
 
+    /**
+     * Sets the fit width used for the emoji images.
+     *
+     * @param fitWidth the fit width to set
+     */
     public final void setEmojiFitWidth(double fitWidth) {
         emojiFitWidthProperty.set(fitWidth);
     }
 
+    /**
+     * {@return the fit height used for the emoji images}
+     */
     public final double getEmojiFitHeight() {
         return emojiFitHeightProperty.get();
     }
 
+    /**
+     * Sets the fit height used for the emoji images.
+     *
+     * @param fitHeight the fit height to set
+     */
     public final void setEmojiFitHeight(double fitHeight) {
         emojiFitHeightProperty.set(fitHeight);
     }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,12 @@ import java.util.Map;
 public abstract class ConfigurableObjectBase {
 
     private Map<String, Object> config = Map.of();
+
+    /**
+     * Creates a new instance with an empty configuration.
+     */
+    protected ConfigurableObjectBase() {
+    }
 
     /**
      * Gets the objects configuration data in its raw form.

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018-2022 TweetWallFX
+ * Copyright (c) 2018-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,16 +65,38 @@ public final class PhotoImageCache extends URLContentCacheBase {
         super("photoImage");
     }
 
+    /**
+     * Adds the image of the given media tweet entry to this cache asynchronously
+     * if it is not already contained.
+     *
+     * @param mte the media tweet entry whose image is to be cached
+     */
     public void addToCacheAsync(final MediaTweetEntry mte) {
         getCachedOrLoad(
                 mte,
                 this::handleLoadedContent);
     }
 
+    /**
+     * Returns the cached content for the given media tweet entry, loading it if
+     * necessary.
+     *
+     * @param mte the media tweet entry whose image content is to be returned
+     *
+     * @return the {@link URLContent} for the given media tweet entry
+     */
     public URLContent getCached(final MediaTweetEntry mte) {
         return getCachedOrLoad(getImageUrlString(mte));
     }
 
+    /**
+     * Returns the cached content for the given media tweet entry, loading it if
+     * necessary and handing it over to the given consumer.
+     *
+     * @param mte the media tweet entry whose image content is to be returned
+     * @param consumer the consumer which receives the {@link URLContent} once
+     * it is available
+     */
     public void getCachedOrLoad(final MediaTweetEntry mte, final Consumer<URLContent> consumer) {
         getCachedOrLoad(
                 getImageUrlString(mte),

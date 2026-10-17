@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 TweetWallFX
+ * Copyright (c) 2023-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +27,35 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Predicate;
 
+/**
+ * Utility methods for working with optional values.
+ */
 public class Optionals {
 
     private Optionals() {
         // prevent instantiation
     }
 
+    /**
+     * Converts an {@link Integer} to an {@link OptionalInt}.
+     *
+     * @param input the integer value to convert
+     *
+     * @return an {@link OptionalInt} containing the value if non-null, otherwise an empty {@link OptionalInt}
+     */
     public static OptionalInt integer(final Integer input) {
         return null == input
                 ? OptionalInt.empty()
                 : OptionalInt.of(input);
     }
 
+    /**
+     * Converts a {@link String} to an {@link Optional} that contains a non-empty trimmed string.
+     *
+     * @param input the string value to convert
+     *
+     * @return an {@link Optional} containing the trimmed non-empty string if present and non-empty, otherwise an empty {@link Optional}
+     */
     public static Optional<String> nonEmptyString(final String input) {
         return Optional.ofNullable(input)
                 .map(String::trim)

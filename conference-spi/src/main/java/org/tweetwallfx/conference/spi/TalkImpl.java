@@ -45,6 +45,9 @@ import org.tweetwallfx.conference.api.Talk;
 import org.tweetwallfx.conference.api.Track;
 import org.tweetwallfx.conference.spi.util.Optionals;
 
+/**
+ * Default implementation of {@link Talk}.
+ */
 public final class TalkImpl implements Talk {
 
     private final String id;
@@ -143,10 +146,18 @@ public final class TalkImpl implements Talk {
             true);
     }
 
+    /**
+     * Creates and returns a new instance of {@link Builder}.
+     *
+     * @return a new {@link Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for creating instances of {@link TalkImpl}.
+     */
     @SuppressWarnings("CanIgnoreReturnValueSuggester")
     public static final class Builder {
 
@@ -168,51 +179,121 @@ public final class TalkImpl implements Talk {
         private Builder() {
         }
 
+        /**
+         * Adds a schedule slot to the talk.
+         *
+         * @param scheduleSlot the schedule slot to add
+         *
+         * @return this builder instance
+         */
         public Builder addScheduleSlot(final ScheduleSlot scheduleSlot) {
             scheduleSlots.add(Objects.requireNonNull(scheduleSlot, "scheduleSlot must not be null"));
             return this;
         }
 
+        /**
+         * Adds a speaker to the talk.
+         *
+         * @param speaker the speaker to add
+         *
+         * @return this builder instance
+         */
         public Builder addSpeaker(final Speaker speaker) {
             speakers.add(Objects.requireNonNull(speaker, "speaker must not be null"));
             return this;
         }
 
+        /**
+         * Adds a tag to the talk.
+         *
+         * @param tag the tag to add
+         *
+         * @return this builder instance
+         */
         public Builder addTag(final String tag) {
             tags.add(Objects.requireNonNull(tag, "tag must not be null").trim());
             return this;
         }
 
+        /**
+         * Sets the id of the talk.
+         *
+         * @param id the id to set
+         *
+         * @return this builder instance
+         */
         public Builder withId(final String id) {
             this.id = Objects.requireNonNull(id, "id must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the name of the talk.
+         *
+         * @param name the name to set
+         *
+         * @return this builder instance
+         */
         public Builder withName(final String name) {
             this.name = Objects.requireNonNull(name, "name must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the audience level of the talk.
+         *
+         * @param audienceLevel the audience level to set
+         *
+         * @return this builder instance
+         */
         public Builder withAudienceLevel(final String audienceLevel) {
             this.audienceLevel = Objects.requireNonNull(audienceLevel, "audienceLevel must not be null").trim();
             return this;
         }
 
+        /**
+         * Sets the session type of the talk.
+         *
+         * @param sessionType the session type to set
+         *
+         * @return this builder instance
+         */
         public Builder withSessionType(final SessionType sessionType) {
             this.sessionType = Objects.requireNonNull(sessionType, "sessionType must not be null");
             return this;
         }
 
+        /**
+         * Sets the favorite count for the talk.
+         *
+         * @param favoriteCount the favorite count to set
+         *
+         * @return this builder instance
+         */
         public Builder withFavoriteCount(final Integer favoriteCount) {
             this.favoriteCount = favoriteCount;
             return this;
         }
 
+        /**
+         * Sets the language of the talk.
+         *
+         * @param language the language to set
+         *
+         * @return this builder instance
+         */
         public Builder withLanguage(final Locale language) {
             this.language = Objects.requireNonNull(language, "language must not be null");
             return this;
         }
 
+        /**
+         * Sets the schedule slots for the talk.
+         *
+         * @param scheduleSlots the collection of schedule slots to set
+         *
+         * @return this builder instance
+         */
         public Builder withScheduleSlots(final Collection<? extends ScheduleSlot> scheduleSlots) {
             this.scheduleSlots.clear();
             if (null != scheduleSlots) {
@@ -221,6 +302,13 @@ public final class TalkImpl implements Talk {
             return this;
         }
 
+        /**
+         * Sets the speakers for the talk.
+         *
+         * @param speakers the collection of speakers to set
+         *
+         * @return this builder instance
+         */
         public Builder withSpeakers(final Collection<? extends Speaker> speakers) {
             this.speakers.clear();
             if (null != speakers) {
@@ -229,6 +317,13 @@ public final class TalkImpl implements Talk {
             return this;
         }
 
+        /**
+         * Sets the tags for the talk.
+         *
+         * @param tags the collection of tags to set
+         *
+         * @return this builder instance
+         */
         public Builder withTags(final Collection<? extends String> tags) {
             this.tags.clear();
             if (null != tags) {
@@ -237,11 +332,23 @@ public final class TalkImpl implements Talk {
             return this;
         }
 
+        /**
+         * Sets the track of the talk.
+         *
+         * @param track the track to set
+         *
+         * @return this builder instance
+         */
         public Builder withTrack(final Track track) {
             this.track = Objects.requireNonNull(track, "track must not be null");
             return this;
         }
 
+        /**
+         * Builds and returns a new instance of {@link TalkImpl}.
+         *
+         * @return a new {@link TalkImpl} instance
+         */
         public Talk build() {
             return new TalkImpl(this);
         }

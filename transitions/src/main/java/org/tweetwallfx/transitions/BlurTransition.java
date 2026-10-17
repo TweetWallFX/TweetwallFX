@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2019 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,9 @@ import javafx.animation.Transition;
 import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 
+/**
+ * A JavaFX {@link Transition} that animates the radius of a {@link GaussianBlur} effect.
+ */
 public final class BlurTransition extends Transition {
 
     private final GaussianBlur blur;
@@ -44,6 +47,12 @@ public final class BlurTransition extends Transition {
         this.targetRadius = targetRadius;
     }
 
+    /**
+     * Creates a new blur transition.
+     *
+     * @param duration the duration of the transition
+     * @param blur the GaussianBlur effect to animate
+     */
     public BlurTransition(
             final Duration duration,
             final GaussianBlur blur) {
@@ -51,6 +60,13 @@ public final class BlurTransition extends Transition {
                 Double.NaN, Double.NaN);
     }
 
+    /**
+     * Creates a new blur transition with specified start and target radius values.
+     *
+     * @param startRadius the initial blur radius
+     * @param targetRadius the final blur radius
+     * @return a new BlurTransition instance
+     */
     public BlurTransition withRadius(final double startRadius, final double targetRadius) {
         return new BlurTransition(getCycleDuration(), blur, startRadius, targetRadius);
     }

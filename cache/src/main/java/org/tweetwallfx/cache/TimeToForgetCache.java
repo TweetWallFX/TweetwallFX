@@ -53,6 +53,15 @@ public class TimeToForgetCache extends URLContentCacheBase {
         super("timeToForgetCache" + suffix);
     }
 
+    /**
+     * Retrieves the JSON content of the given {@code uri} and converts it into
+     * an instance of {@code type}.
+     *
+     * @param <T> the type of the result
+     * @param uri the URI to retrieve the JSON content from
+     * @param type the class of the result
+     * @return the converted JSON content
+     */
     public <T> T getJson(final URI uri, final Class<T> type) {
         final URLContent urlc = Stopwatch.measure(
                 () -> super.getCachedOrLoad(uri.toString()),
@@ -60,6 +69,17 @@ public class TimeToForgetCache extends URLContentCacheBase {
         return JsonDataConverter.convertFromInputStream(urlc.getInputStream(), type);
     }
 
+    /**
+     * Retrieves the JSON content of the given {@code uri} and converts it into
+     * an instance of {@code type} providing {@code defaultValue} when no
+     * content was found.
+     *
+     * @param <T> the type of the result
+     * @param uri the URI to retrieve the JSON content from
+     * @param type the class of the result
+     * @param defaultValue the value to return when no content was found
+     * @return the converted JSON content or {@code defaultValue}
+     */
     public <T> T getJson(final URI uri, final Class<T> type, final T defaultValue) {
         final URLContent urlc = Stopwatch.measure(
                 () -> super.getCachedOrLoad(uri.toString()),
@@ -71,10 +91,22 @@ public class TimeToForgetCache extends URLContentCacheBase {
         return JsonDataConverter.convertFromInputStream(urlc.getInputStream(), type);
     }
 
+    /**
+     * Retrieves the JSON content of the given {@code uri} as a list.
+     *
+     * @param uri the URI to retrieve the JSON content from
+     * @return the JSON content as a list
+     */
     public List<?> getJsonList(final URI uri) {
         return getJson(uri, List.class, List.of());
     }
 
+    /**
+     * Retrieves the JSON content of the given {@code uri} as a map.
+     *
+     * @param uri the URI to retrieve the JSON content from
+     * @return the JSON content as a map
+     */
     @SuppressWarnings("unchecked")
     public Map<String, Object> getJsonMap(final URI uri) {
         return getJson(uri, Map.class, Map.of());

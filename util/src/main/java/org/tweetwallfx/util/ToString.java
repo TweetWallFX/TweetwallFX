@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2017-2025 TweetWallFX
+ * Copyright (c) 2017-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -318,6 +318,9 @@ public class ToString {
      * @param object the object for which the String shall be created
      *
      * @param parameters the parameters to list in the created String
+     *
+     * @param singleLine if {@code true} the created String is kept on a single
+     * line
      *
      * @return the created String
      */

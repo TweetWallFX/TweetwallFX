@@ -39,12 +39,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tweetwallfx.stepengine.api.StepEngine;
 
+/**
+ * Skin rendering a {@link Wordle} control.
+ */
 public final class WordleSkin extends SkinBase<Wordle> {
 
     private static final Logger LOG = LoggerFactory.getLogger("org.tweetwallfx.startup");
     private static final Logger LOGGER = LoggerFactory.getLogger(WordleSkin.class);
+    /**
+     * The mapping of the words of the tag cloud to the text nodes displaying
+     * them.
+     */
     public final Map<Word, Text> word2TextMap = new HashMap<>();
-    // used for Tweet Display
+    /**
+     * The words of the currently displayed tweet. Used for tweet display.
+     */
     public final List<TweetLayout.TweetWordNode> tweetWordList = new ArrayList<>();
     private final Pane pane;
     private final Pane stackPane;
@@ -63,62 +72,113 @@ public final class WordleSkin extends SkinBase<Wordle> {
     private final Boolean favIconsVisible;
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    /**
+     * {@return the second logo}
+     */
     public ImageView getSecondLogo() {
         return secondLogo;
     }
 
+    /**
+     * {@return the logo}
+     */
     public ImageView getLogo() {
         return logo;
     }
 
+    /**
+     * {@return the pane containing the rendered content}
+     */
     public Pane getPane() {
         return pane;
     }
 
+    /**
+     * {@return the number of tags of the cloud to display}
+     */
     public int getDisplayCloudTags() {
         return displayCloudTags;
     }
 
+    /**
+     * {@return the media box of the currently displayed tweet}
+     */
     public Pane getMediaBox() {
         return mediaBox;
     }
 
+    /**
+     * Sets the media box of the currently displayed tweet.
+     *
+     * @param mediaBox the media box
+     */
     public void setMediaBox(Pane mediaBox) {
         this.mediaBox = mediaBox;
     }
 
+    /**
+     * {@return the info box of the currently displayed tweet}
+     */
     public Pane getInfoBox() {
         return infoBox;
     }
 
+    /**
+     * Sets the info box of the currently displayed tweet.
+     *
+     * @param infoBox the info box
+     */
     public void setInfoBox(Pane infoBox) {
         this.infoBox = infoBox;
     }
 
+    /**
+     * {@return whether the favorite icons are visible}
+     */
     public Boolean getFavIconsVisible() {
         return favIconsVisible;
     }
 
+    /**
+     * {@return the formatter used for tweet timestamps}
+     */
     public DateTimeFormatter getDf() {
         return df;
     }
 
+    /**
+     * {@return the font used to render tags}
+     */
     public Font getFont() {
         return font;
     }
 
+    /**
+     * {@return the minimum font size}
+     */
     public int getFontSizeMin() {
         return fontSizeMin;
     }
 
+    /**
+     * {@return the maximum font size}
+     */
     public int getFontSizeMax() {
         return fontSizeMax;
     }
 
+    /**
+     * {@return the font size used to render tweet words}
+     */
     public int getTweetFontSize() {
         return tweetFontSize;
     }
 
+    /**
+     * Creates a new instance.
+     *
+     * @param wordle the control this skin is created for
+     */
     public WordleSkin(Wordle wordle) {
         super(wordle);
         //create panes

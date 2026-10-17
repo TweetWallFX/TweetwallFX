@@ -50,6 +50,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.tweetwallfx.util.JsonDataConverter.convertToBytes;
 
+/**
+ * Runnable MQTT client process that publishes state messages and reacts to
+ * action messages received from the configured broker.
+ */
 public class MqttProcess implements Runnable {
     private static final String TWEETWALL_STATE = "tweetwall/state/";
     private static final Logger LOG = LoggerFactory.getLogger(MqttProcess.class);
@@ -59,18 +63,35 @@ public class MqttProcess implements Runnable {
     private final List<EventHandler<MqttEvent>> handlers = new ArrayList<>();
     private final AtomicReference<MqttClient> clientRef = new AtomicReference<>();
 
+    /**
+     * Creates a new instance.
+     */
+    public MqttProcess() {
+    }
+
     private void fire(MqttEvent mqttEvent) {
         handlers.forEach(h -> h.handle(mqttEvent));
     }
 
+    /**
+     * Registers the given handler to be notified of {@link MqttEvent}s.
+     *
+     * @param handler the handler to register
+     */
     public void addMqttEventHandler(EventHandler<MqttEvent> handler) {
         handlers.add(Objects.requireNonNull(handler));
     }
 
+    /**
+     * {@return a read-only view of the running state of this process}
+     */
     public ReadOnlyBooleanProperty runningProperty() {
         return ReadOnlyBooleanProperty.readOnlyBooleanProperty(runningProperty);
     }
 
+    /**
+     * Requests the process to stop and waits until it has terminated.
+     */
     public void stop() {
         stopProperty.set(true);
         while (runningProperty.get()) {

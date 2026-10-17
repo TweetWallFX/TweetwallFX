@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2022 TweetWallFX
+ * Copyright (c) 2015-2026 TweetWallFX
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,13 +33,24 @@ import org.tweetwallfx.conference.api.Talk;
  */
 public class VotedTalk {
 
+    /** The speakers of the voted talk. */
     public final List<Speaker> speakers;
+    /** The average rating score of the voted talk. */
     public final double ratingAverageScore;
+    /** The total number of votes cast for the voted talk. */
     public final int ratingTotalVotes;
+    /** The voted talk itself. */
     public final Talk talk;
+    /** The tags assigned to the voted talk. */
     public final List<String> tags;
+    /** The URL of the avatar image of the track of the voted talk. */
     public final String trackImageUrl;
 
+    /**
+     * Creates a new instance extracting the data from the given rated talk.
+     *
+     * @param ratedTalk the rated talk to wrap
+     */
     public VotedTalk(final RatedTalk ratedTalk) {
         this.talk = ratedTalk.getTalk();
         this.speakers = ratedTalk.getTalk().getSpeakers();

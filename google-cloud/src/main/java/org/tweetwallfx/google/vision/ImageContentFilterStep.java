@@ -182,6 +182,10 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
      */
     public static final class FactoryImpl implements FilterStep.Factory {
 
+        /** Creates a new instance. */
+        public FactoryImpl() {
+        }
+
         @Override
         public Class<Tweet> getDomainObjectClass() {
             return Tweet.class;
@@ -201,9 +205,13 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
     /**
      * POJO used to configure {@link ImageContentFilterStep}.
      *
-     * <p>
-     * Param {@code checkRetweeted} a boolean flag controlling whether for a
-     * retweet the retweeted Tweet is also checked
+     * @param checkRetweeted a boolean flag controlling whether for a retweet the
+     * retweeted Tweet is also checked
+     * @param adult the accepted likelihood configuration for adult content
+     * @param medical the accepted likelihood configuration for medical content
+     * @param racy the accepted likelihood configuration for racy content
+     * @param spoof the accepted likelihood configuration for spoof content
+     * @param violence the accepted likelihood configuration for violent content
      */
     public static record Config(
             Boolean checkRetweeted,
@@ -213,6 +221,9 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
             SafeTypeConfig spoof,
             SafeTypeConfig violence) {
 
+        /**
+         * Creates a new instance, applying defaults for {@code null} values.
+         */
         public Config {
             checkRetweeted = Objects.requireNonNullElse(checkRetweeted, false);
             adult = Objects.requireNonNullElse(adult, new SafeTypeConfig(GoogleLikelihood.VERY_UNLIKELY));
@@ -223,9 +234,18 @@ public class ImageContentFilterStep implements FilterStep<Tweet> {
         }
     }
 
+    /**
+     * Configuration of an acceptable likelihood for a safe search category.
+     *
+     * @param acceptableLikelyhood the highest likelihood still considered
+     * acceptable
+     */
     public static record SafeTypeConfig(
             GoogleLikelihood acceptableLikelyhood) {
 
+        /**
+         * Creates a new instance, applying a default for a {@code null} value.
+         */
         public SafeTypeConfig {
             acceptableLikelyhood = Objects.requireNonNullElse(acceptableLikelyhood, GoogleLikelihood.VERY_UNLIKELY);
         }
